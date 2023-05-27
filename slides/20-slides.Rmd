@@ -1,0 +1,416 @@
+---
+title: "Supervised Learning"
+subtitle: "Smoothing splines and GAMs"
+date: "July 9th, 2021"
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    # chakra: "libs/remark-latest.min.js"
+    # css: ["default", "css/ath-slides.css", "css/ath-inferno-fonts.css", "css/animate.css"]
+    self-contained: yes
+    # css: [default, default-fonts]
+    # seal: false
+    # anchor_sections: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      navigation:
+        scroll: false
+editor_options:
+  chunk_output_type: console
+---
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_accent(base_color = "#cc002b")
+```
+
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(fig.retina = 3, warning = FALSE, message = FALSE)
+```
+## Kernel regression
+
+__Nadaraya-Watson kernel regression__
+
+- given training data with explanatory variable $x$ and continuous response $y$ 
+
+- _bandwidth_ $h > 0$
+
+- and a new point $(x_{new}, y_{new})$: 
+
+$$\hat{y}_{new} = \sum_{i=1}^n w_i(x_{new})\cdot y_i \,,$$
+
+where
+
+$$w_i(x) = \frac{K_h\left(|x_{new}-x_i|\right)}{\sum_{j=1}^n K_h\left(|x_{new}-x_j|\right)} \text{ with } K_h(x) = K(\frac{x}{h})$$
+
+Example of a __linear smoother__
+
+- class of models where predictions are _weighted_ sums of the response variable
+
+---
+
+## Local regression
+
+We can fit a linear model __at each point $x_{new}$__ with weights given by kernel function centered on $x_{new}$
+
+- we can additionally combine this with _polynomial regression_
+
+--
+
+Local regression of the $k^{th}$ order with kernel function $K$ solves the following:
+
+$$\hat{\beta}(x_{new}) = \underset{\beta}{\text{arg min}}\Big\{ \sum_i K_h(|x_{new} - x_i|) \cdot (y_i - \sum_{j=0}^k x_i^k \cdot \beta_k )^2 \Big\}$$
+
+--
+__Yes, this means every single observation has its own set of coefficients__
+
+
+--
+
+Predicted value is then:
+
+$$\hat{y}_{new} = \sum_{j=0}^k x_{new}^k \cdot \hat{\beta}_k(x_{new})$$
+
+
+--
+
+Smoother predictions than kernel regression but comes at __higher computational cost__ 
+
+- __LOESS__ replaces kernel with k nearest neighbors
+  
+  - faster than local regression but discontinuities when neighbors change
+
+
+---
+
+## Smoothing splines
+
+
+Use __smooth function__ $s(x)$ to predict $y$, control smoothness directly by minimizing the __spline objective function__:
+
+$$\sum_{i=1}^n (y_i - s(x_i))^2 + \lambda \int(s''(x))^2dx$$
+
+
+--
+
+$$= \text{fit data} + \text{impose smoothness}$$
+
+--
+
+$$\Rightarrow \text{model fit} = \text{likelihood} - \lambda \cdot \text{wiggliness}$$
+Estimate the __smoothing spline__ $\hat{s}(x)$ that __balances the tradeoff between the model fit and wiggliness__
+
+
+--
+```{r out.width='70%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://github.com/noamross/gams-in-r-course/blob/master/images/diffsmooth-1.png?raw=true")
+```
+
+---
+
+## Basis functions
+
+Splines are _piecewise cubic polynomials_ with __knots__ (boundary points for functions) at every data point
+
+
+--
+
+Practical alternative: linear combination of set of __basis functions__
+
+
+--
+__Cubic polynomial example__: define four basis functions:
+
+- $B_1(x) = 1$, $B_2(x) = x$, $B_3(x) = x^2$, $B_4(x) = x^3$
+
+where the regression function $r(x)$ is written as:
+
+$$r(x) = \sum_j^4 \beta_j B_j(x)$$
+
+
+--
+- __linear in the transformed variables__ $B_1(x), \dots, B_4(x)$ but it is __nonlinear in $x$__
+
+
+--
+We extend this idea for splines _piecewise_ using indicator functions so the spline is a weighted sum:
+
+$$s(x) = \sum_j^m \beta_j B_j(x)$$
+
+---
+
+## Number of basis functions is another tuning parameter
+
+```{r out.width='80%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://github.com/noamross/gams-in-r-course/blob/master/images/diffbasis-1.png?raw=true")
+```
+
+
+
+---
+
+## Generalized additive models (GAMs)
+
+GAMs were created by [Trevor Hastie and Rob Tibshirani in 1986](https://projecteuclid.org/euclid.ss/1177013604) with intuitive construction:
+
+- relationships between individual explanatory variables and the response variable are smooth (either linear or nonlinear via basis functions)
+
+- estimate the smooth relationships __simultaneously__ to predict the response by just adding them up
+
+__Generalized__ like GLMs where $g()$ is the link function for the expected value of the response $E(Y)$ and __additive__ over the $p$ variables:
+
+$$g(E(Y)) = \beta_0 + s_1(x_1) + s_2(x_2) + \dots + s_p(x_p)$$
+
+```{r out.width='70%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://multithreaded.stitchfix.com/assets/images/blog/fig1.svg")
+```
+
+
+--
+
+- can be a convenient balance between flexibility and interpretability
+
+- you can combine linear and nonlinear terms!
+
+---
+
+## Example: predicting MLB HR probability
+
+Used the [`baseballr`](http://billpetti.github.io/baseballr/) package to scrape all batted-balls from 2019 season:
+
+```{r load-data, warning = FALSE, message = FALSE}
+library(tidyverse)
+batted_ball_data <- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/eda_projects/mlb_batted_balls_2021.csv") %>%
+  mutate(is_hr = as.numeric(events == "home_run")) %>%
+  filter(!is.na(launch_angle), !is.na(launch_speed),
+         !is.na(is_hr))
+head(batted_ball_data)
+table(batted_ball_data$is_hr)
+```
+
+---
+
+## Predict HRs with launch angle and exit velocity?
+
+.pull-left[
+```{r plot-baseball, eval = FALSE}
+batted_ball_data %>%
+  ggplot(aes(x = launch_speed, 
+             y = launch_angle,
+             color = as.factor(is_hr))) +
+  geom_point(alpha = 0.5) +
+  ggthemes::scale_color_colorblind(labels = c("No", "Yes")) +
+  labs(x = "Exit velocity", 
+       y = "Launch angle", 
+       color = "HR?") +
+  theme_bw() +
+  theme(legend.position = "bottom")
+```
+
+- HRs are relatively rare and confined to one area of this plot
+
+]
+.pull-right[
+```{r ref.label='plot-baseball', echo = FALSE}
+
+```
+
+]
+
+---
+
+## Fitting GAMs with [`mgcv`](https://cran.r-project.org/web/packages/mgcv/index.html)
+
+First set-up training data
+
+```{r init-train}
+set.seed(2004)
+batted_ball_data <- batted_ball_data %>%
+  mutate(is_train = sample(rep(0:1, length.out = nrow(batted_ball_data))))
+```
+
+Next fit the initial function using smooth functions via `s()`:
+
+```{r init-gam}
+library(mgcv)
+init_logit_gam <- gam(is_hr ~ s(launch_speed) + s(launch_angle), #<<
+                      data = filter(batted_ball_data, is_train == 1), 
+                      family = binomial, method = "REML") #<<
+```
+
+ - Use [REML](https://en.wikipedia.org/wiki/Restricted_maximum_likelihood) instead of the default for more stable solution
+
+---
+
+### GAM summary
+
+```{r gam-summary}
+summary(init_logit_gam)
+```
+
+
+---
+
+### Visualizing partial response functions with [gratia](https://gavinsimpson.github.io/gratia/index.html)
+
+Displays the partial effect of each term in the model $\Rightarrow$ add up to the overall prediction 
+
+```{r, fig.align = 'center', fig.height=5}
+library(gratia)
+draw(init_logit_gam)
+```
+
+---
+
+## Convert to probability scale with `plogis` function
+
+
+```{r, fig.align = 'center', fig.height=5}
+draw(init_logit_gam, fun = plogis) #<<
+```
+
+--
+
+- centered on average value of 0.5 because it's the partial effect without the intercept
+
+---
+
+## Include intercept in plot...
+
+```{r, fig.align = 'center', fig.height=5}
+draw(init_logit_gam, fun = plogis, constant = coef(init_logit_gam)[1]) #<<
+```
+
+Intercept reflects relatively rare occurence of HRs!
+
+---
+
+## Model checking for number of basis functions
+
+Use `gam.check()` to see if we need more basis functions based on an approximate test
+
+```{r, fig.show='hide'}
+gam.check(init_logit_gam)
+```
+
+
+---
+
+## Check the predictions?
+
+```{r}
+batted_ball_data <- batted_ball_data %>%
+  mutate(init_gam_hr_prob = 
+           as.numeric(predict(init_logit_gam,
+                              newdata = batted_ball_data,
+                              type = "response")),
+         init_gam_hr_class = as.numeric(init_gam_hr_prob >= 0.5))
+batted_ball_data %>%
+  group_by(is_train) %>%
+  summarize(correct = mean(is_hr == init_gam_hr_class))
+```
+
+---
+
+## What about the linear model?
+
+```{r}
+init_linear_logit <- glm(is_hr ~ launch_speed + launch_angle, 
+                         data = filter(batted_ball_data, is_train == 1), 
+                         family = binomial)
+batted_ball_data <- batted_ball_data %>%
+  mutate(init_glm_hr_prob = predict(init_linear_logit,
+                                    newdata = batted_ball_data,
+                                    type = "response"),
+         init_glm_hr_class = as.numeric(init_glm_hr_prob >= 0.5))
+batted_ball_data %>%
+  group_by(is_train) %>%
+  summarize(correct = mean(is_hr == init_glm_hr_class))
+```
+
+
+__Very few situations in reality where linear regressions perform better than an additive model using smooth functions__ - especially since smooth functions can just capture linear models...
+
+---
+
+## Continuous interactions as a smooth surface
+
+```{r multi-gam}
+multi_logit_gam <- gam(is_hr ~ s(launch_speed, launch_angle), 
+                       data = filter(batted_ball_data, is_train == 1), 
+                       family = binomial)
+```
+
+Plot the predicted heatmap:
+
+```{r, fig.align ='center', fig.height=4}
+draw(multi_logit_gam)
+```
+
+---
+
+## Check the predictions?
+
+```{r}
+batted_ball_data <- batted_ball_data %>%
+  mutate(multi_gam_hr_prob =
+           as.numeric(predict(multi_logit_gam,
+                              newdata = batted_ball_data,
+                              type = "response")),
+         multi_gam_hr_class = as.numeric(multi_gam_hr_prob >= 0.5))
+batted_ball_data %>%
+  group_by(is_train) %>%
+  summarize(correct = mean(is_hr == multi_gam_hr_class))
+```
+
+
+- This has one smoothing parameter for the 2D smooth...
+
+---
+
+### Separate interactions from individual terms with tensor smooths
+
+```{r tensor-gam}
+tensor_logit_gam <- gam(is_hr ~ s(launch_speed) + s(launch_angle) +
+                          ti(launch_speed, launch_angle), #<<
+                        data = filter(batted_ball_data, is_train == 1), family = binomial)
+```
+
+--
+
+Check the predictions
+
+```{r}
+batted_ball_data %>%
+  mutate(tensor_gam_hr_prob =
+           as.numeric(predict(tensor_logit_gam, newdata = batted_ball_data, type = "response")),
+         tensor_gam_hr_class = as.numeric(tensor_gam_hr_prob >= 0.5)) %>%
+  group_by(is_train) %>% 
+  summarize(correct = mean(is_hr == tensor_gam_hr_class))
+```
+
+--
+
+__More complicated model but yet it does not help!__
+
+---
+
+## Recap and useful resources
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">140 char vrsn<br><br>1 GAMs are just GLMs<br>2 GAMs fit wiggly terms<br>3 use + s(foo) not foo in frmla<br>4 use method = &quot;REML&quot;<br>5 gam.check()</p>&mdash; Dr Gavin Simpson 😷🇪🇺🇩🇰 (@ucfagls) <a href="https://twitter.com/ucfagls/status/842444686513991680?ref_src=twsrc%5Etfw">March 16, 2017</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+--
+
+- [GAMs in R by Noam Ross](https://noamross.github.io/gams-in-r-course/)
+
+- [`mgcv` course](https://eric-pedersen.github.io/mgcv-esa-workshop/)
+
+- [Stitch Fix post: GAM: The Predictive Modeling Silver Bullet](https://multithreaded.stitchfix.com/blog/2015/07/30/gam/)
+
+- Chapters 7 and 8 of [Advanced Data Analysis from an Elementary Point of View by Prof Cosma Shalizi](https://www.stat.cmu.edu/~cshalizi/ADAfaEPoV/ADAfaEPoV.pdf) 
+
+  - I strongly recommend you download this book, and you will refer back to it for the rest of your life
+

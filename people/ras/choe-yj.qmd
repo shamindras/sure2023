@@ -1,0 +1,31 @@
+---
+title: "YJ Choe"
+sortby: "Choe, YJ"
+subtitle: "Teaching Assistant (Advisor)"
+image: choe-yj.jpg
+started: "Spring 2023"
+ended: "Current"
+toc: false
+about:
+  id: person-profile
+  template: jolla
+---
+
+```{=html}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="../../index.html">Home</a></li>
+    <li class="breadcrumb-item"><a href="../../people.html">People</a></li>
+    <li class="breadcrumb-item active">Research Assistants</li>
+    <li class="breadcrumb-item active" aria-current="page">{{< meta title >}}</li>
+  </ol>
+</nav>
+```
+
+:::{#person-profile}
+YJ Choe is a fourth-year joint Ph.D. student in Statistics and Machine Learning at Carnegie Mellon University, working with Prof. Aaditya Ramdas. His research interests include game-theoretic statistical methods for anytime-valid sequential inference, statistical forecasting, and sequential decision making. YJ is a casual sports fan, and his work in forecasting is often motivated by its applications to sports. Previously, he worked as a Research Scientist at Kakao Brain and Kakao, where he specialized in deep learning for natural language processing, and he received an M.S. in Machine Learning at CMU as well as a B.S. in Mathematics and Computer Science at the University of Chicago.
+
+<!-- ## Education -->
+<!-- - **University of Kansas** | Lawrence, KS, USA<br /> -->
+<!--   Psychology Major -->
+:::

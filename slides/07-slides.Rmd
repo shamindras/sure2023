@@ -1,0 +1,636 @@
+---
+title: "Clustering"
+subtitle: "K-means"
+date: "June 14th, 2022"
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    # chakra: "libs/remark-latest.min.js"
+    # css: ["default", "css/ath-slides.css", "css/ath-inferno-fonts.css", "css/animate.css"]
+    self-contained: yes
+    # css: [default, default-fonts]
+    # seal: false
+    # anchor_sections: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      navigation:
+        scroll: false
+editor_options:
+  chunk_output_type: console
+---
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_accent(base_color = "#cc002b")
+```
+
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(fig.retina = 3, warning = FALSE, message = FALSE)
+```
+
+## Brace yourselves
+
+```{r out.width='60%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("http://images6.fanpop.com/image/photos/42900000/Thor-Ragnarok-2017-Loki-and-Thor-mood-compilation-thor-ragnarok-42998758-268-200.gif")
+```
+
+
+---
+
+## Into statistical learning with unsupervised learning
+
+What is __statistical learning?__
+--
+ [Preface of Introduction to Statistical Learning with Applications in R (ISLR)](https://www.statlearning.com/):
+
+> _refers to a set of tools for modeling and understanding complex datasets_ 
+
+
+--
+What is __unsupervised learning?__
+
+
+--
+We have $p$ variables for $n$ observations $x_1,\dots,x_n$, and for observation $i$:
+
+$$x_{i1},x_{i2},\ldots,x_{ip} \sim P$$
+
+- $P$ is a $p$-dimensional distribution that we might not know much about *a priori*.
+
+- _unsupervised_: none of the variables are __response__ variables, i.e., there are no labeled data
+
+
+--
+Think of unsupervised learning as __an extension of EDA...__
+
+
+--
+- $\Rightarrow$ __there is no unique right answer!__
+
+???
+
+- Statistical learning is the process of ascertaining (discovering) associations between groups of variables
+
+- unsupervised learning - where the goal is to discover interesting things about the data
+
+---
+
+## What is clustering (aka cluster analysis)?
+
+--
+[ISLR 10.3](http://faculty.marshall.usc.edu/gareth-james/ISL/ISLR%20Seventh%20Printing.pdf): 
+> _very broad set of techniques for finding subgroups, or clusters, in a dataset_
+
+--
+__Goals__:
+
+- observations __within__ clusters are __more similar__ to each other,
+
+- observations __in different__ clusters are __more different__ from each other
+
+
+--
+How do we define __distance / dissimilarity__ between observations? 
+
+--
+- e.g. __Euclidean distance__ between observations $i$ and $j$
+
+$$d(x_i, x_j) = \sqrt{(x_{i1}-x_{j1})^2 + \cdots + (x_{ip}-x_{jp})^2}$$
+
+--
+__Units matter!__ 
+
+--
+- one variable may _dominate_ others when computing Euclidean distance because its range is much larger
+
+- can standardize each variable / column of dataset to have mean 0 and standard divation 1 with `scale()`
+
+- __but we may value the separation in that variable!__ (so just be careful...)
+
+
+???
+
+It is the partitioning of data into homogeneous subgroups
+
+Goal define clusters for which the within-cluster variation is relatively small, i.e. observations within clusters are similar to each other
+
+---
+
+## What's the clustering objective?
+
+- $C_1, \dots, C_K$ are _sets_ containing indices of observations in each of the $K$ clusters
+
+  - if observation $i$ is in cluster $k$, then $i \in C_k$
+  
+
+--
+- We want to minimize the __within-cluster variation__ $W(C_k)$ for each cluster $C_k$ and solve:
+
+$$\underset{C_1, \dots, C_K}{\text{minimize}} \Big\{ \sum_{k=1}^K W(C_k) \Big\}$$
+
+- Can define using the __squared Euclidean distance__ ( $|C_k| = n_k =$ # observations in cluster $k$)
+
+$$W(C_k) = \frac{1}{|C_k|}\sum_{i,j \in C_k} d(x_i, x_j)^2$$
+
+  - Commonly referred to as the within-cluster sum of squares (WSS)
+
+--
+
+__So how can we solve this?__
+
+---
+
+## [Lloyd's algorithm](https://en.wikipedia.org/wiki/K-means_clustering)
+
+.pull-left[
+
+1) Choose $K$ random centers, aka __centroids__
+
+2) Assign each observation closest center (using Euclidean distance)
+
+3) Repeat until cluster assignment stop changing:
+
+  - Compute new centroids as the averages of the updated groups
+  
+  - Reassign each observations to closest center
+
+__Converges to a local optimum__, not the global 
+
+__Results will change from run to run__ (set the seed!)
+
+__Takes $K$ as an input!__
+
+]
+
+.pull-right[
+```{r out.width='80%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/e/ea/K-means_convergence.gif")
+```
+]
+
+---
+
+## Gapminder data
+
+Health and income outcomes for 184 countries from 1960 to 2016 from the famous [Gapminder project](https://www.gapminder.org/data)
+
+```{r load-data, warning = FALSE, message = FALSE}
+library(tidyverse)
+library(dslabs)
+gapminder <- as_tibble(gapminder)
+head(gapminder)
+```
+
+---
+
+## GDP is severely skewed right...
+
+```{r gdp-hist, warning = FALSE, message = FALSE, fig.align='center', fig.height=5}
+gapminder %>% ggplot(aes(x = gdp)) + geom_histogram() 
+```
+
+---
+
+## Some initial cleaning...
+
+- Each row is at the `country`-`year` level
+
+- Will just focus on data for 2011 where `gdp` is not missing
+
+- Take `log()` transformation of `gdp`
+
+```{r init-tot-rows}
+clean_gapminder <- gapminder %>%
+  filter(year == 2011, !is.na(gdp)) %>%
+  mutate(log_gdp = log(gdp))
+clean_gapminder
+```
+
+---
+
+### K-means clustering example (`gdp` and `life_expectancy`)
+
+.pull-left[
+
+- Use the `kmeans()` function, __but must provide number of clusters $K$__
+
+```{r first-kmeans, eval = FALSE}
+init_kmeans <- 
+  kmeans(dplyr::select(clean_gapminder,
+                       log_gdp, life_expectancy),
+         algorithm = "Lloyd", centers = 4,
+         nstart = 1)
+
+clean_gapminder %>%
+  mutate(country_clusters = 
+           as.factor(init_kmeans$cluster)) %>% #<<
+  ggplot(aes(x = log_gdp, y = life_expectancy,
+             color = country_clusters)) +
+  geom_point() + 
+  ggthemes::scale_color_colorblind() +
+  theme_bw() +
+  theme(legend.position = "bottom") 
+```
+
+
+]
+.pull-right[
+
+```{r ref.label='first-kmeans', echo = FALSE}
+
+```
+
+
+]
+
+---
+
+## Careful with units...
+
+.pull-left[
+
+- Use the `coord_fixed()` so that the axes match with unit scales
+
+```{r coord-fixed, eval = FALSE}
+clean_gapminder %>%
+  mutate(country_clusters = 
+           as.factor(init_kmeans$cluster)) %>% #<<
+  ggplot(aes(x = log_gdp, y = life_expectancy,
+             color = country_clusters)) +
+  geom_point() + 
+  ggthemes::scale_color_colorblind() +
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  coord_fixed() #<<
+```
+
+
+]
+.pull-right[
+
+```{r ref.label='coord-fixed', echo = FALSE, fig.align='center'}
+
+```
+
+
+]
+
+---
+
+## Standardize the variables!
+
+.pull-left[
+
+- Use the `scale()` function to first __standardize the variables__, $\frac{value - mean}{standard\ deviation}$
+
+```{r std-kmeans, eval = FALSE}
+clean_gapminder <- clean_gapminder %>%
+  mutate(std_log_gdp = as.numeric(scale(log_gdp, center = TRUE, scale = TRUE)), #<<
+         std_life_exp = as.numeric(scale(life_expectancy, center = TRUE, scale = TRUE))) #<<
+std_kmeans <- 
+  kmeans(dplyr::select(clean_gapminder, std_log_gdp, std_life_exp),
+         algorithm = "Lloyd", centers = 4, nstart = 1)
+
+clean_gapminder %>%
+  mutate(country_clusters = 
+           as.factor(std_kmeans$cluster)) %>% #<<
+  ggplot(aes(x = log_gdp, y = life_expectancy,
+             color = country_clusters)) +
+  geom_point() + 
+  ggthemes::scale_color_colorblind() +
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  coord_fixed()
+```
+
+
+]
+.pull-right[
+
+```{r ref.label='std-kmeans', echo = FALSE, fig.align='center'}
+
+```
+
+
+]
+
+---
+
+## Standardize the variables!
+
+.pull-left[
+
+
+```{r std-kmeans-view, eval = FALSE}
+clean_gapminder %>%
+  mutate(country_clusters = 
+           as.factor(std_kmeans$cluster)) %>% #<<
+  ggplot(aes(x = std_log_gdp, y = std_life_exp,
+             color = country_clusters)) +
+  geom_point() + 
+  ggthemes::scale_color_colorblind() +
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  coord_fixed() #<<
+```
+
+
+]
+.pull-right[
+
+```{r ref.label='std-kmeans-view', echo = FALSE, fig.align='center'}
+
+```
+
+
+]
+
+---
+
+### And if we run it again?
+
+.pull-left[
+
+We get different clustering results!
+
+```{r second-kmeans, eval = FALSE}
+another_kmeans <- 
+  kmeans(dplyr::select(clean_gapminder, std_log_gdp, std_life_exp),
+         algorithm = "Lloyd", centers = 4, nstart = 1)
+
+clean_gapminder %>%
+  mutate(country_clusters = 
+           as.factor(another_kmeans$cluster)) %>% #<<
+  ggplot(aes(x = log_gdp, y = life_expectancy,
+             color = country_clusters)) +
+  geom_point() + 
+  ggthemes::scale_color_colorblind() +
+  theme_bw() +
+  theme(legend.position = "bottom")
+```
+
+
+__Results depend on initialization__
+
+Keep in mind: __the labels / colors are arbitrary__
+
+]
+.pull-right[
+
+```{r ref.label='second-kmeans', echo = FALSE}
+
+```
+
+
+]
+
+
+---
+
+
+### Fix randomness issue with `nstart`
+
+.pull-left[
+
+Run the algorithm `nstart` times, then __pick the results with lowest total within-cluster variation__ (total WSS $= \sum_k^K W(C_k)$)
+
+```{r nstart-kmeans, eval = FALSE}
+nstart_kmeans <- 
+  kmeans(dplyr::select(clean_gapminder,
+                       std_log_gdp, std_life_exp),
+         algorithm = "Lloyd", centers = 4,
+         nstart = 30) #<<
+
+clean_gapminder %>%
+  mutate(country_clusters = 
+           as.factor(nstart_kmeans$cluster)) %>% 
+  ggplot(aes(x = log_gdp, y = life_expectancy,
+             color = country_clusters)) +
+  geom_point() + 
+  ggthemes::scale_color_colorblind() +
+  theme_bw() +
+  theme(legend.position = "bottom")
+```
+
+
+]
+.pull-right[
+
+```{r ref.label='nstart-kmeans', echo = FALSE}
+
+```
+
+
+]
+
+
+---
+
+### By default `R` uses [Hartigan and Wong algorithm](https://en.wikipedia.org/wiki/K-means_clustering#Hartigan%E2%80%93Wong_method)
+
+.pull-left[
+
+Updates based on changing a single observation
+
+__Computational advantages over re-computing distances for every observation__
+
+```{r default-kmeans, eval = FALSE}
+default_kmeans <- 
+  kmeans(dplyr::select(clean_gapminder,
+                       std_log_gdp, std_life_exp),
+         algorithm = "Hartigan-Wong", #<<
+         centers = 4, nstart = 30) 
+
+clean_gapminder %>%
+  mutate(country_clusters = 
+           as.factor(default_kmeans$cluster)) %>% 
+  ggplot(aes(x = log_gdp, y = life_expectancy,
+             color = country_clusters)) +
+  geom_point() + 
+  ggthemes::scale_color_colorblind() +
+  theme_bw() +
+  theme(legend.position = "bottom")
+```
+
+Very little differences for our purposes...
+
+]
+.pull-right[
+
+```{r ref.label='default-kmeans', echo = FALSE}
+
+```
+
+
+]
+
+---
+
+### Better alternative to `nstart`: __K-means++__
+
+Pick a random observation to be the center $c_1$ of the first cluster $C_1$
+
+  - This initializes a set $Centers = \{c_1 \}$
+  
+--
+
+Then for each remaining cluster $c^* \in 2, \dots, K$:
+
+  - For each observation (that is not a center), compute $D(x_i) = \underset{c \in Centers}{\text{min}} d(x_i, c)$
+  
+    - Distance between observation and its closest center $c \in Centers$
+    
+--
+
+  - Randomly pick a point $x_i$ with probability: $p_i = \frac{D^2(x_i)}{\sum_{j=1}^n D^2(x_j)}$
+
+--
+
+  - As distance to closest center increases $\Rightarrow$ probability of selection increases
+
+  - Call this randomly selected observation $c^*$, update $Centers = Centers\ \cup c^*$
+  
+    - Same as `centers = c(centers, c_new)`
+    
+--
+
+__Then run $K$-means using these $Centers$ as the starting points__
+
+---
+
+### K-means++ in R using [`flexclust`](https://cran.r-project.org/web/packages/flexclust/flexclust.pdf)
+
+.pull-left[
+
+```{r kmeanspp, eval = FALSE}
+library(flexclust)
+init_kmeanspp <- 
+  kcca(dplyr::select(clean_gapminder, #<<
+                     std_log_gdp, std_life_exp), k = 4, #<<
+       control = list(initcent = "kmeanspp")) #<<
+
+clean_gapminder %>%
+  mutate(country_clusters = 
+           as.factor(init_kmeanspp@cluster)) %>% #<<
+  ggplot(aes(x = log_gdp, y = life_expectancy,
+             color = country_clusters)) +
+  geom_point() + 
+  ggthemes::scale_color_colorblind() +
+  theme_bw() +
+  theme(legend.position = "bottom")
+```
+
+__Note the use of `@` instead of `$`...__
+
+]
+.pull-right[
+
+```{r ref.label='kmeanspp', echo = FALSE}
+
+```
+
+
+]
+
+---
+
+### So, how do we choose the number of clusters?!
+
+```{r out.width='60%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://i.pinimg.com/originals/86/90/6c/86906c4cb23094b8bfb851031509b9f4.gif")
+```
+
+--
+
+__There is no universally accepted way to conclude that a particular choice of $K$ is optimal!__
+
+
+---
+
+### Popular heuristic: elbow plot (use with caution)
+
+Look at the total within-cluster variation as a function of the number of clusters
+
+```{r kmeans-elbow, eval = FALSE}
+# Initialize number of clusters to search over
+n_clusters_search <- 2:12
+tibble(total_wss = 
+         # Compute total WSS for each number by looping with sapply
+         sapply(n_clusters_search,
+                function(k) {
+                  kmeans_results <- kmeans(dplyr::select(clean_gapminder,
+                                                         std_log_gdp,
+                                                         std_life_exp),
+                                           centers = k, nstart = 30)
+                  # Return the total WSS for choice of k
+                  return(kmeans_results$tot.withinss)
+                })) %>%
+  mutate(k = n_clusters_search) %>%
+  ggplot(aes(x = k, y = total_wss)) +
+  geom_line() + geom_point() +
+  labs(x = "Number of clusters K", y = "Total WSS") +
+  theme_bw()
+
+```
+
+---
+
+### Popular heuristic: elbow plot (use with caution)
+
+.pull-left[
+Choose $K$ where marginal improvements is low at the bend (hence the elbow)
+
+__This is just a guideline and should not dictate your choice of $K$!__
+
+[Gap statistic](https://web.stanford.edu/~hastie/Papers/gap.pdf) is a popular choice (see [`clusGap` function](https://stat.ethz.ch/R-manual/R-devel/library/cluster/html/clusGap.html) in [`cluster` package](https://cran.r-project.org/web/packages/cluster/cluster.pdf))
+
+__Next Tuesday__: model-based approach to choosing the number of clusters!
+
+]
+
+.pull-right[
+```{r ref.label='kmeans-elbow', echo = FALSE, fig.align='center'}
+
+```
+
+]
+
+---
+
+### Appendix: elbow plot with `flexclust`
+
+```{r kmeanspp-elbow, eval = FALSE}
+# Initialize number of clusters to search over
+n_clusters_search <- 2:12
+tibble(total_wss = 
+         # Compute total WSS for each number by looping with sapply
+         sapply(n_clusters_search,
+                function(k_choice) {
+                  kmeans_results <- kcca(dplyr::select(clean_gapminder,
+                                                         std_log_gdp,
+                                                         std_life_exp),
+                                         k = k_choice, 
+                                         control = list(initcent = "kmeanspp"))
+                  # Return the total WSS for choice of k
+                  return(sum(kmeans_results@clusinfo$size * 
+                               kmeans_results@clusinfo$av_dist))
+                })) %>%
+  mutate(k = n_clusters_search) %>%
+  ggplot(aes(x = k, y = total_wss)) +
+  geom_line() + geom_point() +
+  labs(x = "Number of clusters K", y = "Total WSS") +
+  theme_bw()
+
+```
+
+---
+
+### Appendix: elbow plot with `flexclust`
+
+```{r ref.label='kmeanspp-elbow', echo = FALSE, fig.align='center'}
+
+```
+

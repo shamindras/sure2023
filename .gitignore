@@ -1,0 +1,16 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+/.quarto/
+/_site/
+/_freeze/
+
+# caching stuff
+**/*_cache/*
+
+/.luarc.json
+.DS_Store
+slides/00-Introduction_files/libs
+slides/00-Introduction_files/libs

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Dimension Reduction</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Dimension Reduction
+]
+.subtitle[
+## Principal components analysis (PCA)
+]
+.date[
+### June 29th, 2021
+]
+
+---
+
+
+
+
+
+
+## What is the goal of dimension reduction?
+
+We have `\(p\)` variables (columns) for `\(n\)` observations (rows) __BUT__ which variables are __interesting__?
+
+--
+
+Can we find a smaller number of dimensions that captures the __interesting__ structure in the data?
+
+  - Could examine all pairwise scatterplots of each variable - tedious, manual process
+
+  - Last week: clustered variables based on correlation
+  
+--
+
+  - Can we find a combination of the original `\(p\)` variables?
+
+
+--
+
+__Dimension reduction__: 
+
+- Focus on reducing the dimensionality of the feature space (i.e., number of columns), 
+
+- While __retaining__ most of the information / __variability__ in a lower dimensional space (i.e., reducing the number of columns)
+
+---
+
+## [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis)
+
+&lt;img src="https://bradleyboehmke.github.io/HOML/images/pcr-steps.png" width="110%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis)
+
+- PCA explores the __covariance__ between variables, and combines variables into a smaller set of __uncorrelated__ variables called __principal components (PCs)__
+
+- PCs are __weighted__, linear combinations of the original variables
+
+  - Weights reveal how different variables are ___loaded___ into the PCs
+
+- We want a __small number of PCs__ to explain most of the information / variance in the data
+
+--
+
+__First principal component__:
+
+`$$Z_1 = \phi_{11} X_1 + \phi_{21} X_2 + \dots + \phi_{p1} X_p$$`
+
+--
+
+  - `\(\phi_{j1}\)` are the weights indicating the contributions of each variable `\(j \in 1, \dots, p\)`
+  
+  - Weights are normalized `\(\sum_{j=1}^p \phi_{j1}^2 = 1\)`
+  
+  - `\(\phi_{1} = (\phi_{11}, \phi_{21}, \dots, \phi_{p1})\)` is the __loading vector__ for PC1
+
+--
+  
+  - `\(Z_1\)` is a linear combination of the `\(p\)` variables that has the __largest variance__
+
+---
+
+## [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis)
+
+__Second principal component__:
+
+`$$Z_2 = \phi_{12} X_1 + \phi_{22} X_2 + \dots + \phi_{p2} X_p$$`
+
+  - `\(\phi_{j2}\)` are the weights indicating the contributions of each variable `\(j \in 1, \dots, p\)`
+  
+  - Weights are normalized `\(\sum_{j=1}^p \phi_{j1}^2 = 1\)`
+  
+  - `\(\phi_{2} = (\phi_{12}, \phi_{22}, \dots, \phi_{p2})\)` is the __loading vector__ for PC2
+  
+  - `\(Z_2\)` is a linear combination of the `\(p\)` variables that has the __largest variance__
+  
+    - __Subject to constraint it is uncorrelated with `\(Z_1\)`__ 
+    
+--
+
+We repeat this process to create `\(p\)` principal components
+
+---
+
+## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
+
+&lt;img src="17-slides_files/figure-html/unnamed-chunk-2-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
+
+&lt;img src="17-slides_files/figure-html/unnamed-chunk-3-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
+
+&lt;img src="17-slides_files/figure-html/unnamed-chunk-4-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
+
+&lt;img src="17-slides_files/figure-html/unnamed-chunk-5-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
+
+&lt;img src="17-slides_files/figure-html/unnamed-chunk-6-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Searching for variance in orthogonal directions
+
+&lt;img src="https://bradleyboehmke.github.io/HOML/15-pca_files/figure-html/create-pca-image-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+
+## PCA: [__singular value decomposition (SVD)__](https://en.wikipedia.org/wiki/Singular_value_decomposition)
+
+$$
+X = U D V^T
+$$
+
+- Matrices `\(U\)` and `\(V\)` contain the left and right (respectively) __singular vectors of scaled matrix `\(X\)`__
+
+- `\(D\)` is the diagonal matrix of the __singular values__
+
+--
+
+- SVD simplifies matrix-vector multiplication as __rotate, scale, and rotate again__
+
+
+--
+`\(V\)` is called the __loading matrix__ for `\(X\)` with `\(\phi_{j}\)` as columns, 
+
+  - `\(Z = X  V\)` is the PC matrix
+
+--
+
+BONUS __eigenvalue decomposition__ (aka spectral decomposition)
+
+- `\(V\)` are the __eigenvectors__ of `\(X^TX\)` (covariance matrix, `\(^T\)` means _transpose_)
+
+- `\(U\)` are the __eigenvectors__ of `\(XX^T\)`
+
+- The singular values (diagonal of `\(D\)`) are square roots of the __eigenvalues__ of `\(X^TX\)` or `\(XX^T\)`
+
+- Meaning that `\(Z = UD\)`
+
+---
+
+## Eigenvalues solve time travel?
+
+
+&lt;img src="https://thumbs.gfycat.com/RealisticFragrantHerculesbeetle-size_restricted.gif" width="70%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## Probably not... but they guide dimension reduction
+
+We want to choose `\(p^* &lt; p\)` such that we are explaining variation in the data
+
+--
+
+Eigenvalues `\(\lambda_j\)` for `\(j \in 1, \dots, p\)` indicate __the variance explained by each component__
+
+  - `\(\sum_j^p \lambda_j = p\)`, meaning `\(\lambda_j \geq 1\)` indicates `\(\text{PC}j\)` contains at least one variable's worth in variability
+  
+  - `\(\lambda_j / p\)` equals proportion of variance explained by `\(\text{PC}j\)`
+  
+  - Arranged in descending order so that `\(\lambda_1\)` is largest eigenvalue and corresponds to PC1
+  
+--
+  
+  - Can compute the cumulative proportion of variance explained (CVE) with `\(p^*\)` components:
+  
+`$$\text{CVE}_{p^*} = \frac{\sum_j^{p*} \lambda_j}{p}$$`
+
+Can use [__scree plot__](https://en.wikipedia.org/wiki/Scree_plot) to plot eigenvalues and guide choice for `\(p^* &lt;p\)` by looking for "elbow" (rapid to slow change)
+
+---
+
+## Example data: NFL teams summary
+
+Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2020
+
+
+```r
+library(tidyverse)
+nfl_teams_data &lt;- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/regression_projects/nfl_team_season_summary.csv")
+nfl_model_data &lt;- nfl_teams_data %&gt;%
+  mutate(score_diff = points_scored - points_allowed) %&gt;%
+  # Only use rows with air yards
+  filter(season &gt;= 2006) %&gt;%
+  dplyr::select(-wins, -losses, -ties, -points_scored, -points_allowed, -season, -team)
+```
+
+---
+
+## NFL PCA example
+
+Use the `prcomp` function (uses SVD) for PCA on __centered__ and __scaled__ data
+
+
+```r
+model_x &lt;- as.matrix(dplyr::select(nfl_model_data, -score_diff))
+*pca_nfl &lt;- prcomp(model_x, center = TRUE, scale = TRUE)
+summary(pca_nfl)
+```
+
+```
+## Importance of components:
+##                           PC1    PC2    PC3     PC4    PC5     PC6     PC7
+## Standard deviation     3.2119 3.1086 2.3406 2.03961 1.5384 1.41243 1.33352
+## Proportion of Variance 0.2149 0.2013 0.1141 0.08667 0.0493 0.04156 0.03705
+## Cumulative Proportion  0.2149 0.4162 0.5304 0.61704 0.6663 0.70791 0.74495
+##                            PC8     PC9    PC10    PC11    PC12    PC13   PC14
+## Standard deviation     1.26070 1.15021 1.10316 1.01999 0.95873 0.93244 0.8314
+## Proportion of Variance 0.03311 0.02756 0.02535 0.02167 0.01915 0.01811 0.0144
+## Cumulative Proportion  0.77807 0.80563 0.83098 0.85265 0.87180 0.88992 0.9043
+##                           PC15    PC16    PC17    PC18    PC19    PC20    PC21
+## Standard deviation     0.82639 0.77427 0.65754 0.60286 0.58982 0.57864 0.53934
+## Proportion of Variance 0.01423 0.01249 0.00901 0.00757 0.00725 0.00698 0.00606
+## Cumulative Proportion  0.91855 0.93104 0.94004 0.94761 0.95486 0.96184 0.96790
+##                           PC22    PC23    PC24    PC25    PC26    PC27    PC28
+## Standard deviation     0.49402 0.47675 0.45810 0.41473 0.36075 0.33619 0.32284
+## Proportion of Variance 0.00508 0.00474 0.00437 0.00358 0.00271 0.00235 0.00217
+## Cumulative Proportion  0.97298 0.97772 0.98209 0.98567 0.98838 0.99074 0.99291
+##                          PC29    PC30    PC31    PC32    PC33    PC34    PC35
+## Standard deviation     0.2939 0.26156 0.25057 0.22371 0.13145 0.11477 0.10849
+## Proportion of Variance 0.0018 0.00143 0.00131 0.00104 0.00036 0.00027 0.00025
+## Cumulative Proportion  0.9947 0.99614 0.99744 0.99849 0.99885 0.99912 0.99937
+##                           PC36    PC37    PC38    PC39    PC40    PC41    PC42
+## Standard deviation     0.09386 0.08375 0.07230 0.05156 0.04715 0.03327 0.02877
+## Proportion of Variance 0.00018 0.00015 0.00011 0.00006 0.00005 0.00002 0.00002
+## Cumulative Proportion  0.99955 0.99970 0.99980 0.99986 0.99991 0.99993 0.99995
+##                           PC43    PC44    PC45    PC46    PC47    PC48
+## Standard deviation     0.02594 0.02201 0.02187 0.02035 0.01669 0.01628
+## Proportion of Variance 0.00001 0.00001 0.00001 0.00001 0.00001 0.00001
+## Cumulative Proportion  0.99996 0.99997 0.99998 0.99999 0.99999 1.00000
+```
+
+
+---
+
+## Proportion of variance explained
+
+`prcomp$sdev` corresponds to the singular values, i.e., `\(\sqrt{\lambda_j}\)`, what is `pca_nfl$sdev^2 / ncol(model_x)`?
+
+--
+
+Can use the `broom` package easily tidy `prcomp` summary for plotting
+
+.pull-left[
+
+```r
+library(broom)
+pca_nfl %&gt;%
+* tidy(matrix = "eigenvalues") %&gt;%
+  ggplot(aes(x = PC, y = percent)) +
+  geom_line() + geom_point() +
+* geom_hline(yintercept = 1 / ncol(model_x),
+             color = "darkred", 
+             linetype = "dashed") +
+  theme_bw()
+```
+
+- Add reference line at `\(1/p\)`, _why_?
+
+]
+.pull-right[
+&lt;img src="17-slides_files/figure-html/unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+## Display data in lower dimensions
+
+`prcomp$x` corresponds to the matrix of __principal component scores__, i.e., `\(Z = XV\)`
+
+.pull-left[
+
+Can `augment` dataset with PC scores for plotting
+
+  - Add team and season for context
+
+
+```r
+pca_nfl %&gt;%
+* augment(nfl_model_data) %&gt;%
+  bind_cols({
+    nfl_teams_data %&gt;% 
+      filter(season &gt;= 2006) %&gt;%
+      dplyr::select(season, team)
+  }) %&gt;%
+* unite("team_id", team:season, sep = "-",
+        remove = FALSE) %&gt;%
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2, 
+             color = season)) +
+  geom_text(aes(label = team_id), alpha = 0.9) +
+  scale_color_gradient(low = "purple", high = "green") +
+  theme_bw() + theme(legend.position = "bottom")
+```
+
+
+]
+.pull-right[
+
+&lt;img src="17-slides_files/figure-html/unnamed-chunk-12-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+## What are the [loadings of these dimensions](https://clauswilke.com/blog/2020/09/07/pca-tidyverse-style/)?
+
+`prcomp$rotation` corresponds to the __loading matrix__, i.e., `\(V\)`
+
+.pull-left[
+
+
+```r
+arrow_style &lt;- arrow(
+  angle = 20, ends = "first", type = "closed", 
+  length = grid::unit(8, "pt")
+)
+library(ggrepel)
+pca_nfl %&gt;%
+  tidy(matrix = "rotation") %&gt;%
+  pivot_wider(names_from = "PC", names_prefix = "PC", 
+              values_from = "value") %&gt;%
+  mutate(stat_type = ifelse(str_detect(column, "offense"),
+                            "offense", "defense")) %&gt;%
+  ggplot(aes(PC1, PC2)) +
+  geom_segment(xend = 0, yend = 0, arrow = arrow_style) +
+  geom_text_repel(aes(label = column, color = stat_type),
+                  size = 3) +
+  scale_color_manual(values = c("darkred", "darkblue")) +
+  theme_bw() +
+  theme(legend.position = "bottom")
+```
+
+
+]
+.pull-right[
+
+&lt;img src="17-slides_files/figure-html/unnamed-chunk-13-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+## PCA analysis with `factoextra`
+
+Visualize the proportion of variance explained by each PC with [`factoextra`](http://www.sthda.com/english/wiki/factoextra-r-package-easy-multivariate-data-analyses-and-elegant-visualization)
+
+
+```r
+library(factoextra)
+fviz_eig(pca_nfl)
+```
+
+&lt;img src="17-slides_files/figure-html/unnamed-chunk-14-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+## PCA analysis with `factoextra`
+
+Display observations with first two PC
+
+
+```r
+fviz_pca_ind(pca_nfl)
+```
+
+&lt;img src="17-slides_files/figure-html/unnamed-chunk-15-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## PCA analysis with `factoextra`
+
+Projection of variables - angles are interpreted as correlations, where negative correlated values point to opposite sides of graph
+
+
+```r
+fviz_pca_var(pca_nfl)
+```
+
+&lt;img src="17-slides_files/figure-html/unnamed-chunk-16-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+## PCA analysis with `factoextra`
+
+__Biplot__ displays both the space of observations and the space of variables 
+
+  - Arrows represent the directions of the original variables
+
+
+```r
+fviz_pca_biplot(pca_nfl)
+```
+
+&lt;img src="17-slides_files/figure-html/unnamed-chunk-17-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

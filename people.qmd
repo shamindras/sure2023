@@ -1,0 +1,78 @@
+---
+pagetitle: "People | AffCom Lab"
+toc: false
+listing:
+  - id: research-staff
+    contents: "people/staff/*.qmd"
+    type: grid
+    image-height: 225px
+    grid-columns: 3
+    fields: [image, title, subtitle]
+    grid-item-align: center
+    sort: sortby
+    field-display-names: 
+      started: "Started"
+  - id: research-assistants
+    contents: "people/ras/*.qmd"
+    type: grid
+    image-height: 225px
+    grid-columns: 3
+    sort: sortby
+    fields: [image, title, subtitle, started]
+    field-display-names:
+      started: "Started"
+    grid-item-align: center
+  - id: executive-staff
+    contents: "people/executive/*.qmd"
+    type: grid
+    image-height: 225px
+    grid-columns: 3
+    sort: sortby
+    fields: [image, title, subtitle, started]
+    field-display-names:
+      started: "Started"
+    grid-item-align: center    
+---
+  
+  <!-- - id: alumni -->
+  <!--   contents: "people/alumni/*.qmd" -->
+  <!--   type: table -->
+  <!--   sort: sortby -->
+  <!--   fields: [title, subtitle, started, ended] -->
+  <!--   sort-ui: [title, subtitle, started, ended] -->
+  <!--   filter-ui: [title, subtitle, started, ended] -->
+  <!--   field-display-names:  -->
+  <!--     title: "Name" -->
+  <!--     subtitle: "Role" -->
+  <!--     started: "Started" -->
+  <!--     ended: "Ended" -->
+<!-- --- -->
+
+<!-- ```{=html} -->
+<!-- <nav aria-label="breadcrumb"> -->
+<!--   <ol class="breadcrumb"> -->
+<!--     <li class="breadcrumb-item"><a href="index.html">Home</a></li> -->
+<!--     <li class="breadcrumb-item active" aria-current="page">People</li> -->
+<!--   </ol> -->
+<!-- </nav> -->
+<!-- ``` -->
+
+## Instructors
+
+:::{#research-staff}
+:::
+
+## TA Advisors
+
+:::{#research-assistants}
+:::
+
+## Executive team
+
+:::{#executive-staff}
+:::
+
+<!-- ## Alumni -->
+
+<!-- :::{#alumni} -->
+<!-- ::: -->

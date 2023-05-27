@@ -1,0 +1,272 @@
+---
+title: "Supervised Learning"
+subtitle: "Principal component regression and partial least squares"
+date: "July 6th, 2021"
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    # chakra: "libs/remark-latest.min.js"
+    # css: ["default", "css/ath-slides.css", "css/ath-inferno-fonts.css", "css/animate.css"]
+    self-contained: yes
+    # css: [default, default-fonts]
+    # seal: false
+    # anchor_sections: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      navigation:
+        scroll: false
+editor_options:
+  chunk_output_type: console
+---
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_accent(base_color = "#cc002b")
+```
+
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(fig.retina = 3, warning = FALSE, message = FALSE)
+```
+
+## Principal component regression (PCR)
+
+```{r out.width='50%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://bradleyboehmke.github.io/HOML/images/pcr-steps.png")
+```
+
+---
+
+## Example data: NFL teams summary
+
+Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2020
+
+```{r, warning = FALSE, message = FALSE}
+library(tidyverse)
+nfl_teams_data <- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/regression_projects/nfl_team_season_summary.csv")
+nfl_model_data <- nfl_teams_data %>%
+  mutate(score_diff = points_scored - points_allowed) %>%
+  # Only use rows with air yards
+  filter(season >= 2006) %>%
+  dplyr::select(-wins, -losses, -ties, -points_scored, -points_allowed, -season, -team)
+nfl_model_data
+```
+
+---
+
+## Implement PCR with [`pls` package](https://cran.r-project.org/web/packages/pls/vignettes/pls-manual.pdf)
+
+Similar syntax to `lm` formula but specify the number of PCs (`ncomp`)
+
+```{r pls-pcr}
+library(pls)
+nfl_pcr_fit <- pcr(score_diff ~ ., ncomp = 2, scale = TRUE, data = nfl_model_data)
+summary(nfl_pcr_fit)
+```
+
+---
+
+## Tuning PCR with [`caret`](http://topepo.github.io/caret/index.html)
+
+To perform PCR __we need to tune the number of principal components__
+
+.pull-left[
+
+- Tune # components in PCR with [`caret`](http://topepo.github.io/caret/index.html)
+
+- `train` with 10-fold CV using `pcr` from [`pls`](https://cran.r-project.org/web/packages/pls/vignettes/pls-manual.pdf)
+
+```{r caret-cv, eval = FALSE}
+set.seed(2013)
+library(caret)
+cv_model_pcr <- train(
+  score_diff ~ ., 
+  data = nfl_model_data, 
+  method = "pcr", #<<
+  trControl = trainControl(method = "cv", number = 10),
+  preProcess = c("center", "scale"), #<<
+  tuneLength = ncol(nfl_model_data) - 1)
+ggplot(cv_model_pcr) + theme_bw()
+```
+
+
+]
+.pull-right[
+
+```{r, ref.label='caret-cv',  out.width='90%', echo = FALSE, fig.align='center'}
+
+```
+
+]
+
+---
+
+## Tuning PCR with [`caret`](http://topepo.github.io/caret/index.html)
+
+By default returns model with minimum CV error as `finalModel`
+
+```{r}
+summary(cv_model_pcr$finalModel)
+```
+
+---
+
+## Tuning PCR with [`caret`](http://topepo.github.io/caret/index.html)
+
+Modify `selectionFunction` in `train` to be the `oneSE` rule
+
+.pull-left[
+
+```{r caret-cv-onese}
+set.seed(2013)
+cv_model_pcr_onese <- train(
+  score_diff ~ ., 
+  data = nfl_model_data, 
+  method = "pcr", #<<
+  trControl = 
+    trainControl(method = "cv", number = 10,
+                 selectionFunction = "oneSE"), #<<
+  preProcess = c("center", "scale"),
+  tuneLength = ncol(nfl_model_data) - 1)
+```
+
+]
+.pull-right[
+
+```{r}
+summary(cv_model_pcr_onese$finalModel)
+```
+
+]
+
+---
+
+## Partial least squares (PLS)
+
+__PCR is agnostic of response variable__
+
+```{r out.width='80%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://bradleyboehmke.github.io/HOML/images/pls-vs-pcr.png")
+```
+
+---
+
+## PLS as supervised dimension reduction
+
+__First principal component__ in PCA:
+
+$$Z_1 = \phi_{11} X_1 + \phi_{21} X_2 + \dots + \phi_{p1} X_p$$
+
+--
+
+In PLS we set $\phi_{j1}$ to the coefficient from __simple linear regression__ of $Y$ on each $X_j$
+
+  - Remember this slope is proportional to the correlation! $\widehat{\beta}_{} = r_{X,Y} \cdot \frac{s_Y}{s_X}$
+  
+  - Thus $Z_1$ in PLS places most weight on variables strongly related to response $Y$
+
+--
+
+To compute $Z_2$ for PLS:
+
+  - Regress each $X_j$ on $Z_1$, residuals capture signal not explained by $Z_1$
+  
+  - Set $\phi_{j2}$ to the coefficient from __simple linear regression__ of $Y$ on these residuals for each variable
+  
+--
+
+Repeat process until all $Z_1, Z_2, \dots, Z_p$ are computed (__PLS components__)
+
+Then regress $Y$ on $Z_1, Z_2, \dots, Z_p^*$, where $p^* < p$ is a tuning parameter
+
+---
+
+## Tuning PLS with [`caret`](http://topepo.github.io/caret/index.html)
+
+.pull-left[
+
+```{r caret-pls-cv, eval = FALSE}
+set.seed(2013)
+cv_model_pls <- train(
+  score_diff ~ ., 
+  data = nfl_model_data, 
+  method = "pls", #<<
+  trControl = 
+    trainControl(method = "cv", number = 10,
+                 selectionFunction = "oneSE"), 
+  preProcess = c("center", "scale"),
+  tuneLength = ncol(nfl_model_data) - 1)
+ggplot(cv_model_pls) + theme_bw()
+```
+
+Sharp contrast with PCR results!
+
+Fewer PLS components because they are guided by the response variable
+
+]
+.pull-right[
+
+```{r, ref.label='caret-pls-cv',  out.width='80%', echo = FALSE, fig.align='center'}
+
+```
+
+
+]
+
+--
+
+_But how do we summarize variable relationships without a single coefficient?_
+
+
+---
+
+## Variable importance with [`vip` package](https://cran.r-project.org/web/packages/vip/vignettes/vip-introduction.pdf)
+
+
+__Variable importance__ attempts to quantify how influential variables are in the model
+
+  - e.g., absolute value of $t$-statistic in regression
+  
+--
+
+__For PLS__:  weighted sums of the absolute regression coefficients across components 
+
+  - Weights are function of reduction of RSS across the number of PLS components
+  
+--
+
+.pull-left[
+```{r 'vip-example', eval = FALSE}
+# Check out `cv_model_pls$finalModel$coefficients`
+library(vip)
+vip(cv_model_pls, num_features = 10, #<<
+    method = "model") + #<<
+  theme_bw() 
+```
+]
+
+.pull-right[
+```{r ref.label = 'vip-example', echo = FALSE, fig.width=8, fig.height=4}
+
+```
+]
+
+---
+
+## Partial dependence plots (PDP) with [`pdp` package](https://bgreenwell.github.io/pdp/index.html)
+
+PDPs display the change in the average predicted response as the predictor varies over their marginal distribution
+
+  - More useful for non-linear models later on!
+  
+```{r 'pdp-example', fig.width=8, fig.height=4, fig.align='center'}
+library(pdp)
+partial(cv_model_pls, "offense_total_epa_pass", plot = TRUE) #<<
+```
+
+
+
+
+

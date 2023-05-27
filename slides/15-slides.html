@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Supervised Learning</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Supervised Learning
+]
+.subtitle[
+## Intro to variable selection
+]
+.date[
+### June 25th, 2021
+]
+
+---
+
+
+
+
+
+
+
+## The setting
+
+We wish to learn a linear model. Our estimate (denoted by hats) is
+$$
+\hat{Y} = \hat{\beta}_0 + \hat{\beta}_1 X_1 + \cdots + \hat{\beta}_p X_p
+$$
+
+
+--
+Why would we attempt to select a __subset__ of the `\(p\)` variables?
+
+
+--
+- *To improve prediction accuracy* 
+
+  - Eliminating uninformative predictors can lead to lower variance in the test-set MSE, at the expense of a slight increase in bias
+
+--
+- *To improve model interpretability*
+
+  - Eliminating uninformative predictors is obviously a good thing when your goal is to tell the story of how your predictors are associated with your response.
+
+
+
+---
+
+## Best subset selection
+
+- Start with the __null model__ `\(\mathcal{M}_0\)` (intercept-only) that has no predictors
+
+  - just predicts the sample mean for each observation
+  
+
+--
+- For `\(k = 1, 2, \dots, p\)` (each possible number of predictors)
+
+  - Fit __all__ `\(\binom{p}{k} = \frac{p!}{k!(p-k)!}\)` with exactly `\(k\)` predictors
+  
+  - Pick the best (some criteria) among these `\(\binom{p}{k}\)` models, call it `\(\mathcal{M}_k\)`
+  
+    - Best can be up to the user: cross-validation error, highest adjusted `\(R^2\)`, etc.
+  
+
+--
+- Select a single best model from among `\(\mathcal{M}_0, \dots, \mathcal{M}_p\)`
+
+
+--
+__This is not typically used in research!__
+
+- only practical for a smaller number of variables
+
+
+--
+- arbitrary way of defining __best__ and ignores __prior knowledge__ about potential predictors
+
+
+---
+
+## Use the shoe leather approach
+
+[Prof. David Freeman](https://en.wikipedia.org/wiki/David_A._Freedman):
+
+- algorithms can be tempting but they are NOT substitutes!
+
+- you should NOT avoid the hard work of EDA in your modeling efforts
+
+
+--
+
+__Variable selection is a difficult problem!__
+
+- Like much of a statistics &amp; data science research there is not one unique, correct answer
+
+
+--
+You should justify which predictors / variables used in modeling based on:
+
+- __context__,
+
+- __extensive EDA__, and 
+
+- __model assessment based on holdout predictions__
+
+---
+
+## Covariance and correlation
+
+- __Covariance__ is a measure of the __linear__ dependence between two variables
+
+  - To be _"uncorrelated"_ is not the same as to be _"independent"_...
+  
+  - Independence means __there is no dependence__, linear or otherwise
+  
+
+--
+- __Correlation__ is a _normalized_ form of covariance, ranges from -1 through 0 to 1
+
+  - -1 means one variable linearly decreases absolutely in value while the other increases in value
+  
+  - 0 means no linear dependence
+  
+  - 1 means one variable linear increases absolutely while the other increases
+
+
+--
+
+- We can use the `cov()` / `cor()` functions in `R` to generate the __covariance__ / __correlation__ matrices
+
+---
+
+## Example data: NFL teams summary
+
+Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2020
+
+
+```r
+library(tidyverse)
+nfl_teams_data &lt;- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/regression_projects/nfl_team_season_summary.csv")
+nfl_teams_data
+```
+
+```
+## # A tibble: 701 × 55
+##    season team  offens…¹ offen…² offen…³ offen…⁴ offen…⁵ offen…⁶ offen…⁷ offen…⁸
+##     &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1   1999 ARI      0.477    2796    1209    4.67    3.15       0     NaN       0
+##  2   1999 ATL      0.504    3317    1176    6.08    3.20       0     NaN      11
+##  3   1999 BAL      0.452    2805    1663    5.07    4.13       0     NaN       0
+##  4   1999 BUF      0.540    3275    2038    6.17    4.13       0     NaN     161
+##  5   1999 CAR      0.552    4144    1484    6.68    4.29       0     NaN      89
+##  6   1999 CHI      0.561    4090    1359    5.75    3.55       0     NaN     508
+##  7   1999 CIN      0.498    3178    1971    5.37    4.63       0     NaN       0
+##  8   1999 CLE      0.489    2574    1140    4.71    3.67       0     NaN      35
+##  9   1999 DAL      0.560    3083    2054    5.95    4.29       0     NaN       0
+## 10   1999 DEN      0.546    3378    1852    5.85    4.05       0     NaN       9
+## # … with 691 more rows, 45 more variables: offense_ave_yac &lt;dbl&gt;,
+## #   offense_n_plays_pass &lt;dbl&gt;, offense_n_plays_run &lt;dbl&gt;,
+## #   offense_n_interceptions &lt;dbl&gt;, offense_n_fumbles_lost_pass &lt;dbl&gt;,
+## #   offense_n_fumbles_lost_run &lt;dbl&gt;, offense_total_epa_pass &lt;dbl&gt;,
+## #   offense_total_epa_run &lt;dbl&gt;, offense_ave_epa_pass &lt;dbl&gt;,
+## #   offense_ave_epa_run &lt;dbl&gt;, offense_total_wpa_pass &lt;dbl&gt;,
+## #   offense_total_wpa_run &lt;dbl&gt;, offense_ave_wpa_pass &lt;dbl&gt;, …
+```
+
+---
+
+## Modeling NFL score differential
+
+.pull-left[
+
+Interested in modeling a team's __score differential__
+
+
+```r
+nfl_teams_data &lt;- nfl_teams_data %&gt;%
+  mutate(score_diff = 
+           points_scored - points_allowed)
+nfl_teams_data %&gt;%
+  ggplot(aes(x = score_diff)) +
+  geom_histogram(color = "black", 
+                 fill = "darkblue",
+                 alpha = 0.3) +
+  theme_bw() +
+  labs(x = "Score differential")
+```
+
+
+
+]
+.pull-right[
+
+&lt;img src="15-slides_files/figure-html/unnamed-chunk-2-1.png" width="504" /&gt;
+
+
+]
+
+
+---
+
+### Correlation matrix of score differential and candidate predictors
+
+.pull-left[
+
+- Interested in `score_diff` relationships with team passing and rush statistics
+
+- View the correlation matrix with [`ggcorrplot`](https://rpkgs.datanovia.com/ggcorrplot/)
+
+
+```r
+library(ggcorrplot)
+nfl_model_data &lt;- nfl_teams_data %&gt;%
+  dplyr::select(score_diff, offense_ave_epa_pass,
+                offense_ave_epa_run, 
+                defense_ave_epa_pass,
+                defense_ave_epa_run,
+                offense_ave_yards_gained_pass,
+                offense_ave_yards_gained_run,
+                defense_ave_yards_gained_pass,
+                defense_ave_yards_gained_run)
+*nfl_cor_matrix &lt;- cor(nfl_model_data)
+*ggcorrplot(nfl_cor_matrix)
+```
+
+
+]
+.pull-right[
+&lt;img src="15-slides_files/figure-html/unnamed-chunk-3-1.png" width="504" /&gt;
+
+]
+
+
+---
+
+## Customize the appearance of the correlation matrix
+
+.pull-left[
+- Avoid redundancy by only using one half of matrix with `type`
+
+- Add correlation value labels using `lab` (but round first!)
+
+- Can arrange variables based on clustering...
+
+
+```r
+round_cor_matrix &lt;- 
+* round(cor(nfl_model_data), 2)
+ggcorrplot(round_cor_matrix, 
+*          hc.order = TRUE,
+*          type = "lower",
+*          lab = TRUE)
+```
+
+
+
+]
+.pull-right[
+
+&lt;img src="15-slides_files/figure-html/unnamed-chunk-4-1.png" width="504" /&gt;
+]
+
+
+---
+
+## Clustering variables using the correlation matrix
+
+Apply [hierarchical clustering](http://stat.cmu.edu/cmsac/sure/2021/materials/lectures/slides/07-Hierarchical-clustering.html#1) to variables instead of observations
+
+
+--
+- Select the explanatory variables of interest from our data
+
+
+```r
+nfl_ex_vars &lt;- dplyr::select(nfl_model_data, -score_diff)
+```
+
+
+--
+
+- Compute correlation matrix of these variables:
+
+
+```r
+exp_cor_matrix &lt;- cor(nfl_ex_vars)
+```
+
+
+--
+
+- Correlations measure similarity and can be negative __BUT__ distances measure dissimilarity and __CANNOT__ 
+
+- Convert your correlations to all be `\(\geq 0\)`: e.g., `\(1 - |\rho|\)` (which drops the sign) or `\(1 - \rho\)`
+  
+
+
+```r
+cor_dist_matrix &lt;- 1 - abs(exp_cor_matrix)
+```
+
+
+--
+- Convert to distance matrix before using `hclust`
+
+
+```r
+cor_dist_matrix &lt;- as.dist(cor_dist_matrix)
+```
+
+---
+
+## Clustering variables using the correlation matrix
+
+.pull-left[
+
+- Cluster variables using `hclust()` as before!
+
+- Use [`ggdendro`](https://cran.r-project.org/web/packages/ggdendro/vignettes/ggdendro.html) to quickly visualize dendrogram
+
+
+```r
+library(ggdendro)
+*nfl_exp_hc &lt;- hclust(cor_dist_matrix,
+                     "complete") 
+*ggdendrogram(nfl_exp_hc,
+*            rotate = TRUE,
+*            size = 2)
+```
+
+
+]
+.pull-right[
+
+&lt;img src="15-slides_files/figure-html/unnamed-chunk-5-1.png" width="504" /&gt;
+
+]
+
+
+---
+
+## Clustering variables using the correlation matrix
+
+.pull-left[
+
+- Another flexible option is [`dendextend`](https://cran.r-project.org/web/packages/dendextend/vignettes/dendextend.html)
+
+
+```r
+library(dendextend)
+cor_dist_matrix %&gt;%
+  hclust() %&gt;%
+* as.dendrogram() %&gt;%
+  set("branches_k_col", 
+      k = 2) %&gt;% 
+  set("labels_cex", .5) %&gt;%
+  ggplot(horiz = TRUE)
+```
+
+- Explore the [package documentation](https://cran.r-project.org/web/packages/dendextend/vignettes/dendextend.html) for more formatting
+
+]
+.pull-right[
+&lt;img src="15-slides_files/figure-html/unnamed-chunk-6-1.png" width="504" /&gt;
+
+
+]
+
+---
+
+## Back to the response variable...
+
+.pull-left[
+
+Use the [`GGally`](https://ggobi.github.io/ggally/index.html) package to easily create __pairs__ plots of multiple variables
+
+- __always look at your data__
+
+- correlation values alone are not enough!
+
+- what if a variable displayed a quadratic relationship?
+
+
+
+```r
+*library(GGally)
+*ggpairs(nfl_model_data,
+        columns =
+          c("score_diff", "offense_ave_epa_pass",
+            "offense_ave_epa_run", "defense_ave_epa_pass",
+*           "defense_ave_epa_run")) +
+  theme_bw()
+```
+
+
+]
+
+.pull-right[
+&lt;img src="15-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" /&gt;
+
+]
+
+---
+
+### Do running statistics matter for modeling score differential?
+
+
+--
+Will use __5-fold cross-validation__ to assess how well different sets of variables (combinations of `pass` &amp; `run` variables) perform in predicting `score_diff`?
+
+
+--
+Can initialize a column of the __test__ fold assignments to our dataset with the `sample()` function:
+
+```r
+set.seed(2020)
+nfl_model_data &lt;- nfl_model_data %&gt;%
+  mutate(test_fold = sample(rep(1:5, length.out = n())))
+```
+
+
+--
+__Always remember to set your seed prior to any k-fold cross-validation!__
+
+---
+
+## Writing a function for k-fold cross-validation
+
+
+```r
+get_cv_preds &lt;- function(model_formula, data = nfl_model_data) {
+  # generate holdout predictions for every row based season
+  map_dfr(unique(data$test_fold), 
+          function(holdout) {
+            # Separate test and training data:
+            test_data &lt;- data %&gt;%
+              filter(test_fold == holdout)
+            train_data &lt;- data %&gt;%
+              filter(test_fold != holdout)
+            
+            # Train model:
+            reg_model &lt;- lm(as.formula(model_formula), data = train_data)
+            
+            # Return tibble of holdout results:
+            tibble(test_preds = predict(reg_model, newdata = test_data),
+                   test_actual = test_data$score_diff,
+                   test_fold = holdout) 
+          })
+}
+```
+
+
+---
+
+## Function enables easy generation of holdout analysis
+
+
+```r
+all_cv_preds &lt;- get_cv_preds("score_diff ~  offense_ave_epa_pass + offense_ave_epa_run + defense_ave_epa_pass + defense_ave_epa_run")
+all_int_cv_preds &lt;- get_cv_preds("score_diff ~ offense_ave_epa_pass*offense_ave_epa_run + defense_ave_epa_pass*defense_ave_epa_run")
+run_only_cv_preds &lt;- get_cv_preds("score_diff ~ offense_ave_epa_run + defense_ave_epa_run")
+pass_only_cv_preds &lt;- get_cv_preds("score_diff ~ offense_ave_epa_pass + defense_ave_epa_pass")
+off_only_cv_preds &lt;- get_cv_preds("score_diff ~ offense_ave_epa_pass + offense_ave_epa_run")
+def_only_cv_preds &lt;- get_cv_preds("score_diff ~ defense_ave_epa_pass + defense_ave_epa_run")
+int_only_cv_preds &lt;- get_cv_preds("score_diff ~ 1")
+```
+
+
+--
+.pull-left[
+Can then summarize together for a single plot:
+
+```r
+bind_rows(mutate(all_cv_preds, type = "All"),
+          mutate(all_int_cv_preds, type = "All w/ interactions"),
+          mutate(pass_only_cv_preds, type = "Passing only"),
+          mutate(run_only_cv_preds, type = "Running only"),
+          mutate(off_only_cv_preds, type = "Offense only"),
+          mutate(def_only_cv_preds, type = "Defense only"),
+          mutate(int_only_cv_preds, type = "Intercept-only")) %&gt;%
+  group_by(type) %&gt;%
+  summarize(rmse = sqrt(mean((test_actual - test_preds)^2))) %&gt;%
+  mutate(type = fct_reorder(type, rmse)) %&gt;%
+  ggplot(aes(x = type, y = rmse)) +
+  geom_point() + coord_flip() + theme_bw()
+```
+]
+.pull-right[
+&lt;img src="15-slides_files/figure-html/unnamed-chunk-10-1.png" width="504" /&gt;
+
+]
+
+
+---
+
+## Fit selected model on all data and view summary
+
+
+```r
+all_lm &lt;- lm(score_diff ~ offense_ave_epa_pass + offense_ave_epa_run + defense_ave_epa_pass + defense_ave_epa_run, data = nfl_model_data)
+summary(all_lm)
+```
+
+```
+## 
+## Call:
+## lm(formula = score_diff ~ offense_ave_epa_pass + offense_ave_epa_run + 
+##     defense_ave_epa_pass + defense_ave_epa_run, data = nfl_model_data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -74.850 -18.814   0.222  18.964  92.173 
+## 
+## Coefficients:
+##                      Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)             3.525      1.732   2.035   0.0422 *  
+## offense_ave_epa_pass  462.886      8.737  52.979   &lt;2e-16 ***
+## offense_ave_epa_run   333.415     15.808  21.092   &lt;2e-16 ***
+## defense_ave_epa_pass -480.918     11.226 -42.838   &lt;2e-16 ***
+## defense_ave_epa_run  -298.546     16.324 -18.289   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 27.84 on 696 degrees of freedom
+## Multiple R-squared:  0.9248,	Adjusted R-squared:  0.9244 
+## F-statistic:  2141 on 4 and 696 DF,  p-value: &lt; 2.2e-16
+```
+
+---
+
+## Do NOT show that summary in a presentation!
+
+.pull-left[
+
+- We can instead display a __coefficient plot__ with confidence intervals based on the reported standard errors
+
+- Use the [`ggcoef()`](https://ggobi.github.io/ggally/articles/ggcoef.html) function from `GGally`
+
+
+```r
+ggcoef(all_lm, 
+       exclude_intercept = TRUE,
+       vline = TRUE,
+       vline_color = "red") + 
+  theme_bw()
+```
+
+- [__A well formatted table__](https://cran.r-project.org/web/packages/sjPlot/vignettes/tab_model_estimates.html) of the summary output is appropriate for a report (not for a presentation)
+
+]
+.pull-right[
+
+&lt;img src="15-slides_files/figure-html/unnamed-chunk-12-1.png" width="504" /&gt;
+
+
+]
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

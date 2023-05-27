@@ -1,0 +1,41 @@
+---
+title: "Shamindra Shrotriya"
+sortby: "2"
+subtitle: "SURE (Optum) 2023 Faculty"
+image: shrotriya-shamindra.jpg
+started: "Summer 2023"
+toc: false
+resources: 
+  - "shrotriya-shamindra_cv.pdf"
+about:
+  id: person-profile
+  template: jolla
+  links:
+    - icon: link
+      text: website
+      href: https://www.shamindras.com/
+    - icon: file-earmark-text
+      text: vitae
+      href: ./people/staff/shrotriya-shamindra_cv.pdf
+    - icon: github
+      text: github
+      href: https://www.github.com/shamindras
+---
+
+:::{#person-profile}
+:::
+
+## Biography
+
+TODO: Add bio here
+
+## Education
+
+- **Carnegie Mellon University** | Pittsburgh, PA, USA<br />
+  PhD in Statistics | 2017–2022
+
+- **University of California, Berkeley** | Berkeley, CA, USA<br />
+  MA in Statistics | 2015–2016
+
+- **University of New South Wales** | Sydney, NSW, Australia<br />
+  BCom in Actuarial Studies and Finance | 2003–2006 

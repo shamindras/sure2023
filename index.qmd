@@ -1,0 +1,58 @@
+---
+title: "SURE 2023"
+subtitle: "Explore cutting-edge statistics and data science methodology with applications in sports and health analytics"
+details: |
+  Summer 2023<br>Department of Statistics & Data Science<br>Carnegie Mellon University
+sidebar: false
+toc: false
+page-layout: full
+format:
+  html:
+    # embed-resources: true
+    template-partials:
+      - html/home/title-block.html
+course-logo: /files/cmu-statds-icon-hex-2.png
+---
+
+```{r set-dependencies, include=FALSE}
+# Site-wide targets dependencies
+withr::with_dir(here::here(), {
+  targets::tar_load(xaringan_slides)
+  targets::tar_load(xaringan_pdfs)
+})
+```
+
+::: {.home}
+
+::: {.grid .course-details}
+
+<!-- ::: {.g-col-12 .g-col-sm-6 .g-col-md-4} -->
+::: {.g-col-8 .g-col-md-8}
+
+### Instructors
+
+- {{< fa user >}} &nbsp; [{{< var instructor_one.name >}}]({{< var instructor_two.url >}}) &nbsp;& [{{< var instructor_two.name >}}]({{< var instructor_two.url >}})
+<!-- - {{< fa university >}} &nbsp; {{< var instructor.office >}} -->
+- {{< fa envelope >}} &nbsp; <a href="mailto:{{< var instructor_one.email >}}">{{< var instructor_one.email >}}</a>  &nbsp;& <a href="mailto:{{< var instructor_two.email >}}">{{< var instructor_two.email >}}</a>
+<!-- - {{< fa brands twitter >}} &nbsp; [{{< var instructor.twitter >}}](https://www.twitter.com/{{< var instructor.twitter >}}) -->
+<!-- - {{< fa calendar-check >}} &nbsp; [Schedule an appointment]({{< var instructor.appointment_url >}}) -->
+:::
+
+<!-- ::: {.g-col-12 .g-col-sm-6 .g-col-md-4} -->
+<!-- ### Course details -->
+
+<!-- - {{< fa calendar >}} &nbsp; {{< var course.days >}} -->
+<!-- - {{< fa calendar-alt >}} &nbsp; {{< var course.dates >}} -->
+<!-- - {{< fa clock >}} &nbsp; {{< var course.time >}} -->
+<!-- - {{< fa location-dot >}} &nbsp; {{< var course.location >}} -->
+<!-- ::: -->
+
+::: {.g-col-6 .g-col-md-8 .contact-policy}
+### Contacting us
+
+{{< var contact_policy >}}
+:::
+
+:::
+
+:::

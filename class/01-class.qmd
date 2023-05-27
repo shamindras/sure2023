@@ -1,0 +1,175 @@
+---
+title: "Introduction and Welcome to SURE 2023"
+date: "2023-06-05"
+---
+
+```{r slides-videos, echo=FALSE, include=FALSE}
+source(here::here("R", "slide-things.R"))
+```
+
+<!-- ## Readings -->
+
+<!-- - The [syllabus](/syllabus.qmd), [class](/class/index.qmd), and [assignments](/assignment/index.qmd) pages for this class -->
+
+<!-- - {{< fa file-pdf >}}&ensp;[@Nelson:2021] -->
+
+<!-- - {{< fa file-pdf >}}&ensp;The "How to Read" section in [@Green:2021] -->
+
+<!-- - {{< fa file-pdf >}}&ensp;[@Powner:2016] -->
+
+<!-- - {{< fa file-pdf >}}&ensp;[@MeierHill:2005] -->
+
+
+## Slides
+
+The slides for today's lesson are available online as an PDF file. Use the 
+buttons below to open the slides either as an interactive website. You can also 
+click in the slides below and navigate through them with your left and right 
+arrow keys.
+
+```{r show-slide-tabs, echo=FALSE, results="asis"}
+slide_buttons("/slides/01-slides", output_type = "pdf")
+# slide_tabs(slide_details, "/slides/01-slides.html")
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/01-slides.pdf" title="Lecture 1"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/02-slides.pdf" title="Lecture 2"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/03-slides.pdf" title="Lecture 3"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/04-slides.pdf" title="Lecture 4"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/05-slides.pdf" title="Lecture 5"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/06-slides.pdf" title="Lecture 6"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/07-slides.pdf" title="Lecture 7"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/08-slides.pdf" title="Lecture 8"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/09-slides.pdf" title="Lecture 9"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/10-slides.pdf" title="Lecture 10"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/11-slides.pdf" title="Lecture 11"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/12-slides.pdf" title="Lecture 12"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/13-slides.pdf" title="Lecture 13"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/14-slides.pdf" title="Lecture 14"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/15-slides.pdf" title="Lecture 15"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/16-slides.pdf" title="Lecture 16"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/17-slides.pdf" title="Lecture 17"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/18-slides.pdf" title="Lecture 18"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/19-slides.pdf" title="Lecture 19"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/20-slides.pdf" title="Lecture 20"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/21-slides.pdf" title="Lecture 21"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/22-slides.pdf" title="Lecture 22"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/23-slides.pdf" title="Lecture 23"></iframe>
+```
+
+```{=html}
+<iframe width="780" height="500" src="/slides/24-slides.pdf" title="Lecture 24"></iframe>
+```
+
+
+## Plan for the day
+
+- **Who are you all and why are you here?**
+
+- **The pains and wonders of bureaucracies + building our Global Bureaucracy**^[Good luck spelling this word correctly over and over and over this semester!] **Toolkit^™^**
+  - [Jan Banning's "Bureaucratics"](https://www.janbanning.com/gallery/bureaucratics/)
+
+- **How the class works**
+  - [Mini presentation signup sheet](https://docs.google.com/spreadsheets/d/1KZZ7Ei85cb97IjnTVwiYsUiSiOSgtbc_pHVuRxPWgz4/edit?usp=sharing)
+
+- **Things they don’t teach you in grad school**
+
+  - **How to read and annotate an article**
+
+    - [Zotero](https://www.zotero.org/) + [Zotero Connector](https://www.zotero.org/download/connectors) + [GSU's Zotero guide](https://research.library.gsu.edu/zotero)
+    - [Class Zotero group library](https://www.zotero.org/groups/compasp23)
+    - [What are DOIs?](https://apastyle.apa.org/style-grammar-guidelines/references/dois-urls)
+    - Taking and storing notes:
+      - [Zotero](https://www.zotero.org/)
+      - [Obsidian](https://obsidian.md/)
+      - [Notion](https://www.notion.so/)
+      - [OneNote](https://www.onenote.com/?public=1)
+      - [Evernote](https://evernote.com/)
+    - Things we'll read together:
+      - {{< fa file-pdf >}}&ensp;[@Wilson:1887]
+      - {{< fa file-pdf >}}&ensp;[@MilwardJensenRoberts:2016]
+      - {{< fa file-pdf >}}&ensp;[@Roberts:2018]
+
+  - [**Break!**]{.text-success}
+
+  - **How to summarize, synthesize, and write about articles**
+
+    - [Zotero in Word](https://www.zotero.org/support/word_processor_plugin_usage) + [Zotero in Google Docs](https://www.zotero.org/support/google_docs) + Zotero [in RStudio](https://posit.co/blog/rstudio-1-4-preview-citations/) or [with Markdown in general](https://www.andrewheiss.com/blog/2023/01/08/bibdesk-to-zotero-pandoc/#example-workflow-with-quarto-r-markdown-pandoc)
+    - [Summary vs. synthesis](https://www.youtube.com/watch?v=R_rnkM7jvlY) + [The Synthesis Test](https://www.youtube.com/watch?v=R_rnkM7jvlY&t=241s)
+
+  - **How to discuss an article in a seminar**
+
+  	- General summary of the article
+  	- Strengths
+  	- Weaknesses
+  	- How does it connect to other readings?
+  	- How does it connect to the broader course themes?
+  	- How does it connect to current events?
+  	- What does it add to our Global Bureaucracy Toolkit^™^?

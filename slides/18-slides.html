@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Supervised Learning</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Supervised Learning
+]
+.subtitle[
+## Principal component regression and partial least squares
+]
+.date[
+### July 6th, 2021
+]
+
+---
+
+
+
+
+
+
+## Principal component regression (PCR)
+
+&lt;img src="https://bradleyboehmke.github.io/HOML/images/pcr-steps.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Example data: NFL teams summary
+
+Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2020
+
+
+```r
+library(tidyverse)
+nfl_teams_data &lt;- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/regression_projects/nfl_team_season_summary.csv")
+nfl_model_data &lt;- nfl_teams_data %&gt;%
+  mutate(score_diff = points_scored - points_allowed) %&gt;%
+  # Only use rows with air yards
+  filter(season &gt;= 2006) %&gt;%
+  dplyr::select(-wins, -losses, -ties, -points_scored, -points_allowed, -season, -team)
+nfl_model_data
+```
+
+```
+## # A tibble: 480 × 49
+##    offense_com…¹ offen…² offen…³ offen…⁴ offen…⁵ offen…⁶ offen…⁷ offen…⁸ offen…⁹
+##            &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1         0.561    3662    1350    6.40    3.28    4284    8.01    1582    4.94
+##  2         0.480    2371    2946    5.10    5.56    4698   11.3      942    4.22
+##  3         0.612    3435    1667    6.41    3.74    4082    7.88    1391    4.24
+##  4         0.564    2718    1555    5.70    3.73    3833    8.91    1243    4.62
+##  5         0.569    3264    1674    5.72    4.10    4348    8.07    1553    4.79
+##  6         0.525    3286    1940    6.12    4.02    4564    8.90    1374    4.89
+##  7         0.588    3827    1648    6.88    3.91    5064    9.76    1466    4.48
+##  8         0.565    2893    1347    5.16    3.69    3766    7.43    1533    4.84
+##  9         0.569    3838    1954    7.04    4.23    4681    9.38    1427    4.63
+## 10         0.529    2799    2167    5.78    4.58    4330    9.56    1233    4.84
+## # … with 470 more rows, 40 more variables: offense_n_plays_pass &lt;dbl&gt;,
+## #   offense_n_plays_run &lt;dbl&gt;, offense_n_interceptions &lt;dbl&gt;,
+## #   offense_n_fumbles_lost_pass &lt;dbl&gt;, offense_n_fumbles_lost_run &lt;dbl&gt;,
+## #   offense_total_epa_pass &lt;dbl&gt;, offense_total_epa_run &lt;dbl&gt;,
+## #   offense_ave_epa_pass &lt;dbl&gt;, offense_ave_epa_run &lt;dbl&gt;,
+## #   offense_total_wpa_pass &lt;dbl&gt;, offense_total_wpa_run &lt;dbl&gt;,
+## #   offense_ave_wpa_pass &lt;dbl&gt;, offense_ave_wpa_run &lt;dbl&gt;, …
+```
+
+---
+
+## Implement PCR with [`pls` package](https://cran.r-project.org/web/packages/pls/vignettes/pls-manual.pdf)
+
+Similar syntax to `lm` formula but specify the number of PCs (`ncomp`)
+
+
+```r
+library(pls)
+nfl_pcr_fit &lt;- pcr(score_diff ~ ., ncomp = 2, scale = TRUE, data = nfl_model_data)
+summary(nfl_pcr_fit)
+```
+
+```
+## Data: 	X dimension: 480 48 
+## 	Y dimension: 480 1
+## Fit method: svdpc
+## Number of components considered: 2
+## TRAINING: % variance explained
+##             1 comps  2 comps
+## X             21.49    41.62
+## score_diff    84.01    87.49
+```
+
+---
+
+## Tuning PCR with [`caret`](http://topepo.github.io/caret/index.html)
+
+To perform PCR __we need to tune the number of principal components__
+
+.pull-left[
+
+- Tune # components in PCR with [`caret`](http://topepo.github.io/caret/index.html)
+
+- `train` with 10-fold CV using `pcr` from [`pls`](https://cran.r-project.org/web/packages/pls/vignettes/pls-manual.pdf)
+
+
+```r
+set.seed(2013)
+library(caret)
+cv_model_pcr &lt;- train(
+  score_diff ~ ., 
+  data = nfl_model_data, 
+* method = "pcr",
+  trControl = trainControl(method = "cv", number = 10),
+* preProcess = c("center", "scale"),
+  tuneLength = ncol(nfl_model_data) - 1)
+ggplot(cv_model_pcr) + theme_bw()
+```
+
+
+]
+.pull-right[
+
+&lt;img src="18-slides_files/figure-html/unnamed-chunk-3-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+## Tuning PCR with [`caret`](http://topepo.github.io/caret/index.html)
+
+By default returns model with minimum CV error as `finalModel`
+
+
+```r
+summary(cv_model_pcr$finalModel)
+```
+
+```
+## Data: 	X dimension: 480 48 
+## 	Y dimension: 480 1
+## Fit method: svdpc
+## Number of components considered: 43
+## TRAINING: % variance explained
+##           1 comps  2 comps  3 comps  4 comps  5 comps  6 comps  7 comps
+## X           21.49    41.62    53.04    61.70    66.63    70.79     74.5
+## .outcome    84.01    87.49    87.75    89.69    89.69    90.06     90.2
+##           8 comps  9 comps  10 comps  11 comps  12 comps  13 comps  14 comps
+## X           77.81    80.56     83.10     85.27     87.18     88.99     90.43
+## .outcome    90.31    90.32     90.66     90.82     91.03     91.05     91.12
+##           15 comps  16 comps  17 comps  18 comps  19 comps  20 comps  21 comps
+## X            91.85     93.10     94.00     94.76     95.49     96.18     96.79
+## .outcome     91.15     91.28     91.28     91.28     91.28     91.34     91.71
+##           22 comps  23 comps  24 comps  25 comps  26 comps  27 comps  28 comps
+## X            97.30     97.77     98.21     98.57     98.84     99.07     99.29
+## .outcome     91.73     91.80     91.95     91.96     92.64     92.72     92.79
+##           29 comps  30 comps  31 comps  32 comps  33 comps  34 comps  35 comps
+## X            99.47     99.61     99.74     99.85     99.88     99.91     99.94
+## .outcome     93.46     93.53     93.81     94.51     94.52     94.55     94.61
+##           36 comps  37 comps  38 comps  39 comps  40 comps  41 comps  42 comps
+## X            99.95     99.97     99.98     99.99     99.99     99.99     99.99
+## .outcome     94.79     94.80     94.82     94.82     94.83     94.83     94.89
+##           43 comps
+## X           100.00
+## .outcome     94.96
+```
+
+---
+
+## Tuning PCR with [`caret`](http://topepo.github.io/caret/index.html)
+
+Modify `selectionFunction` in `train` to be the `oneSE` rule
+
+.pull-left[
+
+
+```r
+set.seed(2013)
+cv_model_pcr_onese &lt;- train(
+  score_diff ~ ., 
+  data = nfl_model_data, 
+* method = "pcr",
+  trControl = 
+    trainControl(method = "cv", number = 10,
+*                selectionFunction = "oneSE"),
+  preProcess = c("center", "scale"),
+  tuneLength = ncol(nfl_model_data) - 1)
+```
+
+]
+.pull-right[
+
+
+```r
+summary(cv_model_pcr_onese$finalModel)
+```
+
+```
+## Data: 	X dimension: 480 48 
+## 	Y dimension: 480 1
+## Fit method: svdpc
+## Number of components considered: 32
+## TRAINING: % variance explained
+##           1 comps  2 comps  3 comps  4 comps  5 comps  6 comps  7 comps
+## X           21.49    41.62    53.04    61.70    66.63    70.79     74.5
+## .outcome    84.01    87.49    87.75    89.69    89.69    90.06     90.2
+##           8 comps  9 comps  10 comps  11 comps  12 comps  13 comps  14 comps
+## X           77.81    80.56     83.10     85.27     87.18     88.99     90.43
+## .outcome    90.31    90.32     90.66     90.82     91.03     91.05     91.12
+##           15 comps  16 comps  17 comps  18 comps  19 comps  20 comps  21 comps
+## X            91.85     93.10     94.00     94.76     95.49     96.18     96.79
+## .outcome     91.15     91.28     91.28     91.28     91.28     91.34     91.71
+##           22 comps  23 comps  24 comps  25 comps  26 comps  27 comps  28 comps
+## X            97.30     97.77     98.21     98.57     98.84     99.07     99.29
+## .outcome     91.73     91.80     91.95     91.96     92.64     92.72     92.79
+##           29 comps  30 comps  31 comps  32 comps
+## X            99.47     99.61     99.74     99.85
+## .outcome     93.46     93.53     93.81     94.51
+```
+
+]
+
+---
+
+## Partial least squares (PLS)
+
+__PCR is agnostic of response variable__
+
+&lt;img src="https://bradleyboehmke.github.io/HOML/images/pls-vs-pcr.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## PLS as supervised dimension reduction
+
+__First principal component__ in PCA:
+
+`$$Z_1 = \phi_{11} X_1 + \phi_{21} X_2 + \dots + \phi_{p1} X_p$$`
+
+--
+
+In PLS we set `\(\phi_{j1}\)` to the coefficient from __simple linear regression__ of `\(Y\)` on each `\(X_j\)`
+
+  - Remember this slope is proportional to the correlation! `\(\widehat{\beta}_{} = r_{X,Y} \cdot \frac{s_Y}{s_X}\)`
+  
+  - Thus `\(Z_1\)` in PLS places most weight on variables strongly related to response `\(Y\)`
+
+--
+
+To compute `\(Z_2\)` for PLS:
+
+  - Regress each `\(X_j\)` on `\(Z_1\)`, residuals capture signal not explained by `\(Z_1\)`
+  
+  - Set `\(\phi_{j2}\)` to the coefficient from __simple linear regression__ of `\(Y\)` on these residuals for each variable
+  
+--
+
+Repeat process until all `\(Z_1, Z_2, \dots, Z_p\)` are computed (__PLS components__)
+
+Then regress `\(Y\)` on `\(Z_1, Z_2, \dots, Z_p^*\)`, where `\(p^* &lt; p\)` is a tuning parameter
+
+---
+
+## Tuning PLS with [`caret`](http://topepo.github.io/caret/index.html)
+
+.pull-left[
+
+
+```r
+set.seed(2013)
+cv_model_pls &lt;- train(
+  score_diff ~ ., 
+  data = nfl_model_data, 
+* method = "pls",
+  trControl = 
+    trainControl(method = "cv", number = 10,
+                 selectionFunction = "oneSE"), 
+  preProcess = c("center", "scale"),
+  tuneLength = ncol(nfl_model_data) - 1)
+ggplot(cv_model_pls) + theme_bw()
+```
+
+Sharp contrast with PCR results!
+
+Fewer PLS components because they are guided by the response variable
+
+]
+.pull-right[
+
+&lt;img src="18-slides_files/figure-html/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+--
+
+_But how do we summarize variable relationships without a single coefficient?_
+
+
+---
+
+## Variable importance with [`vip` package](https://cran.r-project.org/web/packages/vip/vignettes/vip-introduction.pdf)
+
+
+__Variable importance__ attempts to quantify how influential variables are in the model
+
+  - e.g., absolute value of `\(t\)`-statistic in regression
+  
+--
+
+__For PLS__:  weighted sums of the absolute regression coefficients across components 
+
+  - Weights are function of reduction of RSS across the number of PLS components
+  
+--
+
+.pull-left[
+
+```r
+# Check out `cv_model_pls$finalModel$coefficients`
+library(vip)
+*vip(cv_model_pls, num_features = 10,
+*   method = "model") +
+  theme_bw() 
+```
+]
+
+.pull-right[
+&lt;img src="18-slides_files/figure-html/unnamed-chunk-8-1.png" width="576" /&gt;
+]
+
+---
+
+## Partial dependence plots (PDP) with [`pdp` package](https://bgreenwell.github.io/pdp/index.html)
+
+PDPs display the change in the average predicted response as the predictor varies over their marginal distribution
+
+  - More useful for non-linear models later on!
+  
+
+```r
+library(pdp)
+*partial(cv_model_pls, "offense_total_epa_pass", plot = TRUE)
+```
+
+&lt;img src="18-slides_files/figure-html/pdp-example-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

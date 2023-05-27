@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data Visualization</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Data Visualization
+]
+.subtitle[
+## Density estimation
+]
+.date[
+### June 13th, 2022
+]
+
+---
+
+
+
+
+
+
+## New dataset - Stephen Curry's shots
+
+Created dataset of shot attempts by the Stephen Curry in 2021-2022 season using [`nbastatR`](http://asbcllc.com/nbastatR/)
+
+
+```r
+library(tidyverse)
+curry_shots &lt;- 
+  read_csv("http://www.stat.cmu.edu/cmsac/sure/2022/materials/data/sports/xy_examples/curry_2022_shots.csv")
+head(curry_shots)
+```
+
+```
+## # A tibble: 6 × 8
+##   shot_x shot_y shot_distance is_shot_made period fg_type        shot_…¹ shot_…²
+##    &lt;dbl&gt;  &lt;dbl&gt;         &lt;dbl&gt; &lt;lgl&gt;         &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;   &lt;chr&gt;  
+## 1   -109    260            28 FALSE             1 3PT Field Goal Above … Pullup…
+## 2     48    257            26 FALSE             1 3PT Field Goal Above … Runnin…
+## 3   -165    189            25 TRUE              1 3PT Field Goal Above … Jump S…
+## 4    -13     12             1 FALSE             1 2PT Field Goal Restri… Drivin…
+## 5    -15     22             2 FALSE             1 2PT Field Goal Restri… Layup …
+## 6     18     16             2 FALSE             1 2PT Field Goal Restri… Drivin…
+## # … with abbreviated variable names ¹​shot_zone, ²​shot_type
+```
+
+- each row / observation is a shot attempt by Curry in the 2021 season
+- __Categorical__ / qualitative variables: `is_shot_made`, `fg_type`, `shot_zone`, `shot_type`
+- __Continuous__ / quantitative variables: `shot_x`, `shot_y`, `shot_distance`
+
+---
+
+## Back to [histograms](https://ggplot2.tidyverse.org/reference/geom_histogram.html)...
+
+--
+
+.pull-left[
+
+
+```r
+fd_bw &lt;- 2 * IQR(curry_shots$shot_distance) / length(curry_shots$shot_distance)^(1/3)
+curry_shots %&gt;%
+  ggplot(aes(x = shot_distance)) +
+  geom_histogram(binwidth = fd_bw) +
+  theme_bw()
+```
+
+- Split observed data into __bins__
+
+- __Count__ number of observations in each bin
+
+__Need to choose the number of bins__, adjust with:
+
+- `bins` - number of bins (default is 30)
+
+- `binwidth` - literally the width of bins (overrides `bins`), various [rules of thumb](https://en.wikipedia.org/wiki/Histogram)
+
+  - e.g., see `fd_bw` for [Freedman–Diaconis rule](https://en.wikipedia.org/wiki/Freedman%E2%80%93Diaconis_rule)
+
+- `breaks` - vector of bin boundaries (overrides both `bins` and `binwidth`)
+]
+
+.pull-right[
+&lt;img src="06-slides_files/figure-html/unnamed-chunk-1-1.png" width="504" /&gt;
+]
+
+---
+
+## Adjusting the bin width
+
+
+.pull-left[
+__Small__ `binwidth`  `\(\rightarrow\)` _"undersmooth"_ / spiky
+
+
+```r
+curry_shots %&gt;%
+  ggplot(aes(x = shot_distance)) +
+* geom_histogram(binwidth = 1) +
+  theme_bw()
+```
+
+&lt;img src="06-slides_files/figure-html/shot-dist-hist-small-1.png" width="504" /&gt;
+
+
+]
+
+.pull-right[
+
+__Large__ `binwidth`  `\(\rightarrow\)` _"oversmooth"_ / flat
+
+
+
+```r
+curry_shots %&gt;%
+  ggplot(aes(x = shot_distance)) +
+* geom_histogram(binwidth = 25) +
+  theme_bw()
+```
+
+&lt;img src="06-slides_files/figure-html/shot-dist-hist-large-1.png" width="504" /&gt;
+
+]
+
+__Try several approaches, the `R` / `ggplot2` default is NOT guaranteed to be an optimal choice__
+
+---
+
+### A subtle point about the histogram code...
+
+.pull-left[
+
+By default the bins are centered on the integers...
+
+- left-closed, right-open intervals 
+- starting at -0.5 to 0.5, 0.5 to 1.5, ...
+
+
+```r
+curry_shots %&gt;%
+  ggplot(aes(x = shot_distance)) +
+* geom_histogram(binwidth = 1) +
+  theme_bw()
+```
+
+&lt;img src="06-slides_files/figure-html/unnamed-chunk-2-1.png" width="504" /&gt;
+
+]
+
+.pull-right[
+
+__Specify center of one bin__ (e.g. 0.5)
+
+- Reminder to use `closed = "left"`...
+
+
+```r
+curry_shots %&gt;%
+  ggplot(aes(x = shot_distance)) +
+* geom_histogram(binwidth = 1, center = 0.5,
+*                closed = "left") +
+  theme_bw()
+```
+
+&lt;img src="06-slides_files/figure-html/shot-dist-hist-shift-1.png" width="504" /&gt;
+
+]
+
+---
+
+### How do histograms relate to the PDF and CDF?
+
+__Remember__: we use the __probability density function (PDF)__ to provide a __relative likelihood__
+
+--
+- PDF is the __derivative__ of the cumulative distribution function (CDF)
+
+
+--
+- Histograms approximate the PDF with bins, and __points are equally likely within a bin__
+
+.pull-left[
+&lt;img src="06-slides_files/figure-html/shot-dist-hist-left-1.png" width="504" /&gt;
+]
+.pull-right[
+&lt;img src="06-slides_files/figure-html/shot-dist-ecdf-right-1.png" width="504" /&gt;
+
+]
+
+
+--
+__What can say about the relative likelihood of data we have not observed?__
+
+- we want __non-zero density__ between our observations, e.g., just beyond 20 feet
+
+---
+
+## Kernel density estimation
+
+__Goal__: estimate the PDF `\(f(x)\)` for all possible values (assuming it is continuous / smooth)
+
+--
+
+$$
+\text{Kernel density estimate: } \hat{f}(x) = \frac{1}{n} \sum_{i=1}^n \frac{1}{h} K_h(x - x_i)
+$$
+
+--
+- `\(n =\)` sample size, `\(x =\)` new point to estimate `\(f(x)\)` (does NOT have to be in dataset!)
+
+
+--
+- `\(h =\)` __bandwidth__, analogous to histogram bin width, ensures `\(\hat{f}(x)\)` integrates to 1
+
+- `\(x_i =\)` `\(i\)`th observation in dataset
+
+
+--
+- `\(K_h(x - x_i)\)` is the __Kernel__ function, creates __weight__ given distance of `\(i\)`th observation from new point 
+  - as `\(|x - x_i| \rightarrow \infty\)` then `\(K_h(x - x_i) \rightarrow 0\)`, i.e. further apart `\(i\)`th row is from `\(x\)`, smaller the weight
+  
+  - as __bandwidth__ `\(h \uparrow\)` weights are more evenly spread out (as `\(h \downarrow\)` more concentrated around `\(x\)`) 
+
+  - typically use [__Gaussian__ / Normal](https://en.wikipedia.org/wiki/Normal_distribution) kernel: `\(\propto e^{-(x - x_i)^2 / 2h^2}\)`
+  
+  - `\(K_h(x - x_i)\)` is large when `\(x_i\)` is close to `\(x\)`
+  
+
+---
+
+## [Wikipedia example](https://en.wikipedia.org/wiki/Kernel_density_estimation)
+
+.center[![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Comparison_of_1D_histogram_and_KDE.png/1000px-Comparison_of_1D_histogram_and_KDE.png)]
+  
+---
+
+## How do we compute and display the density estimate?
+
+.pull-left[
+
+- We make __kernel density estimates__ with [`geom_density()`](https://ggplot2.tidyverse.org/reference/geom_density.html)
+
+
+```r
+curry_shots %&gt;%
+  ggplot(aes(x = shot_distance)) + 
+* geom_density() +
+  geom_rug(alpha = 0.3) +
+  theme_bw()
+```
+
+- __Pros__:
+  - Displays full shape of distribution
+  - Can easily layer
+  - Add categorical variable with color
+
+- __Cons__:
+  - Need to pick bandwidth and kernel...
+  
+]
+.pull-right[
+&lt;img src="06-slides_files/figure-html/unnamed-chunk-3-1.png" width="504" /&gt;
+]
+
+---
+
+## What about the bandwidth? See [Chapter 14 for more...](https://www.stat.cmu.edu/~cshalizi/ADAfaEPoV/)
+
+Use __Gaussian reference rule__ (_rule-of-thumb_) `\(\approx 1.06 \cdot \sigma \cdot n^{-1/5}\)`, where `\(\sigma\)` is the observed standard deviation
+
+Modify the bandwidth using the `adjust` argument - __value to multiply default bandwidth by__
+
+.pull-left[
+
+```r
+curry_shots %&gt;%
+  ggplot(aes(x = shot_distance)) + 
+* geom_density(adjust = 0.5) +
+  geom_rug(alpha = 0.3) + theme_bw()
+```
+
+&lt;img src="06-slides_files/figure-html/curve-noisy-1.png" width="504" /&gt;
+
+  
+]
+.pull-right[
+
+```r
+curry_shots %&gt;%
+  ggplot(aes(x = shot_distance)) + 
+* geom_density(adjust = 2) +
+  geom_rug(alpha = 0.3) + theme_bw()
+```
+
+&lt;img src="06-slides_files/figure-html/curve-smooth-1.png" width="504" /&gt;
+]
+
+---
+
+## Use density curves and ECDFs together
+
+
+&lt;img src="06-slides_files/figure-html/shot-dist-curve-ecdf-1.png" width="1152" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Code interlude: easy way to arrange multiple figures
+
+Use the new [`patchwork`](https://patchwork.data-imaginist.com/index.html) package to easily arrange your plots (see also [`cowplot`](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html))
+
+
+```r
+*library(patchwork)
+curry_shot_dens &lt;- curry_shots %&gt;%
+  ggplot(aes(x = shot_distance)) + 
+  geom_density() +
+  geom_rug(alpha = 0.3) +
+  theme_bw() +
+  labs(x = "Shot distance (in feet)",
+       y = "Number of shot attempts")
+curry_shot_ecdf &lt;- curry_shots %&gt;%
+  ggplot(aes(x = shot_distance)) + 
+  stat_ecdf() +
+  geom_rug(alpha = 0.3) +
+  theme_bw() +
+  labs(x = "Shot distance (in feet)",
+       y = "Proportion of Curry shot attempts")
+*curry_shot_dens + curry_shot_ecdf
+```
+
+
+---
+
+## Use density curves and ECDFs together
+
+&lt;img src="06-slides_files/figure-html/shot-dist-curve-ecdf-color-1.png" width="1152" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Another code interlude: [collect the legends](https://patchwork.data-imaginist.com/articles/guides/layout.html#controlling-guides)
+
+
+```r
+curry_shot_dens_made &lt;- curry_shots %&gt;%
+  ggplot(aes(x = shot_distance, 
+             color = is_shot_made)) + 
+  geom_density() +
+  geom_rug(alpha = 0.3) +
+  theme_bw() +
+  labs(x = "Shot distance (in feet)",
+       y = "Number of shot attempts")
+curry_shot_ecdf_made &lt;- curry_shots %&gt;%
+  ggplot(aes(x = shot_distance,
+             color = is_shot_made)) + 
+  stat_ecdf() +
+  geom_rug(alpha = 0.3) +
+  theme_bw() +
+  labs(x = "Shot distance (in feet)",
+       y = "Proportion of Curry shot attempts")
+*curry_shot_dens_made + curry_shot_ecdf_made + plot_layout(guides = 'collect')
+```
+
+---
+
+## Alternative to violins - ridge plots
+
+.pull-left[
+
+- Check out the [`ggridges`](https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html) package for a variety of customization options
+
+
+```r
+library(ggridges)
+curry_shots %&gt;%
+  ggplot(aes(x = shot_distance,
+*            y = shot_type)) +
+* geom_density_ridges(rel_min_height = 0.01) +
+  theme_bw()
+```
+
+- Useful to display conditional distributions across many levels
+]
+.pull-right[
+&lt;img src="06-slides_files/figure-html/unnamed-chunk-6-1.png" width="504" /&gt;
+]
+
+
+---
+
+## What about for 2D? (two continuous variables)
+
+We can visualize all of the shot locations: (`shot_x`, `shot_y`)
+
+.pull-left[
+
+
+```r
+curry_shots %&gt;%
+  # Modify the shot coordinates
+  mutate(shot_x = -shot_x / 10,
+         shot_y = shot_y / 10) %&gt;%
+* ggplot(aes(x = shot_x, y = shot_y)) +
+* geom_point(alpha = 0.3) +
+  theme_bw()
+```
+
+- Adjust transparency with `alpha` for overlapping points
+
+]
+.pull-right[
+&lt;img src="06-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" /&gt;
+
+]  
+
+---
+
+## Create contours of 2D kernel density estimate (KDE)
+
+
+.pull-left[
+
+- We make 2D KDE __contour__ plots using [`geom_density2d()`](https://ggplot2.tidyverse.org/reference/geom_density_2d.html)
+
+
+```r
+curry_shots %&gt;%
+  # Modify the shot coordinates
+  mutate(shot_x = -shot_x / 10,
+         shot_y = shot_y / 10) %&gt;%
+  filter(shot_y &lt;= 30) %&gt;%
+  ggplot(aes(x = shot_x, y = shot_y)) + 
+  geom_point(alpha = 0.3) + 
+* geom_density2d() +
+  theme_bw() + theme(legend.position = "bottom") +
+* coord_fixed()
+```
+
+- Extend KDE for joint density estimates in 2D (see [section 14.4.2 for details](https://www.stat.cmu.edu/~cshalizi/ADAfaEPoV/))
+
+- `coord_fixed()` forced a fixed ratio
+
+]
+.pull-right[
+&lt;img src="06-slides_files/figure-html/unnamed-chunk-8-1.png" width="504" /&gt;
+
+]  
+
+---
+
+## Create contours of 2D kernel density estimate (KDE)
+
+
+.pull-left[
+
+- We make 2D KDE __contour__ plots using [`geom_density2d()`](https://ggplot2.tidyverse.org/reference/geom_density_2d.html)
+
+
+```r
+curry_shots %&gt;%
+  # Modify the shot coordinates
+  mutate(shot_x = -shot_x / 10,
+         shot_y = shot_y / 10) %&gt;%
+  # Remove the outlier shots:
+  filter(shot_y &lt;= 30) %&gt;%
+  ggplot(aes(x = shot_x, y = shot_y)) + 
+  geom_point(alpha = 0.3) + 
+* geom_density2d(adjust = 0.1) +
+  theme_bw() + 
+  theme(legend.position = "bottom") +
+  coord_fixed()
+```
+
+- Can use `adjust` to modify the multivariate bandwidth
+
+]
+.pull-right[
+&lt;img src="06-slides_files/figure-html/unnamed-chunk-9-1.png" width="504" /&gt;
+
+]  
+
+---
+
+## Contours are difficult... let's make a heatmap instead
+
+.pull-left[
+
+- We make 2D KDE __heatmap__ plots using [`stat_density_2d()`](https://ggplot2.tidyverse.org/reference/geom_density_2d.html)
+and the `..` or [`after_stat()`](https://ggplot2.tidyverse.org/reference/aes_eval.html) function
+
+
+```r
+curry_shots %&gt;%
+  mutate(shot_x = -shot_x / 10,
+         shot_y = shot_y / 10) %&gt;%
+  filter(shot_y &lt;= 30) %&gt;%
+  ggplot(aes(x = shot_x, y = shot_y)) + 
+* stat_density2d(h = 0.5, bins = 60,
+*                aes(fill = after_stat(level)),
+*                geom = "polygon") +
+* scale_fill_gradient(low = "darkblue",
+*                     high = "darkorange") +
+  theme_bw() + theme(legend.position = "bottom") +
+  coord_fixed()
+```
+
+__Multivariate density estimation can be difficult__
+
+]
+.pull-right[
+&lt;img src="06-slides_files/figure-html/unnamed-chunk-10-1.png" width="504" /&gt;
+
+]  
+
+---
+
+
+
+## Turn off contours and use tiles instead
+
+
+.pull-left[ 
+- We make 2D KDE __heatmap__ plots using [`stat_density_2d()`](https://ggplot2.tidyverse.org/reference/geom_density_2d.html)
+and the `..` or [`after_stat()`](https://ggplot2.tidyverse.org/reference/aes_eval.html) function
+
+
+```r
+curry_shots %&gt;%
+  mutate(shot_x = -shot_x / 10,
+         shot_y = shot_y / 10) %&gt;%
+  filter(shot_y &lt;= 30) %&gt;%
+  ggplot(aes(x = shot_x, y = shot_y)) + 
+  stat_density2d(h = 0.5, bins = 60,
+*                contour = FALSE,
+*                aes(fill = after_stat(density)),
+*                geom = "raster") +
+* scale_fill_gradient(low = "darkblue",
+*                     high = "darkorange") +
+  theme_bw() + theme(legend.position = "bottom") +
+  coord_fixed()
+```
+
+
+]
+.pull-right[
+&lt;img src="06-slides_files/figure-html/unnamed-chunk-11-1.png" width="504" /&gt;
+
+]  
+
+---
+
+## Best alternative? Hexagonal binning
+
+
+.pull-left[ 
+- We make __hexagonal heatmap__ plots using [`geom_hex()`](https://ggplot2.tidyverse.org/reference/geom_hex.html)
+
+- Need to have the [`hexbin`](https://cran.r-project.org/web/packages/hexbin/index.html) package installed
+
+
+```r
+curry_shots %&gt;%
+  mutate(shot_x = -shot_x / 10,
+         shot_y = shot_y / 10) %&gt;%
+  filter(shot_y &lt;= 30) %&gt;%
+  ggplot(aes(x = shot_x, y = shot_y)) + 
+* geom_hex(binwidth = c(1, 1)) +
+  scale_fill_gradient(low = "darkblue", 
+                      high = "darkorange") + 
+  theme_bw() + theme(legend.position = "bottom") +
+  coord_fixed()
+```
+
+- Can specify `binwidth` in both directions
+- Avoids limitations from smoothing
+
+]
+.pull-right[
+&lt;img src="06-slides_files/figure-html/unnamed-chunk-12-1.png" width="504" /&gt;
+
+]  
+
+
+---
+
+## What about his shooting efficiency?
+
+- Can compute a function of another variable inside hexagons with [`stat_summary_hex()`](https://ggplot2.tidyverse.org/reference/stat_summary_2d.html)
+
+- Check out [BallR](https://github.com/toddwschneider/ballr) for code examples to make shot charts and drawing courts
+
+
+.pull-left[
+
+```r
+curry_shots %&gt;%
+  mutate(shot_x = -shot_x / 10,
+         shot_y = shot_y / 10) %&gt;%
+  filter(shot_y &lt;= 30) %&gt;%
+  ggplot(aes(x = shot_x, y = shot_y, 
+*            z = is_shot_made,
+*            group = -1)) +
+* stat_summary_hex(binwidth = c(2, 2),
+*                  color = "black",
+*                  fun = mean) +
+  scale_fill_gradient(low = "darkblue", 
+                      high = "darkorange") + 
+  theme_bw() + theme(legend.position = "bottom") +
+  coord_fixed()
+```
+
+]
+.pull-right[
+&lt;img src="06-slides_files/figure-html/unnamed-chunk-13-1.png" width="504" /&gt;
+]  
+
+
+
+
+
+
+
+
+  
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

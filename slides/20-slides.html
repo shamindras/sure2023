@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Supervised Learning</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Supervised Learning
+]
+.subtitle[
+## Smoothing splines and GAMs
+]
+.date[
+### July 9th, 2021
+]
+
+---
+
+
+
+
+
+## Kernel regression
+
+__Nadaraya-Watson kernel regression__
+
+- given training data with explanatory variable `\(x\)` and continuous response `\(y\)` 
+
+- _bandwidth_ `\(h &gt; 0\)`
+
+- and a new point `\((x_{new}, y_{new})\)`: 
+
+`$$\hat{y}_{new} = \sum_{i=1}^n w_i(x_{new})\cdot y_i \,,$$`
+
+where
+
+`$$w_i(x) = \frac{K_h\left(|x_{new}-x_i|\right)}{\sum_{j=1}^n K_h\left(|x_{new}-x_j|\right)} \text{ with } K_h(x) = K(\frac{x}{h})$$`
+
+Example of a __linear smoother__
+
+- class of models where predictions are _weighted_ sums of the response variable
+
+---
+
+## Local regression
+
+We can fit a linear model __at each point `\(x_{new}\)`__ with weights given by kernel function centered on `\(x_{new}\)`
+
+- we can additionally combine this with _polynomial regression_
+
+--
+
+Local regression of the `\(k^{th}\)` order with kernel function `\(K\)` solves the following:
+
+`$$\hat{\beta}(x_{new}) = \underset{\beta}{\text{arg min}}\Big\{ \sum_i K_h(|x_{new} - x_i|) \cdot (y_i - \sum_{j=0}^k x_i^k \cdot \beta_k )^2 \Big\}$$`
+
+--
+__Yes, this means every single observation has its own set of coefficients__
+
+
+--
+
+Predicted value is then:
+
+`$$\hat{y}_{new} = \sum_{j=0}^k x_{new}^k \cdot \hat{\beta}_k(x_{new})$$`
+
+
+--
+
+Smoother predictions than kernel regression but comes at __higher computational cost__ 
+
+- __LOESS__ replaces kernel with k nearest neighbors
+  
+  - faster than local regression but discontinuities when neighbors change
+
+
+---
+
+## Smoothing splines
+
+
+Use __smooth function__ `\(s(x)\)` to predict `\(y\)`, control smoothness directly by minimizing the __spline objective function__:
+
+`$$\sum_{i=1}^n (y_i - s(x_i))^2 + \lambda \int(s''(x))^2dx$$`
+
+
+--
+
+`$$= \text{fit data} + \text{impose smoothness}$$`
+
+--
+
+`$$\Rightarrow \text{model fit} = \text{likelihood} - \lambda \cdot \text{wiggliness}$$`
+Estimate the __smoothing spline__ `\(\hat{s}(x)\)` that __balances the tradeoff between the model fit and wiggliness__
+
+
+--
+&lt;img src="https://github.com/noamross/gams-in-r-course/blob/master/images/diffsmooth-1.png?raw=true" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Basis functions
+
+Splines are _piecewise cubic polynomials_ with __knots__ (boundary points for functions) at every data point
+
+
+--
+
+Practical alternative: linear combination of set of __basis functions__
+
+
+--
+__Cubic polynomial example__: define four basis functions:
+
+- `\(B_1(x) = 1\)`, `\(B_2(x) = x\)`, `\(B_3(x) = x^2\)`, `\(B_4(x) = x^3\)`
+
+where the regression function `\(r(x)\)` is written as:
+
+`$$r(x) = \sum_j^4 \beta_j B_j(x)$$`
+
+
+--
+- __linear in the transformed variables__ `\(B_1(x), \dots, B_4(x)\)` but it is __nonlinear in `\(x\)`__
+
+
+--
+We extend this idea for splines _piecewise_ using indicator functions so the spline is a weighted sum:
+
+`$$s(x) = \sum_j^m \beta_j B_j(x)$$`
+
+---
+
+## Number of basis functions is another tuning parameter
+
+&lt;img src="https://github.com/noamross/gams-in-r-course/blob/master/images/diffbasis-1.png?raw=true" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+## Generalized additive models (GAMs)
+
+GAMs were created by [Trevor Hastie and Rob Tibshirani in 1986](https://projecteuclid.org/euclid.ss/1177013604) with intuitive construction:
+
+- relationships between individual explanatory variables and the response variable are smooth (either linear or nonlinear via basis functions)
+
+- estimate the smooth relationships __simultaneously__ to predict the response by just adding them up
+
+__Generalized__ like GLMs where `\(g()\)` is the link function for the expected value of the response `\(E(Y)\)` and __additive__ over the `\(p\)` variables:
+
+`$$g(E(Y)) = \beta_0 + s_1(x_1) + s_2(x_2) + \dots + s_p(x_p)$$`
+
+&lt;img src="https://multithreaded.stitchfix.com/assets/images/blog/fig1.svg" width="70%" style="display: block; margin: auto;" /&gt;
+
+
+--
+
+- can be a convenient balance between flexibility and interpretability
+
+- you can combine linear and nonlinear terms!
+
+---
+
+## Example: predicting MLB HR probability
+
+Used the [`baseballr`](http://billpetti.github.io/baseballr/) package to scrape all batted-balls from 2019 season:
+
+
+```r
+library(tidyverse)
+batted_ball_data &lt;- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/eda_projects/mlb_batted_balls_2021.csv") %&gt;%
+  mutate(is_hr = as.numeric(events == "home_run")) %&gt;%
+  filter(!is.na(launch_angle), !is.na(launch_speed),
+         !is.na(is_hr))
+head(batted_ball_data)
+```
+
+```
+## # A tibble: 6 × 32
+##   player_name    batter stand events  hc_x  hc_y hit_d…¹ launc…² launc…³ hit_l…⁴
+##   &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Ahmed, Nick    605113 R     single  94.3  94.7     272    86.3      19       7
+## 2 Herrera, Odúb… 546318 L     field…  97.7  86.7     289    90.7      44       8
+## 3 Davis, Jonath… 641505 R     field… 121.  107.      233    87        52       8
+## 4 Harrison, Josh 543281 R     field… 116.  148.      159    53        38       6
+## 5 Smith, Pavin   656976 L     field…  79.2  75.4     328    99.1      19       7
+## 6 Hernández, Te… 606192 R     single  44.0  78.8     357   104.       22       7
+## # … with 22 more variables: bb_type &lt;chr&gt;, barrel &lt;dbl&gt;, pitch_type &lt;chr&gt;,
+## #   release_speed &lt;dbl&gt;, effective_speed &lt;dbl&gt;, if_fielding_alignment &lt;chr&gt;,
+## #   of_fielding_alignment &lt;chr&gt;, game_date &lt;date&gt;, balls &lt;dbl&gt;, strikes &lt;dbl&gt;,
+## #   outs_when_up &lt;dbl&gt;, on_1b &lt;dbl&gt;, on_2b &lt;dbl&gt;, on_3b &lt;dbl&gt;, inning &lt;dbl&gt;,
+## #   inning_topbot &lt;chr&gt;, home_score &lt;dbl&gt;, away_score &lt;dbl&gt;,
+## #   post_home_score &lt;dbl&gt;, post_away_score &lt;dbl&gt;, des &lt;chr&gt;, is_hr &lt;dbl&gt;, and
+## #   abbreviated variable names ¹​hit_distance_sc, ²​launch_speed, …
+```
+
+```r
+table(batted_ball_data$is_hr)
+```
+
+```
+## 
+##    0    1 
+## 6437  318
+```
+
+---
+
+## Predict HRs with launch angle and exit velocity?
+
+.pull-left[
+
+```r
+batted_ball_data %&gt;%
+  ggplot(aes(x = launch_speed, 
+             y = launch_angle,
+             color = as.factor(is_hr))) +
+  geom_point(alpha = 0.5) +
+  ggthemes::scale_color_colorblind(labels = c("No", "Yes")) +
+  labs(x = "Exit velocity", 
+       y = "Launch angle", 
+       color = "HR?") +
+  theme_bw() +
+  theme(legend.position = "bottom")
+```
+
+- HRs are relatively rare and confined to one area of this plot
+
+]
+.pull-right[
+&lt;img src="20-slides_files/figure-html/unnamed-chunk-4-1.png" width="504" /&gt;
+
+]
+
+---
+
+## Fitting GAMs with [`mgcv`](https://cran.r-project.org/web/packages/mgcv/index.html)
+
+First set-up training data
+
+
+```r
+set.seed(2004)
+batted_ball_data &lt;- batted_ball_data %&gt;%
+  mutate(is_train = sample(rep(0:1, length.out = nrow(batted_ball_data))))
+```
+
+Next fit the initial function using smooth functions via `s()`:
+
+
+```r
+library(mgcv)
+*init_logit_gam &lt;- gam(is_hr ~ s(launch_speed) + s(launch_angle),
+                      data = filter(batted_ball_data, is_train == 1), 
+*                     family = binomial, method = "REML")
+```
+
+ - Use [REML](https://en.wikipedia.org/wiki/Restricted_maximum_likelihood) instead of the default for more stable solution
+
+---
+
+### GAM summary
+
+
+```r
+summary(init_logit_gam)
+```
+
+```
+## 
+## Family: binomial 
+## Link function: logit 
+## 
+## Formula:
+## is_hr ~ s(launch_speed) + s(launch_angle)
+## 
+## Parametric coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)  
+## (Intercept)   -34.14      13.91  -2.455   0.0141 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Approximate significance of smooth terms:
+##                   edf Ref.df Chi.sq p-value    
+## s(launch_speed) 1.928  2.388 172.22  &lt;2e-16 ***
+## s(launch_angle) 3.640  3.970  92.94  &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## R-sq.(adj) =  0.551   Deviance explained = 65.8%
+## -REML = 234.05  Scale est. = 1         n = 3377
+```
+
+
+---
+
+### Visualizing partial response functions with [gratia](https://gavinsimpson.github.io/gratia/index.html)
+
+Displays the partial effect of each term in the model `\(\Rightarrow\)` add up to the overall prediction 
+
+
+```r
+library(gratia)
+draw(init_logit_gam)
+```
+
+&lt;img src="20-slides_files/figure-html/unnamed-chunk-5-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Convert to probability scale with `plogis` function
+
+
+
+```r
+*draw(init_logit_gam, fun = plogis)
+```
+
+&lt;img src="20-slides_files/figure-html/unnamed-chunk-6-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+--
+
+- centered on average value of 0.5 because it's the partial effect without the intercept
+
+---
+
+## Include intercept in plot...
+
+
+```r
+*draw(init_logit_gam, fun = plogis, constant = coef(init_logit_gam)[1])
+```
+
+&lt;img src="20-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+Intercept reflects relatively rare occurence of HRs!
+
+---
+
+## Model checking for number of basis functions
+
+Use `gam.check()` to see if we need more basis functions based on an approximate test
+
+
+```r
+gam.check(init_logit_gam)
+```
+
+```
+## 
+## Method: REML   Optimizer: outer newton
+## full convergence after 9 iterations.
+## Gradient range [-0.0001120962,1.387397e-05]
+## (score 234.0517 &amp; scale 1).
+## Hessian positive definite, eigenvalue range [0.1473281,0.7723187].
+## Model rank =  19 / 19 
+## 
+## Basis dimension (k) checking results. Low p-value (k-index&lt;1) may
+## indicate that k is too low, especially if edf is close to k'.
+## 
+##                   k'  edf k-index p-value
+## s(launch_speed) 9.00 1.93    0.97    0.12
+## s(launch_angle) 9.00 3.64    1.03    0.97
+```
+
+
+---
+
+## Check the predictions?
+
+
+```r
+batted_ball_data &lt;- batted_ball_data %&gt;%
+  mutate(init_gam_hr_prob = 
+           as.numeric(predict(init_logit_gam,
+                              newdata = batted_ball_data,
+                              type = "response")),
+         init_gam_hr_class = as.numeric(init_gam_hr_prob &gt;= 0.5))
+batted_ball_data %&gt;%
+  group_by(is_train) %&gt;%
+  summarize(correct = mean(is_hr == init_gam_hr_class))
+```
+
+```
+## # A tibble: 2 × 2
+##   is_train correct
+##      &lt;int&gt;   &lt;dbl&gt;
+## 1        0   0.974
+## 2        1   0.970
+```
+
+---
+
+## What about the linear model?
+
+
+```r
+init_linear_logit &lt;- glm(is_hr ~ launch_speed + launch_angle, 
+                         data = filter(batted_ball_data, is_train == 1), 
+                         family = binomial)
+batted_ball_data &lt;- batted_ball_data %&gt;%
+  mutate(init_glm_hr_prob = predict(init_linear_logit,
+                                    newdata = batted_ball_data,
+                                    type = "response"),
+         init_glm_hr_class = as.numeric(init_glm_hr_prob &gt;= 0.5))
+batted_ball_data %&gt;%
+  group_by(is_train) %&gt;%
+  summarize(correct = mean(is_hr == init_glm_hr_class))
+```
+
+```
+## # A tibble: 2 × 2
+##   is_train correct
+##      &lt;int&gt;   &lt;dbl&gt;
+## 1        0   0.960
+## 2        1   0.954
+```
+
+
+__Very few situations in reality where linear regressions perform better than an additive model using smooth functions__ - especially since smooth functions can just capture linear models...
+
+---
+
+## Continuous interactions as a smooth surface
+
+
+```r
+multi_logit_gam &lt;- gam(is_hr ~ s(launch_speed, launch_angle), 
+                       data = filter(batted_ball_data, is_train == 1), 
+                       family = binomial)
+```
+
+Plot the predicted heatmap:
+
+
+```r
+draw(multi_logit_gam)
+```
+
+&lt;img src="20-slides_files/figure-html/unnamed-chunk-11-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Check the predictions?
+
+
+```r
+batted_ball_data &lt;- batted_ball_data %&gt;%
+  mutate(multi_gam_hr_prob =
+           as.numeric(predict(multi_logit_gam,
+                              newdata = batted_ball_data,
+                              type = "response")),
+         multi_gam_hr_class = as.numeric(multi_gam_hr_prob &gt;= 0.5))
+batted_ball_data %&gt;%
+  group_by(is_train) %&gt;%
+  summarize(correct = mean(is_hr == multi_gam_hr_class))
+```
+
+```
+## # A tibble: 2 × 2
+##   is_train correct
+##      &lt;int&gt;   &lt;dbl&gt;
+## 1        0   0.975
+## 2        1   0.971
+```
+
+
+- This has one smoothing parameter for the 2D smooth...
+
+---
+
+### Separate interactions from individual terms with tensor smooths
+
+
+```r
+tensor_logit_gam &lt;- gam(is_hr ~ s(launch_speed) + s(launch_angle) +
+*                         ti(launch_speed, launch_angle),
+                        data = filter(batted_ball_data, is_train == 1), family = binomial)
+```
+
+--
+
+Check the predictions
+
+
+```r
+batted_ball_data %&gt;%
+  mutate(tensor_gam_hr_prob =
+           as.numeric(predict(tensor_logit_gam, newdata = batted_ball_data, type = "response")),
+         tensor_gam_hr_class = as.numeric(tensor_gam_hr_prob &gt;= 0.5)) %&gt;%
+  group_by(is_train) %&gt;% 
+  summarize(correct = mean(is_hr == tensor_gam_hr_class))
+```
+
+```
+## # A tibble: 2 × 2
+##   is_train correct
+##      &lt;int&gt;   &lt;dbl&gt;
+## 1        0   0.975
+## 2        1   0.970
+```
+
+--
+
+__More complicated model but yet it does not help!__
+
+---
+
+## Recap and useful resources
+
+&lt;blockquote class="twitter-tweet"&gt;&lt;p lang="en" dir="ltr"&gt;140 char vrsn&lt;br&gt;&lt;br&gt;1 GAMs are just GLMs&lt;br&gt;2 GAMs fit wiggly terms&lt;br&gt;3 use + s(foo) not foo in frmla&lt;br&gt;4 use method = &amp;quot;REML&amp;quot;&lt;br&gt;5 gam.check()&lt;/p&gt;&amp;mdash; Dr Gavin Simpson 😷🇪🇺🇩🇰 (@ucfagls) &lt;a href="https://twitter.com/ucfagls/status/842444686513991680?ref_src=twsrc%5Etfw"&gt;March 16, 2017&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
+
+--
+
+- [GAMs in R by Noam Ross](https://noamross.github.io/gams-in-r-course/)
+
+- [`mgcv` course](https://eric-pedersen.github.io/mgcv-esa-workshop/)
+
+- [Stitch Fix post: GAM: The Predictive Modeling Silver Bullet](https://multithreaded.stitchfix.com/blog/2015/07/30/gam/)
+
+- Chapters 7 and 8 of [Advanced Data Analysis from an Elementary Point of View by Prof Cosma Shalizi](https://www.stat.cmu.edu/~cshalizi/ADAfaEPoV/ADAfaEPoV.pdf) 
+
+  - I strongly recommend you download this book, and you will refer back to it for the rest of your life
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

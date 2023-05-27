@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data Visualization</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Data Visualization
+]
+.subtitle[
+## Visualizing 1D categorical and continuous variables
+]
+.date[
+### June 9th, 2022
+]
+
+---
+
+
+
+
+
+
+## New dataset - 2021 MVP Shohei Ohtani's batted balls
+
+Created dataset of batted balls by the American League MVP Shohei Ohtani in 2021 season using [`baseballr`](http://billpetti.github.io/baseballr/):
+
+
+```r
+library(tidyverse)
+ohtani_batted_balls &lt;- 
+  read_csv("http://www.stat.cmu.edu/cmsac/sure/2022/materials/data/sports/xy_examples/ohtani_2021_batted_balls.csv")
+head(ohtani_batted_balls)
+```
+
+```
+## # A tibble: 6 × 7
+##   pitch_type batted_ball_type  hit_x hit_y exit_velocity launch_angle outcome  
+##   &lt;chr&gt;      &lt;chr&gt;             &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;        &lt;dbl&gt; &lt;chr&gt;    
+## 1 FC         line_drive        89.7  144.          113.            20 home_run 
+## 2 CH         fly_ball           3.35  83.9          83.9           55 field_out
+## 3 CH         fly_ball         -65.6  126.          102.            38 field_out
+## 4 CU         ground_ball       39.2   50.4          82.5            8 field_out
+## 5 FC         fly_ball         -37.6  138.          101.            23 field_out
+## 6 KC         popup            -51.9   41.6          84             65 field_out
+```
+
+--
+- each row / observation is a batted ball from Ohtani's 2021 season
+
+--
+- __Categorical__ / qualitative variables: `pitch_type`, `batted_ball_type`, `outcome`
+
+--
+- __Continuous__ / quantitative variables: `hit_x`, `hit_y`, `exit_velocity`, `launch_angle`
+
+---
+
+## Visualizing 1D categorical data
+
+How can we summarize `batted_ball_type` and other categorical variables?
+
+--
+
+.pull-left[
+
+- We make a __bar chart__ with [`geom_bar()`](https://ggplot2.tidyverse.org/reference/geom_bar.html)
+
+
+```r
+ohtani_batted_balls %&gt;%
+  ggplot(aes(x = batted_ball_type)) +
+* geom_bar() +
+  theme_bw()
+```
+
+- Only map `batted_ball_type` to the x-axis
+
+- Counts of each type are displayed on y-axis...
+
+]
+.pull-right[
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-1-1.png" width="504" /&gt;
+]
+
+---
+
+## Remember statistical summaries!
+
+.center[![](https://d33wubrfki0l68.cloudfront.net/70a3b18a1128c785d8676a48c005ee9b6a23cc00/7283c/images/visualization-stat-bar.png)]
+
+From [Chapter 3 of `R` for Data Science](https://r4ds.had.co.nz/data-visualisation.html)
+
+---
+
+## What does a bar chart show?
+
+__Marginal distribution__: probability that categorical variable X (e.g., `batted_ball_type`) takes each particular value x (e.g. `fly_ball`).
+--
+  _So how do we display the individual probabilities?_
+  
+--
+
+.pull-left[
+
+```r
+ohtani_batted_balls %&gt;%
+  ggplot(aes(x = batted_ball_type)) +
+* geom_bar(aes(y = after_stat(count) / sum(after_stat(count)))) +
+  theme_bw()
+```
+
+- [`after_stat()`](https://ggplot2.tidyverse.org/reference/aes_eval.html) indicates the aesthetic mapping is performed after the statistical transformation
+
+- Use `after_stat(count)` to access the `stat_count()` called by `geom_bar()`
+
+- __We can code this in a more clear way__
+
+]
+.pull-right[
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-2-1.png" width="504" /&gt;
+]
+
+---
+
+## Compute and display the proportions directly
+
+.pull-left[
+
+```r
+ohtani_batted_balls %&gt;%
+* group_by(batted_ball_type) %&gt;%
+* summarize(count = n()) %&gt;%
+* ungroup() %&gt;%
+* mutate(total = sum(count),
+*        prop = count / total) %&gt;%
+  ggplot(aes(x = batted_ball_type)) +
+* geom_bar(aes(y = prop),
+*          stat = "identity") +
+  theme_bw()
+```
+
+- Category counts give info about sample size, but this could be labeled in the chart
+
+- Proportions `\(=\)` the __probability mass function__ (PMF) for __discrete__ variables 
+  - e.g. `\(P\)` (`batted_ball_type` `\(=\)` `fly_ball`)
+
+]
+.pull-right[
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-3-1.png" width="504" /&gt;
+]
+
+---
+
+## Population versus sample...
+
+We have the __population__ of Ohtani's batted balls in the 2021 season
+--
+`\(\Rightarrow\)` __we know the true probabilities__:
+
+- `\(P\)` (`batted_ball_type` `\(=\)` `fly_ball`) 
+- `\(P\)` (`batted_ball_type` `\(=\)` `ground_ball`)
+- `\(P\)` (`batted_ball_type` `\(=\)` `line_drive`)
+- `\(P\)` (`batted_ball_type` `\(=\)` `popup`)
+
+
+--
+_What if we pretend this is a sample from all hypothetical Ohtani 2021 seasons_?
+
+
+--
+__Empirical distribution__: We __estimate__ the __true marginal__ distribution with __observed (sample) data__
+
+`\(\Rightarrow\)` Estimate `\(P\)` (`batted_ball_type` = `\(C_j\)`) with `\(\hat{p}_j\)` for each category `\(C_j\)` (e.g. `\(\hat{p}_{\texttt{fly_ball}}\)`)
+
+
+--
+Compute __standard error__ for each `\(\hat{p}_j\)`:
+
+--
+
+$$
+SE(\hat{p}_j) = \sqrt{\frac{\hat{p}_j ( 1 - \hat{p}_j)}{n}}
+$$
+
+For large `\(n\)` `\(\Rightarrow\)` `\(\approx\)` 95% __confidence interval (CI)__: `\(\hat{p}_j +/- 2 \cdot SE(\hat{p}_j)\)`
+
+---
+
+## Add confidence intervals to bar chart
+
+.pull-left[
+
+```r
+ohtani_batted_balls %&gt;%
+  group_by(batted_ball_type) %&gt;% 
+  summarize(count = n()) %&gt;% 
+  ungroup() %&gt;% 
+  mutate(total = sum(count),
+         prop = count / total,
+*        se = sqrt(prop * (1 - prop) / total),
+*        lower = prop - 2 * se,
+*        upper = prop + 2 * se) %&gt;%
+  ggplot(aes(x = batted_ball_type)) +
+  geom_bar(aes(y = prop),
+           stat = "identity") + 
+* geom_errorbar(aes(ymin = lower,
+*                   ymax = upper),
+*               color = "red") +
+  theme_bw()
+```
+
+__Be careful about your interpration of CIs...__
+
+_You should remember to label your charts!_
+
+]
+.pull-right[
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-4-1.png" width="504" /&gt;
+]
+
+---
+
+## Fun with factors using [`forcats`](https://forcats.tidyverse.org/)
+
+.pull-left[
+
+```r
+ohtani_batted_balls %&gt;%
+  group_by(batted_ball_type) %&gt;% 
+  summarize(count = n()) %&gt;% 
+  ungroup() %&gt;% 
+  mutate(total = sum(count),
+         prop = count / total,
+         se = sqrt(prop * (1 - prop) / total),  
+         lower = prop - 2 * se, 
+         upper = prop + 2 * se,
+*        batted_ball_type =
+*          fct_reorder(batted_ball_type,
+*                      prop)) %&gt;%
+  ggplot(aes(x = batted_ball_type)) +
+  geom_bar(aes(y = prop),
+           stat = "identity") + 
+  geom_errorbar(aes(ymin = lower, 
+                    ymax = upper),
+                color = "red") + 
+  theme_bw()
+```
+
+
+]
+.pull-right[
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-5-1.png" width="504" /&gt;
+]
+
+---
+
+## Did you say pie chart?
+
+.center[![](https://cdn.vox-cdn.com/uploads/chorus_asset/file/3500550/0003VL-9150.0.jpeg)]
+
+
+--
+__This is the only pie chart I will show you all summer__
+
+---
+
+## Describing 1D continuous data
+
+How can we summarize `exit_velocity` and other continuous variables?
+
+
+--
+- __Center__: mean, median, number and location of modes
+
+- __Spread__: range (max - min), quantiles, variance (standard deviation), etc.
+
+- __Shape__: skew vs symmetry, outliers, heavy vs light tails, etc.
+
+--
+- Compute basic summary statistics
+
+
+```r
+summary(ohtani_batted_balls$exit_velocity)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##   27.50   83.75   96.00   93.26  105.55  119.00      27
+```
+
+```r
+sd(ohtani_batted_balls$exit_velocity)
+```
+
+```
+## [1] NA
+```
+
+
+---
+
+## Box plots visualize summary statistics
+
+.pull-left[
+
+- We make a __box plot__ with [`geom_boxplot()`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html)
+
+
+
+```r
+ohtani_batted_balls %&gt;%
+* ggplot(aes(y = exit_velocity)) +
+* geom_boxplot(aes(x = "")) +
+  theme_bw() +
+* coord_flip()
+```
+
+- __Pros__:
+  - Displays outliers, percentiles, spread, skew
+  - Useful for side-by-side comparison (tomorrow)
+
+- __Cons__:
+  - Does not display the full distribution shape!
+  - Does not display modes
+  
+_Why use `aes(x = "")` inside `geom_boxplot()`?_
+
+]
+.pull-right[
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-6-1.png" width="504" /&gt;
+]
+
+---
+
+## Histograms display 1D continuous distributions
+
+.pull-left[
+
+- We make __histograms__ with [`geom_histogram()`](https://ggplot2.tidyverse.org/reference/geom_histogram.html)
+
+
+```r
+ohtani_batted_balls %&gt;%
+* ggplot(aes(x = exit_velocity)) +
+* geom_histogram() +
+  theme_bw() 
+```
+
+
+$$
+\text{# total obs.} = \sum_{j=1}^k \text{# obs. in bin }j
+$$
+
+- __Pros__:
+  - Displays full shape of distribution
+  - Easy to interpret
+
+- __Cons__:
+  - Have to choose number of bins and bin locations (will revisit later)
+  
+]
+.pull-right[
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" /&gt;
+]
+
+---
+
+## Display the data points directly with beeswarm plots
+
+.pull-left[
+
+- We make a __beeswarm plot__ using the  [`ggbeeswarm` package](https://github.com/eclarke/ggbeeswarm)
+
+
+
+```r
+library(ggbeeswarm)
+ohtani_batted_balls %&gt;%
+  ggplot(aes(y = exit_velocity)) + 
+* geom_beeswarm(aes(x = ""),
+*               cex = 3) +
+  theme_bw() +
+  coord_flip()
+```
+
+- __Pros__:
+  - Displays each data point
+  - Easy to view full shape of distribution
+
+- __Cons__:
+  - Can be overbearing with large datasets
+  - Which algorithm for arranging points?
+
+_What does `cex = 3` do?_
+]
+.pull-right[
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-8-1.png" width="504" /&gt;
+]
+
+---
+
+## Smooth summary with violin plots
+
+.pull-left[
+
+- We make __violin plots__ with [`geom_violin()`](https://ggplot2.tidyverse.org/reference/geom_violin.html)
+
+
+```r
+ohtani_batted_balls %&gt;%
+  ggplot(aes(y = exit_velocity)) + 
+* geom_violin(aes(x = "")) +
+  theme_bw() +
+  coord_flip()
+```
+
+- __Pros__:
+  - Displays full shape of distribution
+  - Can easily layer...
+  
+]
+.pull-right[
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-9-1.png" width="504" /&gt;
+]
+
+---
+
+## Smooth summary with violin plots + box plots
+
+.pull-left[
+
+- We make __violin plots__ with [`geom_violin()`](https://ggplot2.tidyverse.org/reference/geom_violin.html)
+
+
+```r
+ohtani_batted_balls %&gt;%
+  ggplot(aes(y = exit_velocity,
+             x = "")) + 
+  geom_violin() + 
+* geom_boxplot(width = .2) +
+  theme_bw() +
+  coord_flip()
+```
+
+- __Pros__:
+  - Displays full shape of distribution
+  - Can easily layer... with box plots on top
+  
+- __Cons__:
+  - Summary of data via __density estimate__ 
+  - Mirror image is duplicate information
+  
+]
+.pull-right[
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-10-1.png" width="504" /&gt;
+]
+
+---
+
+### What do visualizations of continuous distributions display?
+
+__Probability that continuous variable X takes a particular value is 0__ 
+
+e.g. `\(P\)` (`exit_velocity` `\(= 100\)`) `\(= 0\)`, _why_?
+
+
+--
+Instead we use the __probability density function (PDF)__ to provide a __relative likelihood__ 
+
+- Density estimation is the focus of lecture next Monday
+
+
+--
+For continuous variables we can use the __cumulative distribution function (CDF)__,
+
+$$
+F(x) = P(X \leq x)
+$$
+
+--
+For `\(n\)` observations we can easily compute the __Empirical CDF (ECDF)__:
+
+
+`$$\hat{F}_n(x)  = \frac{\text{# obs. with variable} \leq x}{n} = \frac{1}{n} \sum_{i=1}^{n}1(x_i \leq x)$$`
+
+
+- where `\(1()\)` is the indicator function, i.e. `ifelse(x_i &lt;= x, 1, 0)`
+
+---
+
+## Display full distribution with ECDF plot
+
+.pull-left[
+
+- We make __ECDF plots__ with [`stat_ecdf()`](https://ggplot2.tidyverse.org/reference/stat_ecdf.html)
+
+
+```r
+ohtani_batted_balls %&gt;%
+  ggplot(aes(x = exit_velocity)) + 
+* stat_ecdf() +
+  theme_bw()
+```
+
+- __Pros__:
+  - ECDF displays all information in data (except for order)
+  - As `\(n \rightarrow \infty\)`, our ECDF `\(\hat{F}_n(x)\)` converges to the true CDF `\(F(x)\)`
+  - Easy to interpret...
+  
+- __Cons__:
+  - ... and yet it's not as popular!
+  
+]
+.pull-right[
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-11-1.png" width="504" /&gt;
+]
+
+---
+
+## Rug plots display raw data
+
+.pull-left[
+
+- We make a __rug plot__ with [`geom_rug()`](https://ggplot2.tidyverse.org/reference/geom_rug.html)
+
+
+
+```r
+ohtani_batted_balls %&gt;%
+* ggplot(aes(x = exit_velocity)) +
+* geom_rug(alpha = 0.7) +
+  theme_bw()
+```
+
+- __Pros__:
+  - Displays raw data points
+  - Useful supplement for summaries and 2D plots...
+
+- __Cons__:
+  - Can be overbearing for larger datasets
+  
+]
+.pull-right[
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-12-1.png" width="504" /&gt;
+]
+
+---
+
+## Rug plots supplement other displays
+
+.pull-left[
+
+
+```r
+ohtani_batted_balls %&gt;%
+* ggplot(aes(x = exit_velocity)) +
+* geom_rug(alpha = 0.7) +
+* geom_histogram() +
+  theme_bw()
+```
+
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-13-1.png" width="504" /&gt;
+  
+]
+.pull-right[
+
+```r
+ohtani_batted_balls %&gt;%
+* ggplot(aes(x = exit_velocity)) +
+* geom_rug(alpha = 0.7) +
+* stat_ecdf() +
+  theme_bw()
+```
+
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-14-1.png" width="504" /&gt;
+]
+
+---
+
+## Scatterplots for 2D continuous data
+
+
+.pull-left[
+
+- We make a __scatterplot__ with [`geom_point()`](https://ggplot2.tidyverse.org/reference/geom_point.html)
+
+
+
+```r
+ohtani_batted_balls %&gt;%
+* ggplot(aes(x = exit_velocity,
+*            y = launch_angle)) +
+* geom_point() +
+* geom_rug(alpha = 0.4) +
+  theme_bw()
+```
+
+_Easy to supplement with rug plots_ 
+
+__Look at the plot__: what question would you want to ask, assuming you know something about baseball?
+
+_To be continued..._
+  
+]
+.pull-right[
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-15-1.png" width="504" /&gt;
+]
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
