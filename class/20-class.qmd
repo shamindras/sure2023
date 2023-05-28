@@ -16,9 +16,9 @@ also click in the slides and navigate through them with your left and right
 arrow keys, for convenience.
 
 ```{r show-slide-tabs, echo=FALSE, results="asis"}
-slide_buttons("/slides/02-slides", output_type = "pdf")
+slide_buttons("/slides/20-slides", output_type = "pdf")
 ```
 
 ```{=html}
-<iframe width="780" height="500" src="/slides/02-slides.pdf" title="Lecture 1"></iframe>
+<iframe width="780" height="500" src="/slides/20-slides.pdf" title="Lecture 1"></iframe>
 ```

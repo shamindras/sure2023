@@ -82,84 +82,46 @@ website:
               contents:
                 - text: "7: K-means"
                   file: class/07-class.qmd
-                - text: "7: Hierarchical clustering"
+                - text: "8: Hierarchical clustering"
                   file: class/08-class.qmd
-                - text: "7: Gaussian mixture models"
+                - text: "9: Gaussian mixture models"
                   file: class/09-class.qmd
             - section: "Presentation Skills"
               contents:
-                - text: "7: Working with xaringan and xaringanthemer"
+                - text: "10: Working with xaringan and xaringanthemer"
                   file: class/10-class.qmd
             - section: "Machine Learning"
               contents:
-                - text: "7: Model assessment vs selection"
+                - text: "11: Model assessment vs selection"
                   file: class/11-class.qmd
-                - text: "7: Linear regression"
+                - text: "12: Linear regression"
                   file: class/12-class.qmd
-                - text: "7: Intro to variable selection"
+                - text: "13: Intro to variable selection"
                   file: class/13-class.qmd
-                - text: "7: Regularization"
+                - text: "14: Regularization"
                   file: class/14-class.qmd
-                - text: "7: Tidymodels"
+                - text: "15: Tidymodels"
                   file: class/15-class.qmd
-                - text: "7: Dimension reduction: PCA"
+                - text: "16: Dimension reduction: PCA"
                   file: class/16-class.qmd
-                - text: "7: PCR and PLS"
+                - text: "17: PCR and PLS"
                   file: class/17-class.qmd
-                - text: "7: GLMs"
+                - text: "18: GLMs"
                   file: class/18-class.qmd
-                - text: "7: Logistic regression"
+                - text: "19: Logistic regression"
                   file: class/19-class.qmd
-                - text: "7: GAMs"
+                - text: "20: GAMs"
                   file: class/20-class.qmd
-                - text: "7: Decision Trees"
+                - text: "21: Decision Trees"
                   file: class/21-class.qmd
-                - text: "7: Random Forest and Gradient-Boosted trees"
+                - text: "22: Random Forest and Gradient-Boosted trees"
                   file: class/22-class.qmd
-                # - text: "2: Rediscovery of bureaucracy and good governance"
-                #   file: class/02-class.qmd
-                # - text: "3: Quality of government and governance outcomes"
-                #   file: class/03-class.qmd
-                # - text: "4: Institutions"
-                #   file: class/04-class.qmd
-            # - section: "5–9: Comparative bureaucracy and civil society"
-            #   contents:
-            #     - text: "5: Bureaucracy and governance outcomes"
-            #       file: class/05-class.qmd
-            #     - text: "6: Bureaucracy and bureaucratic behavior"
-            #       file: class/06-class.qmd
-            #     - text: "7: Civil society and good governnace"
-            #       file: class/07-class.qmd
-            #     - text: "8: Civil society across countries"
-            #       file: class/08-class.qmd
-            #     - text: "~~9: Representative bureaucracy and philanthropy~~"
-            #       file: class/09-class.qmd
-            # - section: "10–14: Regional deep dives"
-            #   contents:
-            #     - text: "10: The OECD"
-            #       file: class/10-class.qmd
-            #     - text: "11: Latin America"
-            #       file: class/11-class.qmd
-            #     - text: "12: Africa"
-            #       file: class/12-class.qmd
-            #     - text: "13: Middle East and North Africa"
-            #       file: class/13-class.qmd
-            #     - text: "14: Asia"
-            #       file: class/14-class.qmd
 
     - title: "Assignments"
       contents:
         - section: "Overview"
           contents:
             - assignment/index.qmd
-        # - section: "Preparation"
-        #   contents:
-        #     - assignment/reading-report.qmd
-        #     - assignment/presentation-discussion.qmd
-        # - section: "Essays"
-        #   contents:
-        #     - assignment/data-exploration.qmd
-        #     - assignment/theory-in-real-life.qmd
         - section: "Final project"
           contents:
             - assignment/policy-brief.qmd

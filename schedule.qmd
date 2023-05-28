@@ -25,7 +25,7 @@ Here's your roadmap for the semester!
 
 - [**Class**](/class/index.qmd) ({{< fa book-open-reader >}}): This page contains the readings for the class session. Read these **before** our in-person class.
 
-- [**Assignment**](/assignment/index.qmd) ({{< fa pen-ruler >}}): This page contains the instructions for each assignment. Assignments are due by **11:59 PM** on the day they're listed.
+- [**Assignment**](/assignment/index.qmd) ({{< fa pen-ruler >}}): This page contains the instructions for each assignment.
 
 <!-- :::: {.callout-tip} -->
 
