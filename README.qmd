@@ -16,10 +16,10 @@ withr::with_dir(here::here(), {
 })
 ```
 
-# Comparative Public Administration <a href='https://compasp23.classes.andrewheiss.com/'><img src='files/favicon-512.png' align="right" height="139" /></a>
+# CMU SURE Program 2023 <a href='https://compasp23.classes.andrewheiss.com/'><img src='/files/cmu-statds-icon-hex-2.png' align="right" height="139" /></a>
 
-[PMAP 8441 • Spring 2023](https://compasp23.classes.andrewheiss.com/)  
-[Andrew Heiss](https://www.andrewheiss.com/) • Andrew Young School of Policy Studies • Georgia State University
+[Sure 2023 • Summer 2023](https://compasp23.classes.andrewheiss.com/)  
+Department of Statistics & Data Science • Carnegie Mellon University
 
 ---
 
