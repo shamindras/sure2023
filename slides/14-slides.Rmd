@@ -1,7 +1,7 @@
 ---
 title: "Supervised Learning"
-subtitle: "Logistic regression"
-date: "June 24th, 2021"
+subtitle: "Intro to variable selection"
+date: "June 25th, 2021"
 output:
   xaringan::moon_reader:
     lib_dir: "libs"
@@ -31,382 +31,361 @@ style_mono_accent(base_color = "#cc002b")
 knitr::opts_chunk$set(fig.retina = 3, warning = FALSE, message = FALSE)
 ```
 
-## The setting: [Figure 4.2 (ISLR)](http://faculty.marshall.usc.edu/gareth-james/ISL/)
 
+## The setting
 
-```{r out.width='90%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/Figure_4.2.png")
-```
+We wish to learn a linear model. Our estimate (denoted by hats) is
+$$
+\hat{Y} = \hat{\beta}_0 + \hat{\beta}_1 X_1 + \cdots + \hat{\beta}_p X_p
+$$
 
 
 --
-.pull-left[
-Left: Linear regression
-- __not limited to be within [0, 1]!__
-]
-.pull-right[
-Right: __Logistic regression__
-- __respects the observed range of outcomes!__
-]
+Why would we attempt to select a __subset__ of the $p$ variables?
+
+
+--
+- *To improve prediction accuracy* 
+
+  - Eliminating uninformative predictors can lead to lower variance in the test-set MSE, at the expense of a slight increase in bias
+
+--
+- *To improve model interpretability*
+
+  - Eliminating uninformative predictors is obviously a good thing when your goal is to tell the story of how your predictors are associated with your response.
+
 
 
 ---
 
-## Generalized linear models (GLMs) review
+## Best subset selection
 
-Linear regression: estimate __mean value__ of response variable $Y$, given predictor variables $x_1,\dots,x_p$:
-$$
-\mathbb{E}[Y|x] = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p
-$$
+- Start with the __null model__ $\mathcal{M}_0$ (intercept-only) that has no predictors
+
+  - just predicts the sample mean for each observation
+  
+
+--
+- For $k = 1, 2, \dots, p$ (each possible number of predictors)
+
+  - Fit __all__ $\binom{p}{k} = \frac{p!}{k!(p-k)!}$ with exactly $k$ predictors
+  
+  - Pick the best (some criteria) among these $\binom{p}{k}$ models, call it $\mathcal{M}_k$
+  
+    - Best can be up to the user: cross-validation error, highest adjusted $R^2$, etc.
+  
+
+--
+- Select a single best model from among $\mathcal{M}_0, \dots, \mathcal{M}_p$
 
 
 --
-In a __GLM__, we include a __link function__ $g$ that transforms the linear model:
+__This is not typically used in research!__
 
-$$
-g(\mathbb{E}[Y|x]) = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p
-$$
-
-- Use $g$ to reduce the range of possible values for $\mathbb{E}[Y \vert x]$ from $(-\infty,\infty)$ to, e.g., $[0,1]$ or $[0,\infty)$, etc. 
+- only practical for a smaller number of variables
 
 
 --
-In a GLM you specify a __probability distribution family__ that governs the observed response values
-
---
-- e.g. if $Y$ are zero and the positive integers, the family could be [Poisson](https://en.wikipedia.org/wiki/Poisson_distribution)
-
-- e.g. if $Y$ are just 0 and 1, the family is [Bernoulli](https://en.wikipedia.org/wiki/Bernoulli_distribution) and extends to [Binomial](https://en.wikipedia.org/wiki/Binomial_distribution) for $n$ independent trials
-
----
-
-## Logistic regression
-
-Assuming that we are dealing with two classes, the possible observed values for $Y$ are 0 and 1, 
-$$
-Y \vert x \sim {\rm Binomial}(n=1,p=\mathbb{E}[Y\vert x]) = \text{Bernoulli}(p = \mathbb{E}[Y\vert x])
-$$
-
-
---
-To limit the regression betweewn $[0, 1]$: use the __logit__ function, aka the __log-odds ratio__
-
-$$
-\text{logit}(p(x)) = \log \left[ \frac{p(x)}{1 - p(x)} \right] =  \log\left[\frac{\mathbb{E}[Y \vert x]}{1-\mathbb{E}[Y \vert x]}\right] = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p
-$$
-
---
-meaning
-$$
-p(x) = \mathbb{E}[Y \vert x] = \frac{e^{\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p}}{1 + e^{\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p}}
-$$
----
-
-## Major difference between linear and logistic regression
-
-
-Logistic regression __involves numerical optimization__
-
-- $y_i$ is observed response for $n$ observations - either 0 or 1
-
-
---
-- we need to use an iterative algorithm to find $\beta$'s that maximize the __likelihood__
-
-
-$$\prod_{i=1}^{n} p\left(x_{i}\right)^{y_{i}}\left(1-p\left(x_{i}\right)\right)^{1-y_{i}}$$
-
-
---
-- __Newton's method__: start with initial guess, calculate gradient of log-likelihood, add amount proportional to the gradient to parameters, moving up log-likelihood surface
-
-
---
-- means logistic regression runs more slowly than linear regression
-
-
---
-- if you're interested: [you use iteratively re-weighted least squares, Section 12.3.1](http://www.stat.cmu.edu/~cshalizi/uADA/15/lectures/12.pdf)
-
----
-
-## Inference with logistic regression
-
-__Major motivation__ for logistic regression (and all GLMs) is __inference__
-
-- how does the response change when we change a predictor by one unit?
-
-
---
-For linear regression, the answer is straightforward
-
-$$\mathbb{E}[Y \vert x] = \beta_0 + \beta_1 x_1$$
-
---
-For logistic regression... it is a little _less_ straightforward, 
-
-$$
-E[Y \vert x] = \frac{e^{\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p}}{1 + e^{\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p}}
-$$
-
-
---
-- the predicted response varies __non-linearly__ with the predictor variable values
-
-- one convention is to fall back upon the concept of __odds__
+- arbitrary way of defining __best__ and ignores __prior knowledge__ about potential predictors
 
 
 ---
 
-## The odds interpretation
+## Use the shoe leather approach
 
-Pretend the predicted probability is 0.8 given a particular predictor variable value
+[Prof. David Freeman](https://en.wikipedia.org/wiki/David_A._Freedman):
 
-- just pretend we only have one predictor variable
+- algorithms can be tempting but they are NOT substitutes!
 
---
-
-This means that if we were to repeatedly sample response values given that predictor variable value: __we expect class 1 to appear 4 times as often as class 0__
-
-
-$$Odds = \frac{\mathbb{E}[Y \vert x]}{1-\mathbb{E}[Y \vert x]} = \frac{0.8}{1-0.8} = 4 = e^{\beta_0+\beta_1x}$$
-
-Thus we say that for the given predictor variable value, the $Odds$ are 4 (or 4-1) in favor of class 1
-
---
-
-How does the odds change if I change the value of a predictor variable by one unit?
+- you should NOT avoid the hard work of EDA in your modeling efforts
 
 
 --
 
-$$Odds_{\rm new} = e^{\beta_0+\beta_1(x+1)} = e^{\beta_0+\beta_1x}e^{\beta_1} = e^{\beta_1}Odds_{\rm old}$$
+__Variable selection is a difficult problem!__
 
-For every unit change in $x$, the odds change by a __factor__ $e^{\beta_1}$
+- Like much of a statistics & data science research there is not one unique, correct answer
+
+
+--
+You should justify which predictors / variables used in modeling based on:
+
+- __context__,
+
+- __extensive EDA__, and 
+
+- __model assessment based on holdout predictions__
 
 ---
 
-## Example data: NFL field goal attempts
+## Covariance and correlation
 
-Created dataset using [`nflscrapR-data`](https://github.com/ryurko/nflscrapR-data) of all NFL field goal attempts from 2009 to 2019
+- __Covariance__ is a measure of the __linear__ dependence between two variables
+
+  - To be _"uncorrelated"_ is not the same as to be _"independent"_...
+  
+  - Independence means __there is no dependence__, linear or otherwise
+  
+
+--
+- __Correlation__ is a _normalized_ form of covariance, ranges from -1 through 0 to 1
+
+  - -1 means one variable linearly decreases absolutely in value while the other increases in value
+  
+  - 0 means no linear dependence
+  
+  - 1 means one variable linear increases absolutely while the other increases
+
+
+--
+
+- We can use the `cov()` / `cor()` functions in `R` to generate the __covariance__ / __correlation__ matrices
+
+---
+
+## Example data: NFL teams summary
+
+Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2020
 
 ```{r, warning = FALSE, message = FALSE}
-nfl_fg_attempts <- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/glm_examples/nfl_fg_attempt_data.csv")
-nfl_fg_attempts
+library(tidyverse)
+nfl_teams_data <- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/regression_projects/nfl_team_season_summary.csv")
+nfl_teams_data
 ```
+
+---
+
+## Modeling NFL score differential
+
+.pull-left[
+
+Interested in modeling a team's __score differential__
+
+```{r score-diff, echo = TRUE, eval = FALSE}
+nfl_teams_data <- nfl_teams_data %>%
+  mutate(score_diff = 
+           points_scored - points_allowed)
+nfl_teams_data %>%
+  ggplot(aes(x = score_diff)) +
+  geom_histogram(color = "black", 
+                 fill = "darkblue",
+                 alpha = 0.3) +
+  theme_bw() +
+  labs(x = "Score differential")
+```
+
+
+
+]
+.pull-right[
+
+```{r ref.label = 'score-diff', echo = FALSE}
+
+```
+
+
+]
 
 
 ---
 
-## Fitting a logistic regression model
+### Correlation matrix of score differential and candidate predictors
 
 .pull-left[
-- We use the `glm` function (similar to `lm`)
 
-- __Specify the family is `binomial`__
+- Interested in `score_diff` relationships with team passing and rush statistics
 
-```{r init-logit}
-init_logit <- glm(is_fg_made ~ kick_distance, #<<
-                  data = nfl_fg_attempts,
-                  family = "binomial") #<<
+- View the correlation matrix with [`ggcorrplot`](https://rpkgs.datanovia.com/ggcorrplot/)
+
+```{r init-cor, echo = TRUE, eval = FALSE}
+library(ggcorrplot)
+nfl_model_data <- nfl_teams_data %>%
+  dplyr::select(score_diff, offense_ave_epa_pass,
+                offense_ave_epa_run, 
+                defense_ave_epa_pass,
+                defense_ave_epa_run,
+                offense_ave_yards_gained_pass,
+                offense_ave_yards_gained_run,
+                defense_ave_yards_gained_pass,
+                defense_ave_yards_gained_run)
+nfl_cor_matrix <- cor(nfl_model_data) #<<
+ggcorrplot(nfl_cor_matrix) #<<
 ```
 
-- View predicted probability relationship
 
-```{r plot-logit, eval = FALSE}
-nfl_fg_attempts %>%
-  mutate(pred_prob = init_logit$fitted.values) %>% #<<
-  ggplot(aes(x = kick_distance)) +
-  geom_line(aes(y = pred_prob), 
-            color = "blue") +
-  geom_point(aes(y = is_fg_made), 
-             alpha = 0.3,
-             color = "darkorange") +
+]
+.pull-right[
+```{r ref.label = 'init-cor', echo = FALSE}
+
+```
+
+]
+
+
+---
+
+## Customize the appearance of the correlation matrix
+
+.pull-left[
+- Avoid redundancy by only using one half of matrix with `type`
+
+- Add correlation value labels using `lab` (but round first!)
+
+- Can arrange variables based on clustering...
+
+```{r pretty-cor, echo = TRUE, eval = FALSE}
+round_cor_matrix <- 
+  round(cor(nfl_model_data), 2) #<<
+ggcorrplot(round_cor_matrix, 
+           hc.order = TRUE,#<<
+           type = "lower",#<<
+           lab = TRUE)#<<
+```
+
+
+
+]
+.pull-right[
+
+```{r ref.label='pretty-cor', echo = FALSE}
+
+```
+]
+
+
+---
+
+## Clustering variables using the correlation matrix
+
+Apply [hierarchical clustering](http://stat.cmu.edu/cmsac/sure/2021/materials/lectures/slides/07-Hierarchical-clustering.html#1) to variables instead of observations
+
+
+--
+- Select the explanatory variables of interest from our data
+
+```{r select-preds}
+nfl_ex_vars <- dplyr::select(nfl_model_data, -score_diff)
+```
+
+
+--
+
+- Compute correlation matrix of these variables:
+
+```{r exp-cor}
+exp_cor_matrix <- cor(nfl_ex_vars)
+```
+
+
+--
+
+- Correlations measure similarity and can be negative __BUT__ distances measure dissimilarity and __CANNOT__ 
+
+- Convert your correlations to all be $\geq 0$: e.g., $1 - |\rho|$ (which drops the sign) or $1 - \rho$
+  
+
+```{r cor-dist}
+cor_dist_matrix <- 1 - abs(exp_cor_matrix)
+```
+
+
+--
+- Convert to distance matrix before using `hclust`
+
+```{r as-dist}
+cor_dist_matrix <- as.dist(cor_dist_matrix)
+```
+
+---
+
+## Clustering variables using the correlation matrix
+
+.pull-left[
+
+- Cluster variables using `hclust()` as before!
+
+- Use [`ggdendro`](https://cran.r-project.org/web/packages/ggdendro/vignettes/ggdendro.html) to quickly visualize dendrogram
+
+```{r init-var-cluster, eval = FALSE}
+library(ggdendro)
+nfl_exp_hc <- hclust(cor_dist_matrix, #<<
+                     "complete") 
+ggdendrogram(nfl_exp_hc, #<<
+             rotate = TRUE, #<<
+             size = 2)#<<
+```
+
+
+]
+.pull-right[
+
+```{r ref.label = 'init-var-cluster', echo = FALSE}
+
+```
+
+]
+
+
+---
+
+## Clustering variables using the correlation matrix
+
+.pull-left[
+
+- Another flexible option is [`dendextend`](https://cran.r-project.org/web/packages/dendextend/vignettes/dendextend.html)
+
+```{r var-dendro, eval = FALSE}
+library(dendextend)
+cor_dist_matrix %>%
+  hclust() %>%
+  as.dendrogram() %>% #<<
+  set("branches_k_col", 
+      k = 2) %>% 
+  set("labels_cex", .5) %>%
+  ggplot(horiz = TRUE)
+```
+
+- Explore the [package documentation](https://cran.r-project.org/web/packages/dendextend/vignettes/dendextend.html) for more formatting
+
+]
+.pull-right[
+```{r ref.label='var-dendro', echo = FALSE}
+
+```
+
+
+]
+
+---
+
+## Back to the response variable...
+
+.pull-left[
+
+Use the [`GGally`](https://ggobi.github.io/ggally/index.html) package to easily create __pairs__ plots of multiple variables
+
+- __always look at your data__
+
+- correlation values alone are not enough!
+
+- what if a variable displayed a quadratic relationship?
+
+
+```{r pairsplot, eval = FALSE}
+library(GGally) #<<
+ggpairs(nfl_model_data, #<<
+        columns =
+          c("score_diff", "offense_ave_epa_pass",
+            "offense_ave_epa_run", "defense_ave_epa_pass",
+            "defense_ave_epa_run")) + #<<
   theme_bw()
 ```
 
+
 ]
+
 .pull-right[
-```{r ref.label = 'plot-logit', fig.align='center', echo = FALSE}
-
-```
-
-]
-
-
----
-
-```{r}
-summary(init_logit)
-```
-
----
-
-## What is [Deviance](https://en.wikipedia.org/wiki/Deviance_(statistics)?
-
-For model of interest $\mathcal{M}$ the total deviance is:
-
-$$D_{\mathcal{M}}= -2 \log \frac{\mathcal{L}_{\mathcal{M}}}{\mathcal{L}_{\mathcal{S}}} = 2\left(\log  \mathcal{L}_{\mathcal{S}}-\log  \mathcal{L}_{\mathcal{M}}\right)$$
-
-- $\mathcal{L}_{\mathcal{M}}$ is the likelihood for model $\mathcal{M}$
-
---
-
-- $\mathcal{L}_{\mathcal{S}}$ is the likelihood for the __saturated__ model, with $n$ parameters! (i.e., a perfect fit)
-
-- Can think of $\mathcal{L}_{\mathcal{S}}$ as some constant that does not change
-
---
-
-__Deviance is a measure of goodness of fit__: the smaller the deviance, the better the fit
-
-- Generalization of RSS in linear regression to any distribution family
-
-
----
-
-## Logistic regression output
-
-```
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--2.7752   0.2420   0.4025   0.6252   1.5136 
-```
-The __deviance residuals__ are contributions to total deviance (signed square roots of unit deviances)
-$$
-d_i = \mbox{sign}(y_i-\hat{p}_i) \sqrt{-2[y_i \log \hat{p}_i + (1-y_i) \log (1 - \hat{p}_i)]}
-$$
-where $y_i$ is the $i^{\rm th}$ observed response and $\hat{p}_i$ is the estimated probability of success 
-
-```
-Coefficients:
-               Estimate Std. Error z value Pr(>|z|)    
-(Intercept)    5.916656   0.145371   40.70   <2e-16 ***
-kick_distance -0.104365   0.003255  -32.06   <2e-16 ***
-```
-The intercept of the prediction curve is $e^{5.916656}$ and $Odds_{\rm new}/Odds_{\rm old} = e^{-0.104365}$.
-
-
----
-
-## Logistic regression output
-
-```
-    Null deviance: 9593.1  on 10810  degrees of freedom
-Residual deviance: 8277.5  on 10809  degrees of freedom
-AIC: 8281.5
-```
-
-```{r}
-logLik(init_logit)   # the maximum log-likelihood value
-```
-
-
-- __Residual deviance__ is -2 times -4138.732, or 8277.5 (_What about the saturated model?_)
-
-  - Null deviance corresponds to intercept-only model
-
-- [AIC](https://en.wikipedia.org/wiki/Akaike_information_criterion) is $2k - 2\log{\cal L}$ = $2 \cdot k - 2 \cdot (-4138.732)$ = 8281.5
-
-  - where $k$ is the number of degrees of freedom (here, `df` = 2)
-  
---
-
-- These are all metrics of quality of fit of the model
-
-- __We will consider these to be less important than test-set performances__
-
----
-
-## Logistic regression predictions
-
-To generate logistic regression predictions there are few things to keep in mind...
-
-- the `fitted.values` __are on the probability scale__: all are between 0 and 1
-
-
---
-- but the __default__ for `predict(init_logit)` is __the log-odds scale!__
-
-
---
-- we change this with the `type` argument: `predict(init_logit, type = "response")`
-
-
---
-How do we predict the class? e.g make or miss field goal?
-
-
---
-```{r}
-pred_fg_outcome <- ifelse(init_logit$fitted.values > 0.5,
-                          "make", "miss")
-```
-
-- typically if predicted probability is > 0.5 then we predict success, else failure
-
----
-
-### Model assessment
-
-Most straight-forward way is the __confusion matrix__ (rows are predictions, and columns are observed):
-
-```{r confuse}
-table("Predictions" = pred_fg_outcome, "Observed" = nfl_fg_attempts$is_fg_made)
-```
-
-
---
-__In-sample misclassification rate__:
-
-```{r mcr}
-mean(ifelse(fitted(init_logit) < 0.5, 0, 1) != nfl_fg_attempts$is_fg_made)
-```
-
-
---
-[__Brier score__](https://en.wikipedia.org/wiki/Brier_score):
-```{r brier}
-mean((nfl_fg_attempts$is_fg_made - fitted(init_logit))^2)
-```
-
-
-
----
-
-### __Well-calibrated__ if actual probabilities match predicted probabilities
-
-
-.pull-left[
-```{r calib-plot, eval = FALSE}
-nfl_fg_attempts %>%
-  mutate(pred_prob = init_logit$fitted.values,
-         bin_pred_prob = round(pred_prob / 0.05) * .05) %>%
-  # Group by bin_pred_prob:
-  group_by(bin_pred_prob) %>%
-  # Calculate the calibration results:
-  summarize(n_attempts = n(),
-            bin_actual_prob = mean(is_fg_made)) %>%
-  ggplot(aes(x = bin_pred_prob, y = bin_actual_prob)) +
-  geom_point(aes(size = n_attempts)) +
-  geom_smooth(method = "loess", se = FALSE) +
-  geom_abline(slope = 1, intercept = 0, 
-              color = "black", linetype = "dashed") +
-  coord_equal() + 
-  scale_x_continuous(limits = c(0,1)) + 
-  scale_y_continuous(limits = c(0,1)) + 
-  labs(size = "Number of attempts",
-       x = "Estimated make probability",
-       y = "Observed make probability") + 
-  theme_bw() +
-  theme(legend.position = "bottom")
-```
-
-]
-.pull-right[
-If model says the probability of rain for a group of days is 50%, it better rain on half those days... __or something is incorrect about the probability!__
-
-```{r, ref.label='calib-plot', echo = FALSE, fig.height=6}
+```{r ref.label='pairsplot', echo = FALSE}
 
 ```
 
@@ -414,70 +393,131 @@ If model says the probability of rain for a group of days is 50%, it better rain
 
 ---
 
-### BONUS: Leave-one-season-out cross validation (with [`purrr`](https://purrr.tidyverse.org/))
+### Do running statistics matter for modeling score differential?
 
-In many datasets rather than random holdout folds, you might have particular holdouts of interest (e.g. seasons, games, etc.)
 
 --
+Will use __5-fold cross-validation__ to assess how well different sets of variables (combinations of `pass` & `run` variables) perform in predicting `score_diff`?
+
+
+--
+Can initialize a column of the __test__ fold assignments to our dataset with the `sample()` function:
+```{r init-folds}
+set.seed(2020)
+nfl_model_data <- nfl_model_data %>%
+  mutate(test_fold = sample(rep(1:5, length.out = n())))
+```
+
+
+--
+__Always remember to set your seed prior to any k-fold cross-validation!__
+
+---
+
+## Writing a function for k-fold cross-validation
 
 ```{r}
-nfl_fg_loso_cv_preds <- # generate holdout predictions for every row based season
-  map_dfr(unique(nfl_fg_attempts$pbp_season), 
-          function(season) {
+get_cv_preds <- function(model_formula, data = nfl_model_data) {
+  # generate holdout predictions for every row based season
+  map_dfr(unique(data$test_fold), 
+          function(holdout) {
             # Separate test and training data:
-            test_data <- nfl_fg_attempts %>%
-              filter(pbp_season == season)
-            train_data <- nfl_fg_attempts %>%
-              filter(pbp_season != season)
+            test_data <- data %>%
+              filter(test_fold == holdout)
+            train_data <- data %>%
+              filter(test_fold != holdout)
             
             # Train model:
-            fg_model <- glm(is_fg_made ~ kick_distance, data = train_data,
-                            family = "binomial")
+            reg_model <- lm(as.formula(model_formula), data = train_data)
             
             # Return tibble of holdout results:
-            tibble(test_pred_probs = predict(fg_model, newdata = test_data,
-                                             type = "response"),
-                   test_actual = test_data$is_fg_made,
-                   test_season = season) 
+            tibble(test_preds = predict(reg_model, newdata = test_data),
+                   test_actual = test_data$score_diff,
+                   test_fold = holdout) 
           })
+}
+
 ```
 
 
 ---
 
-## Overall holdout performance
+## Function enables easy generation of holdout analysis
 
-
-__Misclassification rate__:
-
-```{r mcr-cv}
-nfl_fg_loso_cv_preds %>%
-  mutate(test_pred = ifelse(test_pred_probs < .5, 0, 1)) %>%
-  summarize(mcr = mean(test_pred != test_actual))
+```{r}
+all_cv_preds <- get_cv_preds("score_diff ~  offense_ave_epa_pass + offense_ave_epa_run + defense_ave_epa_pass + defense_ave_epa_run")
+all_int_cv_preds <- get_cv_preds("score_diff ~ offense_ave_epa_pass*offense_ave_epa_run + defense_ave_epa_pass*defense_ave_epa_run")
+run_only_cv_preds <- get_cv_preds("score_diff ~ offense_ave_epa_run + defense_ave_epa_run")
+pass_only_cv_preds <- get_cv_preds("score_diff ~ offense_ave_epa_pass + defense_ave_epa_pass")
+off_only_cv_preds <- get_cv_preds("score_diff ~ offense_ave_epa_pass + offense_ave_epa_run")
+def_only_cv_preds <- get_cv_preds("score_diff ~ defense_ave_epa_pass + defense_ave_epa_run")
+int_only_cv_preds <- get_cv_preds("score_diff ~ 1")
 ```
 
 
-
-__Brier score__:
-```{r brier-cv}
-nfl_fg_loso_cv_preds %>%
-  summarize(brier_score = mean((test_actual - test_pred_probs)^2))
+--
+.pull-left[
+Can then summarize together for a single plot:
+```{r five-fold, eval = FALSE}
+bind_rows(mutate(all_cv_preds, type = "All"),
+          mutate(all_int_cv_preds, type = "All w/ interactions"),
+          mutate(pass_only_cv_preds, type = "Passing only"),
+          mutate(run_only_cv_preds, type = "Running only"),
+          mutate(off_only_cv_preds, type = "Offense only"),
+          mutate(def_only_cv_preds, type = "Defense only"),
+          mutate(int_only_cv_preds, type = "Intercept-only")) %>%
+  group_by(type) %>%
+  summarize(rmse = sqrt(mean((test_actual - test_preds)^2))) %>%
+  mutate(type = fct_reorder(type, rmse)) %>%
+  ggplot(aes(x = type, y = rmse)) +
+  geom_point() + coord_flip() + theme_bw()
 ```
+]
+.pull-right[
+```{r ref.label='five-fold', echo = FALSE, fig.height=4}
+
+```
+
+]
 
 
 ---
 
-## Holdout performance by season
+## Fit selected model on all data and view summary
 
-```{r mcr-cv-year, fig.align='center', fig.height=4}
-nfl_fg_loso_cv_preds %>%
-  mutate(test_pred = ifelse(test_pred_probs < .5, 0, 1)) %>%
-  group_by(test_season) %>%
-  summarize(mcr = mean(test_pred != test_actual)) %>%
-  ggplot(aes(x = test_season, y = mcr)) +
-  geom_bar(stat = "identity", width = .1) + geom_point(size = 5) +
-  theme_bw() +
-  scale_x_continuous(breaks = unique(nfl_fg_loso_cv_preds$test_season))
+```{r}
+all_lm <- lm(score_diff ~ offense_ave_epa_pass + offense_ave_epa_run + defense_ave_epa_pass + defense_ave_epa_run, data = nfl_model_data)
+summary(all_lm)
 ```
+
+---
+
+## Do NOT show that summary in a presentation!
+
+.pull-left[
+
+- We can instead display a __coefficient plot__ with confidence intervals based on the reported standard errors
+
+- Use the [`ggcoef()`](https://ggobi.github.io/ggally/articles/ggcoef.html) function from `GGally`
+
+```{r ggcoef, eval = FALSE}
+ggcoef(all_lm, 
+       exclude_intercept = TRUE,
+       vline = TRUE,
+       vline_color = "red") + 
+  theme_bw()
+```
+
+- [__A well formatted table__](https://cran.r-project.org/web/packages/sjPlot/vignettes/tab_model_estimates.html) of the summary output is appropriate for a report (not for a presentation)
+
+]
+.pull-right[
+
+```{r ref.label='ggcoef', echo = FALSE}
+
+```
+
+
+]
 
 

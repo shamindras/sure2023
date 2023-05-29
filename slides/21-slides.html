@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Machine learning</title>
+    <title>Supervised Learning</title>
     <meta charset="utf-8" />
-    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
-    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
-    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
 .title[
-# Machine learning
+# Supervised Learning
 ]
 .subtitle[
-## Decision trees
+## Nonparametric regression
 ]
 .date[
-### July 12th, 2021
+### July 8th, 2021
 ]
 
 ---
@@ -28,169 +28,173 @@ class: center, middle, inverse, title-slide
 
 
 
-## What is Machine Learning?
+## Model flexibility vs interpretability
+
+[Figure 2.7, Introduction to Statistical Learning with Applications in R (ISLR)](https://www.statlearning.com/)
+
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/flexibility.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+__Tradeoff__ between model's _flexibility_ (i.e. how "curvy" it is) and how __interpretable__ it is
+
+- Simpler, parametric form of the model `\(\Rightarrow\)` the easier it is to interpret
+
+---
+
+## Model flexibility vs interpretability
+
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/flexibility.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+- __Parametric__ models, for which we can write down a mathematical expression for `\(f(X)\)` __before observing the data__, _a priori_ (e.g. linear regression), __are inherently less flexible__
+
 
 --
-The short version:
 
-- Machine learning (ML) is a subset of statistical learning that focuses on prediction
+- __Nonparametric__ models, in which `\(f(X)\)` is __estimated from the data__ (e.g. kernel regression)
 
+---
+
+## K Nearest Neighbors (KNN)
+
+- Find the `\(k\)` data points __closest__ to an observation `\(x\)`, use these to predit
+
+  - Need to use some measure of distance, e.g., Euclidean distance
 
 --
-The longer version:
 
-- ML focuses on constructing data-driven algorithms that *learn* the mapping between predictor variables and response variable(s). 
+- KNN is data-driven, but we can actually write down the model _a priori_
 
- - We do not assume a parametric form for the mapping *a priori*, even if technically one can write one down *a posteriori* (e.g., by translating a tree model to a indicator-variable mathematical expression)
+--
 
-  - e.g., linear regression is NOT considered a ML algorithm since we can write down the linear equation ahead of time
+- Regression:
+$$
+{\hat Y} \vert X = \frac{1}{k} \sum_{i=1}^k Y_i \,,
+$$
+- Classification:
+$$
+\hat{P}[Y = j \vert X] = \frac{1}{k} \sum_{i=1}^k 1(Y_i = j) \,,
+$$
+
+  - `\(1(\cdot)\)` is the indicator function: returns 1 if TRUE, and 0 otherwise. 
+
+  - Summation yields the proportion of neighbors that are of class `\(j\)`
+
+---
+
+## Finding the optimal number of neighbors `\(k\)`
+
+__The number of neighbors `\(k\)` is a tuning parameter__ (like `\(\lambda\)` is for ridge / lasso)
+
+--
+
+Determining the optimal value of `\(k\)` requires balancing bias and variance:
+
+- If `\(k\)` is too small, the resulting model is *too flexible*,
+
+  - low bias (it is right on average...if we apply KNN to an infinite number of datasets sampled from the same parent population) 
   
-  - e.g., random forests are considered an ML algorithm since we have what the trees will look like in advance
-
----
-
-## Which algorithm is best?
-
-__That's not the right question to ask.__
-
-(And the answer is *not* deep learning. Because if the underlying relationship between your predictors and your response is truly linear, *you do not need to apply deep learning*! Just do linear regression. Really. It's OK.)
-
+  - high variance (the predictions have a large spread in values when we apply KNN to our infinite data). See the panels to the left on the next slide.
 
 --
-The right question is ask is: __why should I try different algorithms?__
 
+- If `\(k\)` is too large, the resulting model is *not flexible enough*, 
 
---
-The answer to that is that without superhuman powers, you cannot visualize the distribution of predictor variables in their native space. 
-
-  - Of course, you can visualize these data *in projection*, for instance when we perform EDA
+  - high bias (wrong on average) and 
   
-  - And the performance of different algorithms will depend on how predictor data are distributed...
+  - low variance (nearly same predictions, every time). See the panels to the right on the next slide.
 
 ---
 
-### Data geometry
+## Finding the optimal number of neighbors `\(k\)`
 
-&lt;img src="http://www.stat.cmu.edu/~pfreeman/data_geometry.png" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/Fig_3.16.png" width="40%" style="display: block; margin: auto;" /&gt;
 
-- Two predictor variables with binary response variable: x's and o's 
-
-- __LHS__: Linear boundaries that form rectangles will peform well in predicting response
-
-- __RHS__: Circular boundaries will perform better
-
----
-
-## Decision trees
-
-Decision trees partition training data into __homogenous nodes / subgroups__ with similar response values
-
---
-
-The subgroups are found __recursively using binary partitions__ 
-
-  - i.e. asking a series of yes-no questions about the predictor variables
-
-We stop splitting the tree once a __stopping criteria__ has been reached (e.g. maximum depth allowed)
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/Fig_2.16.png" width="40%" style="display: block; margin: auto;" /&gt;
 
 
---
-
-For each subgroup / node predictions are made with:
-
-- Regression tree: __the average of the response values__ in the node
-
-- Classification tree: __the most popular class__ in the node
-
-
---
-
-Most popular approach is Leo Breiman's __C__lassification __A__nd __R__egression __T__ree (CART) algorithm
+(Figures 3.16 [top] and 2.16 [bottom], *Introduction to Statistical Learning* by James et al.)
 
 ---
 
-## Decision tree structure
+## KNN in context
 
-&lt;img src="https://bradleyboehmke.github.io/HOML/images/decision-tree-terminology.png" width="100%" style="display: block; margin: auto;" /&gt;
+Here are two quotes from ISLR to keep in mind when thinking about KNN:
+
+- "As a general rule, parametric methods [like linear regression] will tend to outperform non-parametric approaches [like KNN] when there is a small number of observations per predictor." This is the *curse of dimensionality*: for data-driven models, the amount of data you need to get similar model performance goes up exponentially with `\(p\)`.
+
+--
+
+`\(\Rightarrow\)` KNN might not be a good model to learn when the number of predictor variables is very large.
+
+--
+
+- "Even in problems in which the dimension is small, we might prefer linear regression to KNN from an interpretability standpoint. If the test MSE of KNN is only slightly lower than that of linear regression, we might be willing to forego a little bit of prediction accuracy for the sake of a simple model..."
+
+--
+
+`\(\Rightarrow\)` KNN is not the best model to learn if inference is the goal of an analysis.
 
 ---
 
-## Decision tree structure
+## KNN: two critical points to remember
 
-We make a prediction for an observation by __following its path along the tree__
-
-
-&lt;img src="https://bradleyboehmke.github.io/HOML/images/exemplar-decision-tree.png" width="100%" style="display: block; margin: auto;" /&gt;
-
+1. To determine which neighbors are the nearest neighbors, pairwise Euclidean distances are computed...so we may need to scale (or standardize) the individual predictor variables so that the distances are not skewed by that one predictor that has the largest variance.
 
 --
 
-- Decision trees are __very easy to explain__ to non-statisticians.
-
-- Easy to visualize and thus easy to interpret __without assuming a parametric form__
-
----
-
-### Recursive splits: each _split / rule_ depends on previous split / rule _above_ it
-
-__Objective at each split__: find the __best__ variable to partition the data into one of two regions, `\(R_1\)` &amp; `\(R_2\)`, to __minimize the error__ between the actual response, `\(y_i\)`, and the node's predicted constant, `\(c_i\)`
-
---
-
-- For regression we minimize the sum of squared errors (SSE):
-
-`$$S S E=\sum_{i \in R_{1}}\left(y_{i}-c_{1}\right)^{2}+\sum_{i \in R_{2}}\left(y_{i}-c_{2}\right)^{2}$$`
-
-
---
-- For classification trees we minimize the node's _impurity_ the __Gini index__
-
-  - where `\(p_k\)` is the proportion of observations in the node belonging to class `\(k\)` out of `\(K\)` total classes
+2. Don't blindly compute a pairwise distance matrix! For instance, if `\(n\)` = 100,000, then your pairwise distance matrix will have `\(10^{10}\)` elements, each of which uses 8 bytes in memory...resulting in a memory usage of 80 GB! Your laptop cannot handle this. It can barely handle 1-2 GB at this point. If `\(n\)` is large, you have three options:
+    a. subsample your data, limiting `\(n\)` to be `\(\lesssim\)` 15,000-20,000;
+    b. use a variant of KNN that works with sparse matrices (matrices that can be compressed since most values are zero); or
+    c. make use of a "kd tree" to more effectively (but only approximately) identify nearest neighbors.
   
-  - want to minimize `\(Gini\)`: small values indicate a node has primarily one class (_is more pure_)
-
-`$$Gini = 1 - \sum_k^K p_k^2$$`
+The [`FNN` package in `R`](https://daviddalpiaz.github.io/r4sl/knn-reg.html) has an option to search for neighbors via the use of a kd tree.
 
 
 --
-Splits yield __locally optimal__ results, so we are NOT guaranteed to train a model that is globally optimal
-
-
---
-_How do we control the complexity of the tree?_
-
----
-
-## Tune the __maximum tree depth__ or __minimum node size__
-
-
-&lt;img src="https://bradleyboehmke.github.io/HOML/07-decision-trees_files/figure-html/dt-early-stopping-1.png" width="60%" style="display: block; margin: auto;" /&gt;
-
----
-
-## Prune the tree by tuning __cost complexity__
-
-Can grow a very large complicated tree, and then __prune__ back to an optimal __subtree__ using a __cost complexity__ parameter `\(\alpha\)` (like `\(\lambda\)` for elastic net) 
-
-- `\(\alpha\)` penalizes objective as a function of the number of __terminal nodes__
-
-- e.g., we want to minimize `\(SSE + \alpha \cdot (\# \text{  of terminal nodes})\)` 
-
-&lt;img src="https://bradleyboehmke.github.io/HOML/07-decision-trees_files/figure-html/pruned-tree-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+But instead we will use the [`caret`](http://topepo.github.io/caret/index.html) package...
 
 ---
 
 ## Example data: MLB 2021 batting statistics
 
-Downloaded MLB 2021 batting statistics leaderboard from [Fangraphs](https://www.fangraphs.com/leaders.aspx?pos=all&amp;stats=bat&amp;lg=all&amp;qual=y&amp;type=8&amp;season=2019&amp;month=0&amp;season1=2021&amp;ind=0)
+Downloaded MLB 2021 batting statistics leaderboard from [Fangraphs](https://www.fangraphs.com/leaders.aspx?pos=all&amp;stats=bat&amp;lg=all&amp;qual=y&amp;type=8&amp;season=2019&amp;month=0&amp;season1=2019&amp;ind=0)
 
 
 ```r
 library(tidyverse)
-mlb_data &lt;- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/fg_batting_2021.csv") %&gt;%
-  janitor::clean_names() %&gt;%
-  mutate_at(vars(bb_percent:k_percent), parse_number)
+mlb_data &lt;- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/fg_batting_2021.csv")
 head(mlb_data)
+```
+
+```
+## # A tibble: 6 × 23
+##   Name   Team      G    PA    HR     R   RBI    SB `BB%` `K%`    ISO BABIP   AVG
+##   &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Vladi… TOR      82   354    27    66    69     2 14.4% 17.2% 0.336 0.346 0.336
+## 2 Ferna… SDP      68   288    27    66    58    18 12.5% 28.1% 0.395 0.333 0.302
+## 3 Carlo… HOU      79   347    16    61    52     0 13.5% 17.0% 0.231 0.324 0.298
+## 4 Marcu… TOR      82   372    21    63    54    10 8.9%  23.9% 0.256 0.329 0.286
+## 5 Ronal… ATL      78   342    23    67    51    16 13.2% 24.3% 0.313 0.306 0.278
+## 6 Shohe… LAA      82   322    31    60    67    12 11.2% 28.0% 0.418 0.29  0.277
+## # … with 10 more variables: OBP &lt;dbl&gt;, SLG &lt;dbl&gt;, wOBA &lt;dbl&gt;, xwOBA &lt;dbl&gt;,
+## #   `wRC+` &lt;dbl&gt;, BsR &lt;dbl&gt;, Off &lt;dbl&gt;, Def &lt;dbl&gt;, WAR &lt;dbl&gt;, playerid &lt;dbl&gt;
+```
+
+
+---
+
+## Data cleaning
+
+- [`janitor`](http://sfirke.github.io/janitor/) package has convenient functions for data cleaning like `clean_names()`
+
+- `parse_number()` function provides easy way to convert character to numeric columns
+
+
+```r
+library(janitor)
+mlb_data_clean &lt;- clean_names(mlb_data)
+mlb_data_clean &lt;- mlb_data_clean %&gt;%
+  mutate_at(vars(bb_percent:k_percent), parse_number)
+head(mlb_data_clean)
 ```
 
 ```
@@ -208,176 +212,243 @@ head(mlb_data)
 ## #   playerid &lt;dbl&gt;, and abbreviated variable names ¹​bb_percent, ²​k_percent
 ```
 
-
 ---
 
-## Regression tree example with the [`rpart` package](https://cran.r-project.org/web/packages/rpart/vignettes/longintro.pdf)
+## KNN example
 
-Revisit the modeling of `w_oba` from the KNN slides
+`caret` is a package of functions designed to simplify training, tuning, and testing statistical learning methods
 
-
-```r
-library(rpart)
-init_mlb_tree &lt;- rpart(formula = w_oba ~ bb_percent + k_percent + iso,
-                       data = mlb_data, method  = "anova")
-init_mlb_tree
-```
-
-```
-## n= 135 
-## 
-## node), split, n, deviance, yval
-##       * denotes terminal node
-## 
-##  1) root 135 0.203847700 0.3383259  
-##    2) iso&lt; 0.2 82 0.069028260 0.3188171  
-##      4) iso&lt; 0.1315 27 0.021396070 0.2981852  
-##        8) bb_percent&lt; 10.15 19 0.013706740 0.2894737 *
-##        9) bb_percent&gt;=10.15 8 0.002822875 0.3188750 *
-##      5) iso&gt;=0.1315 55 0.030496840 0.3289455  
-##       10) k_percent&gt;=15.15 47 0.020832550 0.3243404  
-##         20) bb_percent&lt; 11.45 37 0.012078700 0.3186216  
-##           40) iso&lt; 0.1585 13 0.002205692 0.3071538 *
-##           41) iso&gt;=0.1585 24 0.007237333 0.3248333 *
-##         21) bb_percent&gt;=11.45 10 0.003066500 0.3455000 *
-##       11) k_percent&lt; 15.15 8 0.002812000 0.3560000 *
-##    3) iso&gt;=0.2 53 0.055325250 0.3685094  
-##      6) iso&lt; 0.283 46 0.029749830 0.3607826  
-##       12) bb_percent&lt; 6.5 8 0.000972000 0.3335000 *
-##       13) bb_percent&gt;=6.5 38 0.021569470 0.3665263  
-##         26) iso&lt; 0.251 29 0.014496690 0.3601034  
-##           52) k_percent&gt;=22.65 14 0.005877500 0.3505000 *
-##           53) k_percent&lt; 22.65 15 0.006122933 0.3690667 *
-##         27) iso&gt;=0.251 9 0.002021556 0.3872222 *
-##      7) iso&gt;=0.283 7 0.004781429 0.4192857 *
-```
-
-
----
-
-## Display the tree with [`rpart.plot`](plhttp://www.milbo.org/rpart-plot/)
-
-
-
-.pull-left[
-
-
-```r
-library(rpart.plot)
-rpart.plot(init_mlb_tree)
-```
-
-&lt;img src="21-slides_files/figure-html/plot-tree-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
-]
-
-.pull-right[
-
-- `rpart()` runs 10-fold CV to tune `\(\alpha\)` for pruning 
-
-- Selects # terminal nodes via 1 SE rule
-
-
-```r
-plotcp(init_mlb_tree)
-```
-
-&lt;img src="21-slides_files/figure-html/plot-complexity-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
-
-]
-
-
----
-
-## What about the full tree? (check out `rpart.control`)
-
-.pull-left[
-
-
-```r
-full_mlb_tree &lt;- rpart(formula = w_oba ~ bb_percent + k_percent + iso,
-                       data = mlb_data, method  = "anova", 
-                       control = list(cp = 0, xval = 10))
-rpart.plot(full_mlb_tree)
-```
-
-&lt;img src="21-slides_files/figure-html/plot-full-tree-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
-]
-
-.pull-right[
-
-
-
-```r
-plotcp(full_mlb_tree)
-```
-
-&lt;img src="21-slides_files/figure-html/plot-full-complexity-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
-
-]
-
----
-
-## Train with `caret`
+- first create partitions for training and test data using `createDataPartition()`
 
 
 ```r
 library(caret)
-caret_mlb_tree &lt;- train(w_oba ~ bb_percent + k_percent + iso + avg + obp + slg + war,
-                        data = mlb_data, method = "rpart",
-                        trControl = trainControl(method = "cv", number = 10),
-                        tuneLength = 20)
-ggplot(caret_mlb_tree) + theme_bw()
+set.seed(1960)
+train_i &lt;- createDataPartition(y = mlb_data_clean$w_oba, p = 0.7, list = FALSE) %&gt;%
+  as.numeric()
+train_mlb_data &lt;- mlb_data_clean[train_i,]
+test_mlb_data &lt;- mlb_data_clean[-train_i,]
 ```
 
-&lt;img src="21-slides_files/figure-html/caret-tree-1.png" width="504" style="display: block; margin: auto;" /&gt;
+--
+
+- next [`train()`](http://topepo.github.io/caret/model-training-and-tuning.html) to find the optimal `k` on the training data with cross-validation
+
+
+```r
+set.seed(1971)
+init_knn_mlb_train &lt;- train(w_oba ~ bb_percent + k_percent + iso, 
+                            data = train_mlb_data, method = "knn",
+                            trControl = trainControl("cv", number = 10),
+                            preProcess = c("center", "scale"),
+                            tuneLength = 10)
+```
+
+---
+
+## KNN example
+
+
+```r
+ggplot(init_knn_mlb_train) + theme_bw()
+```
+
+&lt;img src="21-slides_files/figure-html/plot-knn-1.png" width="504" style="display: block; margin: auto;" /&gt;
 
 
 ---
 
-## Display the final model
+## KNN example
+
+Can manually create a __tuning grid__ to search over for the tuning parameter `k`
 
 
 ```r
-rpart.plot(caret_mlb_tree$finalModel)
+set.seed(1979)
+tune_knn_mlb_train &lt;- train(w_oba ~ bb_percent + k_percent + iso, 
+                            data = train_mlb_data, method = "knn",
+                            trControl = trainControl("cv", number = 10),
+                            preProcess = c("center", "scale"),
+*                           tuneGrid = expand.grid(k = 2:20))
+tune_knn_mlb_train$results
 ```
 
-&lt;img src="21-slides_files/figure-html/unnamed-chunk-6-1.png" width="504" style="display: block; margin: auto;" /&gt;
+```
+##     k       RMSE  Rsquared        MAE      RMSESD RsquaredSD       MAESD
+## 1   2 0.02664407 0.4918627 0.02190051 0.005738257  0.2369480 0.005007983
+## 2   3 0.02396789 0.6196434 0.01953764 0.004799971  0.1591891 0.004490957
+## 3   4 0.02390454 0.6207057 0.01964823 0.004899709  0.1827772 0.004354430
+## 4   5 0.02336004 0.6244300 0.01938406 0.005161427  0.1949702 0.004402360
+## 5   6 0.02303508 0.6335212 0.01917729 0.004972606  0.1561728 0.004147938
+## 6   7 0.02366376 0.6262434 0.01946073 0.005400162  0.1666846 0.004507068
+## 7   8 0.02424653 0.6101839 0.01990244 0.005227669  0.1568779 0.004293239
+## 8   9 0.02421224 0.6337331 0.01979337 0.005645555  0.1611892 0.004766752
+## 9  10 0.02415043 0.6448377 0.01986623 0.005677580  0.1629994 0.005095074
+## 10 11 0.02464093 0.6455271 0.02023478 0.005640372  0.1534025 0.004948348
+## 11 12 0.02487926 0.6445562 0.02042024 0.005492106  0.1663580 0.004889936
+## 12 13 0.02504601 0.6374670 0.02045053 0.005894155  0.1922161 0.005138379
+## 13 14 0.02501372 0.6494843 0.02040749 0.005674674  0.1756100 0.004930679
+## 14 15 0.02486026 0.6691205 0.02037055 0.005720033  0.1546572 0.004830014
+## 15 16 0.02508766 0.6651779 0.02044740 0.005831991  0.1872543 0.004866796
+## 16 17 0.02533878 0.6609326 0.02061879 0.006109175  0.1821065 0.005149361
+## 17 18 0.02545599 0.6582352 0.02055717 0.006196558  0.1896244 0.005195552
+## 18 19 0.02542914 0.6665400 0.02057135 0.005954863  0.1888456 0.004914146
+## 19 20 0.02600403 0.6528360 0.02103544 0.005907427  0.1993802 0.004836106
+```
 
 ---
 
-## Summarizing variables in tree-based models
-
-.pull-left[
-__Variable importance__ - based on reduction in SSE (_notice anything odd?_)
+## KNN example
 
 
 ```r
-library(vip)
-vip(caret_mlb_tree, geom = "point") + theme_bw()
+ggplot(tune_knn_mlb_train) + theme_bw()
 ```
 
-&lt;img src="21-slides_files/figure-html/var-imp-1.png" width="504" style="display: block; margin: auto;" /&gt;
+&lt;img src="21-slides_files/figure-html/plot-knn-tune-1.png" width="504" style="display: block; margin: auto;" /&gt;
 
+---
 
-]
-.pull-right[
-
-- Summarize single variable's relationship with __partial dependence plot__
+## KNN example
 
 
 ```r
-library(pdp)
-partial(caret_mlb_tree, pred.var = "obp") %&gt;% autoplot() + theme_bw()
+tune_knn_mlb_train$bestTune
 ```
 
-&lt;img src="21-slides_files/figure-html/pdp-1.png" width="504" style="display: block; margin: auto;" /&gt;
+```
+##   k
+## 5 6
+```
+
+```r
+test_preds &lt;- predict(tune_knn_mlb_train, test_mlb_data)
+head(test_preds)
+```
+
+```
+## [1] 0.3861667 0.3736667 0.3738333 0.3771667 0.3381667 0.3716667
+```
+
+```r
+RMSE(test_preds, test_mlb_data$w_oba)
+```
+
+```
+## [1] 0.02631488
+```
+
+---
+
+## What does KNN remind you of?...
+
+&lt;img src="https://media1.giphy.com/media/12Gyz2J1b9SjD2/200w.gif" width="40%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Kernels
+
+A kernel `\(K(x)\)` is a weighting function used in estimators, and technically has only one required property:
+
+- `\(K(x) \geq 0\)` for all `\(x\)`
+
+However, in the manner that kernels are used in statistics, there are two other properties that are usually satisfied:
+
+- `\(\int_{-\infty}^\infty K(x) dx = 1\)`; and 
+
+- `\(K(-x) = K(x)\)` for all `\(x\)`.
+
+In short: __a kernel is a symmetric PDF!__
+
+---
+
+## Kernel density estimation
+
+__Goal__: estimate the PDF `\(f(x)\)` for all possible values (assuming it is continuous / smooth)
+
+--
+
+$$
+\text{Kernel density estimate: } \hat{f}(x) = \frac{1}{n} \sum_{i=1}^n \frac{1}{h} K_h(x - x_i)
+$$
+
+--
+- `\(n =\)` sample size, `\(x =\)` new point to estimate `\(f(x)\)` (does NOT have to be in dataset!)
 
 
-]
+--
+- `\(h =\)` __bandwidth__, analogous to histogram bin width, ensures `\(\hat{f}(x)\)` integrates to 1
+
+- `\(x_i =\)` `\(i\)`th observation in dataset
+
+
+--
+- `\(K_h(x - x_i)\)` is the __Kernel__ function, creates __weight__ given distance of `\(i\)`th observation from new point 
+  - as `\(|x - x_i| \rightarrow \infty\)` then `\(K_h(x - x_i) \rightarrow 0\)`, i.e. further apart `\(i\)`th row is from `\(x\)`, smaller the weight
+  
+  - as __bandwidth__ `\(h \uparrow\)` weights are more evenly spread out (as `\(h \downarrow\)` more concentrated around `\(x\)`) 
+
+  - typically use [__Gaussian__ / Normal](https://en.wikipedia.org/wiki/Normal_distribution) kernel: `\(\propto e^{-(x - x_i)^2 / 2h^2}\)`
+  
+  - `\(K_h(x - x_i)\)` is large when `\(x_i\)` is close to `\(x\)`
+  
+
+---
+
+## Commonly Used Kernels
+
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/kernels.png" width="40%" style="display: block; margin: auto;" /&gt;
+
+
+A general rule of thumb: the choice of kernel will have little effect on estimation, particularly if the sample size is large! The Gaussian kernel (i.e., a normal PDF) is by far the most common choice, and is the default for `R` functions that utilize kernels.
+
+
+---
+
+## Kernel regression
+
+We can apply kernels in the regression setting as well as in the density estimation setting!
+
+The classic kernel regression estimator is the __Nadaraya-Watson__ estimator:
+
+`$$\hat{y}_h(x) = \sum_{i=1}^n w_i(x) Y_i \,,$$`
+
+where
+`$$w_i(x) = \frac{K\left(\frac{x-X_i}{h}\right)}{\sum_{j=1}^n K\left(\frac{x-X_j}{h}\right)} \,.$$`
+
+Regression estimate is the average of all the *weighted* observed response values; 
+
+- Farther `\(x\)` is from observation `\(\Rightarrow\)` less weight that observation has in determining the regression estimate at `\(x\)`
+
+---
+
+## Kernel regression with `np`
+
+Use the `npregbw` function to tune bandwidth using [__generalized cross-validation__](https://bookdown.org/egarpor/NP-UC3M/kre-i-bwd.html#kre-i-bwd-cv)
+
+
+```r
+library(np)
+mlb_bw0 &lt;- npregbw(w_oba ~ bb_percent + k_percent + iso, 
+                            data = train_mlb_data)
+```
+
+
+
+Generate predictions with `npreg` with provided bandwidth object
+
+
+```r
+*mlb_test_npreg &lt;- npreg(mlb_bw0, newdata = test_mlb_data)
+RMSE(mlb_test_npreg$mean, test_mlb_data$w_oba) 
+```
+
+```
+## [1] 0.02107194
+```
+
+
+
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

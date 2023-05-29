@@ -3,9 +3,9 @@
   <head>
     <title>Supervised Learning</title>
     <meta charset="utf-8" />
-    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
-    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
-    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -15,10 +15,10 @@ class: center, middle, inverse, title-slide
 # Supervised Learning
 ]
 .subtitle[
-## Smoothing splines and GAMs
+## Logistic regression
 ]
 .date[
-### July 9th, 2021
+### June 24th, 2021
 ]
 
 ---
@@ -27,507 +27,540 @@ class: center, middle, inverse, title-slide
 
 
 
-## Kernel regression
 
-__Nadaraya-Watson kernel regression__
+## The setting: [Figure 4.2 (ISLR)](http://faculty.marshall.usc.edu/gareth-james/ISL/)
 
-- given training data with explanatory variable `\(x\)` and continuous response `\(y\)` 
 
-- _bandwidth_ `\(h &gt; 0\)`
-
-- and a new point `\((x_{new}, y_{new})\)`: 
-
-`$$\hat{y}_{new} = \sum_{i=1}^n w_i(x_{new})\cdot y_i \,,$$`
-
-where
-
-`$$w_i(x) = \frac{K_h\left(|x_{new}-x_i|\right)}{\sum_{j=1}^n K_h\left(|x_{new}-x_j|\right)} \text{ with } K_h(x) = K(\frac{x}{h})$$`
-
-Example of a __linear smoother__
-
-- class of models where predictions are _weighted_ sums of the response variable
-
----
-
-## Local regression
-
-We can fit a linear model __at each point `\(x_{new}\)`__ with weights given by kernel function centered on `\(x_{new}\)`
-
-- we can additionally combine this with _polynomial regression_
-
---
-
-Local regression of the `\(k^{th}\)` order with kernel function `\(K\)` solves the following:
-
-`$$\hat{\beta}(x_{new}) = \underset{\beta}{\text{arg min}}\Big\{ \sum_i K_h(|x_{new} - x_i|) \cdot (y_i - \sum_{j=0}^k x_i^k \cdot \beta_k )^2 \Big\}$$`
-
---
-__Yes, this means every single observation has its own set of coefficients__
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/Figure_4.2.png" width="90%" style="display: block; margin: auto;" /&gt;
 
 
 --
-
-Predicted value is then:
-
-`$$\hat{y}_{new} = \sum_{j=0}^k x_{new}^k \cdot \hat{\beta}_k(x_{new})$$`
-
-
---
-
-Smoother predictions than kernel regression but comes at __higher computational cost__ 
-
-- __LOESS__ replaces kernel with k nearest neighbors
-  
-  - faster than local regression but discontinuities when neighbors change
+.pull-left[
+Left: Linear regression
+- __not limited to be within [0, 1]!__
+]
+.pull-right[
+Right: __Logistic regression__
+- __respects the observed range of outcomes!__
+]
 
 
 ---
 
-## Smoothing splines
+## Generalized linear models (GLMs) review
 
-
-Use __smooth function__ `\(s(x)\)` to predict `\(y\)`, control smoothness directly by minimizing the __spline objective function__:
-
-`$$\sum_{i=1}^n (y_i - s(x_i))^2 + \lambda \int(s''(x))^2dx$$`
-
-
---
-
-`$$= \text{fit data} + \text{impose smoothness}$$`
-
---
-
-`$$\Rightarrow \text{model fit} = \text{likelihood} - \lambda \cdot \text{wiggliness}$$`
-Estimate the __smoothing spline__ `\(\hat{s}(x)\)` that __balances the tradeoff between the model fit and wiggliness__
+Linear regression: estimate __mean value__ of response variable `\(Y\)`, given predictor variables `\(x_1,\dots,x_p\)`:
+$$
+\mathbb{E}[Y|x] = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p
+$$
 
 
 --
-&lt;img src="https://github.com/noamross/gams-in-r-course/blob/master/images/diffsmooth-1.png?raw=true" width="70%" style="display: block; margin: auto;" /&gt;
+In a __GLM__, we include a __link function__ `\(g\)` that transforms the linear model:
+
+$$
+g(\mathbb{E}[Y|x]) = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p
+$$
+
+- Use `\(g\)` to reduce the range of possible values for `\(\mathbb{E}[Y \vert x]\)` from `\((-\infty,\infty)\)` to, e.g., `\([0,1]\)` or `\([0,\infty)\)`, etc. 
+
+
+--
+In a GLM you specify a __probability distribution family__ that governs the observed response values
+
+--
+- e.g. if `\(Y\)` are zero and the positive integers, the family could be [Poisson](https://en.wikipedia.org/wiki/Poisson_distribution)
+
+- e.g. if `\(Y\)` are just 0 and 1, the family is [Bernoulli](https://en.wikipedia.org/wiki/Bernoulli_distribution) and extends to [Binomial](https://en.wikipedia.org/wiki/Binomial_distribution) for `\(n\)` independent trials
 
 ---
 
-## Basis functions
+## Logistic regression
 
-Splines are _piecewise cubic polynomials_ with __knots__ (boundary points for functions) at every data point
-
-
---
-
-Practical alternative: linear combination of set of __basis functions__
+Assuming that we are dealing with two classes, the possible observed values for `\(Y\)` are 0 and 1, 
+$$
+Y \vert x \sim {\rm Binomial}(n=1,p=\mathbb{E}[Y\vert x]) = \text{Bernoulli}(p = \mathbb{E}[Y\vert x])
+$$
 
 
 --
-__Cubic polynomial example__: define four basis functions:
+To limit the regression betweewn `\([0, 1]\)`: use the __logit__ function, aka the __log-odds ratio__
 
-- `\(B_1(x) = 1\)`, `\(B_2(x) = x\)`, `\(B_3(x) = x^2\)`, `\(B_4(x) = x^3\)`
+$$
+\text{logit}(p(x)) = \log \left[ \frac{p(x)}{1 - p(x)} \right] =  \log\left[\frac{\mathbb{E}[Y \vert x]}{1-\mathbb{E}[Y \vert x]}\right] = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p
+$$
 
-where the regression function `\(r(x)\)` is written as:
+--
+meaning
+$$
+p(x) = \mathbb{E}[Y \vert x] = \frac{e^{\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p}}{1 + e^{\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p}}
+$$
+---
 
-`$$r(x) = \sum_j^4 \beta_j B_j(x)$$`
+## Major difference between linear and logistic regression
+
+
+Logistic regression __involves numerical optimization__
+
+- `\(y_i\)` is observed response for `\(n\)` observations - either 0 or 1
 
 
 --
-- __linear in the transformed variables__ `\(B_1(x), \dots, B_4(x)\)` but it is __nonlinear in `\(x\)`__
+- we need to use an iterative algorithm to find `\(\beta\)`'s that maximize the __likelihood__
+
+
+`$$\prod_{i=1}^{n} p\left(x_{i}\right)^{y_{i}}\left(1-p\left(x_{i}\right)\right)^{1-y_{i}}$$`
 
 
 --
-We extend this idea for splines _piecewise_ using indicator functions so the spline is a weighted sum:
+- __Newton's method__: start with initial guess, calculate gradient of log-likelihood, add amount proportional to the gradient to parameters, moving up log-likelihood surface
 
-`$$s(x) = \sum_j^m \beta_j B_j(x)$$`
+
+--
+- means logistic regression runs more slowly than linear regression
+
+
+--
+- if you're interested: [you use iteratively re-weighted least squares, Section 12.3.1](http://www.stat.cmu.edu/~cshalizi/uADA/15/lectures/12.pdf)
 
 ---
 
-## Number of basis functions is another tuning parameter
+## Inference with logistic regression
 
-&lt;img src="https://github.com/noamross/gams-in-r-course/blob/master/images/diffbasis-1.png?raw=true" width="80%" style="display: block; margin: auto;" /&gt;
+__Major motivation__ for logistic regression (and all GLMs) is __inference__
 
+- how does the response change when we change a predictor by one unit?
+
+
+--
+For linear regression, the answer is straightforward
+
+`$$\mathbb{E}[Y \vert x] = \beta_0 + \beta_1 x_1$$`
+
+--
+For logistic regression... it is a little _less_ straightforward, 
+
+$$
+E[Y \vert x] = \frac{e^{\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p}}{1 + e^{\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p}}
+$$
+
+
+--
+- the predicted response varies __non-linearly__ with the predictor variable values
+
+- one convention is to fall back upon the concept of __odds__
 
 
 ---
 
-## Generalized additive models (GAMs)
+## The odds interpretation
 
-GAMs were created by [Trevor Hastie and Rob Tibshirani in 1986](https://projecteuclid.org/euclid.ss/1177013604) with intuitive construction:
+Pretend the predicted probability is 0.8 given a particular predictor variable value
 
-- relationships between individual explanatory variables and the response variable are smooth (either linear or nonlinear via basis functions)
+- just pretend we only have one predictor variable
 
-- estimate the smooth relationships __simultaneously__ to predict the response by just adding them up
+--
 
-__Generalized__ like GLMs where `\(g()\)` is the link function for the expected value of the response `\(E(Y)\)` and __additive__ over the `\(p\)` variables:
+This means that if we were to repeatedly sample response values given that predictor variable value: __we expect class 1 to appear 4 times as often as class 0__
 
-`$$g(E(Y)) = \beta_0 + s_1(x_1) + s_2(x_2) + \dots + s_p(x_p)$$`
 
-&lt;img src="https://multithreaded.stitchfix.com/assets/images/blog/fig1.svg" width="70%" style="display: block; margin: auto;" /&gt;
+`$$Odds = \frac{\mathbb{E}[Y \vert x]}{1-\mathbb{E}[Y \vert x]} = \frac{0.8}{1-0.8} = 4 = e^{\beta_0+\beta_1x}$$`
+
+Thus we say that for the given predictor variable value, the `\(Odds\)` are 4 (or 4-1) in favor of class 1
+
+--
+
+How does the odds change if I change the value of a predictor variable by one unit?
 
 
 --
 
-- can be a convenient balance between flexibility and interpretability
+`$$Odds_{\rm new} = e^{\beta_0+\beta_1(x+1)} = e^{\beta_0+\beta_1x}e^{\beta_1} = e^{\beta_1}Odds_{\rm old}$$`
 
-- you can combine linear and nonlinear terms!
+For every unit change in `\(x\)`, the odds change by a __factor__ `\(e^{\beta_1}\)`
 
 ---
 
-## Example: predicting MLB HR probability
+## Example data: NFL field goal attempts
 
-Used the [`baseballr`](http://billpetti.github.io/baseballr/) package to scrape all batted-balls from 2019 season:
+Created dataset using [`nflscrapR-data`](https://github.com/ryurko/nflscrapR-data) of all NFL field goal attempts from 2009 to 2019
 
 
 ```r
-library(tidyverse)
-batted_ball_data &lt;- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/eda_projects/mlb_batted_balls_2021.csv") %&gt;%
-  mutate(is_hr = as.numeric(events == "home_run")) %&gt;%
-  filter(!is.na(launch_angle), !is.na(launch_speed),
-         !is.na(is_hr))
-head(batted_ball_data)
+nfl_fg_attempts &lt;- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/glm_examples/nfl_fg_attempt_data.csv")
+nfl_fg_attempts
 ```
 
 ```
-## # A tibble: 6 × 32
-##   player_name    batter stand events  hc_x  hc_y hit_d…¹ launc…² launc…³ hit_l…⁴
-##   &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-## 1 Ahmed, Nick    605113 R     single  94.3  94.7     272    86.3      19       7
-## 2 Herrera, Odúb… 546318 L     field…  97.7  86.7     289    90.7      44       8
-## 3 Davis, Jonath… 641505 R     field… 121.  107.      233    87        52       8
-## 4 Harrison, Josh 543281 R     field… 116.  148.      159    53        38       6
-## 5 Smith, Pavin   656976 L     field…  79.2  75.4     328    99.1      19       7
-## 6 Hernández, Te… 606192 R     single  44.0  78.8     357   104.       22       7
-## # … with 22 more variables: bb_type &lt;chr&gt;, barrel &lt;dbl&gt;, pitch_type &lt;chr&gt;,
-## #   release_speed &lt;dbl&gt;, effective_speed &lt;dbl&gt;, if_fielding_alignment &lt;chr&gt;,
-## #   of_fielding_alignment &lt;chr&gt;, game_date &lt;date&gt;, balls &lt;dbl&gt;, strikes &lt;dbl&gt;,
-## #   outs_when_up &lt;dbl&gt;, on_1b &lt;dbl&gt;, on_2b &lt;dbl&gt;, on_3b &lt;dbl&gt;, inning &lt;dbl&gt;,
-## #   inning_topbot &lt;chr&gt;, home_score &lt;dbl&gt;, away_score &lt;dbl&gt;,
-## #   post_home_score &lt;dbl&gt;, post_away_score &lt;dbl&gt;, des &lt;chr&gt;, is_hr &lt;dbl&gt;, and
-## #   abbreviated variable names ¹​hit_distance_sc, ²​launch_speed, …
+## # A tibble: 10,811 × 11
+##    kicke…¹ kicke…²   qtr score…³ home_…⁴ posteam poste…⁵ kick_…⁶ pbp_s…⁷ abs_s…⁸
+##    &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1 00-002… R.Biro…     1       0 PIT     TEN     away         37    2009       0
+##  2 00-002… R.Biro…     2       0 PIT     TEN     away         31    2009       0
+##  3 00-002… R.Biro…     4       0 PIT     TEN     away         45    2009       0
+##  4 00-002… J.Reed      4      -3 PIT     PIT     home         32    2009       3
+##  5 00-002… J.Reed      5       0 PIT     PIT     home         33    2009       0
+##  6 00-000… P.Daws…     1       0 CLE     CLE     home         37    2009       0
+##  7 00-001… R.Long…     1      -3 CLE     MIN     away         21    2009       3
+##  8 00-000… P.Daws…     2      -7 CLE     CLE     home         20    2009       7
+##  9 00-001… R.Long…     4      12 CLE     MIN     away         37    2009      12
+## 10 00-000… J.Hans…     1     -14 NO      DET     away         47    2009      14
+## # … with 10,801 more rows, 1 more variable: is_fg_made &lt;dbl&gt;, and abbreviated
+## #   variable names ¹​kicker_player_id, ²​kicker_player_name, ³​score_differential,
+## #   ⁴​home_team, ⁵​posteam_type, ⁶​kick_distance, ⁷​pbp_season, ⁸​abs_score_diff
 ```
+
+
+---
+
+## Fitting a logistic regression model
+
+.pull-left[
+- We use the `glm` function (similar to `lm`)
+
+- __Specify the family is `binomial`__
+
 
 ```r
-table(batted_ball_data$is_hr)
+*init_logit &lt;- glm(is_fg_made ~ kick_distance,
+                  data = nfl_fg_attempts,
+*                 family = "binomial")
+```
+
+- View predicted probability relationship
+
+
+```r
+nfl_fg_attempts %&gt;%
+* mutate(pred_prob = init_logit$fitted.values) %&gt;%
+  ggplot(aes(x = kick_distance)) +
+  geom_line(aes(y = pred_prob), 
+            color = "blue") +
+  geom_point(aes(y = is_fg_made), 
+             alpha = 0.3,
+             color = "darkorange") +
+  theme_bw()
+```
+
+]
+.pull-right[
+&lt;img src="20-slides_files/figure-html/unnamed-chunk-3-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+---
+
+
+```r
+summary(init_logit)
 ```
 
 ```
 ## 
-##    0    1 
-## 6437  318
+## Call:
+## glm(formula = is_fg_made ~ kick_distance, family = "binomial", 
+##     data = nfl_fg_attempts)
+## 
+## Coefficients:
+##                Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)    5.916656   0.145371   40.70   &lt;2e-16 ***
+## kick_distance -0.104365   0.003255  -32.06   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 9593.1  on 10810  degrees of freedom
+## Residual deviance: 8277.5  on 10809  degrees of freedom
+## AIC: 8281.5
+## 
+## Number of Fisher Scoring iterations: 5
 ```
 
 ---
 
-## Predict HRs with launch angle and exit velocity?
+## What is [Deviance](https://en.wikipedia.org/wiki/Deviance_(statistics)?
+
+For model of interest `\(\mathcal{M}\)` the total deviance is:
+
+`$$D_{\mathcal{M}}= -2 \log \frac{\mathcal{L}_{\mathcal{M}}}{\mathcal{L}_{\mathcal{S}}} = 2\left(\log  \mathcal{L}_{\mathcal{S}}-\log  \mathcal{L}_{\mathcal{M}}\right)$$`
+
+- `\(\mathcal{L}_{\mathcal{M}}\)` is the likelihood for model `\(\mathcal{M}\)`
+
+--
+
+- `\(\mathcal{L}_{\mathcal{S}}\)` is the likelihood for the __saturated__ model, with `\(n\)` parameters! (i.e., a perfect fit)
+
+- Can think of `\(\mathcal{L}_{\mathcal{S}}\)` as some constant that does not change
+
+--
+
+__Deviance is a measure of goodness of fit__: the smaller the deviance, the better the fit
+
+- Generalization of RSS in linear regression to any distribution family
+
+
+---
+
+## Logistic regression output
+
+```
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.7752   0.2420   0.4025   0.6252   1.5136 
+```
+The __deviance residuals__ are contributions to total deviance (signed square roots of unit deviances)
+$$
+d_i = \mbox{sign}(y_i-\hat{p}_i) \sqrt{-2[y_i \log \hat{p}_i + (1-y_i) \log (1 - \hat{p}_i)]}
+$$
+where `\(y_i\)` is the `\(i^{\rm th}\)` observed response and `\(\hat{p}_i\)` is the estimated probability of success 
+
+```
+Coefficients:
+               Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)    5.916656   0.145371   40.70   &lt;2e-16 ***
+kick_distance -0.104365   0.003255  -32.06   &lt;2e-16 ***
+```
+The intercept of the prediction curve is `\(e^{5.916656}\)` and `\(Odds_{\rm new}/Odds_{\rm old} = e^{-0.104365}\)`.
+
+
+---
+
+## Logistic regression output
+
+```
+    Null deviance: 9593.1  on 10810  degrees of freedom
+Residual deviance: 8277.5  on 10809  degrees of freedom
+AIC: 8281.5
+```
+
+
+```r
+logLik(init_logit)   # the maximum log-likelihood value
+```
+
+```
+## 'log Lik.' -4138.732 (df=2)
+```
+
+
+- __Residual deviance__ is -2 times -4138.732, or 8277.5 (_What about the saturated model?_)
+
+  - Null deviance corresponds to intercept-only model
+
+- [AIC](https://en.wikipedia.org/wiki/Akaike_information_criterion) is `\(2k - 2\log{\cal L}\)` = `\(2 \cdot k - 2 \cdot (-4138.732)\)` = 8281.5
+
+  - where `\(k\)` is the number of degrees of freedom (here, `df` = 2)
+  
+--
+
+- These are all metrics of quality of fit of the model
+
+- __We will consider these to be less important than test-set performances__
+
+---
+
+## Logistic regression predictions
+
+To generate logistic regression predictions there are few things to keep in mind...
+
+- the `fitted.values` __are on the probability scale__: all are between 0 and 1
+
+
+--
+- but the __default__ for `predict(init_logit)` is __the log-odds scale!__
+
+
+--
+- we change this with the `type` argument: `predict(init_logit, type = "response")`
+
+
+--
+How do we predict the class? e.g make or miss field goal?
+
+
+--
+
+```r
+pred_fg_outcome &lt;- ifelse(init_logit$fitted.values &gt; 0.5,
+                          "make", "miss")
+```
+
+- typically if predicted probability is &gt; 0.5 then we predict success, else failure
+
+---
+
+### Model assessment
+
+Most straight-forward way is the __confusion matrix__ (rows are predictions, and columns are observed):
+
+
+```r
+table("Predictions" = pred_fg_outcome, "Observed" = nfl_fg_attempts$is_fg_made)
+```
+
+```
+##            Observed
+## Predictions    0    1
+##        make 1662 8994
+##        miss   94   61
+```
+
+
+--
+__In-sample misclassification rate__:
+
+
+```r
+mean(ifelse(fitted(init_logit) &lt; 0.5, 0, 1) != nfl_fg_attempts$is_fg_made)
+```
+
+```
+## [1] 0.1593747
+```
+
+
+--
+[__Brier score__](https://en.wikipedia.org/wiki/Brier_score):
+
+```r
+mean((nfl_fg_attempts$is_fg_made - fitted(init_logit))^2)
+```
+
+```
+## [1] 0.1197629
+```
+
+
+
+---
+
+### __Well-calibrated__ if actual probabilities match predicted probabilities
+
 
 .pull-left[
 
 ```r
-batted_ball_data %&gt;%
-  ggplot(aes(x = launch_speed, 
-             y = launch_angle,
-             color = as.factor(is_hr))) +
-  geom_point(alpha = 0.5) +
-  ggthemes::scale_color_colorblind(labels = c("No", "Yes")) +
-  labs(x = "Exit velocity", 
-       y = "Launch angle", 
-       color = "HR?") +
+nfl_fg_attempts %&gt;%
+  mutate(pred_prob = init_logit$fitted.values,
+         bin_pred_prob = round(pred_prob / 0.05) * .05) %&gt;%
+  # Group by bin_pred_prob:
+  group_by(bin_pred_prob) %&gt;%
+  # Calculate the calibration results:
+  summarize(n_attempts = n(),
+            bin_actual_prob = mean(is_fg_made)) %&gt;%
+  ggplot(aes(x = bin_pred_prob, y = bin_actual_prob)) +
+  geom_point(aes(size = n_attempts)) +
+  geom_smooth(method = "loess", se = FALSE) +
+  geom_abline(slope = 1, intercept = 0, 
+              color = "black", linetype = "dashed") +
+  coord_equal() + 
+  scale_x_continuous(limits = c(0,1)) + 
+  scale_y_continuous(limits = c(0,1)) + 
+  labs(size = "Number of attempts",
+       x = "Estimated make probability",
+       y = "Observed make probability") + 
   theme_bw() +
   theme(legend.position = "bottom")
 ```
 
-- HRs are relatively rare and confined to one area of this plot
-
 ]
 .pull-right[
-&lt;img src="20-slides_files/figure-html/unnamed-chunk-4-1.png" width="504" /&gt;
+If model says the probability of rain for a group of days is 50%, it better rain on half those days... __or something is incorrect about the probability!__
+
+&lt;img src="20-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" /&gt;
 
 ]
 
 ---
 
-## Fitting GAMs with [`mgcv`](https://cran.r-project.org/web/packages/mgcv/index.html)
+### BONUS: Leave-one-season-out cross validation (with [`purrr`](https://purrr.tidyverse.org/))
 
-First set-up training data
-
-
-```r
-set.seed(2004)
-batted_ball_data &lt;- batted_ball_data %&gt;%
-  mutate(is_train = sample(rep(0:1, length.out = nrow(batted_ball_data))))
-```
-
-Next fit the initial function using smooth functions via `s()`:
-
-
-```r
-library(mgcv)
-*init_logit_gam &lt;- gam(is_hr ~ s(launch_speed) + s(launch_angle),
-                      data = filter(batted_ball_data, is_train == 1), 
-*                     family = binomial, method = "REML")
-```
-
- - Use [REML](https://en.wikipedia.org/wiki/Restricted_maximum_likelihood) instead of the default for more stable solution
-
----
-
-### GAM summary
-
-
-```r
-summary(init_logit_gam)
-```
-
-```
-## 
-## Family: binomial 
-## Link function: logit 
-## 
-## Formula:
-## is_hr ~ s(launch_speed) + s(launch_angle)
-## 
-## Parametric coefficients:
-##             Estimate Std. Error z value Pr(&gt;|z|)  
-## (Intercept)   -34.14      13.91  -2.455   0.0141 *
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Approximate significance of smooth terms:
-##                   edf Ref.df Chi.sq p-value    
-## s(launch_speed) 1.928  2.388 172.22  &lt;2e-16 ***
-## s(launch_angle) 3.640  3.970  92.94  &lt;2e-16 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## R-sq.(adj) =  0.551   Deviance explained = 65.8%
-## -REML = 234.05  Scale est. = 1         n = 3377
-```
-
-
----
-
-### Visualizing partial response functions with [gratia](https://gavinsimpson.github.io/gratia/index.html)
-
-Displays the partial effect of each term in the model `\(\Rightarrow\)` add up to the overall prediction 
-
-
-```r
-library(gratia)
-draw(init_logit_gam)
-```
-
-&lt;img src="20-slides_files/figure-html/unnamed-chunk-5-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
----
-
-## Convert to probability scale with `plogis` function
-
-
-
-```r
-*draw(init_logit_gam, fun = plogis)
-```
-
-&lt;img src="20-slides_files/figure-html/unnamed-chunk-6-1.png" width="504" style="display: block; margin: auto;" /&gt;
+In many datasets rather than random holdout folds, you might have particular holdouts of interest (e.g. seasons, games, etc.)
 
 --
 
-- centered on average value of 0.5 because it's the partial effect without the intercept
-
----
-
-## Include intercept in plot...
-
 
 ```r
-*draw(init_logit_gam, fun = plogis, constant = coef(init_logit_gam)[1])
-```
-
-&lt;img src="20-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
-Intercept reflects relatively rare occurence of HRs!
-
----
-
-## Model checking for number of basis functions
-
-Use `gam.check()` to see if we need more basis functions based on an approximate test
-
-
-```r
-gam.check(init_logit_gam)
-```
-
-```
-## 
-## Method: REML   Optimizer: outer newton
-## full convergence after 9 iterations.
-## Gradient range [-0.0001120962,1.387397e-05]
-## (score 234.0517 &amp; scale 1).
-## Hessian positive definite, eigenvalue range [0.1473281,0.7723187].
-## Model rank =  19 / 19 
-## 
-## Basis dimension (k) checking results. Low p-value (k-index&lt;1) may
-## indicate that k is too low, especially if edf is close to k'.
-## 
-##                   k'  edf k-index p-value
-## s(launch_speed) 9.00 1.93    0.97    0.12
-## s(launch_angle) 9.00 3.64    1.03    0.97
+nfl_fg_loso_cv_preds &lt;- # generate holdout predictions for every row based season
+  map_dfr(unique(nfl_fg_attempts$pbp_season), 
+          function(season) {
+            # Separate test and training data:
+            test_data &lt;- nfl_fg_attempts %&gt;%
+              filter(pbp_season == season)
+            train_data &lt;- nfl_fg_attempts %&gt;%
+              filter(pbp_season != season)
+            
+            # Train model:
+            fg_model &lt;- glm(is_fg_made ~ kick_distance, data = train_data,
+                            family = "binomial")
+            
+            # Return tibble of holdout results:
+            tibble(test_pred_probs = predict(fg_model, newdata = test_data,
+                                             type = "response"),
+                   test_actual = test_data$is_fg_made,
+                   test_season = season) 
+          })
 ```
 
 
 ---
 
-## Check the predictions?
+## Overall holdout performance
+
+
+__Misclassification rate__:
 
 
 ```r
-batted_ball_data &lt;- batted_ball_data %&gt;%
-  mutate(init_gam_hr_prob = 
-           as.numeric(predict(init_logit_gam,
-                              newdata = batted_ball_data,
-                              type = "response")),
-         init_gam_hr_class = as.numeric(init_gam_hr_prob &gt;= 0.5))
-batted_ball_data %&gt;%
-  group_by(is_train) %&gt;%
-  summarize(correct = mean(is_hr == init_gam_hr_class))
+nfl_fg_loso_cv_preds %&gt;%
+  mutate(test_pred = ifelse(test_pred_probs &lt; .5, 0, 1)) %&gt;%
+  summarize(mcr = mean(test_pred != test_actual))
 ```
 
 ```
-## # A tibble: 2 × 2
-##   is_train correct
-##      &lt;int&gt;   &lt;dbl&gt;
-## 1        0   0.974
-## 2        1   0.970
+## # A tibble: 1 × 1
+##     mcr
+##   &lt;dbl&gt;
+## 1 0.160
 ```
+
+
+
+__Brier score__:
+
+```r
+nfl_fg_loso_cv_preds %&gt;%
+  summarize(brier_score = mean((test_actual - test_pred_probs)^2))
+```
+
+```
+## # A tibble: 1 × 1
+##   brier_score
+##         &lt;dbl&gt;
+## 1       0.120
+```
+
 
 ---
 
-## What about the linear model?
+## Holdout performance by season
 
 
 ```r
-init_linear_logit &lt;- glm(is_hr ~ launch_speed + launch_angle, 
-                         data = filter(batted_ball_data, is_train == 1), 
-                         family = binomial)
-batted_ball_data &lt;- batted_ball_data %&gt;%
-  mutate(init_glm_hr_prob = predict(init_linear_logit,
-                                    newdata = batted_ball_data,
-                                    type = "response"),
-         init_glm_hr_class = as.numeric(init_glm_hr_prob &gt;= 0.5))
-batted_ball_data %&gt;%
-  group_by(is_train) %&gt;%
-  summarize(correct = mean(is_hr == init_glm_hr_class))
+nfl_fg_loso_cv_preds %&gt;%
+  mutate(test_pred = ifelse(test_pred_probs &lt; .5, 0, 1)) %&gt;%
+  group_by(test_season) %&gt;%
+  summarize(mcr = mean(test_pred != test_actual)) %&gt;%
+  ggplot(aes(x = test_season, y = mcr)) +
+  geom_bar(stat = "identity", width = .1) + geom_point(size = 5) +
+  theme_bw() +
+  scale_x_continuous(breaks = unique(nfl_fg_loso_cv_preds$test_season))
 ```
 
-```
-## # A tibble: 2 × 2
-##   is_train correct
-##      &lt;int&gt;   &lt;dbl&gt;
-## 1        0   0.960
-## 2        1   0.954
-```
+&lt;img src="20-slides_files/figure-html/mcr-cv-year-1.png" width="504" style="display: block; margin: auto;" /&gt;
 
-
-__Very few situations in reality where linear regressions perform better than an additive model using smooth functions__ - especially since smooth functions can just capture linear models...
-
----
-
-## Continuous interactions as a smooth surface
-
-
-```r
-multi_logit_gam &lt;- gam(is_hr ~ s(launch_speed, launch_angle), 
-                       data = filter(batted_ball_data, is_train == 1), 
-                       family = binomial)
-```
-
-Plot the predicted heatmap:
-
-
-```r
-draw(multi_logit_gam)
-```
-
-&lt;img src="20-slides_files/figure-html/unnamed-chunk-11-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
----
-
-## Check the predictions?
-
-
-```r
-batted_ball_data &lt;- batted_ball_data %&gt;%
-  mutate(multi_gam_hr_prob =
-           as.numeric(predict(multi_logit_gam,
-                              newdata = batted_ball_data,
-                              type = "response")),
-         multi_gam_hr_class = as.numeric(multi_gam_hr_prob &gt;= 0.5))
-batted_ball_data %&gt;%
-  group_by(is_train) %&gt;%
-  summarize(correct = mean(is_hr == multi_gam_hr_class))
-```
-
-```
-## # A tibble: 2 × 2
-##   is_train correct
-##      &lt;int&gt;   &lt;dbl&gt;
-## 1        0   0.975
-## 2        1   0.971
-```
-
-
-- This has one smoothing parameter for the 2D smooth...
-
----
-
-### Separate interactions from individual terms with tensor smooths
-
-
-```r
-tensor_logit_gam &lt;- gam(is_hr ~ s(launch_speed) + s(launch_angle) +
-*                         ti(launch_speed, launch_angle),
-                        data = filter(batted_ball_data, is_train == 1), family = binomial)
-```
-
---
-
-Check the predictions
-
-
-```r
-batted_ball_data %&gt;%
-  mutate(tensor_gam_hr_prob =
-           as.numeric(predict(tensor_logit_gam, newdata = batted_ball_data, type = "response")),
-         tensor_gam_hr_class = as.numeric(tensor_gam_hr_prob &gt;= 0.5)) %&gt;%
-  group_by(is_train) %&gt;% 
-  summarize(correct = mean(is_hr == tensor_gam_hr_class))
-```
-
-```
-## # A tibble: 2 × 2
-##   is_train correct
-##      &lt;int&gt;   &lt;dbl&gt;
-## 1        0   0.975
-## 2        1   0.970
-```
-
---
-
-__More complicated model but yet it does not help!__
-
----
-
-## Recap and useful resources
-
-&lt;blockquote class="twitter-tweet"&gt;&lt;p lang="en" dir="ltr"&gt;140 char vrsn&lt;br&gt;&lt;br&gt;1 GAMs are just GLMs&lt;br&gt;2 GAMs fit wiggly terms&lt;br&gt;3 use + s(foo) not foo in frmla&lt;br&gt;4 use method = &amp;quot;REML&amp;quot;&lt;br&gt;5 gam.check()&lt;/p&gt;&amp;mdash; Dr Gavin Simpson 😷🇪🇺🇩🇰 (@ucfagls) &lt;a href="https://twitter.com/ucfagls/status/842444686513991680?ref_src=twsrc%5Etfw"&gt;March 16, 2017&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
-
---
-
-- [GAMs in R by Noam Ross](https://noamross.github.io/gams-in-r-course/)
-
-- [`mgcv` course](https://eric-pedersen.github.io/mgcv-esa-workshop/)
-
-- [Stitch Fix post: GAM: The Predictive Modeling Silver Bullet](https://multithreaded.stitchfix.com/blog/2015/07/30/gam/)
-
-- Chapters 7 and 8 of [Advanced Data Analysis from an Elementary Point of View by Prof Cosma Shalizi](https://www.stat.cmu.edu/~cshalizi/ADAfaEPoV/ADAfaEPoV.pdf) 
-
-  - I strongly recommend you download this book, and you will refer back to it for the rest of your life
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

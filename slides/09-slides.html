@@ -1,33 +1,24 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Presentations</title>
+    <title>Clustering</title>
     <meta charset="utf-8" />
-    <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
-    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
-    <link href="libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
-    <script src="libs/datatables-binding/datatables.js"></script>
-    <script src="libs/jquery/jquery-3.6.0.min.js"></script>
-    <link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
-    <link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
-    <script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
-    <link href="libs/crosstalk/css/crosstalk.min.css" rel="stylesheet" />
-    <script src="libs/crosstalk/js/crosstalk.min.js"></script>
+    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
 .title[
-# Presentations
+# Clustering
 ]
 .subtitle[
-## And working with xaringan and xaringanthemer
+## Hierarchical clustering
 ]
 .date[
-### June 17th, 2022
+### June 15th, 2022
 ]
 
 ---
@@ -37,674 +28,617 @@ class: center, middle, inverse, title-slide
 
 
 
+## Prep NBA player dataset
 
-
-## Begin with background and motivation
-
-Every presentation has a __story__:
-
-  - What is the motivation? Why should people care about your work?
-  
-  - You want to build up want your work is trying to address
-
---
-
-Example [nflWAR talk from 2017](https://www.youtube.com/watch?v=djD-yL3vWNQ):
-
-  - Do __NOT__ begin with: "We're introducing WAR for NFL!"
-  
-  - Instead begin with current state of NFL analytics and need for better, reproducible player level-metrics
-
---
-  
-Do __NOT__ include an outline slide!
-
-  - Your presentation should flow naturally 
-
----
-
-## Describing the data
-
-You want to provide a general overview of your dataset:
-
-  - What are your observations? i.e., what does each row of your dataset represent?
-
---
-  
-  - What are the relevant variables / features? i.e., what are the columns of interest?
-  
-    - Be careful though with many variables - avoid just listing everything!
-    
-    - Simplify by describing groups of variables together
-    
---
-
-__Use examples__ - makes your data explicit and concrete for the audience
-
-  - But Do __NOT__ print out raw `R` console output!
-  
-  - Use text or a clean formatted table (via `knitr`, [`DT`](https://rstudio.github.io/DT/), [`gt`](https://gt.rstudio.com/))
-  
----
-
-## Introducing and describing methods
-
-- Prior to presenting results, you want to clearly state any transformations and methods used in the analysis
-
-- Your presentation should provide the general steps for someone to replicate your work
-
-  - e.g., Used complete-linkage hierarchical clustering with [INSERT VARIABLES], determined `\(K\)` number of clusters by [INSERT REASON]
-  
-  - e.g., Modeled [INSERT RESPONSE VARIABLE] as a function of [INSERT EXPLANATORY VARIABLES]
-  
---
-
-- For more complicated methods, you'll want to provide a brief review of the methodology
-
-- If introducing new methodology: __walk through the steps clearly__
-
---
-
-- __Always justify your choice of methodology__
-
-  - Why you used a flexible tree-based model over linear regression
-  
-
----
-
-## Presenting results
-
-- Use the __assertion-evidence__ model
-
-- __Assertion__: title of the slide should be the key takeaway in brief sentence form
-
-  - Indicates the point of the visualization or whatever means used to display the results
-
-- __Evidence__: the body of the slide containing the results
-
-  - Display of the results in some format that is simple to explain and understand
-  
---
-
-- Limit the amount of text in your __Evidence__ portion - brief statements with important context
-
-- Treat the __Assertion__ as the title of your __Evidence__
-
-  - Plot titles are then redundant and not necessary with an effective assertion
-
----
-
-## Assertion
-
-.center[__Evidence__]
-
----
-
-### MLB strikeout rates have been increasing throughout MLB's history
-
-&lt;img src="09-slides_files/figure-html/lahman-example-1.png" width="100%" style="display: block; margin: auto;" /&gt;
-
-
---
-
-(Explain the `aes` of your graph - what is each axis, color, shape, etc referring to? And what is the unit scale?)
-
----
-
-## Discussion (and ending a presentation)
-
-- Conclude with a recap of the main points of your work
-
---
-
-- Then __point out limitations__ and indicate a __direction for the next steps__
-
---
-
-- Either end with the __Discussion__ slide (or __Acknowledgements__ but this is sometimes placed at the beginning)
-
-- Never end a presentation with lone _Thank you_ slide! 
-
-  - Want the audience to focus on the final points in your __Discussion__ slide
-  
---
-
-- Include back-up __Appendix__ slides with additional info, ready for questions
-
---
-
-- Slides for __References__ should not be displayed during your talk
-
-  - Their purpose is just for sharing with others
-  
-  - Alternative option: include references directly on slides either in text or via footnotes&lt;sup&gt;1&lt;/sup&gt;
-
-  
-.footnote[
-[1] Like this...
-]  
-
----
-
-## Additional tips and reminders
-
-__Use pauses effectively__ to highlight points and explain steps
-
---
-
-- Showing all of your text at once can overwhelm your audience
-
---
-
-But
---
- don't
---
- be 
---
- ridiculous
-
---
-
-Remember: __memory overload is real!__
-
-- Do __NOT__ introduce too much notation at once
-
-- __Repetitive language and usage of words are useful and reminders for the audience__
-
-  - Use consistent language and terminology throughout the talk
-
---
-
-__Know your audience!__
-
-
-.center[![](https://media2.giphy.com/media/uq6ILNBI6g3As/200.gif)]
-
-
----
-class: inverse center middle
-
-# How do we make presentations?
-
----
-
-## Use [`xaringan`](https://slides.yihui.org/xaringan) and [`xaringanthemer`](https://pkg.garrickadenbuie.com/xaringanthemer/articles/xaringanthemer.html)
-
-- Install both packages: [`xaringan`](https://slides.yihui.org/xaringan) and [`xaringanthemer`](https://pkg.garrickadenbuie.com/xaringanthemer/articles/xaringanthemer.html)
-
-- Create a new presentation using a template 
-
-- View in-progress slides with the __Infinite Moon Reader__ addin for RStudio
-
-- More options with [xaringanExtra](https://pkg.garrickadenbuie.com/xaringanExtra/#/README?id=xaringanextra)!
-
---
-
-Check out public resources:
-
-  - Check out [Alison Hill](https://alison.rbind.io/)'s [Meet xaringan](http://arm.rbind.io/slides/xaringan.html#1) presentation
-  
-  - [Chapter 7](https://bookdown.org/yihui/rmarkdown/xaringan.html) of free online `rmarkdown` book by its author [Yihui Xie](https://yihui.org/)
-  
-  - The rest of these slides are taken from the [`xaringanthemer`](https://pkg.garrickadenbuie.com/xaringanthemer/articles/xaringanthemer.html) template in RStudio
-  
-  - And google for more [examples](https://slides.earo.me/rladiesakl20/#1)
-
-
----
-
-## Typography
-
-Text can be **bold**, _italic_, ~~strikethrough~~, or `inline code`.
-
-[Link to another slide](#colors).
-
-### Lorem Ipsum
-
-Dolor imperdiet nostra sapien scelerisque praesent curae metus facilisis dignissim tortor. 
-Lacinia neque mollis nascetur neque urna velit bibendum. 
-Himenaeos suspendisse leo varius mus risus sagittis aliquet venenatis duis nec.
-
-- Dolor cubilia nostra nunc sodales
-
-- Consectetur aliquet mauris blandit
-
-- Ipsum dis nec porttitor urna sed
-
----
-name: colors
-
-## Colors
-
-- &lt;span style="color: var(--text-color)"&gt;Text Color&lt;/span&gt;
-
-- &lt;span style="color: var(--header-color); font-family: var(--header-font-family);"&gt;Header Color&lt;/span&gt;
-
-- &lt;span style="color: var(--link-color)"&gt;Link Color&lt;/span&gt;
-
-- &lt;span style="color: var(--text-bold-color); font-weight: bold;"&gt;Bold Color&lt;/span&gt;
-
-- `inline code color`
-
----
-
-# Big Topic or Inverse Slides `#`
-
-## Slide Headings `##`
-
-### Sub-slide Headings `###`
-
-#### Bold Call-Out `####`
-
-This is a normal paragraph text. Only use header levels 1-4.
-
-##### Possible, but not recommended `#####`
-
-###### Definitely don't use h6 `######`
-
----
-class: inverse center middle
-
-# Topic Changing Interstitial
-
---
-
-```
-class: inverse center middle
-```
-
----
-layout: true
-
-## Blocks
-
----
-
-### Blockquote
-
-&gt; This is a blockquote following a header.
-&gt;
-&gt; When something is important enough, you do it even if the odds are not in your favor.
-
----
-
-### Code Blocks
-
-#### R Code
+Created dataset of NBA player statistics per 100 possessions using [`ballr`](https://cran.r-project.org/web/packages/ballr/vignettes/use-ballr.html)
 
 
 ```r
-ggplot(gapminder) +
-  aes(x = gdpPercap, y = lifeExp, size = pop, color = country) +
-  geom_point() +
-  facet_wrap(~year)
-```
-
-#### JavaScript
-
-```js
-var fun = function lang(l) {
-  dateformat.i18n = require('./lang/' + l)
-  return true;
-}
-```
-
----
-
-### More R Code
-
-
-```r
-dplyr::starwars %&gt;% dplyr::slice_sample(n = 4)
-```
-
----
-
-
-```r
-cli::cli_alert_success("It worked!")
+library(tidyverse)
+nba_pos_stats &lt;- 
+  read_csv("http://www.stat.cmu.edu/cmsac/sure/2022/materials/data/sports/clustering/nba_2022_player_per_pos_stats.csv")
+# Find rows for players indicating a full season worth of stats
+tot_players &lt;- nba_pos_stats %&gt;% filter(tm == "TOT")
+# Stack this dataset with players that played on just one team
+nba_player_stats &lt;- nba_pos_stats %&gt;% filter(!(player %in% tot_players$player)) %&gt;% 
+  bind_rows(tot_players)
+# Filter to only players with at least 125 minutes played
+nba_filtered_stats &lt;- nba_player_stats %&gt;% filter(mp &gt;= 125)
+head(nba_filtered_stats)
 ```
 
 ```
-## ✔ It worked!
-```
-
---
-
-
-```r
-message("Just a friendly message")
-```
-
-```
-## Just a friendly message
-```
-
---
-
-
-```r
-warning("This could be bad...")
-```
-
-```
-## Warning: This could be bad...
-```
-
---
-
-
-```r
-stop("I hope you're sitting down for this")
-```
-
-```
-## Error in eval(expr, envir, enclos): I hope you're sitting down for this
+## # A tibble: 6 × 31
+##   player     pos     age tm        g    gs    mp    fg   fga fgper…¹   x3p  x3pa
+##   &lt;chr&gt;      &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Precious … C        22 TOR      73    28  1725   7.7  17.5   0.439   1.6   4.5
+## 2 Steven Ad… C        28 MEM      76    75  1999   5     9.2   0.547   0     0  
+## 3 Bam Adeba… C        24 MIA      56    56  1825  11.1  20     0.557   0     0.2
+## 4 Santi Ald… PF       21 MEM      32     0   360   7    17.5   0.402   0.8   6.4
+## 5 LaMarcus … C        36 BRK      47    12  1050  11.6  21.1   0.55    0.6   2.1
+## 6 Grayson A… SG       26 MIL      66    61  1805   6.8  15.1   0.448   4.2  10.4
+## # … with 19 more variables: x3ppercent &lt;dbl&gt;, x2p &lt;dbl&gt;, x2pa &lt;dbl&gt;,
+## #   x2ppercent &lt;dbl&gt;, ft &lt;dbl&gt;, fta &lt;dbl&gt;, ftpercent &lt;dbl&gt;, orb &lt;dbl&gt;,
+## #   drb &lt;dbl&gt;, trb &lt;dbl&gt;, ast &lt;dbl&gt;, stl &lt;dbl&gt;, blk &lt;dbl&gt;, tov &lt;dbl&gt;, pf &lt;dbl&gt;,
+## #   pts &lt;dbl&gt;, x &lt;lgl&gt;, ortg &lt;dbl&gt;, drtg &lt;dbl&gt;, and abbreviated variable name
+## #   ¹​fgpercent
 ```
 
 
 ---
-layout: true
 
-## Tables
-
----
-
-
-```r
-tibble::as_tibble(mtcars)
-```
-
-```
-## # A tibble: 32 × 11
-##      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4
-##  2  21       6  160    110  3.9   2.88  17.0     0     1     4     4
-##  3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1
-##  4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1
-##  5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2
-##  6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1
-##  7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4
-##  8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2
-##  9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2
-## 10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4
-## # … with 22 more rows
-```
-
----
-
-
-```r
-knitr::kable(head(mtcars), format = 'html')
-```
-
-&lt;table&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; mpg &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; cyl &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; disp &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; hp &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; drat &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; wt &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; qsec &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; vs &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; am &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; gear &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; carb &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Mazda RX4 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 21.0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 160 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 110 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3.90 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2.620 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 16.46 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Mazda RX4 Wag &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 21.0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 160 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 110 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3.90 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2.875 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 17.02 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Datsun 710 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 22.8 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 108 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 93 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3.85 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2.320 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 18.61 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Hornet 4 Drive &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 21.4 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 258 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 110 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3.08 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3.215 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 19.44 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Hornet Sportabout &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 18.7 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 360 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 175 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3.15 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3.440 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 17.02 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Valiant &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 18.1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 225 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 105 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2.76 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3.460 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 20.22 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
----
-
-
-```r
-DT::datatable(head(mtcars), fillContainer = FALSE, options = list(pageLength = 4))
-```
-
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-177fcf1868be782de2a3" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-177fcf1868be782de2a3">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["Mazda RX4","Mazda RX4 Wag","Datsun 710","Hornet 4 Drive","Hornet Sportabout","Valiant"],[21,21,22.8,21.4,18.7,18.1],[6,6,4,6,8,6],[160,160,108,258,360,225],[110,110,93,110,175,105],[3.9,3.9,3.85,3.08,3.15,2.76],[2.62,2.875,2.32,3.215,3.44,3.46],[16.46,17.02,18.61,19.44,17.02,20.22],[0,0,1,1,0,1],[1,1,1,0,0,0],[4,4,4,3,3,3],[4,4,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":4,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[4,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
-
----
-layout: true
-
-## Lists
-
----
+## Let's work from the bottom-up...
 
 .pull-left[
-#### Here is an unordered list:
 
-*   Item foo
-*   Item bar
-*   Item baz
-*   Item zip
+- __Review__: We have `\(p\)` variables for `\(n\)` observations `\(x_1,\dots,x_n\)`,
+
+- Compute the __distance / dissimilarity__ between observations
+
+- e.g. __Euclidean distance__ between observations `\(i\)` and `\(j\)`
+
+`$$d(x_i, x_j) = \sqrt{(x_{i1}-x_{j1})^2 + \cdots + (x_{ip}-x_{jp})^2}$$`
+
+__What are the distances between these NBA players using `x3pa` and `trb`?__ 
+
+
+
+
+]
+.pull-right[
+
+&lt;img src="09-slides_files/figure-html/unnamed-chunk-1-1.png" width="504" /&gt;
+
+]
+
+---
+
+## Remember to standardize!
+
+
+.pull-left[
+
+
+```r
+nba_filtered_stats &lt;- nba_filtered_stats %&gt;%
+  mutate(std_x3pa = as.numeric(scale(x3pa)),
+         std_trb = as.numeric(scale(trb)))
+nba_filtered_stats %&gt;%
+  ggplot(aes(x = std_x3pa, y = std_trb)) +
+  geom_point(alpha = 0.5) + 
+  theme_bw() +
+  coord_fixed()
+```
+
+
+]
+.pull-right[
+
+&lt;img src="09-slides_files/figure-html/unnamed-chunk-2-1.png" width="504" /&gt;
+
+]
+
+---
+
+## Compute the distance matrix using `dist()`
+
+.pull-left[
+
+- Compute pairwise Euclidean distance
+
+
+```r
+*player_dist &lt;- dist(dplyr::select(nba_filtered_stats,
+                                  std_x3pa, std_trb))
+```
+
+- Returns an object of `dist` class - i.e., not a matrix
+
+- Can convert to a matrix, then set the row and column names:
+
+
+```r
+*player_dist_matrix &lt;- as.matrix(player_dist)
+rownames(player_dist_matrix) &lt;- nba_filtered_stats$player
+colnames(player_dist_matrix) &lt;- nba_filtered_stats$player
+head(player_dist_matrix[1:3, 1:3])
+```
+
+```
+##                  Precious Achiuwa Steven Adams Bam Adebayo
+## Precious Achiuwa         0.000000    1.6394586   1.2387398
+## Steven Adams             1.639459    0.0000000   0.6652539
+## Bam Adebayo              1.238740    0.6652539   0.0000000
+```
+
+
+]
+.pull-right[
+
+Can convert to a long table for plotting with `ggplot`:
+
+
+```r
+long_dist_matrix &lt;- 
+  as_tibble(player_dist_matrix) %&gt;%
+  mutate(player1 = rownames(player_dist_matrix)) %&gt;%
+* pivot_longer(cols = -player1,
+*              names_to = "player2",
+*              values_to = "distance")
+long_dist_matrix %&gt;%
+  ggplot(aes(x = player1, y = player2, 
+             fill = distance)) +
+  geom_tile() +
+  theme_bw() +
+  theme(axis.text = element_blank(), 
+        axis.ticks = element_blank(),
+        legend.position = "bottom") +
+  scale_fill_gradient(low = "darkorange", 
+                      high = "darkblue")
+```
+
+
+]
+
+---
+
+## This is useless...
+
+&lt;img src="09-slides_files/figure-html/unnamed-chunk-3-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Code interlude: arrange your heatmap with [`seriation`](https://github.com/mhahsler/seriation)
+
+.pull-left[
+
+```r
+library(seriation)
+*player_dist_seriate &lt;- seriate(player_dist)
+*player_order &lt;- get_order(player_dist_seriate)
+player_names_order &lt;- 
+  nba_filtered_stats$player[player_order]
+
+long_dist_matrix %&gt;%
+  mutate(player1 = 
+           fct_relevel(player1, 
+                       player_names_order),
+         player2 = 
+           fct_relevel(player2, 
+                       player_names_order)) %&gt;%
+  ggplot(aes(x = player1, y = player2, 
+             fill = distance)) +
+  geom_tile() + theme_bw() +
+  theme(axis.text = element_blank(), 
+        axis.ticks = element_blank(),
+        legend.position = "bottom") +
+  scale_fill_gradient(low = "darkorange",
+                      high = "darkblue")
+```
+
+]
+.pull-right[
+&lt;img src="09-slides_files/figure-html/unnamed-chunk-4-1.png" width="504" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## (Agglomerative) [Hierarchical clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering)
+
+Let's pretend all `\(n\)` observations are in their own cluster
+
+--
+
+- Step 1: Compute the pairwise dissimilarities between each cluster
+
+  - e.g., distance matrix on previous slides
+  
+--
+  
+- Step 2: Identify the pair of clusters that are __least dissimilar__
+
+--
+
+- Step 3: Fuse these two clusters into a new cluster!
+
+--
+
+- __Repeat Steps 1 to 3 until all observations are in the same cluster__
+
+--
+
+__"Bottom-up"__, agglomerative clustering that forms a __tree / hierarchy__ of merging
+
+No mention of any randomness!
+
+No mention of the number of clusters `\(K\)`!
+
+---
+
+## (Agglomerative) [Hierarchical clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering)
+
+.pull-left[
+Start with all observations in their own cluster
+
+- Step 1: Compute the pairwise dissimilarities between each cluster
+
+- Step 2: Identify the pair of clusters that are __least dissimilar__
+
+- Step 3: Fuse these two clusters into a new cluster!
+
+- __Repeat Steps 1 to 3 until all observations are in the same cluster__
+]
+.pull-right[
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Clusters.svg/250px-Clusters.svg.png" width="70%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## (Agglomerative) [Hierarchical clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering)
+
+.pull-left[
+Start with all observations in their own cluster
+
+- Step 1: Compute the pairwise dissimilarities between each cluster
+
+- Step 2: Identify the pair of clusters that are __least dissimilar__
+
+- Step 3: Fuse these two clusters into a new cluster!
+
+- __Repeat Steps 1 to 3 until all observations are in the same cluster__
+]
+.pull-right[
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Hierarchical_clustering_simple_diagram.svg/418px-Hierarchical_clustering_simple_diagram.svg.png" width="85%" style="display: block; margin: auto;" /&gt;
+
+Forms a __dendrogram__ (typically displayed from bottom-up)
+]
+
+
+---
+
+## How do we define dissimilarity between clusters?
+
+We know how to compute distance / dissimilarity between two observations
+
+__But how do we handle clusters?__
+
+  - Dissimilarity between a cluster and an observation, or between two clusters
+  
+--
+
+We need to choose a __linkage function__! Clusters are built up by __linking them together__
+
+--
+
+Compute all pairwise dissimilarities between observations in cluster 1 with observations in cluster 2
+
+i.e. Compute the distance matrix between observations, `\(d(x_i, x_j)\)` for `\(i \in C_1\)` and `\(j \in C_2\)`
+
+--
+
+  - __Complete linkage__: Use the __maximum__ value of these dissimilarities: `\(\underset{i \in C_1, j \in C_2}{\text{max}} d(x_i, x_j)\)`
+  
+--
+
+  - __Single linkage__: Use the __minimum__ value: `\(\underset{i \in C_1, j \in C_2}{\text{min}} d(x_i, x_j)\)`
+
+--
+
+  - __Average linkage__: Use the __average__ value: `\(\frac{1}{|C_1| \cdot |C_2|} \sum_{i \in C_1} \sum_{j \in C_2} d(x_i, x_j)\)`
+  
+--
+
+Define dissimilarity between two clusters __based on our initial dissimilarity matrix between observations__
+
+---
+
+## Complete linkage example 
+
+.pull-left[
+
+- Use the `hclust` function with a `dist()` object
+
+- Uses `complete` linkage by default
+
+
+```r
+nba_complete_hclust &lt;- 
+* hclust(player_dist, method = "complete")
+```
+
+- Need to use `cutree()` to return cluster labels:
+
+
+```r
+nba_filtered_stats %&gt;%
+  mutate(player_clusters = 
+*          as.factor(cutree(nba_complete_hclust,
+*                           k = 4))) %&gt;%
+  ggplot(aes(x = std_x3pa, y = std_trb,
+             color = player_clusters)) +
+  geom_point(alpha = 0.5) + 
+  ggthemes::scale_color_colorblind() +
+  theme_bw() +
+  theme(legend.position = "bottom")
+```
+
+
+]
+.pull-right[
+
+Returns _compact_ clusters, similar to `\(K\)`-means
+
+&lt;img src="09-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## What are we cutting? Dendrograms
+
+.pull-left[
+Use the [`ggdendro`](https://cran.r-project.org/web/packages/ggdendro/index.html) package (instead of `plot()`)
+
+
+```r
+library(ggdendro)
+*ggdendrogram(nba_complete_hclust, theme_dendro = FALSE,
+*            labels = FALSE, leaf_labels = FALSE) +
+  labs(y = "Dissimilarity between clusters") +
+  theme_bw() +
+  theme(axis.text.x = element_blank(), 
+        axis.title.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.grid = element_blank())
+```
+
+- Each __leaf__ is one observation
+
+- __Height of branch indicates dissimilarity between clusters__
+
+  - (After first step) Horizontal position along x-axis means nothing
+
+]
+.pull-right[
+&lt;img src="09-slides_files/figure-html/unnamed-chunk-8-1.png" width="504" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## [Textbook example](https://bradleyboehmke.github.io/HOML/hierarchical.html)
+
+&lt;img src="https://bradleyboehmke.github.io/HOML/19-hierarchical_files/figure-html/comparing-dendrogram-to-distances-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Cut dendrograms to obtain cluster labels
+
+.pull-left[
+Specify the height to cut with `h` instead of `k`
+
+&lt;img src="09-slides_files/figure-html/complete-dendro-cut-1.png" width="80%" /&gt;
+
+]
+.pull-right[
+
+```r
+*cutree(nba_complete_hclust, h = 6)
+```
+
+&lt;img src="09-slides_files/figure-html/nba-complete-cut-plot-1.png" width="80%" /&gt;
+]
+
+---
+
+## Single linkage example
+
+.pull-left[
+Change the `method` argument to `single`
+
+&lt;img src="09-slides_files/figure-html/single-dendro-cut-1.png" width="80%" /&gt;
+
+]
+.pull-right[
+Results in a __chaining__ effect
+
+&lt;img src="09-slides_files/figure-html/nba-single-plot-1.png" width="80%" /&gt;
+]
+
+---
+
+## Average linkage example
+
+.pull-left[
+Change the `method` argument to `average`
+
+&lt;img src="09-slides_files/figure-html/average-dendro-cut-1.png" width="80%" /&gt;
+
+]
+.pull-right[
+Closer to `complete` but varies in compactness
+
+&lt;img src="09-slides_files/figure-html/nba-average-plot-1.png" width="80%" /&gt;
+]
+
+---
+
+## More linkage functions
+
+
+- __Centroid linkage__: Computes the dissimilarity between the centroid for cluster 1 and the centroid for cluster 2
+
+  - i.e. distance between the averages of the two clusters
+  
+  - use `method = centroid`
+  
+--
+
+- __Ward’s linkage__: Merges a pair of clusters to minimize the within-cluster variance
+
+  - i.e. aim is to minimize the objection function from `\(K\)`-means
+  
+  - can use `ward.D` or `ward.D2` (different algorithms)
+  
+--
+
+&lt;img src="https://media1.tenor.com/images/bfb8e3e881ac4413ae12b61c4b982d60/tenor.gif?itemid=5140031" width="30%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## [Minimax linkage](http://statweb.stanford.edu/~tibs/sta306bfiles/minimax-clustering.pdf)
+
+- Each cluster is defined __by a prototype__ observation (most representative)
+
+- __Identify the point whose farthest point is closest__ (hence the minimax)
+
+&lt;img src="https://europepmc.org/articles/PMC4527350/bin/nihms637357f2.jpg" width="60%" style="display: block; margin: auto;" /&gt;
+
+- Use this minimum-maximum distance as the measure of cluster dissimilarity
+
+- Dendogram interpretation: each point point is `\(\leq h\)` in dissimilarity to the __prototype__ of cluster
+
+- __Cluster centers are chosen among the observations themselves - hence prototype__
+
+---
+
+## Minimax linkage example
+
+.pull-left[
+
+- Easily done in `R` via the [`protoclust`](https://github.com/jacobbien/protoclust) package
+
+- Use the `protoclust()` function to apply the clustering to the `dist()` object
+
+
+```r
+library(protoclust)
+*nba_minimax &lt;- protoclust(player_dist)
+# ggdendrogram(nba_minimax, 
+#              theme_dendro = FALSE, 
+#              labels = FALSE, 
+#              leaf_labels = FALSE) + 
+#   labs(y = "Maximum dissimilarity from prototype") +
+#   theme_bw() +
+#   theme(axis.text.x = element_blank(), 
+#         axis.title.x = element_blank(),
+#         axis.ticks.x = element_blank(),
+#         panel.grid = element_blank())
+```
+
+
 ]
 
 .pull-right[
 
-#### And an ordered list:
+&lt;!-- TODO: Add image of output here --&gt;
 
-1.  Item one
-1.  Item two
-1.  Item three
-1.  Item four
 ]
-
 ---
 
-### And a nested list:
-
-- level 1 item
-  - level 2 item
-  - level 2 item
-    - level 3 item
-    - level 3 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-  - level 2 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-- level 1 item
-
----
-
-### Nesting an ol in ul in an ol
-
-- level 1 item (ul)
-  1. level 2 item (ol)
-  1. level 2 item (ol)
-    - level 3 item (ul)
-    - level 3 item (ul)
-- level 1 item (ul)
-  1. level 2 item (ol)
-  1. level 2 item (ol)
-    - level 3 item (ul)
-    - level 3 item (ul)
-  1. level 4 item (ol)
-  1. level 4 item (ol)
-    - level 3 item (ul)
-    - level 3 item (ul)
-- level 1 item (ul)
-
----
-layout: true
-
-## Plots
-
----
-
-
-```r
-library(ggplot2)
-(g &lt;- ggplot(mpg) + aes(hwy, cty, color = class) + geom_point())
-```
-
-&lt;img src="09-slides_files/figure-html/plot-example-1.png" width="100%" /&gt;
-
----
-
-
-```r
-g + xaringanthemer::theme_xaringan(text_font_size = 16, title_font_size = 18) +
-  ggtitle("A Plot About Cars")
-```
-
-&lt;img src="09-slides_files/figure-html/plot-example-themed-1.png" width="100%" /&gt;
-
----
-layout: false
-
-## Square image
-
-&lt;center&gt;&lt;img src="https://octodex.github.com/images/labtocat.png" height="400px" /&gt;&lt;/center&gt;
-
-.footnote[GitHub Octocat]
-
----
-
-### Wide image
-
-![](https://guides.github.com/activities/hello-world/branching.png)
-
-.footnote[Wide images scale to 100% slide width]
-
----
-
-## Two images
+## Minimax linkage example
 
 .pull-left[
-![](https://octodex.github.com/images/motherhubbertocat.png)
-]
 
+- Use the `protocut()` function to make the cut 
+
+- But then access the cluster labels `cl`
+
+
+```r
+library(protoclust)
+minimax_player_clusters &lt;- 
+* protocut(nba_minimax, k = 4)
+nba_filtered_stats %&gt;%
+  mutate(player_clusters = 
+*          as.factor(minimax_player_clusters$cl)) %&gt;%
+  ggplot(aes(x = std_x3pa, y = std_trb,
+             color = player_clusters)) +
+  geom_point(alpha = 0.5) + 
+  ggthemes::scale_color_colorblind() +
+  theme_bw() +
+  theme(legend.position = "bottom")
+```
+
+&lt;img src="09-slides_files/figure-html/nba-minimax-cut-1.png" width="504" /&gt;
+
+
+]
 .pull-right[
-![](https://octodex.github.com/images/dinotocat.png)
+
+&lt;!-- TODO: Add image of output here --&gt;
 ]
 
 ---
 
-## Alternatively `include_graphics`
+## Minimax linkage example
 
-&lt;img src="http://images6.fanpop.com/image/photos/42900000/Thor-Ragnarok-2017-Loki-and-Thor-mood-compilation-thor-ragnarok-42998758-268-200.gif" width="60%" style="display: block; margin: auto;" /&gt;
+- Want to check out the prototypes for the three clusters
+
+- `protocut` returns the indices of the prototypes (in order of the cluster labels)
+
+
+```r
+minimax_player_clusters$protos
+```
+
+```
+## [1] 468 347 103 251
+```
+
+- View these player rows using `slice`:
+
+
+```r
+nba_filtered_stats %&gt;%
+  dplyr::select(player, pos, age, std_x3pa, std_trb) %&gt;%
+  slice(minimax_player_clusters$protos)
+```
+
+```
+## # A tibble: 4 × 5
+##   player           pos     age std_x3pa std_trb
+##   &lt;chr&gt;            &lt;chr&gt; &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Domantas Sabonis C-PF     25   -1.02    1.99 
+## 2 Jalen Suggs      PG       20    0.161  -0.691
+## 3 Luka Dončić      PG       22    1.53    0.955
+## 4 Ben McLemore     SG       28    2.47   -1.28
+```
 
 ---
 
-### Definition lists can be used with HTML syntax.
+## Wrapping up...
 
-&lt;dl&gt;
-&lt;dt&gt;Name&lt;/dt&gt;
-&lt;dd&gt;Godzilla&lt;/dd&gt;
-&lt;dt&gt;Born&lt;/dt&gt;
-&lt;dd&gt;1952&lt;/dd&gt;
-&lt;dt&gt;Birthplace&lt;/dt&gt;
-&lt;dd&gt;Japan&lt;/dd&gt;
-&lt;dt&gt;Color&lt;/dt&gt;
-&lt;dd&gt;Green&lt;/dd&gt;
-&lt;/dl&gt;
+- For context, how does player position (`pos`) relate to our clustering results?
 
----
-class: center, middle
 
-# Thanks!
+```r
+table("Clusters" = minimax_player_clusters$cl, "Positions" = nba_filtered_stats$pos)
+```
 
-Slides created via the R packages:
+```
+##         Positions
+## Clusters  C C-PF PF PF-SF PG PG-SG SF SF-SG SG SG-PG SG-SF
+##        1 71    2 34     0  0     0  8     0  3     0     0
+##        2 13    0 54     1 88     1 76     5 90     2     4
+##        3  1    0  4     0  2     0  6     0  3     0     0
+##        4  0    0  1     0  2     0  2     0  9     1     0
+```
 
-[**xaringan**](https://github.com/yihui/xaringan)&lt;br&gt;
-[gadenbuie/xaringanthemer](https://github.com/gadenbuie/xaringanthemer)
+--
 
-The chakra comes from [remark.js](https://remarkjs.com), [**knitr**](http://yihui.name/knitr), and [R Markdown](https://rmarkdown.rstudio.com).
+- Can see positions tend to fall within particular clusters...
+
+- _What's the way to visually compare the two labels?_
+
+--
+
+- __We can easily include more variables__ - just changes our distance matrix
+
+--
+
+- But we might want to explore __soft__ assignments instead...
+
+
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

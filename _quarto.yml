@@ -43,7 +43,7 @@ website:
       - schedule.qmd
       - text: "Lectures"
         file: class/index.qmd
-      - text: "Labs and Projects"
+      - text: "Assignments"
         file: assignment/index.qmd
       - icon: slack
         href: "https://cmu-sure-2023.slack.com"
@@ -80,42 +80,42 @@ website:
                 #   file: class/06-class.qmd
             - section: "Clustering"
               contents:
-                - text: "7: K-means"
-                  file: class/07-class.qmd
-                - text: "8: Hierarchical clustering"
+                - text: "8: K-means"
                   file: class/08-class.qmd
-                - text: "9: Gaussian mixture models"
+                - text: "9: Hierarchical clustering"
                   file: class/09-class.qmd
+                - text: "10: Gaussian mixture models"
+                  file: class/10-class.qmd
             - section: "Presentation Skills"
               contents:
-                - text: "10: Working with xaringan and xaringanthemer"
-                  file: class/10-class.qmd
+                - text: "11: Working with xaringan and xaringanthemer"
+                  file: class/11-class.qmd
             - section: "Machine Learning"
               contents:
-                - text: "11: Model assessment vs selection"
-                  file: class/11-class.qmd
-                - text: "12: Linear regression"
+                - text: "12: Model assessment vs selection"
                   file: class/12-class.qmd
-                - text: "13: Intro to variable selection"
+                - text: "13: Linear regression"
                   file: class/13-class.qmd
-                - text: "14: Regularization"
+                - text: "14: Intro to variable selection"
                   file: class/14-class.qmd
-                - text: "15: Tidymodels"
+                - text: "15: Regularization"
                   file: class/15-class.qmd
-                - text: "16: Dimension reduction: PCA"
+                - text: "16: Tidymodels"
                   file: class/16-class.qmd
-                - text: "17: PCR and PLS"
+                - text: "17: Dimension reduction: PCA"
                   file: class/17-class.qmd
-                - text: "18: GLMs"
+                - text: "18: PCR and PLS"
                   file: class/18-class.qmd
-                - text: "19: Logistic regression"
+                - text: "19: GLMs"
                   file: class/19-class.qmd
-                - text: "20: GAMs"
+                - text: "20: Logistic regression"
                   file: class/20-class.qmd
-                - text: "21: Decision Trees"
+                - text: "21: Nonparametric regression"
                   file: class/21-class.qmd
-                - text: "22: Random Forest and Gradient-Boosted trees"
+                - text: "22: Decision Trees"
                   file: class/22-class.qmd
+                - text: "23: Random Forest and Gradient-Boosted trees"
+                  file: class/23-class.qmd
 
     - title: "Assignments"
       contents:

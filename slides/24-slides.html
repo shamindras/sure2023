@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Advanced topics</title>
+    <title>Supervised Learning</title>
     <meta charset="utf-8" />
-    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
-    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
-    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
 .title[
-# Advanced topics
+# Supervised Learning
 ]
 .subtitle[
-## More fun with classification
+## Smoothing splines and GAMs
 ]
 .date[
-### July 22nd, 2021
+### July 9th, 2021
 ]
 
 ---
@@ -27,672 +27,507 @@ class: center, middle, inverse, title-slide
 
 
 
+## Kernel regression
+
+__Nadaraya-Watson kernel regression__
+
+- given training data with explanatory variable `\(x\)` and continuous response `\(y\)` 
+
+- _bandwidth_ `\(h &gt; 0\)`
+
+- and a new point `\((x_{new}, y_{new})\)`: 
+
+`$$\hat{y}_{new} = \sum_{i=1}^n w_i(x_{new})\cdot y_i \,,$$`
+
+where
+
+`$$w_i(x) = \frac{K_h\left(|x_{new}-x_i|\right)}{\sum_{j=1}^n K_h\left(|x_{new}-x_j|\right)} \text{ with } K_h(x) = K(\frac{x}{h})$$`
+
+Example of a __linear smoother__
+
+- class of models where predictions are _weighted_ sums of the response variable
+
+---
+
+## Local regression
+
+We can fit a linear model __at each point `\(x_{new}\)`__ with weights given by kernel function centered on `\(x_{new}\)`
+
+- we can additionally combine this with _polynomial regression_
+
+--
+
+Local regression of the `\(k^{th}\)` order with kernel function `\(K\)` solves the following:
+
+`$$\hat{\beta}(x_{new}) = \underset{\beta}{\text{arg min}}\Big\{ \sum_i K_h(|x_{new} - x_i|) \cdot (y_i - \sum_{j=0}^k x_i^k \cdot \beta_k )^2 \Big\}$$`
+
+--
+__Yes, this means every single observation has its own set of coefficients__
 
 
-## NFL completion probability
+--
 
-Binary outcome model: `\(Y \in \{\text{Incomplete }(0), \text{Complete }(1) \}\)`
+Predicted value is then:
+
+`$$\hat{y}_{new} = \sum_{j=0}^k x_{new}^k \cdot \hat{\beta}_k(x_{new})$$`
+
+
+--
+
+Smoother predictions than kernel regression but comes at __higher computational cost__ 
+
+- __LOESS__ replaces kernel with k nearest neighbors
+  
+  - faster than local regression but discontinuities when neighbors change
+
+
+---
+
+## Smoothing splines
+
+
+Use __smooth function__ `\(s(x)\)` to predict `\(y\)`, control smoothness directly by minimizing the __spline objective function__:
+
+`$$\sum_{i=1}^n (y_i - s(x_i))^2 + \lambda \int(s''(x))^2dx$$`
+
+
+--
+
+`$$= \text{fit data} + \text{impose smoothness}$$`
+
+--
+
+`$$\Rightarrow \text{model fit} = \text{likelihood} - \lambda \cdot \text{wiggliness}$$`
+Estimate the __smoothing spline__ `\(\hat{s}(x)\)` that __balances the tradeoff between the model fit and wiggliness__
+
+
+--
+&lt;img src="https://github.com/noamross/gams-in-r-course/blob/master/images/diffsmooth-1.png?raw=true" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Basis functions
+
+Splines are _piecewise cubic polynomials_ with __knots__ (boundary points for functions) at every data point
+
+
+--
+
+Practical alternative: linear combination of set of __basis functions__
+
+
+--
+__Cubic polynomial example__: define four basis functions:
+
+- `\(B_1(x) = 1\)`, `\(B_2(x) = x\)`, `\(B_3(x) = x^2\)`, `\(B_4(x) = x^3\)`
+
+where the regression function `\(r(x)\)` is written as:
+
+`$$r(x) = \sum_j^4 \beta_j B_j(x)$$`
+
+
+--
+- __linear in the transformed variables__ `\(B_1(x), \dots, B_4(x)\)` but it is __nonlinear in `\(x\)`__
+
+
+--
+We extend this idea for splines _piecewise_ using indicator functions so the spline is a weighted sum:
+
+`$$s(x) = \sum_j^m \beta_j B_j(x)$$`
+
+---
+
+## Number of basis functions is another tuning parameter
+
+&lt;img src="https://github.com/noamross/gams-in-r-course/blob/master/images/diffbasis-1.png?raw=true" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+## Generalized additive models (GAMs)
+
+GAMs were created by [Trevor Hastie and Rob Tibshirani in 1986](https://projecteuclid.org/euclid.ss/1177013604) with intuitive construction:
+
+- relationships between individual explanatory variables and the response variable are smooth (either linear or nonlinear via basis functions)
+
+- estimate the smooth relationships __simultaneously__ to predict the response by just adding them up
+
+__Generalized__ like GLMs where `\(g()\)` is the link function for the expected value of the response `\(E(Y)\)` and __additive__ over the `\(p\)` variables:
+
+`$$g(E(Y)) = \beta_0 + s_1(x_1) + s_2(x_2) + \dots + s_p(x_p)$$`
+
+&lt;img src="https://multithreaded.stitchfix.com/assets/images/blog/fig1.svg" width="70%" style="display: block; margin: auto;" /&gt;
+
+
+--
+
+- can be a convenient balance between flexibility and interpretability
+
+- you can combine linear and nonlinear terms!
+
+---
+
+## Example: predicting MLB HR probability
+
+Used the [`baseballr`](http://billpetti.github.io/baseballr/) package to scrape all batted-balls from 2019 season:
 
 
 ```r
 library(tidyverse)
-nfl_passing_plays &lt;- 
-  read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/eda_projects/nfl_passing_plays_2020.csv") %&gt;%
-  # Only keep rows with passer and receiver information known:
-  filter(!is.na(passer_player_id), !is.na(receiver_player_id), 
-         !is.na(epa), !is.na(air_yards), !is.na(pass_location)) %&gt;%
-  # Combine passer and receiver unique IDs:
-  mutate(passer_name_id = paste0(passer_player_name, ":", passer_player_id),
-         receiver_name_id = paste0(receiver_player_name, ":", receiver_player_id))
+batted_ball_data &lt;- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/eda_projects/mlb_batted_balls_2021.csv") %&gt;%
+  mutate(is_hr = as.numeric(events == "home_run")) %&gt;%
+  filter(!is.na(launch_angle), !is.na(launch_speed),
+         !is.na(is_hr))
+head(batted_ball_data)
 ```
 
-
---
-
-Create train and test folds based on games:
-
+```
+## # A tibble: 6 × 32
+##   player_name    batter stand events  hc_x  hc_y hit_d…¹ launc…² launc…³ hit_l…⁴
+##   &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Ahmed, Nick    605113 R     single  94.3  94.7     272    86.3      19       7
+## 2 Herrera, Odúb… 546318 L     field…  97.7  86.7     289    90.7      44       8
+## 3 Davis, Jonath… 641505 R     field… 121.  107.      233    87        52       8
+## 4 Harrison, Josh 543281 R     field… 116.  148.      159    53        38       6
+## 5 Smith, Pavin   656976 L     field…  79.2  75.4     328    99.1      19       7
+## 6 Hernández, Te… 606192 R     single  44.0  78.8     357   104.       22       7
+## # … with 22 more variables: bb_type &lt;chr&gt;, barrel &lt;dbl&gt;, pitch_type &lt;chr&gt;,
+## #   release_speed &lt;dbl&gt;, effective_speed &lt;dbl&gt;, if_fielding_alignment &lt;chr&gt;,
+## #   of_fielding_alignment &lt;chr&gt;, game_date &lt;date&gt;, balls &lt;dbl&gt;, strikes &lt;dbl&gt;,
+## #   outs_when_up &lt;dbl&gt;, on_1b &lt;dbl&gt;, on_2b &lt;dbl&gt;, on_3b &lt;dbl&gt;, inning &lt;dbl&gt;,
+## #   inning_topbot &lt;chr&gt;, home_score &lt;dbl&gt;, away_score &lt;dbl&gt;,
+## #   post_home_score &lt;dbl&gt;, post_away_score &lt;dbl&gt;, des &lt;chr&gt;, is_hr &lt;dbl&gt;, and
+## #   abbreviated variable names ¹​hit_distance_sc, ²​launch_speed, …
+```
 
 ```r
-set.seed(1985)
-game_fold_table &lt;- tibble(game_id = unique(nfl_passing_plays$game_id)) %&gt;%
-  mutate(game_fold = sample(rep(1:5, length.out = n()), n()))
-nfl_passing_plays &lt;- nfl_passing_plays %&gt;% dplyr::left_join(game_fold_table, by = "game_id")
-```
-
-
----
-
-## Logistic regression review
-
-Generate data of test predictions with particular model:
-
-
-```r
-logit_cv_preds &lt;- 
-  map_dfr(unique(nfl_passing_plays$game_fold), 
-          function(test_fold) {
-            # Separate test and training data:
-            test_data &lt;- nfl_passing_plays %&gt;%
-              filter(game_fold == test_fold)
-            train_data &lt;- nfl_passing_plays %&gt;%
-              filter(game_fold != test_fold)
-            
-            # Train model:
-            logit_model &lt;- glm(complete_pass ~ yardline_100 + shotgun + air_yards + pass_location + qb_hit, 
-                               data = train_data,family = "binomial")
-            
-            # Return tibble of holdout results:
-            tibble(test_pred_probs = predict(logit_model, newdata = test_data,
-                                             type = "response"),
-                   test_actual = test_data$complete_pass,
-                   game_fold = test_fold) 
-          })
-```
-
-
----
-
-## Holdout performance by fold
-
-
-
-```r
-logit_cv_preds %&gt;%
-  mutate(test_pred = ifelse(test_pred_probs &lt; .5, 0, 1)) %&gt;%
-  group_by(game_fold) %&gt;%
-  summarize(mcr = mean(test_pred != test_actual)) 
+table(batted_ball_data$is_hr)
 ```
 
 ```
-## # A tibble: 5 × 2
-##   game_fold   mcr
-##       &lt;int&gt; &lt;dbl&gt;
-## 1         1 0.297
-## 2         2 0.298
-## 3         3 0.293
-## 4         4 0.277
-## 5         5 0.296
+## 
+##    0    1 
+## 6437  318
 ```
 
-
---
-
-Let's think more carefully about what's going on here...
-
 ---
 
-### Evaluating the prediction threshold
-
-We can really write our classification as a function of some cutoff `\(c\)`:
-
-`$$\hat{Y} = \hat{C}(x)=\left\{\begin{array}{ll}
-1 &amp; \hat{p}(x)&gt;c \\
-0 &amp; \hat{p}(x) \leq c
-\end{array}\right.$$`
-
---
-
-Given the classifications, we can form a confusion matrix:
-
-&lt;img src="https://bradleyboehmke.github.io/HOML/images/confusion-matrix.png" width="80%" style="display: block; margin: auto;" /&gt;
-
-
----
-
-&lt;img src="https://bradleyboehmke.github.io/HOML/images/confusion-matrix.png" width="80%" style="display: block; margin: auto;" /&gt;
-
-We want to __maximize__ all of the following (positive means 1, negative means 0):
-
-- __Accuracy__: How often is the classifier correct? `\(\frac{TP + TN}{total}\)`
-
---
-
-- __Precision__: How often is it right for predicted positives? `\(\frac{TP}{TP + FP}\)`
-
---
-
-- __Sensitivity__, aka true positive rate (TPR) or power: How often does it detect positives? `\(\frac{TP}{TP + FN}\)`
-
---
-
-- __Specificity__, aka true negative rate (TNR), or 1 - false positive rate (FPR): How often does it detect negatives? `\(\frac{TN}{TN + FP}\)`
-
---
-
-__So how do we handle this?__
-
----
-
-### We want to balance with high power and low false positive rate
-
-&lt;img src="https://media1.tenor.com/images/f6ec84a0969cb05a08d8c0ae16b847af/tenor.gif?itemid=13078930" width="80%" style="display: block; margin: auto;" /&gt;
-
----
-
-### Receiver Operating Characteristic (ROC) curve
-
-Check all possible values for the cutoff `\(c\)`, plot the power against false positive rate
-
-Want to maximize the __area under the curve (AUC)__
-
-&lt;img src="https://bradleyboehmke.github.io/HOML/02-modeling-process_files/figure-html/modeling-process-roc-1.png" width="60%" style="display: block; margin: auto;" /&gt;
-
-
----
-
-### [`plotROC`](https://cran.r-project.org/web/packages/plotROC/vignettes/examples.html) and holdout AUC
+## Predict HRs with launch angle and exit velocity?
 
 .pull-left[
 
-- `d` stands for disease status (the outcome)
-
-- `m` stands for marker (the prediction)
-
-
 ```r
-library(plotROC)
-logit_cv_preds %&gt;%
-  ggplot() + 
-* geom_roc(aes(d = test_actual,
-*              m = test_pred_probs),
-           labelround = 4) + 
-  style_roc() + 
-  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray") +
-  labs(color = "Test fold")
-with(logit_cv_preds, 
-*    MLmetrics::AUC(test_pred_probs, test_actual))
-```
-
-
-]
-.pull-right[
-&lt;img src="24-slides_files/figure-html/unnamed-chunk-8-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
-```
-## [1] 0.6864571
-```
-
-]
-
----
-
-### [`plotROC`](https://cran.r-project.org/web/packages/plotROC/vignettes/examples.html) and holdout AUC by test fold
-
-.pull-left[
-
-
-```r
-logit_cv_preds %&gt;%
-  ggplot() + 
-  geom_roc(aes(d = test_actual, 
-               m = test_pred_probs,
-*              color = as.factor(game_fold)),
-*          n.cuts = 0) +
-  style_roc() + 
-  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray") +
-  ggthemes::scale_color_colorblind() +
-  labs(color = "Test fold") + 
+batted_ball_data %&gt;%
+  ggplot(aes(x = launch_speed, 
+             y = launch_angle,
+             color = as.factor(is_hr))) +
+  geom_point(alpha = 0.5) +
+  ggthemes::scale_color_colorblind(labels = c("No", "Yes")) +
+  labs(x = "Exit velocity", 
+       y = "Launch angle", 
+       color = "HR?") +
+  theme_bw() +
   theme(legend.position = "bottom")
-logit_cv_preds %&gt;% group_by(game_fold) %&gt;%
-  summarize(auc = MLmetrics::AUC(test_pred_probs, test_actual))
 ```
 
-_There is definitely room for improvement..._
+- HRs are relatively rare and confined to one area of this plot
 
 ]
 .pull-right[
-&lt;img src="24-slides_files/figure-html/unnamed-chunk-9-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
-```
-## # A tibble: 5 × 2
-##   game_fold   auc
-##       &lt;int&gt; &lt;dbl&gt;
-## 1         1 0.690
-## 2         2 0.679
-## 3         3 0.678
-## 4         4 0.705
-## 5         5 0.681
-```
+&lt;img src="24-slides_files/figure-html/unnamed-chunk-4-1.png" width="504" /&gt;
 
 ]
 
 ---
 
-### Add in varying intercepts with `glmer`?
+## Fitting GAMs with [`mgcv`](https://cran.r-project.org/web/packages/mgcv/index.html)
 
+First set-up training data
 
 
 ```r
-library(lme4)
-glmer_cv_preds &lt;- 
-  map_dfr(unique(nfl_passing_plays$game_fold), 
-          function(test_fold) {
-            
-            # Separate test and training data - scale variables:
-            test_data &lt;- nfl_passing_plays %&gt;% filter(game_fold == test_fold) %&gt;%
-*             mutate(yardline_100 = scale(yardline_100), air_yards = scale(air_yards))
-            
-            train_data &lt;- nfl_passing_plays %&gt;% filter(game_fold != test_fold)  %&gt;%
-*             mutate(yardline_100 = scale(yardline_100), air_yards = scale(air_yards))
-            
-            # Train model:
-            glmer_model &lt;- glmer(complete_pass ~ yardline_100 + shotgun + air_yards + 
-                                  pass_location + qb_hit + 
-*                                 (1|passer_name_id) + (1|receiver_name_id),
-                                 data = train_data, family = "binomial")
-            
-            # Return tibble of holdout results:
-            tibble(test_pred_probs = predict(glmer_model, newdata = test_data,
-                                             type = "response",
-*                                            allow.new.levels = TRUE),
-                   test_actual = test_data$complete_pass,
-                   game_fold = test_fold) 
-          })
+set.seed(2004)
+batted_ball_data &lt;- batted_ball_data %&gt;%
+  mutate(is_train = sample(rep(0:1, length.out = nrow(batted_ball_data))))
+```
+
+Next fit the initial function using smooth functions via `s()`:
+
+
+```r
+library(mgcv)
+*init_logit_gam &lt;- gam(is_hr ~ s(launch_speed) + s(launch_angle),
+                      data = filter(batted_ball_data, is_train == 1), 
+*                     family = binomial, method = "REML")
+```
+
+ - Use [REML](https://en.wikipedia.org/wiki/Restricted_maximum_likelihood) instead of the default for more stable solution
+
+---
+
+### GAM summary
+
+
+```r
+summary(init_logit_gam)
+```
+
+```
+## 
+## Family: binomial 
+## Link function: logit 
+## 
+## Formula:
+## is_hr ~ s(launch_speed) + s(launch_angle)
+## 
+## Parametric coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)  
+## (Intercept)   -34.14      13.91  -2.455   0.0141 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Approximate significance of smooth terms:
+##                   edf Ref.df Chi.sq p-value    
+## s(launch_speed) 1.928  2.388 172.22  &lt;2e-16 ***
+## s(launch_angle) 3.640  3.970  92.94  &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## R-sq.(adj) =  0.551   Deviance explained = 65.8%
+## -REML = 234.05  Scale est. = 1         n = 3377
 ```
 
 
 ---
 
-### Add in varying intercepts with `glmer`?
+### Visualizing partial response functions with [gratia](https://gavinsimpson.github.io/gratia/index.html)
 
-.pull-left[
+Displays the partial effect of each term in the model `\(\Rightarrow\)` add up to the overall prediction 
 
 
 ```r
-glmer_cv_preds %&gt;%
-  ggplot() + 
-  geom_roc(aes(d = test_actual, 
-               m = test_pred_probs,
-*              color = as.factor(game_fold)),
-*          n.cuts = 0) +
-  style_roc() + 
-  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray") +
-  ggthemes::scale_color_colorblind() +
-  labs(color = "Test fold") + 
-  theme(legend.position = "bottom")
-glmer_cv_preds %&gt;% group_by(game_fold) %&gt;%
-  summarize(auc = MLmetrics::AUC(test_pred_probs, test_actual))
+library(gratia)
+draw(init_logit_gam)
 ```
 
-_Looks like player-level effects do not help!_
+&lt;img src="24-slides_files/figure-html/unnamed-chunk-5-1.png" width="504" style="display: block; margin: auto;" /&gt;
 
-]
-.pull-right[
+---
+
+## Convert to probability scale with `plogis` function
+
+
+
+```r
+*draw(init_logit_gam, fun = plogis)
+```
+
+&lt;img src="24-slides_files/figure-html/unnamed-chunk-6-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+--
+
+- centered on average value of 0.5 because it's the partial effect without the intercept
+
+---
+
+## Include intercept in plot...
+
+
+```r
+*draw(init_logit_gam, fun = plogis, constant = coef(init_logit_gam)[1])
+```
+
+&lt;img src="24-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+Intercept reflects relatively rare occurence of HRs!
+
+---
+
+## Model checking for number of basis functions
+
+Use `gam.check()` to see if we need more basis functions based on an approximate test
+
+
+```r
+gam.check(init_logit_gam)
+```
+
+```
+## 
+## Method: REML   Optimizer: outer newton
+## full convergence after 9 iterations.
+## Gradient range [-0.0001120962,1.387397e-05]
+## (score 234.0517 &amp; scale 1).
+## Hessian positive definite, eigenvalue range [0.1473281,0.7723187].
+## Model rank =  19 / 19 
+## 
+## Basis dimension (k) checking results. Low p-value (k-index&lt;1) may
+## indicate that k is too low, especially if edf is close to k'.
+## 
+##                   k'  edf k-index p-value
+## s(launch_speed) 9.00 1.93    0.97    0.12
+## s(launch_angle) 9.00 3.64    1.03    0.97
+```
+
+
+---
+
+## Check the predictions?
+
+
+```r
+batted_ball_data &lt;- batted_ball_data %&gt;%
+  mutate(init_gam_hr_prob = 
+           as.numeric(predict(init_logit_gam,
+                              newdata = batted_ball_data,
+                              type = "response")),
+         init_gam_hr_class = as.numeric(init_gam_hr_prob &gt;= 0.5))
+batted_ball_data %&gt;%
+  group_by(is_train) %&gt;%
+  summarize(correct = mean(is_hr == init_gam_hr_class))
+```
+
+```
+## # A tibble: 2 × 2
+##   is_train correct
+##      &lt;int&gt;   &lt;dbl&gt;
+## 1        0   0.974
+## 2        1   0.970
+```
+
+---
+
+## What about the linear model?
+
+
+```r
+init_linear_logit &lt;- glm(is_hr ~ launch_speed + launch_angle, 
+                         data = filter(batted_ball_data, is_train == 1), 
+                         family = binomial)
+batted_ball_data &lt;- batted_ball_data %&gt;%
+  mutate(init_glm_hr_prob = predict(init_linear_logit,
+                                    newdata = batted_ball_data,
+                                    type = "response"),
+         init_glm_hr_class = as.numeric(init_glm_hr_prob &gt;= 0.5))
+batted_ball_data %&gt;%
+  group_by(is_train) %&gt;%
+  summarize(correct = mean(is_hr == init_glm_hr_class))
+```
+
+```
+## # A tibble: 2 × 2
+##   is_train correct
+##      &lt;int&gt;   &lt;dbl&gt;
+## 1        0   0.960
+## 2        1   0.954
+```
+
+
+__Very few situations in reality where linear regressions perform better than an additive model using smooth functions__ - especially since smooth functions can just capture linear models...
+
+---
+
+## Continuous interactions as a smooth surface
+
+
+```r
+multi_logit_gam &lt;- gam(is_hr ~ s(launch_speed, launch_angle), 
+                       data = filter(batted_ball_data, is_train == 1), 
+                       family = binomial)
+```
+
+Plot the predicted heatmap:
+
+
+```r
+draw(multi_logit_gam)
+```
+
 &lt;img src="24-slides_files/figure-html/unnamed-chunk-11-1.png" width="504" style="display: block; margin: auto;" /&gt;
 
-```
-## # A tibble: 5 × 2
-##   game_fold   auc
-##       &lt;int&gt; &lt;dbl&gt;
-## 1         1 0.692
-## 2         2 0.681
-## 3         3 0.682
-## 4         4 0.705
-## 5         5 0.684
-```
-
-]
-
 ---
 
-## Tree-based approach?
-
-We need to first convert categorical variables into dummy indicators:
+## Check the predictions?
 
 
 ```r
-model_data &lt;- nfl_passing_plays %&gt;%
-  mutate(play_id = 1:n(),
-         complete_pass = as.factor(complete_pass)) %&gt;%
-  dplyr::select(play_id, complete_pass, yardline_100, shotgun, air_yards, qb_hit,
-                game_fold, pass_location) %&gt;%
-  mutate(pass_location_val = 1) %&gt;%
-  pivot_wider(id_cols = play_id:game_fold,
-              names_from = pass_location, values_from = pass_location_val,
-              values_fill = 0) %&gt;%
-  dplyr::select(-play_id)
+batted_ball_data &lt;- batted_ball_data %&gt;%
+  mutate(multi_gam_hr_prob =
+           as.numeric(predict(multi_logit_gam,
+                              newdata = batted_ball_data,
+                              type = "response")),
+         multi_gam_hr_class = as.numeric(multi_gam_hr_prob &gt;= 0.5))
+batted_ball_data %&gt;%
+  group_by(is_train) %&gt;%
+  summarize(correct = mean(is_hr == multi_gam_hr_class))
+```
+
+```
+## # A tibble: 2 × 2
+##   is_train correct
+##      &lt;int&gt;   &lt;dbl&gt;
+## 1        0   0.975
+## 2        1   0.971
 ```
 
 
+- This has one smoothing parameter for the 2D smooth...
+
 ---
 
-## Random forests using probability forest
-
-For each tree compute class proportion in terminal node, then take average across all trees
+### Separate interactions from individual terms with tensor smooths
 
 
 ```r
-library(ranger)
-rf_prob_cv_preds &lt;- 
-  map_dfr(unique(model_data$game_fold), 
-          function(test_fold) {
-            
-            # Separate test and training data - scale variables:
-            test_data &lt;- model_data %&gt;% filter(game_fold == test_fold)
-            
-            train_data &lt;- model_data %&gt;% filter(game_fold != test_fold)
-
-            rf_prob_model &lt;-
-              ranger(complete_pass ~ ., data = dplyr::select(train_data, -game_fold),
-                     probability = TRUE)
-
-            # Return tibble of holdout results:
-            tibble(test_pred_probs = 
-                     as.numeric(predict(rf_prob_model, data = test_data,
-*                                       type = "response")$predictions[,2]),
-*                  test_actual = as.numeric(test_data$complete_pass) - 1,
-                   game_fold = test_fold) 
-          })
+tensor_logit_gam &lt;- gam(is_hr ~ s(launch_speed) + s(launch_angle) +
+*                         ti(launch_speed, launch_angle),
+                        data = filter(batted_ball_data, is_train == 1), family = binomial)
 ```
-
-
-
----
-
-### Random forests using probability forest
-
-.pull-left[
-
-
-```r
-rf_prob_cv_preds %&gt;%
-  ggplot() + 
-  geom_roc(aes(d = test_actual, 
-               m = test_pred_probs,
-*              color = as.factor(game_fold)),
-*          n.cuts = 0) +
-  style_roc() + 
-  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray") +
-  ggthemes::scale_color_colorblind() +
-  labs(color = "Test fold") + 
-  theme(legend.position = "bottom")
-rf_prob_cv_preds %&gt;% group_by(game_fold) %&gt;%
-  summarize(auc = MLmetrics::AUC(test_pred_probs, test_actual))
-```
-
-_Looks like just a modest improvement_
-
-]
-.pull-right[
-&lt;img src="24-slides_files/figure-html/unnamed-chunk-14-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
-```
-## # A tibble: 5 × 2
-##   game_fold   auc
-##       &lt;int&gt; &lt;dbl&gt;
-## 1         1 0.702
-## 2         2 0.703
-## 3         3 0.683
-## 4         4 0.713
-## 5         5 0.690
-```
-
-]
-
----
-
-## XGBoost!
-
-
-```r
-library(xgboost)
-xgb_cv_preds &lt;- 
-  map_dfr(unique(model_data$game_fold), 
-          function(test_fold) {
-            # Separate test and training data - scale variables:
-            test_data &lt;- model_data %&gt;% filter(game_fold == test_fold)
-            test_data_x &lt;- as.matrix(dplyr::select(test_data, -complete_pass, -game_fold))
-            train_data &lt;- model_data %&gt;% filter(game_fold != test_fold)
-            train_data_x &lt;- as.matrix(dplyr::select(train_data, -complete_pass, -game_fold))
-            train_data_y &lt;- as.numeric(train_data$complete_pass) - 1
-            
-*           xgb_model &lt;- xgboost(data = train_data_x, label = train_data_y,
-                                 nrounds = 100, max_depth = 3, eta = 0.3, 
-                                 gamma = 0, colsample_bytree = 1, min_child_weight = 1,
-                                 subsample = 1, nthread = 1,
-                                 objective = 'binary:logistic', eval_metric = 'auc', 
-                                 verbose = 0)
-
-            # Return tibble of holdout results:
-            tibble(test_pred_probs = 
-                     as.numeric(predict(xgb_model, newdata = test_data_x, type = "response")),
-                   test_actual = as.numeric(test_data$complete_pass) - 1,
-                   game_fold = test_fold) 
-          })
-```
-
-
----
-
-### XGBoost
-
-.pull-left[
-
-
-```r
-xgb_cv_preds %&gt;%
-  ggplot() + 
-  geom_roc(aes(d = test_actual, 
-               m = test_pred_probs,
-*              color = as.factor(game_fold)),
-*          n.cuts = 0) +
-  style_roc() + 
-  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray") +
-  ggthemes::scale_color_colorblind() +
-  labs(color = "Test fold") + 
-  theme(legend.position = "bottom")
-xgb_cv_preds %&gt;% group_by(game_fold) %&gt;%
-  summarize(auc = MLmetrics::AUC(test_pred_probs, test_actual))
-```
-
-_Should actually tune this more..._
-
-]
-.pull-right[
-&lt;img src="24-slides_files/figure-html/unnamed-chunk-16-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
-```
-## # A tibble: 5 × 2
-##   game_fold   auc
-##       &lt;int&gt; &lt;dbl&gt;
-## 1         1 0.704
-## 2         2 0.706
-## 3         3 0.683
-## 4         4 0.715
-## 5         5 0.692
-```
-
-]
-
----
-
-## All together now...
-
-.pull-left[
-
-```r
-bind_rows(
-  mutate(logit_cv_preds, type = "logit"),
-  mutate(glmer_cv_preds, type = "glmer"),
-  mutate(rf_prob_cv_preds, type = "RF"),
-  mutate(xgb_cv_preds, type = "XGBoost")) %&gt;%
-  ggplot() + 
-  geom_roc(aes(d = test_actual, 
-               m = test_pred_probs,
-*              color = type),
-*          n.cuts = 0) +
-  style_roc() + 
-  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray") +
-  ggthemes::scale_color_colorblind() +
-  labs(color = "Model") + 
-  theme(legend.position = "bottom")
-```
-
-]
-.pull-right[
-&lt;img src="24-slides_files/figure-html/unnamed-chunk-17-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
-Pretty similar performance across all models...
-
-]
-
----
-
-### Explaining predictions with [SHAP-values](https://christophm.github.io/interpretable-ml-book/shap.html)
-
-SHAP-values are based on [Shapley values](https://christophm.github.io/interpretable-ml-book/shapley.html) (an idea from game theory) and are used to measure the contributions from each feature in the model to the prediction for an individual observation
-
-Shapley value `\(\phi_i^j\)` for feature value `\(j\)` for observation `\(i\)` can be interpreted as:
-
-- the value of feature `\(j\)` contributed `\(\phi_i^j\)` to the prediction of observation `\(i\)` compared to the average prediction for the dataset
-
-- linear regression coefficients function in the same way
 
 --
 
-Can use them in multiple ways:
-
-- View total importance: `\(\frac{1}{n}\sum |\phi_i^j|\)`
-
-- View distribution of `\(\phi_i^j\)` for each feature
-
-- Plot `\(\phi_i^j\)` against feature value for partial dependence
-
-
----
-
-### [`SHAPforxgboost`](https://cran.r-project.org/web/packages/SHAPforxgboost/readme/README.html)
-
-Fit model on full data then [extract SHAP-values with `SHAPforxgboost`](https://www.kaggle.com/rikdifos/shap-make-algorithms-interpretable)
+Check the predictions
 
 
 ```r
-library(xgboost)
-train_data_x &lt;- as.matrix(dplyr::select(model_data, -complete_pass, -game_fold))
-train_data_y &lt;- as.numeric(model_data$complete_pass) - 1
-xgb_model &lt;- xgboost(data = train_data_x, label = train_data_y, nrounds = 100, max_depth = 3, eta = 0.3, 
-                     gamma = 0, colsample_bytree = 1, min_child_weight = 1, subsample = 1, nthread = 1,
-                     objective = 'binary:logistic', eval_metric = 'auc', verbose = 0)
-library(SHAPforxgboost)
-shap_value_list &lt;- shap.values(xgb_model, X_train = train_data_x)
-shap.plot.summary.wrap1(xgb_model, X = train_data_x)
+batted_ball_data %&gt;%
+  mutate(tensor_gam_hr_prob =
+           as.numeric(predict(tensor_logit_gam, newdata = batted_ball_data, type = "response")),
+         tensor_gam_hr_class = as.numeric(tensor_gam_hr_prob &gt;= 0.5)) %&gt;%
+  group_by(is_train) %&gt;% 
+  summarize(correct = mean(is_hr == tensor_gam_hr_class))
 ```
 
-&lt;img src="24-slides_files/figure-html/unnamed-chunk-18-1.png" width="504" style="display: block; margin: auto;" /&gt;
+```
+## # A tibble: 2 × 2
+##   is_train correct
+##      &lt;int&gt;   &lt;dbl&gt;
+## 1        0   0.975
+## 2        1   0.970
+```
 
+--
 
+__More complicated model but yet it does not help!__
 
 ---
 
-## Multinomial classification with XGBoost
+## Recap and useful resources
 
-Use same NFL play-by-play dataset as before but get ready for XGBoost...
+&lt;blockquote class="twitter-tweet"&gt;&lt;p lang="en" dir="ltr"&gt;140 char vrsn&lt;br&gt;&lt;br&gt;1 GAMs are just GLMs&lt;br&gt;2 GAMs fit wiggly terms&lt;br&gt;3 use + s(foo) not foo in frmla&lt;br&gt;4 use method = &amp;quot;REML&amp;quot;&lt;br&gt;5 gam.check()&lt;/p&gt;&amp;mdash; Dr Gavin Simpson 😷🇪🇺🇩🇰 (@ucfagls) &lt;a href="https://twitter.com/ucfagls/status/842444686513991680?ref_src=twsrc%5Etfw"&gt;March 16, 2017&lt;/a&gt;&lt;/blockquote&gt; &lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
 
+--
 
-```r
-nfl_ep_model_data &lt;- read_rds("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/model_pbp_data.rds") %&gt;%
-  mutate(Next_Score_Half = fct_relevel(Next_Score_Half, 
-                                       "No_Score", "Safety", "Field_Goal", "Touchdown",
-                                       "Opp_Safety", "Opp_Field_Goal", "Opp_Touchdown"),
-         next_score_label = as.numeric(Next_Score_Half) - 1) 
-model_variables &lt;- c("half_seconds_remaining", "yardline_100", "down", "ydstogo")
-```
+- [GAMs in R by Noam Ross](https://noamross.github.io/gams-in-r-course/)
 
-XGBoost requires the multinomial categories to be numeric starting at 0
+- [`mgcv` course](https://eric-pedersen.github.io/mgcv-esa-workshop/)
 
----
+- [Stitch Fix post: GAM: The Predictive Modeling Silver Bullet](https://multithreaded.stitchfix.com/blog/2015/07/30/gam/)
 
-### Leave-one-season-out cross-validation
+- Chapters 7 and 8 of [Advanced Data Analysis from an Elementary Point of View by Prof Cosma Shalizi](https://www.stat.cmu.edu/~cshalizi/ADAfaEPoV/ADAfaEPoV.pdf) 
 
-
-```r
-library(xgboost)
-xgb_loso_cv_preds &lt;- 
-  map_dfr(unique(nfl_ep_model_data$season), function(x) {
-            
-            # Separate test and training data - scale variables:
-            test_data &lt;- nfl_ep_model_data %&gt;% filter(season == x)
-            test_data_x &lt;- as.matrix(dplyr::select(test_data, model_variables))
-            train_data &lt;- nfl_ep_model_data %&gt;% filter(season != x)
-            train_data_x &lt;- as.matrix(dplyr::select(train_data, model_variables))
-            train_data_y &lt;- train_data$next_score_label
-            
-            xgb_model &lt;- xgboost(data = train_data_x, label = train_data_y, nrounds = 100, max_depth = 3, 
-                                 eta = 0.3, gamma = 0, colsample_bytree = 1, min_child_weight = 1,
-*                                subsample = 1, nthread = 1, objective = 'multi:softprob', num_class = 7,
-                                 eval_metric = 'mlogloss', verbose = 0)
-            
-            xgb_preds &lt;- matrix(predict(xgb_model, test_data_x), ncol = 7, byrow = TRUE) %&gt;%
-              as_tibble()
-            colnames(xgb_preds) &lt;- c("No_Score", "Safety", "Field_Goal", "Touchdown",
-                                     "Opp_Safety", "Opp_Field_Goal", "Opp_Touchdown")
-            xgb_preds %&gt;%
-              mutate(Next_Score_Half = test_data$Next_Score_Half,season = x)
-            })
-```
-
-
-
-
----
-
-### Calibration results for each scoring event
-  
-
-```r
-ep_cv_loso_calibration_results &lt;- xgb_loso_cv_preds %&gt;%
-  pivot_longer(No_Score:Opp_Touchdown,
-               names_to = "next_score_type",
-               values_to = "pred_prob") %&gt;%
-  mutate(bin_pred_prob = round(pred_prob / 0.05) * .05) %&gt;%
-  group_by(next_score_type, bin_pred_prob) %&gt;%
-  summarize(n_plays = n(), 
-            n_scoring_event = length(which(Next_Score_Half == next_score_type)),
-            bin_actual_prob = n_scoring_event / n_plays,
-*           bin_se = sqrt((bin_actual_prob * (1 - bin_actual_prob)) / n_plays)) %&gt;%
-  ungroup() %&gt;%
-* mutate(bin_upper = pmin(bin_actual_prob + 2 * bin_se, 1),
-*        bin_lower = pmax(bin_actual_prob - 2 * bin_se, 0))
-```
-
----
-
-### Calibration results for each scoring event
-
-
-```r
-ep_cv_loso_calibration_results %&gt;%
-  mutate(next_score_type = fct_relevel(next_score_type, "Opp_Safety", "Opp_Field_Goal", 
-                                       "Opp_Touchdown", "No_Score", "Safety", "Field_Goal", "Touchdown"),
-  next_score_type = fct_recode(next_score_type, "-Field Goal (-3)" = "Opp_Field_Goal", "-Safety (-2)" = "Opp_Safety", "-Touchdown (-7)" = "Opp_Touchdown",
-                               "Field Goal (3)" = "Field_Goal", "No Score (0)" = "No_Score",
-                               "Touchdown (7)" = "Touchdown", "Safety (2)" = "Safety")) %&gt;%
-  ggplot(aes(x = bin_pred_prob, y = bin_actual_prob)) +
-  geom_abline(slope = 1, intercept = 0, color = "black", linetype = "dashed") +
-  geom_smooth(se = FALSE) + 
-  geom_point(aes(size = n_plays)) +
-  geom_errorbar(aes(ymin = bin_lower, ymax = bin_upper)) + #coord_equal() +   
-  scale_x_continuous(limits = c(0,1)) + 
-  scale_y_continuous(limits = c(0,1)) + 
-  labs(size = "Number of plays", x = "Estimated next score probability", 
-       y = "Observed next score probability") + 
-  theme_bw() + 
-  theme(strip.background = element_blank(), 
-        axis.text.x = element_text(angle = 90), 
-        legend.position = c(1, .05), legend.justification = c(1, 0)) +
-  facet_wrap(~ next_score_type, ncol = 4)
-```
-
-
----
-
-### Calibration results for each scoring event
-
-&lt;img src="24-slides_files/figure-html/unnamed-chunk-20-1.png" width="864" style="display: block; margin: auto;" /&gt;
-
-
-
-
+  - I strongly recommend you download this book, and you will refer back to it for the rest of your life
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

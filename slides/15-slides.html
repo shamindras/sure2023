@@ -3,9 +3,9 @@
   <head>
     <title>Supervised Learning</title>
     <meta charset="utf-8" />
-    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
-    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
-    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -15,10 +15,10 @@ class: center, middle, inverse, title-slide
 # Supervised Learning
 ]
 .subtitle[
-## Intro to variable selection
+## Regularization
 ]
 .date[
-### June 25th, 2021
+### June 28th, 2021
 ]
 
 ---
@@ -29,15 +29,14 @@ class: center, middle, inverse, title-slide
 
 
 
-## The setting
+## Previously...
 
-We wish to learn a linear model. Our estimate (denoted by hats) is
+We talked about variable selection in the linear model context:
+
 $$
-\hat{Y} = \hat{\beta}_0 + \hat{\beta}_1 X_1 + \cdots + \hat{\beta}_p X_p
+\hat{Y} = \hat{\beta}_0 + \hat{\beta}_1 x_1 + \cdots + \hat{\beta}_p x_p
 $$
 
-
---
 Why would we attempt to select a __subset__ of the `\(p\)` variables?
 
 
@@ -46,97 +45,158 @@ Why would we attempt to select a __subset__ of the `\(p\)` variables?
 
   - Eliminating uninformative predictors can lead to lower variance in the test-set MSE, at the expense of a slight increase in bias
 
+
 --
 - *To improve model interpretability*
 
   - Eliminating uninformative predictors is obviously a good thing when your goal is to tell the story of how your predictors are associated with your response.
 
 
+--
+__Remember the bias-variance tradeoff__:
+
+
+$$
+{\rm MSE} = {\rm (Bias)}^2 + {\rm Variance}
+$$
+
+- Introduce bias but decrease variance to improve predictions
 
 ---
 
-## Best subset selection
+## Shrinkage methods: Ridge regression
 
-- Start with the __null model__ `\(\mathcal{M}_0\)` (intercept-only) that has no predictors
+__Remember__: linear regression estimates coefficients by minimizing:
 
-  - just predicts the sample mean for each observation
-  
-
---
-- For `\(k = 1, 2, \dots, p\)` (each possible number of predictors)
-
-  - Fit __all__ `\(\binom{p}{k} = \frac{p!}{k!(p-k)!}\)` with exactly `\(k\)` predictors
-  
-  - Pick the best (some criteria) among these `\(\binom{p}{k}\)` models, call it `\(\mathcal{M}_k\)`
-  
-    - Best can be up to the user: cross-validation error, highest adjusted `\(R^2\)`, etc.
-  
-
---
-- Select a single best model from among `\(\mathcal{M}_0, \dots, \mathcal{M}_p\)`
+ `$$\text{RSS} = \sum_i^n \big(Y_i - \beta_0 -  \sum_j^p \hat{\beta}_j x_{ij}\big)^2$$`
 
 
 --
-__This is not typically used in research!__
+__Ridge regression__ introduces a __shrinkage penalty__ `\(\lambda \geq 0\)` by minimizing:
 
-- only practical for a smaller number of variables
-
+`$$\sum_i^n \big(Y_i - \beta_0 -  \sum_j^p \beta_j x_{ij}\big)^2 + \lambda \sum_j^p \beta_j^2 = \text{RSS} + \lambda \sum_j^p \beta_j^2$$`
 
 --
-- arbitrary way of defining __best__ and ignores __prior knowledge__ about potential predictors
+- as `\(\lambda\)` increases `\(\Rightarrow\)` flexibility of models decreases
+
+  - __increases bias, but decreases variance__
+ 
+
+--
+- for fixed value of `\(\lambda\)`, ridge regression fits only a single model
+
+  - need to use cross-validation to __tune__ `\(\lambda\)`
+
+---
+
+## Shrinkage methods: Ridge regression
+
+For example: note how the magnitude of the coefficient for `Income` trends as `\(\lambda \rightarrow \infty\)`
+
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/Ridge.png" width="40%" style="display: block; margin: auto;" /&gt;
+
+--
+
+The coefficient __shrinks towards zero__, but never actually reaches it
+
+- `Income` is always a variable in the learned model, regardless of the value of `\(\lambda\)`
 
 
 ---
 
-## Use the shoe leather approach
+## Shrinkage methods: Lasso regression
 
-[Prof. David Freeman](https://en.wikipedia.org/wiki/David_A._Freedman):
+Ridge regression __keeps all variables__ 
 
-- algorithms can be tempting but they are NOT substitutes!
-
-- you should NOT avoid the hard work of EDA in your modeling efforts
+But we may believe there is a __sparse__ solution
 
 
 --
+__Lasso__ enables variable selection with `\(\lambda\)` by minimizing:
 
-__Variable selection is a difficult problem!__
+`$$\sum_i^n \big(Y_i - \beta_0 -  \sum_j^p \beta_j X_{ij}\big)^2 + \lambda \sum_j^p\vert  \beta_j \vert = \text{RSS} + \lambda \sum_j^p \vert \beta_j \vert$$`
 
-- Like much of a statistics &amp; data science research there is not one unique, correct answer
+- Lasso uses an `\(\ell_1\)` ("ell 1") penalty
 
 
 --
-You should justify which predictors / variables used in modeling based on:
+- as `\(\lambda\)` increases `\(\Rightarrow\)` flexibility of models decreases
 
-- __context__,
+  - __increases bias, but decreases variance__
+  
+--
 
-- __extensive EDA__, and 
-
-- __model assessment based on holdout predictions__
+- Can handle the `\(p &gt; n\)` case, i.e. more variables than observations!
+ 
 
 ---
 
-## Covariance and correlation
+## Shrinkage methods: Lasso regression
 
-- __Covariance__ is a measure of the __linear__ dependence between two variables
+Lasso regression __performs variable selection__ yielding __sparse__ models
 
-  - To be _"uncorrelated"_ is not the same as to be _"independent"_...
-  
-  - Independence means __there is no dependence__, linear or otherwise
-  
-
---
-- __Correlation__ is a _normalized_ form of covariance, ranges from -1 through 0 to 1
-
-  - -1 means one variable linearly decreases absolutely in value while the other increases in value
-  
-  - 0 means no linear dependence
-  
-  - 1 means one variable linear increases absolutely while the other increases
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/Lasso.png" width="40%" style="display: block; margin: auto;" /&gt;
 
 
 --
 
-- We can use the `cov()` / `cor()` functions in `R` to generate the __covariance__ / __correlation__ matrices
+The coefficient shrinks towards and __eventually equals zero__ at `\(\lambda \approx 1000\)`
+
+- if the optimum value of `\(\lambda\)` is larger, then `Income` would NOT be included in the learned model
+
+---
+
+## Which do we use?
+
+
+--
+
+&lt;img src="https://i.gifer.com/Xnj.gif" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## Best of both worlds? Elastic net
+
+`$$\sum_{i}^{n}\left(Y_{i}-\beta_{0}-\sum_{j}^{p} \beta_{j} X_{i j}\right)^{2}+\lambda\left[(1-\alpha)\|\beta\|_{2}^{2} / 2+\alpha\|\beta\|_{1} \right]$$`
+- `\(\vert \vert \beta \vert \vert_1\)` is the `\(\ell_1\)` norm: `\(\vert \vert \beta \vert \vert_1 = \sum_j^p \vert \beta_j \vert\)`
+
+- `\(\vert \vert \beta \vert \vert_2\)` is the `\(\ell_2\)`, Euclidean, norm: `\(\vert \vert \beta \vert \vert_2 = \sqrt{\sum_j^p \beta_j^2}\)`
+
+
+--
+
+- Ridge penalty: `\(\lambda \cdot (1 - \alpha) / 2\)`
+
+- Lasso penalty: `\(\lambda \cdot \alpha\)`
+
+
+--
+- `\(\alpha\)` controls the __mixing__ between the two types, ranges from 0 to 1
+
+  - `\(\alpha = 1\)` returns lasso
+  
+  - `\(\alpha = 0\)` return ridge
+
+---
+
+## Caveats to consider...
+
+- For either ridge, lasso, or elastic net: __you should standardize your data__
+
+- Common convention: within each column, compute then subtract off the sample mean, and compute the divide off the sample standard deviation:
+
+`$$\tilde{x}_{ij} = \frac{x_{ij} - \bar{x}_j}{s_{x,j}}$$`
+
+- [`glmnet`](https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html) package does this by default and reports coefficients on the original scale
+
+
+--
+- `\(\lambda\)` and `\(\alpha\)` are __tuning parameters__
+
+- Have to select appropriate values based on test data / cross-validation
+
+- When using `glmnet`, the `cv.glmnet()` function will perform the cross-validation for you
 
 ---
 
@@ -148,196 +208,66 @@ Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL te
 ```r
 library(tidyverse)
 nfl_teams_data &lt;- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/regression_projects/nfl_team_season_summary.csv")
-nfl_teams_data
-```
-
-```
-## # A tibble: 701 × 55
-##    season team  offens…¹ offen…² offen…³ offen…⁴ offen…⁵ offen…⁶ offen…⁷ offen…⁸
-##     &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-##  1   1999 ARI      0.477    2796    1209    4.67    3.15       0     NaN       0
-##  2   1999 ATL      0.504    3317    1176    6.08    3.20       0     NaN      11
-##  3   1999 BAL      0.452    2805    1663    5.07    4.13       0     NaN       0
-##  4   1999 BUF      0.540    3275    2038    6.17    4.13       0     NaN     161
-##  5   1999 CAR      0.552    4144    1484    6.68    4.29       0     NaN      89
-##  6   1999 CHI      0.561    4090    1359    5.75    3.55       0     NaN     508
-##  7   1999 CIN      0.498    3178    1971    5.37    4.63       0     NaN       0
-##  8   1999 CLE      0.489    2574    1140    4.71    3.67       0     NaN      35
-##  9   1999 DAL      0.560    3083    2054    5.95    4.29       0     NaN       0
-## 10   1999 DEN      0.546    3378    1852    5.85    4.05       0     NaN       9
-## # … with 691 more rows, 45 more variables: offense_ave_yac &lt;dbl&gt;,
-## #   offense_n_plays_pass &lt;dbl&gt;, offense_n_plays_run &lt;dbl&gt;,
-## #   offense_n_interceptions &lt;dbl&gt;, offense_n_fumbles_lost_pass &lt;dbl&gt;,
-## #   offense_n_fumbles_lost_run &lt;dbl&gt;, offense_total_epa_pass &lt;dbl&gt;,
-## #   offense_total_epa_run &lt;dbl&gt;, offense_ave_epa_pass &lt;dbl&gt;,
-## #   offense_ave_epa_run &lt;dbl&gt;, offense_total_wpa_pass &lt;dbl&gt;,
-## #   offense_total_wpa_run &lt;dbl&gt;, offense_ave_wpa_pass &lt;dbl&gt;, …
-```
-
----
-
-## Modeling NFL score differential
-
-.pull-left[
-
-Interested in modeling a team's __score differential__
-
-
-```r
-nfl_teams_data &lt;- nfl_teams_data %&gt;%
-  mutate(score_diff = 
-           points_scored - points_allowed)
-nfl_teams_data %&gt;%
-  ggplot(aes(x = score_diff)) +
-  geom_histogram(color = "black", 
-                 fill = "darkblue",
-                 alpha = 0.3) +
-  theme_bw() +
-  labs(x = "Score differential")
-```
-
-
-
-]
-.pull-right[
-
-&lt;img src="15-slides_files/figure-html/unnamed-chunk-2-1.png" width="504" /&gt;
-
-
-]
-
-
----
-
-### Correlation matrix of score differential and candidate predictors
-
-.pull-left[
-
-- Interested in `score_diff` relationships with team passing and rush statistics
-
-- View the correlation matrix with [`ggcorrplot`](https://rpkgs.datanovia.com/ggcorrplot/)
-
-
-```r
-library(ggcorrplot)
 nfl_model_data &lt;- nfl_teams_data %&gt;%
-  dplyr::select(score_diff, offense_ave_epa_pass,
-                offense_ave_epa_run, 
-                defense_ave_epa_pass,
-                defense_ave_epa_run,
-                offense_ave_yards_gained_pass,
-                offense_ave_yards_gained_run,
-                defense_ave_yards_gained_pass,
-                defense_ave_yards_gained_run)
-*nfl_cor_matrix &lt;- cor(nfl_model_data)
-*ggcorrplot(nfl_cor_matrix)
+  mutate(score_diff = points_scored - points_allowed) %&gt;%
+  # Only use rows with air yards
+  filter(season &gt;= 2006) %&gt;%
+  dplyr::select(-wins, -losses, -ties, -points_scored, -points_allowed, -season, -team)
 ```
-
-
-]
-.pull-right[
-&lt;img src="15-slides_files/figure-html/unnamed-chunk-3-1.png" width="504" /&gt;
-
-]
 
 
 ---
 
-## Customize the appearance of the correlation matrix
+## Introduction to `glmnet`
 
-.pull-left[
-- Avoid redundancy by only using one half of matrix with `type`
-
-- Add correlation value labels using `lab` (but round first!)
-
-- Can arrange variables based on clustering...
+We will use the [`glmnet`](https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html#lin) package for ridge, lasso, and elastic net
 
 
 ```r
-round_cor_matrix &lt;- 
-* round(cor(nfl_model_data), 2)
-ggcorrplot(round_cor_matrix, 
-*          hc.order = TRUE,
-*          type = "lower",
-*          lab = TRUE)
+library(glmnet)
 ```
 
 
+--
 
-]
-.pull-right[
+__Important__: `glmnet` does NOT use formula but instead `x` matrix of predictors and `y` vector of response
 
-&lt;img src="15-slides_files/figure-html/unnamed-chunk-4-1.png" width="504" /&gt;
-]
+- could use the `model.matrix()` function (which converts factors to 0-1 dummy variables!)
+
+
+```r
+model_x &lt;- nfl_model_data %&gt;%
+  dplyr::select(-score_diff) %&gt;%
+  as.matrix()
+model_y &lt;- nfl_model_data$score_diff
+# model_x &lt;- model.matrix(score_diff ~ ., nfl_model_data)[, -1]
+```
 
 
 ---
 
-## Clustering variables using the correlation matrix
+## Initial model with `lm()`
 
-Apply [hierarchical clustering](http://stat.cmu.edu/cmsac/sure/2021/materials/lectures/slides/07-Hierarchical-clustering.html#1) to variables instead of observations
-
-
---
-- Select the explanatory variables of interest from our data
-
-
-```r
-nfl_ex_vars &lt;- dplyr::select(nfl_model_data, -score_diff)
-```
-
-
---
-
-- Compute correlation matrix of these variables:
-
-
-```r
-exp_cor_matrix &lt;- cor(nfl_ex_vars)
-```
-
-
---
-
-- Correlations measure similarity and can be negative __BUT__ distances measure dissimilarity and __CANNOT__ 
-
-- Convert your correlations to all be `\(\geq 0\)`: e.g., `\(1 - |\rho|\)` (which drops the sign) or `\(1 - \rho\)`
-  
-
-
-```r
-cor_dist_matrix &lt;- 1 - abs(exp_cor_matrix)
-```
-
-
---
-- Convert to distance matrix before using `hclust`
-
-
-```r
-cor_dist_matrix &lt;- as.dist(cor_dist_matrix)
-```
-
----
-
-## Clustering variables using the correlation matrix
 
 .pull-left[
 
-- Cluster variables using `hclust()` as before!
+- What do the initial regression coefficients look like?
 
-- Use [`ggdendro`](https://cran.r-project.org/web/packages/ggdendro/vignettes/ggdendro.html) to quickly visualize dendrogram
+- Use [`broom`](https://broom.tidymodels.org/reference/tidy.cv.glmnet.html) to tidy model output for plotting
 
 
 ```r
-library(ggdendro)
-*nfl_exp_hc &lt;- hclust(cor_dist_matrix,
-                     "complete") 
-*ggdendrogram(nfl_exp_hc,
-*            rotate = TRUE,
-*            size = 2)
+init_reg_fit &lt;- lm(score_diff ~ ., nfl_model_data)
+library(broom)
+tidy(init_reg_fit) %&gt;%
+  mutate(coef_sign = as.factor(sign(estimate)),
+         term = fct_reorder(term, estimate)) %&gt;%
+  ggplot(aes(x = term, y = estimate, fill = coef_sign)) +
+  geom_bar(stat = "identity", color = "white") +
+  scale_fill_manual(values = c("darkred", "darkblue"), 
+                    guide = FALSE) +
+  coord_flip() + theme_bw()
 ```
-
 
 ]
 .pull-right[
@@ -346,226 +276,334 @@ library(ggdendro)
 
 ]
 
-
 ---
 
-## Clustering variables using the correlation matrix
+## Ridge regression example
 
-.pull-left[
+Perform ridge regression using `glmnet` with `alpha = 0` (more on that later)
 
-- Another flexible option is [`dendextend`](https://cran.r-project.org/web/packages/dendextend/vignettes/dendextend.html)
-
+By default it standardizes your predictors and fits model across a range of `\(\lambda\)` values (can plot these!)
+  
 
 ```r
-library(dendextend)
-cor_dist_matrix %&gt;%
-  hclust() %&gt;%
-* as.dendrogram() %&gt;%
-  set("branches_k_col", 
-      k = 2) %&gt;% 
-  set("labels_cex", .5) %&gt;%
-  ggplot(horiz = TRUE)
+*init_ridge_fit &lt;- glmnet(model_x, model_y, alpha = 0)
+*plot(init_ridge_fit, xvar = "lambda")
 ```
 
-- Explore the [package documentation](https://cran.r-project.org/web/packages/dendextend/vignettes/dendextend.html) for more formatting
+&lt;img src="15-slides_files/figure-html/init-ridge-ex-1.png" width="504" style="display: block; margin: auto;" /&gt;
 
-]
-.pull-right[
-&lt;img src="15-slides_files/figure-html/unnamed-chunk-6-1.png" width="504" /&gt;
-
-
-]
 
 ---
 
-## Back to the response variable...
+## Ridge regression example
 
-.pull-left[
+We use cross-validation to select `\(\lambda\)` with `cv.glmnet()` which uses 10-folds by default
 
-Use the [`GGally`](https://ggobi.github.io/ggally/index.html) package to easily create __pairs__ plots of multiple variables
-
-- __always look at your data__
-
-- correlation values alone are not enough!
-
-- what if a variable displayed a quadratic relationship?
-
+- specify ridge regression with `alpha = 0`
 
 
 ```r
-*library(GGally)
-*ggpairs(nfl_model_data,
-        columns =
-          c("score_diff", "offense_ave_epa_pass",
-            "offense_ave_epa_run", "defense_ave_epa_pass",
-*           "defense_ave_epa_run")) +
+*fit_ridge_cv &lt;- cv.glmnet(model_x, model_y, alpha = 0)
+plot(fit_ridge_cv)
+```
+
+&lt;img src="15-slides_files/figure-html/ridge-ex-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Tidy ridge regression
+
+.pull-left[
+
+```r
+*tidy_ridge_coef &lt;- tidy(fit_ridge_cv$glmnet.fit)
+tidy_ridge_coef %&gt;%
+  ggplot(aes(x = lambda, y = estimate, 
+             group = term)) +
+  scale_x_log10() +
+  geom_line(alpha = 0.75) +
+  geom_vline(xintercept = 
+               fit_ridge_cv$lambda.min) +
+  geom_vline(xintercept = 
+               fit_ridge_cv$lambda.1se, 
+             linetype = "dashed", color = "red") +
   theme_bw()
 ```
 
+- Could easily add color with legend for variables...
+
+]
+.pull-right[
+&lt;img src="15-slides_files/figure-html/unnamed-chunk-6-1.png" width="504" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Tidy ridge regression
+
+.pull-left[
+
+```r
+tidy_ridge_cv &lt;- tidy(fit_ridge_cv)
+tidy_ridge_cv %&gt;%
+  ggplot(aes(x = lambda, y = estimate)) +
+  geom_line() + scale_x_log10() +
+  geom_ribbon(aes(ymin = conf.low,
+                  ymax = conf.high), alpha = .25) +
+  geom_vline(xintercept = 
+               fit_ridge_cv$lambda.min) +
+  geom_vline(xintercept = 
+               fit_ridge_cv$lambda.1se,
+             linetype = "dashed", color = "red") +
+  theme_bw()
+```
+
+]
+.pull-right[
+&lt;img src="15-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Ridge regression coefficients
+
+
+.pull-left[
+Coefficients using the __1 standard error rule__ `\(\lambda\)`
+
+
+```r
+tidy_ridge_coef %&gt;%
+  filter(lambda == fit_ridge_cv$lambda.1se) %&gt;%
+  mutate(coef_sign = as.factor(sign(estimate)),
+         term = fct_reorder(term, estimate)) %&gt;%
+  ggplot(aes(x = term, y = estimate, fill = coef_sign)) +
+  geom_bar(stat = "identity", color = "white") +
+  scale_fill_manual(values = c("darkred", "darkblue"), guide = FALSE) +
+  coord_flip() + theme_bw()
+```
+
+]
+.pull-right[
+
+&lt;img src="15-slides_files/figure-html/unnamed-chunk-8-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+---
+
+## Lasso regression example
+
+.pull-left[
+Similar syntax to ridge but specify `alpha = 1`:
+
+
+```r
+fit_lasso_cv &lt;- cv.glmnet(model_x, model_y, 
+*                         alpha = 1)
+tidy_lasso_coef &lt;- tidy(fit_lasso_cv$glmnet.fit)
+tidy_lasso_coef %&gt;%
+  ggplot(aes(x = lambda, y = estimate, 
+             group = term)) +
+  scale_x_log10() +
+  geom_line(alpha = 0.75) +
+  geom_vline(xintercept = 
+               fit_lasso_cv$lambda.min) +
+  geom_vline(xintercept = 
+               fit_lasso_cv$lambda.1se, 
+             linetype = "dashed", color = "red") +
+  theme_bw()
+```
 
 ]
 
 .pull-right[
-&lt;img src="15-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" /&gt;
+&lt;img src="15-slides_files/figure-html/unnamed-chunk-9-1.png" width="504" /&gt;
 
 ]
 
 ---
 
-### Do running statistics matter for modeling score differential?
+## Lasso regression example
 
-
---
-Will use __5-fold cross-validation__ to assess how well different sets of variables (combinations of `pass` &amp; `run` variables) perform in predicting `score_diff`?
-
-
---
-Can initialize a column of the __test__ fold assignments to our dataset with the `sample()` function:
-
-```r
-set.seed(2020)
-nfl_model_data &lt;- nfl_model_data %&gt;%
-  mutate(test_fold = sample(rep(1:5, length.out = n())))
-```
-
-
---
-__Always remember to set your seed prior to any k-fold cross-validation!__
-
----
-
-## Writing a function for k-fold cross-validation
-
-
-```r
-get_cv_preds &lt;- function(model_formula, data = nfl_model_data) {
-  # generate holdout predictions for every row based season
-  map_dfr(unique(data$test_fold), 
-          function(holdout) {
-            # Separate test and training data:
-            test_data &lt;- data %&gt;%
-              filter(test_fold == holdout)
-            train_data &lt;- data %&gt;%
-              filter(test_fold != holdout)
-            
-            # Train model:
-            reg_model &lt;- lm(as.formula(model_formula), data = train_data)
-            
-            # Return tibble of holdout results:
-            tibble(test_preds = predict(reg_model, newdata = test_data),
-                   test_actual = test_data$score_diff,
-                   test_fold = holdout) 
-          })
-}
-```
-
-
----
-
-## Function enables easy generation of holdout analysis
-
-
-```r
-all_cv_preds &lt;- get_cv_preds("score_diff ~  offense_ave_epa_pass + offense_ave_epa_run + defense_ave_epa_pass + defense_ave_epa_run")
-all_int_cv_preds &lt;- get_cv_preds("score_diff ~ offense_ave_epa_pass*offense_ave_epa_run + defense_ave_epa_pass*defense_ave_epa_run")
-run_only_cv_preds &lt;- get_cv_preds("score_diff ~ offense_ave_epa_run + defense_ave_epa_run")
-pass_only_cv_preds &lt;- get_cv_preds("score_diff ~ offense_ave_epa_pass + defense_ave_epa_pass")
-off_only_cv_preds &lt;- get_cv_preds("score_diff ~ offense_ave_epa_pass + offense_ave_epa_run")
-def_only_cv_preds &lt;- get_cv_preds("score_diff ~ defense_ave_epa_pass + defense_ave_epa_run")
-int_only_cv_preds &lt;- get_cv_preds("score_diff ~ 1")
-```
-
-
---
 .pull-left[
-Can then summarize together for a single plot:
+Number of non-zero predictors by `\(\lambda\)`
+
 
 ```r
-bind_rows(mutate(all_cv_preds, type = "All"),
-          mutate(all_int_cv_preds, type = "All w/ interactions"),
-          mutate(pass_only_cv_preds, type = "Passing only"),
-          mutate(run_only_cv_preds, type = "Running only"),
-          mutate(off_only_cv_preds, type = "Offense only"),
-          mutate(def_only_cv_preds, type = "Defense only"),
-          mutate(int_only_cv_preds, type = "Intercept-only")) %&gt;%
-  group_by(type) %&gt;%
-  summarize(rmse = sqrt(mean((test_actual - test_preds)^2))) %&gt;%
-  mutate(type = fct_reorder(type, rmse)) %&gt;%
-  ggplot(aes(x = type, y = rmse)) +
-  geom_point() + coord_flip() + theme_bw()
+tidy_lasso_cv &lt;- tidy(fit_lasso_cv)
+tidy_lasso_cv %&gt;%
+  ggplot(aes(x = lambda, y = nzero)) +
+  geom_line() +
+  geom_vline(xintercept = fit_lasso_cv$lambda.min) +
+  geom_vline(xintercept = fit_lasso_cv$lambda.1se, 
+             linetype = "dashed", color = "red") +
+  scale_x_log10() + theme_bw()
 ```
+
+Reduction in variables using __1 standard error rule__ `\(\lambda\)`
+
 ]
 .pull-right[
 &lt;img src="15-slides_files/figure-html/unnamed-chunk-10-1.png" width="504" /&gt;
-
 ]
 
-
 ---
 
-## Fit selected model on all data and view summary
-
-
-```r
-all_lm &lt;- lm(score_diff ~ offense_ave_epa_pass + offense_ave_epa_run + defense_ave_epa_pass + defense_ave_epa_run, data = nfl_model_data)
-summary(all_lm)
-```
-
-```
-## 
-## Call:
-## lm(formula = score_diff ~ offense_ave_epa_pass + offense_ave_epa_run + 
-##     defense_ave_epa_pass + defense_ave_epa_run, data = nfl_model_data)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -74.850 -18.814   0.222  18.964  92.173 
-## 
-## Coefficients:
-##                      Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)             3.525      1.732   2.035   0.0422 *  
-## offense_ave_epa_pass  462.886      8.737  52.979   &lt;2e-16 ***
-## offense_ave_epa_run   333.415     15.808  21.092   &lt;2e-16 ***
-## defense_ave_epa_pass -480.918     11.226 -42.838   &lt;2e-16 ***
-## defense_ave_epa_run  -298.546     16.324 -18.289   &lt;2e-16 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 27.84 on 696 degrees of freedom
-## Multiple R-squared:  0.9248,	Adjusted R-squared:  0.9244 
-## F-statistic:  2141 on 4 and 696 DF,  p-value: &lt; 2.2e-16
-```
-
----
-
-## Do NOT show that summary in a presentation!
+## Lasso regression example
 
 .pull-left[
-
-- We can instead display a __coefficient plot__ with confidence intervals based on the reported standard errors
-
-- Use the [`ggcoef()`](https://ggobi.github.io/ggally/articles/ggcoef.html) function from `GGally`
+Coefficients using the __1 standard error rule__ `\(\lambda\)`
 
 
 ```r
-ggcoef(all_lm, 
-       exclude_intercept = TRUE,
-       vline = TRUE,
-       vline_color = "red") + 
+tidy_lasso_coef %&gt;%
+  filter(lambda == fit_lasso_cv$lambda.1se) %&gt;%
+  mutate(coef_sign = as.factor(sign(estimate)),
+         term = fct_reorder(term, estimate)) %&gt;%
+  ggplot(aes(x = term, y = estimate, 
+             fill = coef_sign)) +
+  geom_bar(stat = "identity", color = "white") +
+  scale_fill_manual(values = c("darkred", "darkblue"), 
+                    guide = FALSE) +
+  coord_flip() +
   theme_bw()
 ```
 
-- [__A well formatted table__](https://cran.r-project.org/web/packages/sjPlot/vignettes/tab_model_estimates.html) of the summary output is appropriate for a report (not for a presentation)
+]
+
+.pull-right[
+&lt;img src="15-slides_files/figure-html/unnamed-chunk-11-1.png" width="504" /&gt;
+
+]
+
+---
+
+
+## Elastic net example
+
+Need to tune both `\(\lambda\)` and `\(\alpha\)` - can do so manually with our own folds
+
+
+```r
+set.seed(2020)
+fold_id &lt;- sample(rep(1:10, length.out = nrow(model_x)))
+```
+
+Then use cross-validation with these folds for different candidate `alpha` values:
+
+
+```r
+cv_en_25 &lt;- cv.glmnet(model_x, model_y, foldid = fold_id, alpha = .25)
+cv_en_50 &lt;- cv.glmnet(model_x, model_y, foldid = fold_id, alpha = .5)
+cv_ridge &lt;- cv.glmnet(model_x, model_y, foldid = fold_id, alpha = 0)
+cv_lasso &lt;- cv.glmnet(model_x, model_y, foldid = fold_id, alpha = 1)
+```
+
+Can see which one had the lowest CV error among its candidate `\(\lambda\)` values:
+
+
+```r
+which.min(c(min(cv_en_25$cvm), min(cv_en_50$cvm), min(cv_ridge$cvm), min(cv_lasso$cvm)))
+```
+
+```
+## [1] 2
+```
+
+---
+
+## Elastic net example
+
+.pull-left[
+
+Can view same type of summary
+
+
+```r
+tidy(cv_en_50) %&gt;%
+  ggplot(aes(x = lambda, y = nzero)) +
+  geom_line() +
+  geom_vline(xintercept = cv_en_50$lambda.min) +
+  geom_vline(xintercept = cv_en_50$lambda.1se, 
+             linetype = "dashed", 
+             color = "red") +
+  scale_x_log10() + 
+  theme_bw()
+```
+
+- More relaxed than lasso for variable entry
 
 ]
 .pull-right[
+&lt;img src="15-slides_files/figure-html/unnamed-chunk-15-1.png" width="504" /&gt;
+]
 
-&lt;img src="15-slides_files/figure-html/unnamed-chunk-12-1.png" width="504" /&gt;
+---
 
+#### Comparison of models based on holdout performance
+
+
+```r
+set.seed(2020)
+nfl_model_data &lt;- nfl_model_data %&gt;% mutate(test_fold = sample(rep(1:5, length.out = n())))
+holdout_predictions &lt;- 
+  map_dfr(unique(nfl_model_data$test_fold), 
+          function(holdout) {
+            # Separate test and training data:
+            test_data &lt;- nfl_model_data %&gt;% filter(test_fold == holdout)
+            train_data &lt;- nfl_model_data %&gt;% filter(test_fold != holdout)
+            
+            # Repeat for matrices
+            test_x &lt;- as.matrix(dplyr::select(test_data, -score_diff))
+            train_x &lt;- as.matrix(dplyr::select(train_data, -score_diff))
+
+            # Train models:
+            lm_model &lt;- lm(score_diff ~ ., data = train_data)
+            ridge_model &lt;- cv.glmnet(train_x, train_data$score_diff, alpha = 0)
+            lasso_model &lt;- cv.glmnet(train_x, train_data$score_diff, alpha = 1)
+            en_model &lt;- cv.glmnet(train_x, train_data$score_diff, alpha = .5)
+
+            # Return tibble of holdout results:
+            tibble(lm_preds = predict(lm_model, newdata = test_data),
+                   ridge_preds = as.numeric(predict(ridge_model, newx = test_x)),
+                   lasso_preds = as.numeric(predict(lasso_model, newx = test_x)),
+                   en_preds = as.numeric(predict(en_model, newx = test_x)),
+                   test_actual = test_data$score_diff, test_fold = holdout) 
+          })
+```
+
+---
+
+## Predictions compared to `lm`?
+
+.pull-left[
+
+Compute RMSE across folds with std error intervals
+
+
+```r
+holdout_predictions %&gt;%
+  pivot_longer(lm_preds:en_preds, 
+               names_to = "type", values_to = "test_preds") %&gt;%
+  group_by(type, test_fold) %&gt;%
+  summarize(rmse =
+              sqrt(mean((test_actual - test_preds)^2))) %&gt;% 
+  ggplot(aes(x = type, y = rmse)) + 
+  geom_point() + theme_bw() +
+  stat_summary(fun = mean, geom = "point", 
+               color = "red") + 
+  stat_summary(fun.data = mean_se, geom = "errorbar",
+               color = "red")
+```
+]
+.pull-right[
+&lt;img src="15-slides_files/figure-html/unnamed-chunk-17-1.png" width="504" /&gt;
 
 ]
 
-
+In this case `lm` actually "beat" regularization, but within intervals
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

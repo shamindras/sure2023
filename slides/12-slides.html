@@ -15,10 +15,10 @@ class: center, middle, inverse, title-slide
 # Supervised Learning
 ]
 .subtitle[
-## Linear regression
+## Model assessment vs selection
 ]
 .date[
-### June 21st, 2021
+### June 18th, 2021
 ]
 
 ---
@@ -28,568 +28,370 @@ class: center, middle, inverse, title-slide
 
 
 
-## Simple linear regression
+## Supervised learning
 
-We assume a __linear relationship__ for `\(Y = f(X)\)`:
+What is __statistical learning?__
+--
+ [Preface of Introduction to Statistical Learning with Applications in R (ISLR)](https://www.statlearning.com/):
 
-`$$Y_{i}=\beta_{0}+\beta_{1} X_{i}+\epsilon_{i}, \quad \text { for } i=1,2, \dots, n$$`
+&gt; _refers to a set of tools for modeling and understanding complex datasets_ 
 
-- `\(Y_i\)` is the `\(i\)`th value for the __response__ variable
+
+--
+What is __supervised learning?__ 
+
+__Goal__: uncover associations between a set of __predictor__ (aka __independent__ / __explanatory__) variables / features and a single __response__ (or __dependent__) variable
+
+
+--
+- Ex: MLB records the batting average (hits / at-bats) for every player in each season. Can we accurately predict player X's batting average in year `\(t+1\)` using their batting average in year `\(t\)`? Can we uncover meaningful relationships between other measurements (which are __predictors__ / __features__) and batting average in year `\(t+1\)` (which is the __response__)?
+
+
+--
+- Ex: We are provided player tracking data from the NFL, all x,y coordinates of every player on the field at every tenth of the second. Can we predict how far a ball-carrier will go at any given moment they have the football?
+
+
+---
+
+## Examples of statistical learning methods / algorithms
+
+__You are probably already familiar with statistical learning__ - even if you did not know what the phrase meant before
+
+
+--
+Examples of statistical learning algorithms include:
+
+- Generalized linear models (GLMs) and penalized versions (Lasso, elastic net)
+
+- Smoothing splines, Generalized additive models (GAMs)
+
+- Decision trees and its variants (e.g., random forest, boosting)
+
+- Neural networks (e.g., convolutional neural networks)
+
+
+--
+Two main types of estimation __given values for predictors__:
+
+- __Regression__ models: estimate _average_ value of response
+
+- __Classification__ models: determine _the most likely_ class of a set of discrete response variable classes
+
+---
+
+## Which method should I use in my analysis?
+
+--
+__Depends on your goal__ - the big picture: __inference__ vs __prediction__
+
+
+Let `\(Y\)` be the response variable, and `\(X\)` be the predictors, then the __learned__ model will take the form:
+
+$$
+\hat{Y}=\hat{f}(X)
+$$
+
+--
+- Care about the details of `\(\hat{f}(X)\)`? `\(\Rightarrow\)` You want to perform statistical inference
+
+- Fine with treating `\(\hat{f}(X)\)` as a black-box? `\(\Rightarrow\)` Your interest is prediction
+
+
+--
+Any algorithm can be used for prediction, however options are limited for inference
+
+
+_Active area of research on using more black-box models for statistical inference_
+
+---
+
+### Model flexibility vs interpretability
+
+Generally speaking: __tradeoff__ between a model's _flexibility_ (i.e. how "wiggly" it is) and how __interpretable__ it is
+
+- Simpler the parametric form of the model `\(\Rightarrow\)` the easier it is to interpret
+
+- Hence why __linear regression__ is popular in practice
+
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/flexibility.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+.footnote[[ISLR Figure 2.7](https://www.statlearning.com/)]
+
+---
+
+## Model flexibility vs interpretability
+
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/flexibility.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+- __Parametric__ models, for which we can write down a mathematical expression for `\(f(X)\)` __before observing the data__, _a priori_ (e.g. linear regression), __are inherently less flexible__
+
+
+--
+- __Nonparametric__ models, in which `\(f(X)\)` is __estimated from the data__ (e.g. kernel regression)
+
+---
+
+## Model flexibility vs interpretability
+
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/flexibility.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+- If your goal is prediction `\(\Rightarrow\)` your model can be as arbitrarily flexible as it needs to be
+
+- We'll discuss how one estimates the optimal amount of flexibility shortly...
+
+---
+
+## Looks about right...
+
+
+&lt;img src="https://66.media.tumblr.com/c4886c7b12f2a9a7d81cba3e8d8f1d00/bc9f1aa7fb6adf6d-7c/s1280x1920/a01569c35bebdac425baf4ed3360f1481580d4d6.jpg" width="90%" style="display: block; margin: auto;" /&gt;
+
+
+
+
+---
+
+## Model assessment vs selection, what's the difference?
+
+--
+__Model assessment__:
+
+- __evaluating how well a learned model performs__, via the use of a single-number metric
+
+
+
+--
+__Model selection__:
+
+- selecting the best model from a suite of learned models (e.g., linear regression, random forest, etc.)
+
+---
+
+## Model __flexibility__ ([ISLR Figure 2.9](https://www.statlearning.com/))
+
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/Flexibility.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+- Left panel: intuitive notion of the meaning of model flexibility
+
+- Data are generated from a smoothly varying non-linear model (shown in black), with random noise added:
+$$
+Y = f(X) + \epsilon
+$$
+
+---
+
+## Model __flexibility__
+
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/Flexibility.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+Orange line: an inflexible, fully parametrized model (simple linear regression)
+
+
+--
+- __Cannot__ provide a good estimate of `\(f(X)\)`
+
+
+--
+- Cannot __overfit__ by modeling the noisy deviations of the data from `\(f(X)\)`
+
+
+---
+
+## Model __flexibility__
+
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/Flexibility.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+Green line: an overly flexible, nonparametric model 
+
+
+--
+- __It can__ provide a good estimate of `\(f(X)\)` 
+--
+, __BUT__ it goes too far and overfits by modeling the noise
+
+
+--
+__This is NOT generalizable__: bad job of predicting response given new data NOT used in learning the model
+
+---
+
+## So... how do we deal with flexibility?
+
+__GOAL__: We want to learn a statistical model that provides a good estimate of `\(f(X)\)` __without overfitting__
+
+
+--
+There are two common approaches:
+
+- We can __split the data into two groups__: 
+  - __training__ data: data used to train models, 
   
-- `\(X_i\)` is the `\(i\)`th value for the __predictor__ variable
-
---
+  - __test__ data: data used to test them
   
-- `\(\beta_0\)` is an _unknown_, constant __intercept__: average value for `\(Y\)` if `\(X = 0\)`
+  - By assessing models using "held-out" test set data, we act to ensure that we get a __generalizable(!)__ estimate of `\(f(X)\)`
+
+
+--
+- We can __repeat data splitting `\(k\)` times__:
+
+  - Each observation is placed in the "held-out" / test data exactly once
   
-- `\(\beta_1\)` is an _unknown_, constant __slope__: increase in average value for `\(Y\)` for each one-unit increase in `\(X\)`
+  - This is called __k-fold cross validation__ (typically set `\(k\)` to 5 or 10)
+
+
+--
+`\(k\)`-fold cross validation is the preferred approach, but the tradeoff is that CV analyses take `\({\sim}k\)` times longer than analyses that utilize data splitting
+
+---
+
+### Model assessment
+
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/Flexibility.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+- Right panel shows __a metric of model assessment__, the mean squared error (MSE) as a function of flexibility for both a training and test datasets
+
+
+--
+- Training error (gray line) __decreases as  flexibility increases__
+
+--
+- Test error (red line) decreases while flexibility increases __until__ the point a good estimate of `\(f(X)\)` is reached, and then it __increases as it overfits to the training data__
+
+---
+
+## Brief note on reproducibility
+
+An important aspect of a statistical analysis is that it be reproducible. You should...
+
+1. Record your analysis in a notebook, via, e.g., `R Markdown` or `Jupyter`. A notebook should be complete such that if you give it and datasets to someone, that someone should be able to recreate the entire analysis and achieve the exact same results. To ensure the achivement of the exact same results, you should...
+
+2. Manually set the random-number generator seed before each instance of random sampling in your analysis (such as when you assign data to training or test sets, or to folds):
+
+```r
+set.seed(101)    # can be any number...
+sample(10,3)     # sample three numbers between 1 and 10 inclusive
+```
+
+```
+## [1]  9 10  6
+```
+
+```r
+set.seed(101)
+sample(10,3)     # voila: the same three numbers!
+```
+
+```
+## [1]  9 10  6
+```
+
+---
+
+## Model assessment metrics
+
+__Loss function__ (aka _objective_ or _cost_ function) is a metric that represents __the quality of fit of a model__
+
+
+--
+For regression we typically use __mean squared error (MSE)__
+- quadratic loss: squared differences between model predictions `\(\hat{f}(X)\)` and observed data `\(Y\)`
+
+`$$\text{MSE} = \frac{1}{n} \sum_i^n (Y_i - \hat{f}(X_i))^2$$`
+
+
+--
+For classification, the situation is not quite so clear-cut
+- __misclassification rate (MCR)__: percentage of predictions that are wrong
+
+- __area under curve (AUC)__ (we'll come back to this later)
+
+--
+- interpretation can be affected by __class imbalance__: 
+  - if two classes are equally represented in a dataset, an MCR of 2% is good
   
---
-  
-- `\(\epsilon_i\)` is the __random__ noise: assume __independent, identically distributed__ (_iid_) from Normal distribution
-
-`$$\epsilon_i \overset{iid}{\sim}N(0, \sigma^2) \quad \text{ with constant variance } \sigma^2$$`
+  - but if one class comprises 99% of the data, that 2% is no longer such a good result...
 
 ---
 
-## Simple linear regression estimation
+## Back to model selection
 
-We are estimating the __conditional expection (mean)__ for `\(Y\)`:
+__Model selection__: picking the best model from a suite of possible models 
 
-`$$\mathbb{E}[Y_i| X_i] = \beta_0 + \beta_1X_i$$`
-
-- average value for `\(Y\)` given the value for `\(X\)`
 
 --
+- Picking the best covariance constraints (e.g. _VVV_) or number of clusters with BIC
 
-How do we estimate the __best fitting__ line?
+- Picking the best regression model based on __MSE__, or best classification model based on __MCR__
 
---
-
-__Ordinary least squares (OLS)__ - by minimizing the __residual sum of squares (RSS)__
-
-`$$R S S\left(\beta_{0}, \beta_{1}\right)=\sum_{i=1}^{n}\left[Y_{i}-\left(\beta_{0}+\beta_{1} X_{i}\right)\right]^{2}=\sum_{i=1}^{n}\left(Y_{i}-\beta_{0}-\beta_{1} X_{i}\right)^{2}$$`
 
 --
+Two things to keep in mind:
 
-`$$\widehat{\beta}_{1}=\frac{\sum_{i=1}^{n}\left(X_{i}-\bar{X}\right)\left(Y_{i}-\bar{Y}\right)}{\sum_{i=1}^{n}\left(X_{i}-\bar{X}\right)^{2}} \quad \text{ and } \quad \widehat{\beta}_{0}=\bar{Y}-\widehat{\beta}_{1} \bar{X}$$`
+1. __Ensure an apples-to-apples comparison of metrics__
+  - every model should be learned using __the same training and test data__! Do not resample the data between the time when you, e.g., perform linear regression and vs you perform random forest.
 
-where `\(\bar{X} = \frac{1}{n}\sum_{i=1}^n X_i\)` and `\(\bar{Y} = \frac{1}{n}\sum_{i=1}^n Y_i\)`
+2. __An assessment metric is a random variable__, i.e., if you choose different data to be in your training set, the metric will be different.
+
+
+--
+For regression, a third point should be kept in mind: __a metric like the MSE is unit-dependent__
+  - an MSE of 0.001 in one analysis context is not necessarily better or worse than an MSE of 100 in another context
 
 ---
 
-## Connection to covariance and correlation
+## An example __true__ model
 
-[__Covariance__](https://en.wikipedia.org/wiki/Covariance) describes the __joint variability of two variables__
+&lt;img src="12-slides_files/figure-html/unnamed-chunk-10-1.png" width="432" style="display: block; margin: auto;" /&gt;
 
-`$$\text{Cov}(X, Y) = \sigma_{X,Y} = \mathbb{E}[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])]$$`
+---
+
+## The repeated experiments...
+
+&lt;img src="12-slides_files/figure-html/unnamed-chunk-11-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+
+---
+
+## The linear regression fits
+
+
+
+
+&lt;img src="12-slides_files/figure-html/unnamed-chunk-13-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+Look at the plots. For any given value of `\(x\)`:
+
+- The *average* estimated `\(y\)` value is offset from the truth (__high bias__)
+- The dispersion (variance) in the estimated `\(y\)` values is relatively small (__low variance__)
+
+---
+
+## The spline fits
+
+
+
+&lt;img src="12-slides_files/figure-html/unnamed-chunk-15-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+Look at the plots. For any given value of `\(x\)`:
 
 --
+- The *average* estimated `\(y\)` value approximately matches the truth (__low bias__)
+- The dispersion (variance) in the estimated `\(y\)` values is relatively large (__high variance__)
 
-We compute the __sample covariance__ (use `\(n - 1\)` since we are using the means and want [__unbiased estimates__](https://lazyprogrammer.me/covariance-matrix-divide-by-n-or-n-1/))
+---
 
-`$$\hat{\sigma}_{X,Y} = \frac{1}{n-1} \sum_{i=1}^{n}\left(X_{i}-\bar{X}\right)\left(Y_{i}-\bar{Y}\right)$$`
+### Bias-variance tradeoff
+
+"Best" model minimizes the test-set MSE, where the __true__ MSE can be decomposed into:
 
 --
-
-__Correlation__ is a _normalized_ form of covariance, ranges from -1 to 1
-
-`$$\rho_{X,Y} = \frac{\text{Cov}(X,Y)}{\sigma_X \cdot \sigma_Y}$$`
-
-__Sample correlation__ uses the sample covariance and standard deviations, e.g. `\(s_X^2 = \frac{1}{n-1} \sum_i (X_i - \bar{X})^2\)`
-
-`$$r_{X,Y} = \frac{\sum_{i=1}^{n}\left(X_{i}-\bar{X}\right)\left(Y_{i}-\bar{Y}\right)}{\sqrt{\sum_{i=1}^{n}\left(X_{i}-\bar{X}\right)^{2} \sum_{i=1}^{n}\left(Y_{i}-\bar{Y}\right)^{2}}}$$`
-
----
-
-## Connection to covariance and correlation
-
-So we have the following:
-
-`$$\widehat{\beta}_{1}=\frac{\sum_{i=1}^{n}\left(X_{i}-\bar{X}\right)\left(Y_{i}-\bar{Y}\right)}{\sum_{i=1}^{n}\left(X_{i}-\bar{X}\right)^{2}} \quad \text{ compared to } \quad r_{X,Y} = \frac{\sum_{i=1}^{n}\left(X_{i}-\bar{X}\right)\left(Y_{i}-\bar{Y}\right)}{\sqrt{\sum_{i=1}^{n}\left(X_{i}-\bar{X}\right)^{2} \sum_{i=1}^{n}\left(Y_{i}-\bar{Y}\right)^{2}}}$$`
-
+$$
+{\rm MSE} = {\rm (Bias)}^2 + {\rm Variance}
+$$
 --
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/Flexibility.png" width="60%" style="display: block; margin: auto;" /&gt;
 
-`\(\Rightarrow\)` Can rewrite `\(\hat{\beta}_1\)` as:
+Towards the left: high bias, low variance. Towards the right: low bias, high variance. 
 
-`$$\widehat{\beta}_{1} = r_{X,Y} \cdot \frac{s_Y}{s_X}$$`
-
-`\(\Rightarrow\)` Can rewrite `\(r_{X,Y}\)` as:
-
-`$$r_{X,Y} = \widehat{\beta}_{1} \cdot \frac{s_X}{s_Y}$$`
-
---
-
-Can think of `\(\widehat{\beta}_{1}\)` weighting the ratio of variance between `\(X\)` and `\(Y\)`...
-
----
-
-## Example data: NFL teams summary
-
-Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2020
-
-
-```r
-library(tidyverse)
-nfl_teams_data &lt;- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/regression_projects/nfl_team_season_summary.csv")
-nfl_teams_data
-```
-
-```
-## # A tibble: 701 × 55
-##    season team  offens…¹ offen…² offen…³ offen…⁴ offen…⁵ offen…⁶ offen…⁷ offen…⁸
-##     &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-##  1   1999 ARI      0.477    2796    1209    4.67    3.15       0     NaN       0
-##  2   1999 ATL      0.504    3317    1176    6.08    3.20       0     NaN      11
-##  3   1999 BAL      0.452    2805    1663    5.07    4.13       0     NaN       0
-##  4   1999 BUF      0.540    3275    2038    6.17    4.13       0     NaN     161
-##  5   1999 CAR      0.552    4144    1484    6.68    4.29       0     NaN      89
-##  6   1999 CHI      0.561    4090    1359    5.75    3.55       0     NaN     508
-##  7   1999 CIN      0.498    3178    1971    5.37    4.63       0     NaN       0
-##  8   1999 CLE      0.489    2574    1140    4.71    3.67       0     NaN      35
-##  9   1999 DAL      0.560    3083    2054    5.95    4.29       0     NaN       0
-## 10   1999 DEN      0.546    3378    1852    5.85    4.05       0     NaN       9
-## # … with 691 more rows, 45 more variables: offense_ave_yac &lt;dbl&gt;,
-## #   offense_n_plays_pass &lt;dbl&gt;, offense_n_plays_run &lt;dbl&gt;,
-## #   offense_n_interceptions &lt;dbl&gt;, offense_n_fumbles_lost_pass &lt;dbl&gt;,
-## #   offense_n_fumbles_lost_run &lt;dbl&gt;, offense_total_epa_pass &lt;dbl&gt;,
-## #   offense_total_epa_run &lt;dbl&gt;, offense_ave_epa_pass &lt;dbl&gt;,
-## #   offense_ave_epa_run &lt;dbl&gt;, offense_total_wpa_pass &lt;dbl&gt;,
-## #   offense_total_wpa_run &lt;dbl&gt;, offense_ave_wpa_pass &lt;dbl&gt;, …
-```
-
----
-
-## Modeling NFL score differential
-
-.pull-left[
-
-Interested in modeling a team's __score differential__
-
-
-```r
-nfl_teams_data &lt;- nfl_teams_data %&gt;%
-  mutate(score_diff = 
-           points_scored - points_allowed)
-nfl_teams_data %&gt;%
-  ggplot(aes(x = score_diff)) +
-  geom_histogram(color = "black", 
-                 fill = "darkblue",
-                 alpha = 0.3) +
-  theme_bw() +
-  labs(x = "Score differential")
-```
-
-
-
-]
-.pull-right[
-
-&lt;img src="12-slides_files/figure-html/unnamed-chunk-2-1.png" width="504" /&gt;
-
-
-]
-
----
-
-### Relationship between score differential and passing performance
-
-.pull-left[
-- `offense_ave_epa_pass`: team's average [expected points added (EPA)]() per pass attempt
-
-
-```r
-nfl_plot &lt;- nfl_teams_data %&gt;%
-* ggplot(aes(x = offense_ave_epa_pass,
-             y = score_diff)) +
-  geom_point(alpha = 0.5) +
-  theme_bw() +
-  labs(x = "EPA gained per pass attempt",
-       y = "Score differential")
-nfl_plot
-```
-
-We fit linear regression models using `lm()`, formula is input as: `response ~ predictor`
-
-
-```r
-*init_lm &lt;- lm(score_diff ~ offense_ave_epa_pass,
-*             data = nfl_teams_data)
-```
-
-
-]
-.pull-right[
-&lt;img src="12-slides_files/figure-html/unnamed-chunk-3-1.png" width="504" /&gt;
-]
-
----
-
-## View the model `summary()`
-
-
-```r
-summary(init_lm)
-```
-
-```
-## 
-## Call:
-## lm(formula = score_diff ~ offense_ave_epa_pass, data = nfl_teams_data)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -182.611  -46.600   -1.326   44.123  233.640 
-## 
-## Coefficients:
-##                      Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)            -4.890      2.561  -1.909   0.0566 .  
-## offense_ave_epa_pass  566.352     19.226  29.458   &lt;2e-16 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 67.67 on 699 degrees of freedom
-## Multiple R-squared:  0.5539,	Adjusted R-squared:  0.5532 
-## F-statistic: 867.8 on 1 and 699 DF,  p-value: &lt; 2.2e-16
-```
-
----
-
-## Inference with OLS
-
-Reports the intercept and coefficient estimates: `\(\quad \hat{\beta}_0 \approx -4.89 \quad, \quad \hat{\beta}_1 \approx 566.352\)` 
-
---
-
-Estimates of uncertainty for `\(\beta\)`s via __standard errors__: `\(\quad \widehat{SE}(\hat{\beta}_0) \approx 2.561 \quad, \quad \widehat{SE}(\hat{\beta}_1) \approx 19.226\)` 
-
---
-
-`\(t\)`-statistics are coefficients `Estimates` / `Std. Error`, i.e., number of standard deviations from 0
-
-  - _p-values_ (i.e., `Pr(&gt;|t|)`): estimated probability observing value as extreme as |`t value`| __given the null hypothesis__ `\(\beta = 0\)`
-  
-  - p-value `\(&lt;\)` conventional threshold of `\(\alpha = 0.05\)`, __sufficient evidence to reject the null hypothesis that the coefficient is zero__,
-  
-  - Typically |`t values`| `\(&gt; 2\)` indicate __significant__ relationship at `\(\alpha = 0.05\)`
-
-  - i.e., there is a __significant__ association between `offense_ave_epa_pass` and `score_diff`
-
-
----
-
-## Be careful!
-
-__Caveats to keep in mind regarding p-values:__
-
---
-
-If the true value of a coefficient `\(\beta = 0\)`, then the p-value is sampled from a [Uniform(0,1) distribution](https://en.wikipedia.org/wiki/Continuous_uniform_distribution)
-
-- i.e. it is just as likely to have value 0.45 as 0.16 or 0.84 or 0.9999 or 0.00001...
-
---
-
-`\(\Rightarrow\)` Hence why we typically only reject for low `\(\alpha\)` values like 0.05
-
-  - Controlling the Type 1 error rate at `\(\alpha = 0.05\)`, i.e., the probability of a __false positive__ mistake
-  
-  - 5% chance that you'll conclude there's a significant association between `\(x\)` and `\(y\)` __even when there is none__
-
---
-
-Remember what a standard error is? `\(SE = \frac{\sigma}{\sqrt{n}}\)`
-
-  - `\(\Rightarrow\)` As `\(n\)` gets large __standard error goes to zero__, and *all* predictors are eventually deemed significant
-
-- While the p-values might be informative, we will explore other approaches to determine which subset of predictors to include (e.g., holdout performance)
-
----
-
-## Back to the model summary: `Multiple R-squared`
-
-Back to the connection between the coefficient and correlation:
-
-`$$r_{X,Y} = \widehat{\beta}_{1} \cdot \frac{s_X}{s_Y} \quad \Rightarrow \quad r^2_{X,Y} = \widehat{\beta}_{1}^2\cdot \frac{s_X^2}{s_Y^2}$$`
-
-Compute the correlation with `cor()`:
-
-
-```r
-*with(nfl_teams_data, cor(offense_ave_epa_pass, score_diff))
-```
-
-```
-## [1] 0.7442135
-```
-
---
-
-The squared `cor` matches the reported `Multiple R-squared`
-
-
-```r
-*with(nfl_teams_data, cor(offense_ave_epa_pass, score_diff))^2
-```
-
-```
-## [1] 0.5538537
-```
-
-
----
-
-## Back to the model summary: `Multiple R-squared`
-
-Back to the connection between the coefficient and correlation:
-
-`$$r_{X,Y} = \widehat{\beta}_{1} \cdot \frac{s_X}{s_Y} \quad \Rightarrow \quad r^2_{X,Y} = \widehat{\beta}_{1}^2\cdot \frac{s_X^2}{s_Y^2}$$`
-
-`\(r^2\)` (or also `\(R^2\)`) estimates the __proportion of the variance__ of `\(Y\)` explained by `\(X\)` 
-
-  - More generally: variance of model predictions / variance of `\(Y\)`
-
-
-```r
-*var(predict(init_lm)) / var(nfl_teams_data$score_diff)
-```
-
-```
-## [1] 0.5538537
-```
-
-
----
-
-## Generating predictions
-
-We can use the `predict()` function to either get the fitted values of the regression:
-
-
-```r
-train_preds &lt;- predict(init_lm)
-head(train_preds)
-```
-
-```
-##          1          2          3          4          5          6 
-## -120.21628  -33.58829 -104.31202   21.15045   57.18906  -23.34489
-```
-
-Which is equivalent to using:
-
-```r
-head(init_lm$fitted.values)
-```
-
-```
-##          1          2          3          4          5          6 
-## -120.21628  -33.58829 -104.31202   21.15045   57.18906  -23.34489
-```
-
-
----
-
-## Predictions for new data
-
-Or we can provide it `newdata` which __must contain the explanatory variables__:
-
-.pull-left[
-
-```r
-steelers_data &lt;- nfl_teams_data %&gt;% 
-  filter(team == "PIT", season == 2020)
-
-new_steelers_data &lt;- steelers_data %&gt;%
-  dplyr::select(team, offense_ave_epa_pass) %&gt;%
-* slice(rep(1, 3)) %&gt;%
-  mutate(adj_factor = c(0.5, 1, 2),
-         offense_ave_epa_pass = offense_ave_epa_pass * adj_factor)
-new_steelers_data$pred_score_diff &lt;- 
-* predict(init_lm, newdata = new_steelers_data)
-nfl_plot +
-  geom_point(data = new_steelers_data,
-             aes(x = offense_ave_epa_pass,
-                 y = pred_score_diff),
-             color = "gold", size = 5)
-```
-]
-.pull-right[
-&lt;img src="12-slides_files/figure-html/unnamed-chunk-4-1.png" width="432" style="display: block; margin: auto;" /&gt;
-
-
-]
-
----
-
-### Plot observed values against predictions
-
-Useful diagnostic (for __any type of model__, not just linear regression!) 
-
-.pull-left[
-
-
-```r
-nfl_teams_data %&gt;%
-* mutate(pred_vals = predict(init_lm)) %&gt;%
-  ggplot(aes(x = pred_vals,
-             y = score_diff)) +
-  geom_point(alpha = 0.5) +
-* geom_abline(slope = 1, intercept = 0,
-              linetype = "dashed",
-              color = "red",
-              size = 2) +
-  theme_bw()
-```
-
-- "Perfect" model will follow __diagonal__
-
-]
-.pull-right[
-&lt;img src="12-slides_files/figure-html/unnamed-chunk-5-1.png" width="432" style="display: block; margin: auto;" /&gt;
-
-
-]
-
----
-
-### Plot observed values against predictions
-
-Can augment the data with model output using the [`broom` package](https://cran.r-project.org/web/packages/broom/vignettes/broom.html)
-
-.pull-left[
-
-
-```r
-nfl_teams_data &lt;- 
-* broom::augment(init_lm, nfl_teams_data)
-nfl_teams_data %&gt;%
-  ggplot(aes(x = .fitted, 
-*            y = score_diff)) +
-  geom_point(alpha = 0.5) +
-* geom_abline(slope = 1, intercept = 0,
-              linetype = "dashed",
-              color = "red",
-              size = 2) +
-  theme_bw()
-```
-
-- Adds various columns from model fit we can use in plotting for model diagnostics
-
-]
-.pull-right[
-&lt;img src="12-slides_files/figure-html/unnamed-chunk-6-1.png" width="432" style="display: block; margin: auto;" /&gt;
-
-
-]
-
----
-
-## Plot residuals against predicted values
-
-.pull-left[
-
-- Residuals = observed - predicted
-
-- Conditional on the predicted values, the __residuals should have a mean of zero__
-
-
-```r
-nfl_teams_data %&gt;%
-  ggplot(aes(x = .fitted, 
-*            y = .resid)) +
-  geom_point(alpha = 0.5) +
-* geom_hline(yintercept = 0,
-             linetype = "dashed",
-             color = "red",
-             size = 2) +
-  # To plot the residual mean
-* geom_smooth(se = FALSE) +
-  theme_bw()
-```
-
-- Residuals __should NOT display any pattern__
-
-]
-.pull-right[
-&lt;img src="12-slides_files/figure-html/unnamed-chunk-7-1.png" width="432" style="display: block; margin: auto;" /&gt;
-
-
-]
-
----
-
-## Multiple regression 
-
-We can include as many variables as we want (assuming `\(n &gt; p\)`!)
-
-`$$Y=\beta_{0}+\beta_{1} X_{1}+\beta_{2} X_{2}+\cdots+\beta_{p} X_{p}+\epsilon$$`
-
-OLS estimates in matrix notation ( `\(\boldsymbol{X}\)` is a `\(n \times p\)` matrix):
-  
-`$$\hat{\boldsymbol{\beta}} = (\boldsymbol{X} ^T \boldsymbol{X})^{-1}\boldsymbol{X}^T\boldsymbol{Y}$$`
-
---
-
-Can just add more variables to the formula in `R`
-
-
-```r
-*multiple_lm &lt;- lm(score_diff ~ offense_ave_epa_pass + defense_ave_epa_pass,
-                  data = nfl_teams_data)
-```
-
-- Use the `Adjusted R-squared` when including multiple variables `\(= 1 - \frac{(1 - R^2)(n - 1)}{(n - p - 1)}\)`
-
-  - Adjusts for the number of variables in the model `\(p\)`  
-  
-  - Adding more variables __will always increase__ `Multiple R-squared`
-
----
-
-### What about the Normal distribution assumption???
-
-`$$Y=\beta_{0}+\beta_{1} X_{1}+\beta_{2} X_{2}+\cdots+\beta_{p} X_{p}+\epsilon$$`
-
-- `\(\epsilon_i\)` is the __random__ noise: assume __independent, identically distributed__ (_iid_) from Normal distribution
-
-`$$\epsilon_i \overset{iid}{\sim}N(0, \sigma^2) \quad \text{ with constant variance } \sigma^2$$`
-
---
-
-__OLS doesn't care about this assumption__, it's just estimating coefficients!
-
---
-
-In order to perform inference, __we need to impose additional assumptions__
-
-By assuming `\(\epsilon_i \overset{iid}{\sim}N(0, \sigma^2)\)`, what we really mean is:
-
-`$$Y \overset{iid}{\sim}N(\beta_{0}+\beta_{1} X_{1}+\beta_{2} X_{2}+\cdots+\beta_{p} X_{p}, \sigma^2)$$`
-
---
-
-So we're estimating the mean `\(\mu\)` of this conditional distribution, but what about `\(\sigma^2\)`?
-  
---
-
-[Unbiased estimate](https://bradleyboehmke.github.io/HOML/linear-regression.html#simple-linear-regression) `\(\hat{\sigma}^2 = \frac{RSS}{n - (p + 1)}\)`, its square root is the `Residual standard error` 
-
-  - __Degrees of freedom__:  `\(n - (p + 1)\)`, data supplies us with `\(n\)` "degrees of freedom" and we used up `\(p + 1\)`
-
----
-
-### Check the assumptions about normality with [`ggfortify`](https://cran.r-project.org/web/packages/ggfortify/vignettes/plot_lm.html)
-
-
-```r
-library(ggfortify)
-*autoplot(multiple_lm, ncol = 4) + theme_bw()
-```
-
-&lt;img src="12-slides_files/figure-html/more-resid-plots-1.png" width="1080" style="display: block; margin: auto;" /&gt;
-
-- Standardized residuals = residuals `/ sd(`residuals`)` (see also `.std.resid` from `augment`)
+__Optimal amount of flexibility lies somewhere in the middle__
 
 
     </textarea>

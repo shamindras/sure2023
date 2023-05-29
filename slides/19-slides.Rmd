@@ -1,7 +1,7 @@
 ---
 title: "Supervised Learning"
-subtitle: "Nonparametric regression"
-date: "July 8th, 2021"
+subtitle: "Generalized linear models (GLMs)"
+date: "June 22nd, 2021"
 output:
   xaringan::moon_reader:
     lib_dir: "libs"
@@ -31,352 +31,398 @@ style_mono_accent(base_color = "#cc002b")
 knitr::opts_chunk$set(fig.retina = 3, warning = FALSE, message = FALSE)
 ```
 
-## Model flexibility vs interpretability
+## Probability distributions
 
-[Figure 2.7, Introduction to Statistical Learning with Applications in R (ISLR)](https://www.statlearning.com/)
+A __distribution__ is a mathematical function $f(x \vert \theta)$ where
 
-```{r out.width='50%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/flexibility.png")
+- $x$ may take on continuous or discrete values over the _domain_ (i.e. all possible inputs) of $f(x \vert \theta)$
+
+
+--
+- $\theta$ is a set of parameters governing the shape of the distribution
+  - e.g. $\theta = \{\mu,\sigma^2\}$ for a [Normal / Gaussian](https://en.wikipedia.org/wiki/Normal_distribution) distribution)
+
+- the $\vert$ symbol means that the shape of the distribution is *conditional* on the values of $\theta$
+
+
+--
+- $f(x \vert \theta) \geq 0$ for all $x$
+
+- $\sum_x f(x \vert \theta) = 1$ or $\int_x f(x \vert \theta) = 1$.
+
+
+--
+We use $f$ to denote the distribution for its:
+
+- __probability density function (PDF)__ if $x$ is continuous
+
+- __probability mass function (PMF)__ if $x$ is discrete
+
+---
+
+## Probability distribution examples: [Normal distribution](https://en.wikipedia.org/wiki/Normal_distribution)
+
+.pull-left[
+Normal distribution PDF (`dnorm`):
+
+$$f(x \vert \mu, \sigma^2)=\frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^{2}}$$
+- we write $X \sim N(\mu, \sigma^2)$
+
+- __standard Normal__: $N(0, 1)$
+
+- can plot density curves with __stat_function()__ 
+
+```{r draw-Normal, eval = FALSE}
+tibble(x = c(-5, 5)) %>%
+  ggplot(aes(x)) +
+  stat_function(fun = dnorm, n = 101, #<< 
+                args = list(mean = 0, sd = 1)) + #<<
+  stat_function(fun = dnorm, color = "red",
+                args = list(mean = -2, 
+                            sd = sqrt(0.5))) +
+  theme_bw()
 ```
 
-__Tradeoff__ between model's _flexibility_ (i.e. how "curvy" it is) and how __interpretable__ it is
 
-- Simpler, parametric form of the model $\Rightarrow$ the easier it is to interpret
+]
+.pull-right[
 
----
+```{r ref.label = 'draw-Normal', echo = FALSE}
 
-## Model flexibility vs interpretability
-
-```{r out.width='50%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/flexibility.png")
 ```
 
-- __Parametric__ models, for which we can write down a mathematical expression for $f(X)$ __before observing the data__, _a priori_ (e.g. linear regression), __are inherently less flexible__
 
-
---
-
-- __Nonparametric__ models, in which $f(X)$ is __estimated from the data__ (e.g. kernel regression)
+]
 
 ---
 
-## K Nearest Neighbors (KNN)
+## Probability distribution examples: [binomial distribution](https://en.wikipedia.org/wiki/Binomial_distribution)
 
-- Find the $k$ data points __closest__ to an observation $x$, use these to predit
+.pull-left[
+Binomial distribution PMF (`dbinom`):
 
-  - Need to use some measure of distance, e.g., Euclidean distance
+$$f(x \vert n, p)= \binom{n}{x} p^{x}(1-p)^{n-x}$$
+- model for the probability of $x$ successes in $n$ independent trials (`size`), each with success probability of $p$ (`prob`)
 
---
+- we write $X \sim \text{Binomial}(n, p)$
 
-- KNN is data-driven, but we can actually write down the model _a priori_
+- `R` uses `d` for both PDFs and PMFs
 
---
+```{r draw-binom, eval = FALSE}
+tibble(x = 0:20) %>%
+  mutate(binom1 = dbinom(x, size = 20,
+                         prob = 0.5),
+         binom2 = dbinom(x, size = 20,
+                         prob = 0.1)) %>%
+  ggplot(aes(x)) + geom_point(aes(y = binom1)) +
+  geom_point(aes(y = binom2), color = "red") +
+  theme_bw()
+```
 
-- Regression:
-$$
-{\hat Y} \vert X = \frac{1}{k} \sum_{i=1}^k Y_i \,,
-$$
-- Classification:
-$$
-\hat{P}[Y = j \vert X] = \frac{1}{k} \sum_{i=1}^k 1(Y_i = j) \,,
-$$
 
-  - $1(\cdot)$ is the indicator function: returns 1 if TRUE, and 0 otherwise. 
+]
+.pull-right[
 
-  - Summation yields the proportion of neighbors that are of class $j$
+```{r ref.label = 'draw-binom', echo = FALSE}
+
+```
+
+
+]
+
 
 ---
 
-## Finding the optimal number of neighbors $k$
+## Distributions and regression
 
-__The number of neighbors $k$ is a tuning parameter__ (like $\lambda$ is for ridge / lasso)
+Why does this matter?
+
 
 --
+- Because linear regression, and generalized variants, __make assumptions__ about how observed data are distributed around the true regression line, conditional on a value of $x$
 
-Determining the optimal value of $k$ requires balancing bias and variance:
 
-- If $k$ is too small, the resulting model is *too flexible*,
+--
+For simple linear regression, our goal is to estimate $E[Y \vert x]$, assuming that for every value of $x$...
 
-  - low bias (it is right on average...if we apply KNN to an infinite number of datasets sampled from the same parent population) 
+
+--
+- the distribution governing the possible values of $Y$ is a __Normal distribution__
+
+  - _Note:_ capitalize $Y$ because values are __random variables__ (random samples from distribution)
+
+
+--
+- the __mean__ of the Normal distribution is $E[Y \vert x] = \mu(y \vert x) = \beta_0 + \beta_1 x$
+
+- the __variance__ of the Normal distribution is $\sigma^2$, which is a constant (i.e., does not vary with $x$)
+
+
+--
+- $\Rightarrow Y|x \sim N(\beta_0 + \beta_1 x, \sigma^2)$, same as yesterday: $Y = \beta_0 + \beta_1 x + \epsilon$, where $\epsilon \sim N(0, \sigma^2)$
+
+
+--
+However, just because these assumptions are made in simple linear regression doesn't mean that all linear regression-related models utilize the same assumptions. __They don't__. When we step back from these assumptions, we enter the realm of __generalized linear models (GLMs)__.
+
+---
+
+## Maximum likelihood estimation
+
+In generalized regression, we
+
+1. assume a (family of) distribution(s) that govern observed response values $Y$, and
+
+
+--
+2. estimate the parameters $\theta$ of that distribution.
+
+
+--
+Estimation is done by maximizing the __likelihood function__:
+$$\mathcal{L} = \prod_{i=1}^n f(Y_i \vert \theta)$$
+
+to find the __maximum likelihood estimators (MLEs)__ (typically maximize $\mathcal{l} = \log{\cal L}$, the __log-likelihood__)
+
+
+--
+Leaving many details under the rug:
+
+- the maximum is the point at which the derivative of the likelihood function is zero
+
+- you don't need to check the second derivative: wherever the derivative equals zero, it's a maximum value, not a minimum value
+
+---
+
+## MLE for regression
+
+__Determining the value of $\theta$ that achieves the maximum likelihood can be difficult__
+
+
+--
+It may require __numerical optimization__ 
+  - wherein the computer, using an algorithm, searches over possible values of $\theta$ to find the optimal one
+
+
+--
+For linear regression, ${\cal L}$ can be maximized analytically:
+
+$$\hat{\boldsymbol{\beta}} = (\boldsymbol{X} ^T \boldsymbol{X})^{-1}\boldsymbol{X}^T\boldsymbol{Y}$$
+
+- the $\hat{\boldsymbol{\beta}}$ estimates that minimize the __residual sum of squares (RSS)__ are the MLEs!
+
+- Unbiased estimate for $\hat{\sigma}^2$ is $= \frac{RSS}{n - (p + 1)}$
+
+- This enables us to perform statistical inference:
+
+  - Hypothesis testing for coefficients from yesterday
   
-  - high variance (the predictions have a large spread in values when we apply KNN to our infinite data). See the panels to the left on the next slide.
-
---
-
-- If $k$ is too large, the resulting model is *not flexible enough*, 
-
-  - high bias (wrong on average) and 
-  
-  - low variance (nearly same predictions, every time). See the panels to the right on the next slide.
+  - Confidence intervals and prediction intervals
 
 ---
 
-## Finding the optimal number of neighbors $k$
+### Example: NFL teams summary and modeling score differential
 
-```{r out.width='40%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/Fig_3.16.png")
-```
+Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2020
 
-```{r out.width='40%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/Fig_2.16.png")
-```
-
-
-(Figures 3.16 [top] and 2.16 [bottom], *Introduction to Statistical Learning* by James et al.)
-
----
-
-## KNN in context
-
-Here are two quotes from ISLR to keep in mind when thinking about KNN:
-
-- "As a general rule, parametric methods [like linear regression] will tend to outperform non-parametric approaches [like KNN] when there is a small number of observations per predictor." This is the *curse of dimensionality*: for data-driven models, the amount of data you need to get similar model performance goes up exponentially with $p$.
-
---
-
-$\Rightarrow$ KNN might not be a good model to learn when the number of predictor variables is very large.
-
---
-
-- "Even in problems in which the dimension is small, we might prefer linear regression to KNN from an interpretability standpoint. If the test MSE of KNN is only slightly lower than that of linear regression, we might be willing to forego a little bit of prediction accuracy for the sake of a simple model..."
-
---
-
-$\Rightarrow$ KNN is not the best model to learn if inference is the goal of an analysis.
-
----
-
-## KNN: two critical points to remember
-
-1. To determine which neighbors are the nearest neighbors, pairwise Euclidean distances are computed...so we may need to scale (or standardize) the individual predictor variables so that the distances are not skewed by that one predictor that has the largest variance.
-
---
-
-2. Don't blindly compute a pairwise distance matrix! For instance, if $n$ = 100,000, then your pairwise distance matrix will have $10^{10}$ elements, each of which uses 8 bytes in memory...resulting in a memory usage of 80 GB! Your laptop cannot handle this. It can barely handle 1-2 GB at this point. If $n$ is large, you have three options:
-    a. subsample your data, limiting $n$ to be $\lesssim$ 15,000-20,000;
-    b. use a variant of KNN that works with sparse matrices (matrices that can be compressed since most values are zero); or
-    c. make use of a "kd tree" to more effectively (but only approximately) identify nearest neighbors.
-  
-The [`FNN` package in `R`](https://daviddalpiaz.github.io/r4sl/knn-reg.html) has an option to search for neighbors via the use of a kd tree.
-
-
---
-But instead we will use the [`caret`](http://topepo.github.io/caret/index.html) package...
-
----
-
-## Example data: MLB 2021 batting statistics
-
-Downloaded MLB 2021 batting statistics leaderboard from [Fangraphs](https://www.fangraphs.com/leaders.aspx?pos=all&stats=bat&lg=all&qual=y&type=8&season=2019&month=0&season1=2019&ind=0)
-
-```{r load-data, warning = FALSE, message = FALSE}
+```{r, warning = FALSE, message = FALSE}
 library(tidyverse)
-mlb_data <- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/fg_batting_2021.csv")
-head(mlb_data)
-```
-
-
----
-
-## Data cleaning
-
-- [`janitor`](http://sfirke.github.io/janitor/) package has convenient functions for data cleaning like `clean_names()`
-
-- `parse_number()` function provides easy way to convert character to numeric columns
-
-```{r clean-data}
-library(janitor)
-mlb_data_clean <- clean_names(mlb_data)
-mlb_data_clean <- mlb_data_clean %>%
-  mutate_at(vars(bb_percent:k_percent), parse_number)
-head(mlb_data_clean)
-```
-
----
-
-## KNN example
-
-`caret` is a package of functions designed to simplify training, tuning, and testing statistical learning methods
-
-- first create partitions for training and test data using `createDataPartition()`
-
-```{r split-data}
-library(caret)
-set.seed(1960)
-train_i <- createDataPartition(y = mlb_data_clean$w_oba, p = 0.7, list = FALSE) %>%
-  as.numeric()
-train_mlb_data <- mlb_data_clean[train_i,]
-test_mlb_data <- mlb_data_clean[-train_i,]
+nfl_teams_data <- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/regression_projects/nfl_team_season_summary.csv") %>%
+  mutate(score_diff = points_scored - points_allowed)
+init_lm <- lm(score_diff ~ offense_ave_epa_pass, data = nfl_teams_data) #<<
 ```
 
 --
 
-- next [`train()`](http://topepo.github.io/caret/model-training-and-tuning.html) to find the optimal `k` on the training data with cross-validation
+.pull-left[
 
-```{r train-knn}
-set.seed(1971)
-init_knn_mlb_train <- train(w_oba ~ bb_percent + k_percent + iso, 
-                            data = train_mlb_data, method = "knn",
-                            trControl = trainControl("cv", number = 10),
-                            preProcess = c("center", "scale"),
-                            tuneLength = 10)
+- `geom_smooth()` displays __confidence intervals__ for the regression line
+
+```{r conf-int, eval = FALSE}
+nfl_plot <- nfl_teams_data %>%
+  ggplot(aes(x = offense_ave_epa_pass, #<<
+             y = score_diff)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm") + #<<
+  theme_bw() +
+  labs(x = "EPA gained per pass attempt",
+       y = "Score differential")
+nfl_plot
 ```
 
----
+]
+.pull-right[
+```{r, ref.label='conf-int', echo = FALSE, fig.height=5, fig.width=6,fig.align="center"}
 
-## KNN example
-
-```{r plot-knn, fig.align ='center', fig.height=5}
-ggplot(init_knn_mlb_train) + theme_bw()
 ```
 
+]
+
 
 ---
 
-## KNN example
+## Confidence intervals versus prediction intervals
 
-Can manually create a __tuning grid__ to search over for the tuning parameter `k`
+Regression __confidence intervals__ are based on standard errors for the estimated regression line at $x^*$:
 
-```{r tune-k}
-set.seed(1979)
-tune_knn_mlb_train <- train(w_oba ~ bb_percent + k_percent + iso, 
-                            data = train_mlb_data, method = "knn",
-                            trControl = trainControl("cv", number = 10),
-                            preProcess = c("center", "scale"),
-                            tuneGrid = expand.grid(k = 2:20)) #<<
-tune_knn_mlb_train$results
-```
-
----
-
-## KNN example
-
-```{r plot-knn-tune, fig.align ='center', fig.height=5}
-ggplot(tune_knn_mlb_train) + theme_bw()
-```
-
----
-
-## KNN example
-
-```{r test-preds}
-tune_knn_mlb_train$bestTune
-test_preds <- predict(tune_knn_mlb_train, test_mlb_data)
-head(test_preds)
-RMSE(test_preds, test_mlb_data$w_oba)
-```
-
----
-
-## What does KNN remind you of?...
-
-```{r out.width='40%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("https://media1.giphy.com/media/12Gyz2J1b9SjD2/200w.gif")
-```
-
----
-
-## Kernels
-
-A kernel $K(x)$ is a weighting function used in estimators, and technically has only one required property:
-
-- $K(x) \geq 0$ for all $x$
-
-However, in the manner that kernels are used in statistics, there are two other properties that are usually satisfied:
-
-- $\int_{-\infty}^\infty K(x) dx = 1$; and 
-
-- $K(-x) = K(x)$ for all $x$.
-
-In short: __a kernel is a symmetric PDF!__
-
----
-
-## Kernel density estimation
-
-__Goal__: estimate the PDF $f(x)$ for all possible values (assuming it is continuous / smooth)
+$$SE_{\text{line}}\left(x^{*}\right)=\hat{\sigma} \cdot \sqrt{\frac{1}{n}+\frac{\left(x^{*}-\bar{x}\right)^{2}}{\sum_{i=1}^{n}\left(x_{i}-\bar{x}\right)^{2}}}$$
 
 --
 
-$$
-\text{Kernel density estimate: } \hat{f}(x) = \frac{1}{n} \sum_{i=1}^n \frac{1}{h} K_h(x - x_i)
-$$
+Regression __prediction intervals__ add the variance of a __single predicted value__ $\sigma^2$:
+
+$$SE_{\text{pred}}\left(x^{*}\right)=\hat{\sigma} \cdot \sqrt{1 + \frac{1}{n}+\frac{\left(x^{*}-\bar{x}\right)^{2}}{\sum_{i=1}^{n}\left(x_{i}-\bar{x}\right)^{2}}}$$
 
 --
-- $n =$ sample size, $x =$ new point to estimate $f(x)$ (does NOT have to be in dataset!)
 
+- $SE_{\text{line}}\left(x^{*}\right) \Rightarrow$ std error for the predicted AVERAGE $\hat{\beta}_0 + \hat{\beta}_1 x^*$
 
---
-- $h =$ __bandwidth__, analogous to histogram bin width, ensures $\hat{f}(x)$ integrates to 1
-
-- $x_i =$ $i$th observation in dataset
-
+- $SE_{\text{pred}}\left(x^{*}\right) \Rightarrow$ std error for the prediction of an observation $\hat{\beta}_0 + \hat{\beta}_1 x^* + \epsilon$
 
 --
-- $K_h(x - x_i)$ is the __Kernel__ function, creates __weight__ given distance of $i$th observation from new point 
-  - as $|x - x_i| \rightarrow \infty$ then $K_h(x - x_i) \rightarrow 0$, i.e. further apart $i$th row is from $x$, smaller the weight
-  
-  - as __bandwidth__ $h \uparrow$ weights are more evenly spread out (as $h \downarrow$ more concentrated around $x$) 
 
-  - typically use [__Gaussian__ / Normal](https://en.wikipedia.org/wiki/Normal_distribution) kernel: $\propto e^{-(x - x_i)^2 / 2h^2}$
-  
-  - $K_h(x - x_i)$ is large when $x_i$ is close to $x$
-  
+- Why does the standard error for a prediction never go to 0 as $n$ goes to $\infty$?
 
 ---
 
-## Commonly Used Kernels
+## Confidence intervals versus prediction intervals
 
-```{r out.width='40%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/kernels.png")
+Generate 95% intervals with $\hat{Y}^* +/- 2 \cdot SE_{type}(x^*)$
+
+.pull-left[
+```{r pred-interval, eval = FALSE}
+pred_int_data <- 
+  predict(init_lm, data = nfl_teams_data, 
+          interval = "prediction",  #<<
+          level = .95) %>% #<<
+  as_tibble()  
+nfl_plot +
+  geom_ribbon(data = #<<
+                bind_cols(nfl_teams_data,
+                          pred_int_data),
+              aes(ymin = lwr, ymax = upr), #<<
+              color = "red", fill = NA)
 ```
 
+Subtle point: both are __confidence intervals__...
 
-A general rule of thumb: the choice of kernel will have little effect on estimation, particularly if the sample size is large! The Gaussian kernel (i.e., a normal PDF) is by far the most common choice, and is the default for `R` functions that utilize kernels.
+]
+.pull-right[
+```{r, ref.label='pred-interval', echo = FALSE,  fig.height=6,fig.width=6,fig.align="center"}
+
+```
+
+]
 
 
 ---
 
-## Kernel regression
+## Generalization example
 
-We can apply kernels in the regression setting as well as in the density estimation setting!
+In typical linear regression, the distribution is Normal and the domain of $Y \vert x$ is $(-\infty,\infty)$.
 
-The classic kernel regression estimator is the __Nadaraya-Watson__ estimator:
 
-$$\hat{y}_h(x) = \sum_{i=1}^n w_i(x) Y_i \,,$$
+--
+What, however, happens if we know that
 
-where
-$$w_i(x) = \frac{K\left(\frac{x-X_i}{h}\right)}{\sum_{j=1}^n K\left(\frac{x-X_j}{h}\right)} \,.$$
+1. the domain of observed values of the response is actually $[0,\infty]$? and
 
-Regression estimate is the average of all the *weighted* observed response values; 
 
-- Farther $x$ is from observation $\Rightarrow$ less weight that observation has in determining the regression estimate at $x$
+--
+2. the observed values are __discrete__, with possible values 0, 1, 2, ...
+
+
+--
+__The Normal distribution doesn't hold here__
+
+- Any idea of what distribution could possibly govern $Y \vert x$?
+
+- Remember, we might not know truly how $Y \vert x$ is distributed, but any assumption we make has to fit with the limitations imposed by points 1 and 2 above
 
 ---
 
-## Kernel regression with `np`
-
-Use the `npregbw` function to tune bandwidth using [__generalized cross-validation__](https://bookdown.org/egarpor/NP-UC3M/kre-i-bwd.html#kre-i-bwd-cv)
-
-```{r, eval = FALSE}
-library(np)
-mlb_bw0 <- npregbw(w_oba ~ bb_percent + k_percent + iso, 
-                            data = train_mlb_data)
-```
-
-```{r, include = FALSE}
-library(np)
-mlb_bw0 <- npregbw(w_oba ~ bb_percent + k_percent + iso, 
-                            data = train_mlb_data)
-```
-
-Generate predictions with `npreg` with provided bandwidth object
-
-```{r}
-mlb_test_npreg <- npreg(mlb_bw0, newdata = test_mlb_data) #<<
-RMSE(mlb_test_npreg$mean, test_mlb_data$w_oba) 
-```
+## Generalization: Poisson regression
 
 
+A distribution that fulfills the conditions imposed on the last slide is the [__Poisson__ distribution](https://en.wikipedia.org/wiki/Poisson_distribution), 
+
+$$f(x \vert \lambda) = \frac{\lambda^xe^{-\lambda}}{x!},\text{ where }x = 0, 1, 2, \dots$$
+
+--
+- has a single parameter $\lambda$, which is __both__ the mean __AND__ variance of the distribution
+
+  - in general the variance governs the distribution's shape
+
+
+--
+- distribution of independent event occurences in an interval, e.g. soccer goals in a match
+
+- $\lambda$ is the average number of the events in an interval
+
+
+
+--
+So, when we apply generalized linear regression in this context, we would identify the family as Poisson.
+
+But there's another step in generalization...
+
+---
+
+## Generalization: link Function
+
+Start with one predictor, linear function: $\beta_0 + \beta_1 x$
+
+
+--
+Range of this function is $(-\infty,\infty)$ - but for Poisson regression example, we know that $Y$ __cannot be negative__,
+
+- __We need to transform the linear function__ to be $[0,\infty)$! (We could punt and use simple linear regression, but results may not be meaningful, e.g., we predict ${\hat Y}$ to be negative!)
+
+--
+
+__There is usually no unique transformation__, but rather conventional ones
+
+- e.g., for Poisson we use the $log()$ function as the __link function__ $g()$:
+
+$$g(\lambda \vert x) = \log(\lambda \vert x) = \beta_0 + \beta_1 x$$
+
+--
+Given $Y$ with values limited to being either 0 or positive integers, with no upper bound, we
+
+1. assume $Y \vert x \sim \text{Poisson}(\lambda)$
+
+2. assume $\lambda \vert x = e^{\beta_0 + \beta_1 x}$ 
+
+3. use optimization to estimate $\beta_0$ and $\beta_1$ by maximizing the likelihood function
+
+---
+
+## Exercises
+
+What family might be appropriate for...
+
+
+--
+1. $Y \vert x$ continuous, but bounded between 0 and 1?
+
+--
+[Beta distribution](https://en.wikipedia.org/wiki/Beta_distribution)
+
+
+--
+2. $Y \vert x$ continuous, but bounded between 0 and $\infty$?
+
+--
+[Gamma distribution](https://en.wikipedia.org/wiki/Gamma_distribution)
+
+
+--
+3. $Y \vert x$ discrete, but can only take on the values 0 and 1?
+
+--
+[Bernoulli distribution](https://en.wikipedia.org/wiki/Bernoulli_distribution)
+
+
+Focus on Case 3 for Thursday!
 
 
