@@ -1,0 +1,373 @@
+---
+title: "Optum Data Science Research Project Guidelines"
+---
+
+## Project Theme
+
+*"The impact of race, social and demographic factors on health,
+survival, and mortality."*
+
+The motivation and purpose for the 2023 Optum project is to highlight
+the issues and external factors that impact people's mental and physical
+health, which ultimately determine the quality of one's life. This
+project will example opportunities to improve disparities by identifying
+social, racial, demographic factors that impact and predict quality of
+mental and physical health.
+
+### Your task
+
+Each student has been allocated into a project team (of up to 4
+students). Each project team has been assigned a specific project
+research topic using the above general theme as a prompt. Your goal is
+to complete the required [[project
+deliverables]{.underline}](#project-deliverables) for your assigned
+project, in accordance with the guidelines detailed in the remainder of
+this document.
+
+## Project deliverables
+
+This project has the following **three** key deliverables, due in the
+final week (starting 07/24[^1]):
+
+1.  **Reproducible** **project report**
+
+    -   This report is to be written as either an
+        [[Rmarkdown]{.underline}](https://rmarkdown.rstudio.com/) or a
+        [[quarto
+        markdown]{.underline}](https://quarto.org/docs/authoring/markdown-basics.html)
+        file.
+
+    -   Submitted as rendered **pdf** and **html** output formats.
+
+    -   The report must comply with the rubric provided.
+
+2.  **Project poster**
+
+    -   Required to be an A2 landscape size.
+
+    -   Submitted as a **pdf** output format, and a printed copy for the
+        poster session.
+
+3.  **Project slide deck and presentation**
+
+    -   Executive **pdf** output summary of key poster results (maximum
+        5 slides).
+
+    -   Used in a 5 minute presentation by the entire team on the final
+        day.
+
+It is important to know that the project poster is summarized directly
+from the project report, and the slide deck further summarizes the key
+insights from both the project report and poster. The project report
+thus contains all of the detailed reproducible analysis for your
+research question. However you are expected (and advised) to work on
+both the project report and poster concurrently to meet the weekly
+[[project milestones]{.underline}](#project-milestones).
+
+All three project deliverables **must only use open data** (see [[data
+guidelines]{.underline}](#data-guidelines)), and will be publicly linked
+on our showcase website. The project report analysis must be made
+available online. It must be **fully reproducible** and **developed only
+using open source** **software** as taught in the course.
+
+## Benefits of the Program
+
+These three deliverables are designed to be openly accessible research
+projects. The main benefits to you in completing them successfully
+include (but are not limited to) the following:
+
+1.  **Networking opportunities:** you will actively present your poster
+    and slides to Optum Executives and CMU Statistics & Data Science
+    faculty.
+
+2.  **Building a public data science portfolio:** your report, poster,
+    and slide deck will be publicly shared as part of our program
+    showcase.
+
+3.  **Developing marketable skills:** the project involves collaborative
+    software skills essential to industry and academia (version
+    control, reproducibility), in addition to the statistical
+    techniques you learn. Most importantly, you will practice
+    communicating your work to a broad audience.
+
+Producing high quality project deliverables is an ideal way to broadcast
+your research for future health and data science related job-search
+purposes. So please put your best foot forward!
+
+## Research Topic Guidelines
+
+Using the general [[project theme]{.underline}](#project-theme) and the
+required [[data guidelines]{.underline}](#data-guidelines), your project
+team has been assigned to one of the following 4 research topics.
+
+### Final Research Topics
+
+1.  **Premature deaths.**
+
+    -   **TA Advisor:** Akshay Prasadan
+
+    -   *Do income inequality, unemployment and high school completion
+        rates affect the number of premature deaths of certain racial
+        groups at the county level?*
+
+2.  **Preventable hospital stays:**
+
+    -   **TA Advisor:** Beomjo Park
+
+    -   *Do income inequality, unemployment and high school completion
+        rates affect the number of preventable hospital stays of
+        certain racial groups at the county level?*
+
+3.  **Mental health:**
+
+    -   **TA Advisor:** YJ Choe
+
+    -   *Do the number of mental health professionals per county affect
+        the number of poor mental health days?*
+
+4.  **Drug overdose alcohol related deaths:**
+
+    -   **TA Advisor:** Alec McClean
+
+    -   *Are there demographic and social factors that are predictors of
+        drug overdose, alcohol-related incidents (e.g., driving
+        accidents)?*
+
+### Exploratory and Predictive modeling
+
+In preparing your [[three project
+deliverables]{.underline}](#project-deliverables), you should focus on
+both:
+
+-   **Exploratory analysis:** Create visualizations to explore the
+    underlying structure of key demographics and social determinants
+    in the data, gaining insight about distributions and relationships
+    between variables. These should be ideally based on reasoned
+    hypotheses by the team.
+
+-   **Predictive modeling:** Are there demographic and social
+    determinants, access to care factors that are *predictors* of
+    physical and emotional health. These could be the outcome of
+    carefully applied predictive models.
+
+## Data Guidelines
+
+### **Required:** County Health Rankings Data 
+
+In order to complete this project successfully, you **must utilize**
+(and appropriately cite) relevant datasets as detailed below:
+
+-   **Required data source:** [**[The County Health Rankings
+    Data]{.underline}**](https://www.countyhealthrankings.org/explore-health-rankings/rankings-data-documentation)
+
+-   [[The County Health Rankings
+    Data]{.underline}](https://www.countyhealthrankings.org/explore-health-rankings/rankings-data-documentation)
+    as collected by the University of Wisconsin Population Health
+    Institute, ranks every county in each state on their Health
+    Outcomes and Health Factors. This dataset also contains the
+    measurements used to calculate the rankings for each county.
+
+-   We recommend reading the [[background information and
+    video]{.underline}](https://www.countyhealthrankings.org/explore-health-rankings/county-health-rankings-model)
+    explainers for details.
+
+-   In particular you must (at minimum) utilize the [[2023 ranking
+    measures]{.underline}](https://www.countyhealthrankings.org/explore-health-rankings/county-health-rankings-measures)
+    which can provide more insight into the *most recent* health
+    ranking outcomes priorities. This can be used to better shape your
+    project topic and related hypotheses.
+
+-   Your analysis should mainly be done at the entire **United States
+    scale** (as feasible). However you are welcome to focus on some
+    specific counties/states to test more granular spatial hypotheses.
+
+-   **All data used must be publicly available**. Any personally
+    identifiable data, or data that is not openly accessible **must be
+    removed** from your project deliverables before submission.
+
+### **Optional:** Additional Suggestions and Data Sources 
+
+The following are some additional guidelines and data sources which you
+can consider during the course of your project analysis:
+
+-   The [[County Health Rankings
+    Data]{.underline}](https://www.countyhealthrankings.org/explore-health-rankings/rankings-data-documentation)
+    are typically collected over time.
+
+    -   Consider doing a temporal or trend analysis for your analyses.
+
+    -   For predictive modeling consider adding time-varying features or
+        forecasting an outcome, with suitable uncertainty
+        quantification.
+
+-   Consider whether this [[County Health Rankings
+    Data]{.underline}](https://www.countyhealthrankings.org/explore-health-rankings/rankings-data-documentation)
+    can be *augmented* with other publicly available datasets, over
+    the time periods.
+
+    -   Consider spatiotemporally merging on US Census, or COVID19 data
+        to the [[County Health Rankings
+        Data]{.underline}](https://www.countyhealthrankings.org/explore-health-rankings/rankings-data-documentation).
+
+    -   Such data is publicly accessible in **R** using the
+        [**[{tidycensus}]{.underline}**](https://walker-data.com/tidycensus/)
+        and
+        [**[{covidcast}]{.underline}**](https://cmu-delphi.github.io/covidcast/covidcastR/)
+        packages, for example.
+
+    -   We note that the [[County Health Rankings
+        Data]{.underline}](https://www.countyhealthrankings.org/explore-health-rankings/rankings-data-documentation)
+        is a requirement, but these optional augmented datasets can
+        help you test, and sharpen your hypotheses for some of the
+        collected ranking metrics across US Counties.
+
+## Project Logistics
+
+### Project Teams and TA advisor
+
+-   Based on your pre-course Optum survey topic preferences, each
+    student has been assigned to a project team of (up to) four
+    students.
+
+-   Your project team has already been assigned to a [[research
+    topic]{.underline}](#final-research-topics).
+
+-   You will maintain this assigned team structure and project topic
+    throughout the program.
+
+-   **TA Advisor:** Your project team will be assigned a TA advisor.
+    Your assigned TA advisor will be your project teams' primary point
+    of contact throughout the program.
+
+-   All students however are expected to do the majority of the project
+    work together, including collecting datasets, formulating
+    hypotheses, EDA, and predictive modeling etc.
+
+-   The TA advisor will help project guidance and mentorship and mainly
+    help resolve any high level technical issues during your project
+    work.
+
+-   All "project-lab" activities throughout the program will involve
+    meeting with your assigned project team members and typically the
+    TA advisor.
+
+-   It is important for your team members to meet during the assigned
+    times and ensure that you meet the weekly project milestones.
+
+-   Student teams are encouraged to meet during free times during the
+    workday, outside of lectures to continue making progress on the
+    final project.
+
+### 
+
+### Project Milestones
+
+These project milestones are to be met the Friday of each week. During
+your Friday project lab session, the head instructor (Shamindra
+Shrotriya) will briefly meet with your project team and your TA advisor.
+During this meeting, you will provide quick progress update on that
+weeks' project milestones, as detailed below:
+
+-   **Week 1:**
+
+    -   Meet your team and TA advisor.
+
+    -   Start to understand your topic of interest and start noting
+        formulating specific hypotheses.
+
+    -   Your TA advisor will help you set up a collaboration workflow
+        (e.g., Dropbox, Github).
+
+    -   Set up the project report document as either a
+        [[Rmarkdown]{.underline}](https://rmarkdown.rstudio.com/) or a
+        [[quarto
+        markdown]{.underline}](https://quarto.org/docs/authoring/markdown-basics.html)
+        file, and start populating it.
+
+-   **Week 2:**
+
+    -   Formulate initial key hypotheses with TA advisor.
+
+    -   Source initial datasets and read them into R.
+
+    -   Do some basic exploratory data analysis (EDA), i.e., produce
+        some summary plots and update your project report. This may
+        change, but keep adding in findings.
+
+    -   TA Advisor to set up an overleaf project poster file for the
+        team. Must be A2 landscape format. Your team can use other
+        formats per your preference.
+
+    -   Start also populating some poster sections like the
+        introduction, data sources, and placeholder for the
+        conclusion. Mirror these from your project report.
+
+    -   Your project report and poster should be done concurrently to
+        save time!
+
+-   **Week 3:**
+
+    -   More hypotheses should be tested and introduction, data sources
+        section should be finalized in both the project report and
+        project poster.
+
+    -   Additional exploratory plot with commentary should be finalized
+        in both the project report and project poster.
+
+    -   Carefully list assumptions, not just insights when summarizing
+        any findings.
+
+    -   Start preparing predictive modeling questions of interest and
+        source some datasets in R to help answer the questions.
+
+-   **Week 4:**
+
+    -   Additional exploratory plots with commentary should be finalized
+        in both the project report and project poster.
+
+    -   Predictive models should be run. Check which predictors provide
+        most explanatory power for the outcome. Note down key
+        assumptions and data limitations as you draft your report and
+        poster findings.
+
+-   **Week 5:**
+
+    -   Refine your predictive models. Draft predictive questions
+        section in the poster, including question, data, and
+        methodology used. Explain your model and variable selection
+        procedures used.
+
+    -   Report should be drafted at this stage, similar to the poster.
+
+-   **Week 6:**
+
+    -   Polish the report and poster. Ensure that you can generate
+        **pdf** and **html** files for the report submission.
+
+    -   Create a basic slide deck and summarize main results. This
+        should be a quarto markdown reveal.js document, as taught in
+        the course lectures.
+
+    -   You will have only 5 minutes for your presentation, so it should
+        be a maximum of 5 slides.
+
+-   **Week 7:**
+
+    -   Optum HQ visit 07/17 to 07/20 (inclusive).
+
+    -   Not much work to do this week.
+
+    -   Just keep polishing the report and poster session in the
+        background on the Friday project-lab.
+
+-   **Week 8:**
+
+    -   Submit your project poster **pdf** by 07/27 to allow for
+        printing.
+
+    -   Submit your project report **pdf** and **html** files by 07/27.
+
+    -   Submit your project slide deck **pdf** by 07/27.
+
+[^1]: Details on deliverable due dates will be announced after semester
+    starts. Stay tuned!

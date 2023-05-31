@@ -1,0 +1,43 @@
+---
+title: "Jessica Paschke"
+sortby: "Paschke, Jessica"
+subtitle: "SURE Academic Advisor"
+image: paschke-jessica.jpg
+started: "Summer 2015"
+toc: false
+# resources: 
+#   - "yurko-ron_cv.pdf"
+about:
+  id: person-profile
+  template: jolla
+  links:
+    - icon: link
+      text: website
+      href: https://www.cmu.edu/dietrich/statistics-datascience/people/staff/jessica-paschke.html
+    # - icon: file-earmark-text
+    #   text: vitae
+    #   href: ./people/executive/yurko-ron_cv.pdf
+    # - icon: github
+    #   text: github
+    #   href: https://www.github.com/shamindras
+---
+
+:::{#person-profile}
+:::
+
+## Biography
+
+TODO: Add here.
+
+## Education
+
+TODO: Add here.
+
+<!-- - **Carnegie Mellon University** | Pittsburgh, PA, USA<br /> -->
+<!--   PhD in Statistics | 2017–2022 -->
+
+<!-- - **University of California, Berkeley** | Berkeley, CA, USA<br /> -->
+<!--   MA in Statistics | 2015–2016 -->
+
+<!-- - **University of New South Wales** | Sydney, NSW, Australia<br /> -->
+<!--   BCom in Actuarial Studies and Finance | 2003–2006  -->

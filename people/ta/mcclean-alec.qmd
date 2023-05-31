@@ -1,0 +1,47 @@
+---
+title: "Alec McClean"
+sortby: "McClean, Alec"
+subtitle: "TA Advisor (Optum)"
+image: mcclean-alec.jpg
+started: "Fall 2019"
+ended: "Current"
+toc: false
+about:
+  id: person-profile
+  template: jolla
+  links:
+    - icon: github
+      text: github
+      href: https://github.com/alecmcclean
+    - icon: link
+      text: website
+      href: https://alecmcclean.github.io/
+---
+
+```{=html}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="../../index.html">Home</a></li>
+    <li class="breadcrumb-item"><a href="../../people.html">People</a></li>
+    <li class="breadcrumb-item active">TA Advisors</li>
+    <li class="breadcrumb-item active" aria-current="page">{{< meta title >}}</li>
+  </ol>
+</nav>
+```
+
+:::{#person-profile}
+:::
+
+## Biography
+
+Alec McClean is a fourth year PhD student at CMU. His research interests are at
+the intersection of statistics, machine learning, and causal inference. He
+received a BA in Mathematics and Economics from Swarthmore College in 2016.
+
+## Education
+
+- **Swarthmore College** | Swarthmore, PA, USA<br/>
+  BA in Mathematics and Economics | 2012–2016
+  
+- **Carnegie Mellon University** | Pittsburgh, PA, USA<br/>
+  MS in Statistics | 2019-2020

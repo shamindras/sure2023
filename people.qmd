@@ -13,7 +13,7 @@ listing:
     field-display-names: 
       started: "Started"
   - id: research-assistants
-    contents: "people/ras/*.qmd"
+    contents: "people/ta/*.qmd"
     type: grid
     image-height: 225px
     grid-columns: 3
@@ -22,6 +22,16 @@ listing:
     field-display-names:
       started: "Started"
     grid-item-align: center
+  - id: student-support
+    contents: "people/student_support/*.qmd"
+    type: grid
+    image-height: 225px
+    grid-columns: 3
+    sort: sortby
+    fields: [image, title, subtitle, started]
+    field-display-names:
+      started: "Started"
+    grid-item-align: center    
   - id: executive-staff
     contents: "people/executive/*.qmd"
     type: grid
@@ -48,14 +58,14 @@ listing:
   <!--     ended: "Ended" -->
 <!-- --- -->
 
-<!-- ```{=html} -->
-<!-- <nav aria-label="breadcrumb"> -->
-<!--   <ol class="breadcrumb"> -->
-<!--     <li class="breadcrumb-item"><a href="index.html">Home</a></li> -->
-<!--     <li class="breadcrumb-item active" aria-current="page">People</li> -->
-<!--   </ol> -->
-<!-- </nav> -->
-<!-- ``` -->
+```{=html}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">People</li>
+  </ol>
+</nav>
+```
 
 ## Instructors
 
@@ -65,6 +75,11 @@ listing:
 ## TA Advisors
 
 :::{#research-assistants}
+:::
+
+## Student Support
+
+:::{#student-support}
 :::
 
 ## Executive team

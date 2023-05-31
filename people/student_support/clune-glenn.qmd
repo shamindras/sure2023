@@ -1,0 +1,35 @@
+---
+title: "Glenn Clune"
+sortby: "Clune, Glenn"
+subtitle: "SURE Academic Advisor, Academic Program Manager"
+image: clune-glenn.jpg
+started: "Summer 2018"
+toc: false
+# resources: 
+#   - "yurko-ron_cv.pdf"
+about:
+  id: person-profile
+  template: jolla
+  links:
+    - icon: link
+      text: website
+      href: https://www.cmu.edu/dietrich/gened/fall-2021-and-beyond/meet-the-advisors/glenn-clune.html
+---
+
+:::{#person-profile}
+:::
+
+## Biography
+
+Glenn Clune is part of the undergraduate advising team for our Statistics & Data
+Science students. Starting with the department in the summer of 2018, he has
+continually strived to help students feel welcome and supported during their
+time with the department, and has maintained a particular commitment to
+supporting first generation, underrepresented and underprivileged students
+navigate through the challenges of higher education.
+
+## Education
+
+- **Geneva College** | Beaver Falls, PA, USA<br />
+  MA in Higher Education | 2016–2018
+ 

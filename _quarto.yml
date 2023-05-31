@@ -12,30 +12,30 @@ execute:
 
 bibliography: files/bib/readings.bib
 csl: files/bib/chicago-author-date.csl
-description-meta: "Explore how the public and nonprofit sectors work around the world and learn how political institutions shape government and civil society"
+description-meta: "Explore cutting-edge statistics and data science methodology with applications in sports and health analytics"
 
 website:
-  title: "CMU SURE Program 2023"
+  image: "/files/cmu-statds-icon-hex-2-bg.png"
+  title: "SURE 2023"
   site-url: "https://compasp23.classes.andrewheiss.com"
 
-  favicon: "/files/.pngcmu-statds-icon-hex-2"
+  favicon: "/files/cmu-statds-icon-hex-2-bg.png"
 
   twitter-card:
-    image: "/files/cmu-statds-icon-hex-2.png"
+    image: "/files/cmu-statds-icon-hex-2-bg.png"
     card-style: summary_large_image
     creator: "@andrewheiss"
     # site: "@andrewheiss"
 
   open-graph:
-    image: "/files/cmu-statds-icon-hex-2.png"
+    image: "/files/cmu-statds-icon-hex-2-bg.png"
     locale: en_US
 
   navbar:
+    logo: "/files/cmu-statds-icon-hex-2-bg.png"
+    logo-alt: "SURE 2023 logo."
     pinned: true
     background: "#341648"
-    # left:
-    #   - href: people.qmd
-    #     text: People
     right:
       - href: people.qmd
         text: Team
@@ -58,7 +58,7 @@ website:
         - section: "Overview"
           contents:
             - class/index.qmd
-        - section: "Classes"
+        - section: "Lectures"
           contents:
             - section: "Orientation"
               contents:
@@ -67,7 +67,7 @@ website:
             - section: "Exploratory Data Analysis"
               contents:
                 - text: "2: Exploring Data: Into the tidyverse"
-                  file: class/01-class.qmd
+                  file: class/02-class.qmd
                 - text: "3: The grammar of graphics and ggplot2"
                   file: class/03-class.qmd
                 - text: "4: Visualizing 1D categorical and continuous variables"
@@ -117,14 +117,23 @@ website:
                 - text: "23: Random Forest and Gradient-Boosted trees"
                   file: class/23-class.qmd
 
+    - title: "Documentation"
+      contents:
+        - section: "Syllabus"
+          contents:
+            - syllabus.qmd
+        - section: "Code of Conduct"
+          contents:
+            - code-of-conduct.qmd
+
     - title: "Assignments"
       contents:
         - section: "Overview"
           contents:
             - assignment/index.qmd
-        - section: "Final project"
+        - section: "Final projects"
           contents:
-            - assignment/policy-brief.qmd
+            - assignment/optum-project-guidelines.qmd
 
   page-footer:
     left: |

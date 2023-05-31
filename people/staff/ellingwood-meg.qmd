@@ -3,38 +3,29 @@ title: "Meg Ellingwood"
 sortby: "1"
 subtitle: "SURE (CMSAC) 2023 Faculty"
 image: ellingwood-meg.jpg
-started: "Summer 2020"
+started: "Fall 2020"
 toc: false
-# resources: 
-#   - "shrotriya-shamindra_cv.pdf"
 about:
   id: person-profile
   template: jolla
   links:
-    - icon: link
-      text: website
-      href: https://www.cmu.edu/dietrich/statistics-datascience/people/phd/margaret-ellingwood.html
-    # - icon: file-earmark-text
-    #   text: vitae
-    #   href: ./people/staff/shrotriya-shamindra_cv.pdf
-    # - icon: mortarboard
-    #   text: scholar
-    #   href: https://scholar.google.com/citations?user=N2UcZ84AAAAJ
     - icon: github
       text: github
       href: https://www.github.com/mellingwood
-    # - icon: twitter
-    #   text: twitter
-    #   href: https://www.twitter.com/jeffreymgirard
 ---
 
 :::{#person-profile}
 :::
 
 ## Biography
-Margaret (Meg) Ellingwood is a third-year student in the PhD program in statistics at CMU. She graduated from Kenyon College and briefly taught high school statistics before entering graduate school. Meg participated in CMSACamp Summer 2020 and is very excited to be involved again this year. She is interested in applications of statistics and data science in sports, public health, and neuroscience.
+Meg Ellingwood is a second-year student in the PhD program in statistics at CMU.
+She graduated from Kenyon College and briefly taught high school statistics
+before entering graduate school. Meg participated as a student in CMSACamp
+Summer 2020, as a TA in Summer 2021 and 2022, and she is thrilled to be an
+instructor this summer. She is interested in applications of statistics and
+data science in sports, public health, and neuroscience.
 
 ## Education
 
-- **Kenyon College** | Seattle, WA, USA<br />
-  BA in Psychology & Philosophy (Honors) | 2005–2008
+- **Kenyon College** | Gambier, OH, USA<br/>
+  BA in Psychology & Anthropology | 2016–2020
