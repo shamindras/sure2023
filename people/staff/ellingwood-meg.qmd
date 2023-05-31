@@ -1,7 +1,7 @@
 ---
 title: "Meg Ellingwood"
-sortby: "1"
-subtitle: "SURE (CMSAC) 2023 Faculty"
+sortby: "Ellingwood, Meg"
+subtitle: "SURE 2023 Faculty (CMSAC)"
 image: ellingwood-meg.jpg
 started: "Fall 2020"
 toc: false
@@ -13,6 +13,17 @@ about:
       text: github
       href: https://www.github.com/mellingwood
 ---
+
+```{=html}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="../../index.html">Home</a></li>
+    <li class="breadcrumb-item"><a href="../../people.html">People</a></li>
+    <li class="breadcrumb-item active">Instructors</li>
+    <li class="breadcrumb-item active" aria-current="page">{{< meta title >}}</li>
+  </ol>
+</nav>
+```
 
 :::{#person-profile}
 :::

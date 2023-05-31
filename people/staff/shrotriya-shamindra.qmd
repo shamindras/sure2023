@@ -1,9 +1,9 @@
 ---
 title: "Shamindra Shrotriya"
-sortby: "2"
-subtitle: "SURE (Optum) 2023 Faculty"
+sortby: "Shrotriya, Shamindra"
+subtitle: "SURE 2023 Faculty (Optum)"
 image: shrotriya-shamindra.jpg
-started: "Summer 2023"
+started: "Fall 2017"
 toc: false
 resources: 
   - "shrotriya-shamindra_cv.pdf"
@@ -21,6 +21,17 @@ about:
       text: github
       href: https://www.github.com/shamindras
 ---
+
+```{=html}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="../../index.html">Home</a></li>
+    <li class="breadcrumb-item"><a href="../../people.html">People</a></li>
+    <li class="breadcrumb-item active">Instructors</li>
+    <li class="breadcrumb-item active" aria-current="page">{{< meta title >}}</li>
+  </ol>
+</nav>
+```
 
 :::{#person-profile}
 :::

@@ -1,7 +1,7 @@
 ---
 title: "Nick Kissel"
 sortby: "Kissel, Nick"
-subtitle: "Teaching Assistant (Advisor)"
+subtitle: "TA Advisor (CMSAC)"
 image: kissel-nick.jpg
 started: "Spring 2023"
 ended: "Current"
@@ -9,6 +9,13 @@ toc: false
 about:
   id: person-profile
   template: jolla
+  links:
+    - icon: github
+      text: github
+      href: https://github.com/nkissel
+    - icon: link
+      text: website
+      href: https://nkissel.github.io/
 ---
 
 ```{=html}
@@ -16,17 +23,28 @@ about:
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="../../index.html">Home</a></li>
     <li class="breadcrumb-item"><a href="../../people.html">People</a></li>
-    <li class="breadcrumb-item active">Research Assistants</li>
+    <li class="breadcrumb-item active">TA Advisors</li>
     <li class="breadcrumb-item active" aria-current="page">{{< meta title >}}</li>
   </ol>
 </nav>
 ```
 
 :::{#person-profile}
-## Biography
-Nicholas Kissel is a third year statistics PhD student at CMU. He received an MS in statistics and BS in math & statistics from Pitt in 2019. He is am primarily interested in developing methods for generating model confidence sets. More broadly, he is interested in creating inferential procedures for machine learning modeling methods, as well as developing accessible statistical tools that are applicable to natural and social science research.
-
-<!-- ## Education -->
-<!-- - **University of Kansas** | Lawrence, KS, USA<br /> -->
-<!--   Psychology Major -->
 :::
+
+## Biography
+
+Nicholas Kissel is a fourth year statistics PhD student at CMU. He received an
+MS in statistics and BS in math & statistics from Pitt in 2019. He is am
+primarily interested in developing methods for generating model confidence sets.
+More broadly, he is interested in creating inferential procedures for machine
+learning modeling methods, as well as developing accessible statistical tools
+that areapplicable to natural and social science research.
+
+## Education
+
+- **University of Pittsburgh** | Pittsburgh, PA, USA</br>
+  BS in Statistics and Applied Mathematics | 2015–2018
+  
+- **University of Pittsburgh** | Pittsburgh, PA, USA</br>
+  MS in Statistics | 2018–2019

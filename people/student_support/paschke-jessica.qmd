@@ -1,43 +1,40 @@
 ---
 title: "Jessica Paschke"
 sortby: "Paschke, Jessica"
-subtitle: "SURE Academic Advisor"
+subtitle: "SURE 2023 Program Administrator"
 image: paschke-jessica.jpg
-started: "Summer 2015"
+started: "Fall 2014"
 toc: false
-# resources: 
-#   - "yurko-ron_cv.pdf"
 about:
   id: person-profile
   template: jolla
-  links:
-    - icon: link
-      text: website
-      href: https://www.cmu.edu/dietrich/statistics-datascience/people/staff/jessica-paschke.html
-    # - icon: file-earmark-text
-    #   text: vitae
-    #   href: ./people/executive/yurko-ron_cv.pdf
-    # - icon: github
-    #   text: github
-    #   href: https://www.github.com/shamindras
 ---
+
+```{=html}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="../../index.html">Home</a></li>
+    <li class="breadcrumb-item"><a href="../../people.html">People</a></li>
+    <li class="breadcrumb-item active">Student Support</li>
+    <li class="breadcrumb-item active" aria-current="page">{{< meta title >}}</li>
+  </ol>
+</nav>
+```
 
 :::{#person-profile}
 :::
 
 ## Biography
 
-TODO: Add here.
+Jess Paschke is the Assistant Business Manager and Project Administrator for the
+Department of Statistics & Data Science. She began working with the department
+in 2014. Jess works closely with the Department Head and Business Manager on
+large department events, projects, and programs.
 
 ## Education
 
-TODO: Add here.
+- **University of Pittsburgh** | Pittsburgh, PA, USA</br>
+  Master of Public & International Affairs | 2008
 
-<!-- - **Carnegie Mellon University** | Pittsburgh, PA, USA<br /> -->
-<!--   PhD in Statistics | 2017–2022 -->
-
-<!-- - **University of California, Berkeley** | Berkeley, CA, USA<br /> -->
-<!--   MA in Statistics | 2015–2016 -->
-
-<!-- - **University of New South Wales** | Sydney, NSW, Australia<br /> -->
-<!--   BCom in Actuarial Studies and Finance | 2003–2006  -->
+- **Wake Forest University** | Winston-Salem, NC, USA</br>
+  BA in Political Science | 2004

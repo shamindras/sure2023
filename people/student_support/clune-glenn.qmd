@@ -5,8 +5,6 @@ subtitle: "SURE Academic Advisor, Academic Program Manager"
 image: clune-glenn.jpg
 started: "Summer 2018"
 toc: false
-# resources: 
-#   - "yurko-ron_cv.pdf"
 about:
   id: person-profile
   template: jolla
@@ -15,6 +13,17 @@ about:
       text: website
       href: https://www.cmu.edu/dietrich/gened/fall-2021-and-beyond/meet-the-advisors/glenn-clune.html
 ---
+
+```{=html}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="../../index.html">Home</a></li>
+    <li class="breadcrumb-item"><a href="../../people.html">People</a></li>
+    <li class="breadcrumb-item active">Student Support</li>
+    <li class="breadcrumb-item active" aria-current="page">{{< meta title >}}</li>
+  </ol>
+</nav>
+```
 
 :::{#person-profile}
 :::

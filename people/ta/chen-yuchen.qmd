@@ -1,14 +1,18 @@
 ---
 title: "Yuchen Chen"
 sortby: "Chen, Yuchen"
-subtitle: "Teaching Assistant (Advisor)"
+subtitle: "TA Advisor (CMSAC)"
 image: chen-yuchen.jpg
-started: "Spring 2023"
+started: "Fall 2022"
 ended: "Current"
 toc: false
 about:
   id: person-profile
   template: jolla
+  links:
+    - icon: github
+      text: github
+      href: https://github.com/yuch44
 ---
 
 ```{=html}
@@ -16,18 +20,24 @@ about:
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="../../index.html">Home</a></li>
     <li class="breadcrumb-item"><a href="../../people.html">People</a></li>
-    <li class="breadcrumb-item active">Research Assistants</li>
+    <li class="breadcrumb-item active">TA Advisors</li>
     <li class="breadcrumb-item active" aria-current="page">{{< meta title >}}</li>
   </ol>
 </nav>
 ```
 
 :::{#person-profile}
+:::
+
 ## Biography
 
-TODO: Add Bio here
+Yuchen Chen is a first year PhD student in statistics at CMU. His research
+interests are in survival analysis, semi-parametric statistics and
+distribution-free inference. He received a BA in Mathematics at the University
+of Chicago.
 
 ## Education
-- **University of Kansas** | Lawrence, KS, USA<br />
-  Psychology Major
-:::
+
+- **University of Chicago** | Chicago, Il, USA</br>
+  BA in Mathematics | 2017-2021
+
