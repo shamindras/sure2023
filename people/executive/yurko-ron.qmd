@@ -22,20 +22,35 @@ about:
       href: https://www.github.com/shamindras
 ---
 
+```{=html}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="../../index.html">Home</a></li>
+    <li class="breadcrumb-item"><a href="../../people.html">People</a></li>
+    <li class="breadcrumb-item active">Executive</li>
+    <li class="breadcrumb-item active" aria-current="page">{{< meta title >}}</li>
+  </ol>
+</nav>
+```
+
 :::{#person-profile}
 :::
 
 ## Biography
 
-Ron Yurko is an incoming Assistant Teaching Professor in the Department of Statistics & Data Science at Carnegie Mellon University. He received his PhD in Statistics at CMU in 2022 under supervision of Professor Kathryn Roeder and Professor Max G’Sell. His research focuses on developing methods at the interface of inference and machine learning, oriented towards problems in statistical genetics and sports analytics. Previously, he received his BS in Statistics (also) at CMU in 2015, briefly worked in finance, as well as with the Pittsburgh Pirates and Zelus Analytics.
+Ron Yurko is an Assistant Teaching Professor in the Department of Statistics &
+Data Science at Carnegie Mellon University. He received his PhD in Statistics at
+CMU in 2022 under supervision of Professor Kathryn Roeder and Professor Max
+G’Sell. His research focuses on developing methods at the interface of
+inference and machine learning, oriented towards problems in statistical
+genetics and sports analytics. Previously, he received his BS in Statistics
+(also) at CMU in 2015, briefly worked in finance, as well as with the Pittsburgh
+Pirates and Zelus Analytics.
 
 ## Education
 
 - **Carnegie Mellon University** | Pittsburgh, PA, USA<br />
   PhD in Statistics | 2017–2022
 
-<!-- - **University of California, Berkeley** | Berkeley, CA, USA<br /> -->
-<!--   MA in Statistics | 2015–2016 -->
-
-<!-- - **University of New South Wales** | Sydney, NSW, Australia<br /> -->
-<!--   BCom in Actuarial Studies and Finance | 2003–2006  -->
+- **Carnegie Mellon University** | Pittsburgh, PA, USA<br />
+  PhD in Statistics | 2017–2022
