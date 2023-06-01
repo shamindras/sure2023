@@ -38,11 +38,3 @@ interested in statistical machine learning, with a recent focus on sequential
 inference, game-theoretic statistics, forecast evaluation, and causal inference.
 Previously, YJ was an industry researcher working on deep learningmethods for
 natural language processing.
-
-## Education
-
-- **University of Chicago** | Chicago, IL, USA</br>
-  BS in Mathematics and Computer Science | 2011-2015
-
-- **Carnegie Mellon University** | Pittsburgh, PA, USA</br>
-  MS in Machine Learning | 2015-2017

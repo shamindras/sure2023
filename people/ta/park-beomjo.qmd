@@ -41,11 +41,3 @@ inference, specifically addressing model misspecification and data corruption.
 His previous work includes interdisciplinary applications in Oceanography and
 Biostatistics, with a central emphasis on Bayesian semiparametric models and
 variational inference.
-
-## Education
-
-- **Korea University** | Seoul, Korea</br>
-  MS in Statistics | 2016-2018
-  
-- **Korea University** | Seoul, Korea</br>
-  BS in Industrial Engineering & BEc in Statistics | 2010–2016

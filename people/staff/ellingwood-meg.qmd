@@ -35,8 +35,3 @@ before entering graduate school. Meg participated as a student in CMSACamp
 Summer 2020, as a TA in Summer 2021 and 2022, and she is thrilled to be an
 instructor this summer. She is interested in applications of statistics and
 data science in sports, public health, and neuroscience.
-
-## Education
-
-- **Kenyon College** | Gambier, OH, USA<br/>
-  BA in Psychology & Anthropology | 2016–2020

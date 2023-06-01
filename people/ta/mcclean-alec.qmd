@@ -37,11 +37,3 @@ about:
 Alec McClean is a fourth year PhD student at CMU. His research interests are at
 the intersection of statistics, machine learning, and causal inference. He
 received a BA in Mathematics and Economics from Swarthmore College in 2016.
-
-## Education
-
-- **Swarthmore College** | Swarthmore, PA, USA<br/>
-  BA in Mathematics and Economics | 2012–2016
-  
-- **Carnegie Mellon University** | Pittsburgh, PA, USA<br/>
-  MS in Statistics | 2019-2020

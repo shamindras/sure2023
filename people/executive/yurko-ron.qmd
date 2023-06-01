@@ -46,11 +46,3 @@ inference and machine learning, oriented towards problems in statistical
 genetics and sports analytics. Previously, he received his BS in Statistics
 (also) at CMU in 2015, briefly worked in finance, as well as with the Pittsburgh
 Pirates and Zelus Analytics.
-
-## Education
-
-- **Carnegie Mellon University** | Pittsburgh, PA, USA<br />
-  PhD in Statistics | 2017–2022
-
-- **Carnegie Mellon University** | Pittsburgh, PA, USA<br />
-  PhD in Statistics | 2017–2022

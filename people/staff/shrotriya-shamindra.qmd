@@ -39,14 +39,3 @@ about:
 ## Biography
 
 TODO: Add bio here
-
-## Education
-
-- **Carnegie Mellon University** | Pittsburgh, PA, USA<br />
-  PhD in Statistics | 2017–2022
-
-- **University of California, Berkeley** | Berkeley, CA, USA<br />
-  MA in Statistics | 2015–2016
-
-- **University of New South Wales** | Sydney, NSW, Australia<br />
-  BCom in Actuarial Studies and Finance | 2003–2006 

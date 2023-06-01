@@ -35,9 +35,3 @@ Yuchen Chen is a first year PhD student in statistics at CMU. His research
 interests are in survival analysis, semi-parametric statistics and
 distribution-free inference. He received a BA in Mathematics at the University
 of Chicago.
-
-## Education
-
-- **University of Chicago** | Chicago, Il, USA</br>
-  BA in Mathematics | 2017-2021
-

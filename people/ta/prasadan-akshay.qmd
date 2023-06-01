@@ -36,11 +36,3 @@ research topics in the areas of minimax theory, constrained estimation, and
 Gaussian sequence models. He received a BS in Mathematics and Economics at The
 Ohio State University. He is a Pittsburgh local and is passionate about the
 stock market.
-
-## Education
-
-- **The Ohio State University** | Columbus, OH, USA</br>
-  BS in Mathematics and Economics | 2016-2020
-  
-- **Carnegie Mellon University** | Pittsburgh, PA, USA</br>
-  MS in Statistics | 2020-2022

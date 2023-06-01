@@ -41,11 +41,3 @@ of statistics and machine learning in sports with focus on player tracking data.
 Quang previously received his MS in Applied Statistics from Loyola University
 Chicago and BS in Mathematics and Data Science from Wittenberg University. He is
 a die-hard supporter of Manchester United.
-
-## Education
-- **Wittenberg University** | Springfield, OH, USA<br/>
-  BS in Mathematics and Data Science | 2017–2020
-  
-- **Loyola University Chicago** | Chicago, IL, USA<br/>
-  MS in Applied Statistics | 2020-2021
-:::
