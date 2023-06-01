@@ -18,6 +18,6 @@ the lectures throughout the program.
 :::
 
 You can view all lecture materials by navigating the links in the left sidebar,
-or via the [course schedule](../schedule.qmd).
+or via the [schedule](../schedule.qmd).
 
 

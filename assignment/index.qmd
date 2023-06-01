@@ -5,25 +5,40 @@ title: "Assignments"
 There are two main forms of assignments in the SURE 2023 program, namely:
 
   - Demo-labs
-  - Final research project, poster and presentation
+  - Final research project, poster, and presentation
 
 Some additional details on both are provided below. You can view all assignment
-materials by navigating the links in the left sidebar, or via the [course
-schedule](../schedule.qmd).
+materials by navigating the links in the left sidebar, or via the
+[schedule](../schedule.qmd).
 
 ## Demo-labs
 
 We also provide you demo-lab materials for you to test out your understanding of
-the course content. Completing these demo-labs is strongly recommended to
-reinforce the material. There is no grading involved here, just learning.
+the course content. They are usually released once or twice a week, as per the
+[schedule](../schedule.qmd). Completing these demo-labs is strongly recommended
+to help you reinforce the material. There is no grading involved here, just
+learning. So don't hesitate to reach out to your fellow peers, TA Advisors, and
+course instructors for help.
 
 ## Research project deliverables
 
 As noted in our [syllabus](../syllabus.qmd) and [schedule](../schedule.qmd) the
-**only deliverables** you have are your final (Optum or CMSAC) research project
-report, poster, and presentation. Although the research project won't be
-formally graded, all of these deliverables will be presented by you to various
-important stakeholders in healthcare (Optum) and sports (CMSAC) data science
-community. So it is in your best interest to put your best foot forward!
+**only deliverables** you have are your **final (Optum or CMSAC) research 
+project report, poster, and presentation**. 
+
+::: {.callout-tip}
+### Research project deliverables
+
+We reemphasize that the research project won't be formally graded. However
+**your three research deliverables will be presented by you to various important
+(executive) stakeholders** in healthcare (Optum) and the sports (CMSAC) data
+science community.
+
+So it is in your best interest to put your best foot forward, since it will be
+of **great benefit for your future data science career**!
+:::
+
+You can view all assignment materials by navigating the links in the left 
+sidebar, or via the [schedule](../schedule.qmd).
 
 

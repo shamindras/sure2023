@@ -34,17 +34,11 @@ Diversity, Equity, and Inclusion within the Dietrich College of Humanities and
 Social Sciences, expanding CMU's recruiting presence at Historically Black
 Colleges and Universities (HBCUs) and presenting educational opportunities to
 historically underrepresented groups at the American Statistical
-Society-sponsored StatFest conference. Teraya also assists with the popular
-Pittsburgh Women in Data Science conference (WiDS), featuring thought leadership
-shared by women speakers from academia and industry. She also co-led the
-recruiting of Pittsburgh Public Schools students for a data science summer
-program in the Department of Statistics & Data Sciences at Carnegie Mellon
-University.
+Society-sponsored StatFest conference.
 
-## Education
+Teraya also assists with the popular Pittsburgh Women in Data Science conference
+(WiDS), featuring thought leadership shared by women speakers from academia and
+industry. She also co-led the recruiting of Pittsburgh Public Schools students
+for a data science summer program in the Department of Statistics & Data
+Sciences at Carnegie Mellon University.
 
-- **University of Pittsburgh** | Pittsburgh, PA, USA</br>
-  MEd in Higher Education Management
-
-- **Pennsylvania State University** | University Park, PA, USA</br>
-  BA in English

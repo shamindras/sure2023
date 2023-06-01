@@ -48,9 +48,9 @@ website:
         menu:
           - text: "SURE 2023 Computing Setup"
           - file: guides/computing-setup.qmd
-      - icon: slack
-        href: "https://cmu-sure-2023.slack.com"
-        aria-label: Slack
+      # - icon: slack
+      #   href: "https://cmu-sure-2023.slack.com"
+      #   aria-label: Slack
 
   sidebar:
     - title: "Classes"
@@ -61,16 +61,16 @@ website:
         - section: "Overview"
           contents:
             - class/index.qmd
-        - section: "Lectures"
-          contents:
-            - section: "Orientation"
-              contents:
-                - text: "1: Welcome to SURE 2023"
-                  file: class/01-class.qmd
-            - section: "Exploratory Data Analysis"
-              contents:
-                - text: "2: Exploring Data: Into the tidyverse"
-                  file: class/02-class.qmd
+        # - section: "Lectures"
+        #   contents:
+        #     - section: "Orientation"
+        #       contents:
+        #         - text: "1: Welcome to SURE 2023"
+        #           file: class/01-class.qmd
+        #     - section: "Exploratory Data Analysis"
+        #       contents:
+        #         - text: "2: Exploring Data: Into the tidyverse"
+        #           file: class/02-class.qmd
                 # - text: "3: The grammar of graphics and ggplot2"
                 #   file: class/03-class.qmd
                 # - text: "4: Visualizing 1D categorical and continuous variables"

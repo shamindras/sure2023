@@ -45,7 +45,7 @@ build_schedule_for_page <- function(schedule_file) {
   schedule_nested <- schedule %>%
     select(group, subgroup,
            ` ` = col_date, Title = col_title,
-           Class = col_class, Assignment = col_assignment) %>%
+           Lecture = col_class, Assignment = col_assignment) %>%
     group_by(group) %>%
     nest() %>%
     mutate(subgroup_count = map(data, ~count(.x, subgroup)),

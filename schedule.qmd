@@ -23,9 +23,13 @@ ical_url_absolute <- paste0(base_url, "/", schedule_ical_file)
 
 Here's your roadmap for the semester!
 
-- [**Class**](/class/index.qmd) ({{< fa book-open-reader >}}): This page contains the readings for the class session. Read these **before** our in-person class.
+  - [**Lecture**](/class/index.qmd) ({{\< fa book-open-reader \>}}): This page
+    contains the readings for the class session. These materials will typically 
+    be released _right_ before each class, and in some cases, _directly after_ the 
+    class.
 
-- [**Assignment**](/assignment/index.qmd) ({{< fa pen-ruler >}}): This page contains the instructions for each assignment.
+  - [**Assignment**](/assignment/index.qmd) ({{\< fa pen-ruler \>}}): This page
+    contains the instructions for each assignment, i.e., demo-lab or final research project materials.
 
 <!-- :::: {.callout-tip} -->
 

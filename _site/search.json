@@ -4,21 +4,21 @@
     "href": "assignment/index.html",
     "title": "Assignments",
     "section": "",
-    "text": "There are two main forms of assignments in the SURE 2023 program, namely:\nSome additional details on both are provided below. You can view all assignment materials by navigating the links in the left sidebar, or via the course schedule."
+    "text": "There are two main forms of assignments in the SURE 2023 program, namely:\nSome additional details on both are provided below. You can view all assignment materials by navigating the links in the left sidebar, or via the schedule."
   },
   {
     "objectID": "assignment/index.html#demo-labs",
     "href": "assignment/index.html#demo-labs",
     "title": "Assignments",
     "section": "Demo-labs",
-    "text": "Demo-labs\nWe also provide you demo-lab materials for you to test out your understanding of the course content. Completing these demo-labs is strongly recommended to reinforce the material. There is no grading involved here, just learning."
+    "text": "Demo-labs\nWe also provide you demo-lab materials for you to test out your understanding of the course content. They are usually released once or twice a week, as per the schedule. Completing these demo-labs is strongly recommended to help you reinforce the material. There is no grading involved here, just learning. So don’t hesitate to reach out to your fellow peers, TA Advisors, and course instructors for help."
   },
   {
     "objectID": "assignment/index.html#research-project-deliverables",
     "href": "assignment/index.html#research-project-deliverables",
     "title": "Assignments",
     "section": "Research project deliverables",
-    "text": "Research project deliverables\nAs noted in our syllabus and schedule the only deliverables you have are your final (Optum or CMSAC) research project report, poster, and presentation. Although the research project won’t be formally graded, all of these deliverables will be presented by you to various important stakeholders in healthcare (Optum) and sports (CMSAC) data science community. So it is in your best interest to put your best foot forward!"
+    "text": "Research project deliverables\nAs noted in our syllabus and schedule the only deliverables you have are your final (Optum or CMSAC) research project report, poster, and presentation.\n\n\n\n\n\n\nResearch project deliverables\n\n\n\nWe reemphasize that the research project won’t be formally graded. However your three research deliverables will be presented by you to various important (executive) stakeholders in healthcare (Optum) and the sports (CMSAC) data science community.\nSo it is in your best interest to put your best foot forward, since it will be of great benefit for your future data science career!\n\n\nYou can view all assignment materials by navigating the links in the left sidebar, or via the schedule."
   },
   {
     "objectID": "assignment/optum-project-guidelines.html",
@@ -403,7 +403,7 @@
     "href": "class/index.html",
     "title": "Lectures and Readings",
     "section": "",
-    "text": "Each lecture in the left sidebar contains the relevant pdf slides, and some additional useful resources for you to deeply explore a lecture topic. We will continually update any additional resources (e.g., youtube links, articles, blog post tutorials etc.) for a given lecture as needed. So please keep checking back in regularly throughout the program.\n\n\n\n\n\n\nGive us tips!\n\n\n\nYou are also welcome to suggest new resources (links) for us to include for a given topic page. We’re always keen to grow the body of knowledge contained in the lectures throughout the program.\n\n\nYou can view all lecture materials by navigating the links in the left sidebar, or via the course schedule."
+    "text": "Each lecture in the left sidebar contains the relevant pdf slides, and some additional useful resources for you to deeply explore a lecture topic. We will continually update any additional resources (e.g., youtube links, articles, blog post tutorials etc.) for a given lecture as needed. So please keep checking back in regularly throughout the program.\n\n\n\n\n\n\nGive us tips!\n\n\n\nYou are also welcome to suggest new resources (links) for us to include for a given topic page. We’re always keen to grow the body of knowledge contained in the lectures throughout the program.\n\n\nYou can view all lecture materials by navigating the links in the left sidebar, or via the schedule."
   },
   {
     "objectID": "code-of-conduct.html",
@@ -515,7 +515,7 @@
     "href": "people/executive/mcgovern-jamie.html",
     "title": "Jamie McGovern",
     "section": "",
-    "text": "Home\n    People\n    Executive\n    Jamie McGovern"
+    "text": "Home\n    People\n    Executive team\n    Jamie McGovern"
   },
   {
     "objectID": "people/executive/mcgovern-jamie.html#biography",
@@ -529,7 +529,7 @@
     "href": "people/executive/nugent-rebecca.html",
     "title": "Rebecca Nugent",
     "section": "",
-    "text": "Home\n    People\n    Executive\n    Rebecca Nugent"
+    "text": "Home\n    People\n    Executive team\n    Rebecca Nugent"
   },
   {
     "objectID": "people/executive/nugent-rebecca.html#biography",
@@ -543,7 +543,7 @@
     "href": "people/executive/yurko-ron.html",
     "title": "Ron Yurko",
     "section": "",
-    "text": "Home\n    People\n    Executive\n    Ron Yurko"
+    "text": "Home\n    People\n    Executive team\n    Ron Yurko"
   },
   {
     "objectID": "people/executive/yurko-ron.html#biography",
@@ -595,13 +595,6 @@
     "text": "Biography\nGlenn Clune is part of the undergraduate advising team for our Statistics & Data Science students. Starting with the department in the summer of 2018, he has continually strived to help students feel welcome and supported during their time with the department, and has maintained a particular commitment to supporting first generation, underrepresented and underprivileged students navigate through the challenges of higher education."
   },
   {
-    "objectID": "people/student_support/clune-glenn.html#education",
-    "href": "people/student_support/clune-glenn.html#education",
-    "title": "Glenn Clune",
-    "section": "Education",
-    "text": "Education\n\nGeneva College | Beaver Falls, PA, USA MA in Higher Education | 2016–2018"
-  },
-  {
     "objectID": "people/student_support/paschke-jessica.html",
     "href": "people/student_support/paschke-jessica.html",
     "title": "Jessica Paschke",
@@ -616,13 +609,6 @@
     "text": "Biography\nJess Paschke is the Assistant Business Manager and Project Administrator for the Department of Statistics & Data Science. She began working with the department in 2014. Jess works closely with the Department Head and Business Manager on large department events, projects, and programs."
   },
   {
-    "objectID": "people/student_support/paschke-jessica.html#education",
-    "href": "people/student_support/paschke-jessica.html#education",
-    "title": "Jessica Paschke",
-    "section": "Education",
-    "text": "Education\n\nUniversity of Pittsburgh | Pittsburgh, PA, USA Master of Public & International Affairs | 2008\nWake Forest University | Winston-Salem, NC, USA BA in Political Science | 2004"
-  },
-  {
     "objectID": "people/student_support/white-teraya.html",
     "href": "people/student_support/white-teraya.html",
     "title": "Teraya White",
@@ -634,14 +620,7 @@
     "href": "people/student_support/white-teraya.html#biography",
     "title": "Teraya White",
     "section": "Biography",
-    "text": "Biography\nAs the Academic Program Manager for Carnegie Mellon University’s Master of Statistical Practice (MSP) Program in the Department of Statistics & Data Science, Teraya works closely with students on developing industry-valued competencies and navigating a highly dynamic job market. She is a champion for Diversity, Equity, and Inclusion within the Dietrich College of Humanities and Social Sciences, expanding CMU’s recruiting presence at Historically Black Colleges and Universities (HBCUs) and presenting educational opportunities to historically underrepresented groups at the American Statistical Society-sponsored StatFest conference. Teraya also assists with the popular Pittsburgh Women in Data Science conference (WiDS), featuring thought leadership shared by women speakers from academia and industry. She also co-led the recruiting of Pittsburgh Public Schools students for a data science summer program in the Department of Statistics & Data Sciences at Carnegie Mellon University."
-  },
-  {
-    "objectID": "people/student_support/white-teraya.html#education",
-    "href": "people/student_support/white-teraya.html#education",
-    "title": "Teraya White",
-    "section": "Education",
-    "text": "Education\n\nUniversity of Pittsburgh | Pittsburgh, PA, USA MEd in Higher Education Management\nPennsylvania State University | University Park, PA, USA BA in English"
+    "text": "Biography\nAs the Academic Program Manager for Carnegie Mellon University’s Master of Statistical Practice (MSP) Program in the Department of Statistics & Data Science, Teraya works closely with students on developing industry-valued competencies and navigating a highly dynamic job market. She is a champion for Diversity, Equity, and Inclusion within the Dietrich College of Humanities and Social Sciences, expanding CMU’s recruiting presence at Historically Black Colleges and Universities (HBCUs) and presenting educational opportunities to historically underrepresented groups at the American Statistical Society-sponsored StatFest conference.\nTeraya also assists with the popular Pittsburgh Women in Data Science conference (WiDS), featuring thought leadership shared by women speakers from academia and industry. She also co-led the recruiting of Pittsburgh Public Schools students for a data science summer program in the Department of Statistics & Data Sciences at Carnegie Mellon University."
   },
   {
     "objectID": "people/ta/chen-yuchen.html",
@@ -739,7 +718,7 @@
     "href": "schedule.html",
     "title": "Schedule",
     "section": "",
-    "text": "Here’s your roadmap for the semester!\n\nClass (): This page contains the readings for the class session. Read these before our in-person class.\nAssignment (): This page contains the instructions for each assignment.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOrientation\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nIntroduction\n\n\n\n\nJune 5\n\n\nWelcome to SURE 2023\n\n\n\n\n\n\n\n\n\n\n\n\n\nExploratory Data Analysis\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nData Exploring\n\n\n\n\nJune 5\n\n\nDemo-lab: Rstudio basics\n\n\n\n\n\n\n\n\n\n\nJune 6\n\n\nExploring data: Into the tidyverse\n\n\n\n\n\n\n\n\n\n\nJune 7\n\n\nThe grammar of graphics and ggplot2\n\n\n\n\n\n\n\n\n\n\nData Visualization\n\n\n\n\nJune 7\n\n\nDemo-lab: wrangling with dplyr\n\n\n\n\n\n\n\n\n\n\nJune 8\n\n\nVisualizing 1D categorical and continuous variables\n\n\n\n\n\n\n\n\n\n\nJune 9\n\n\nVisualizing 2D categorical and continuous by categorical\n\n\n\n\n\n\n\n\n\n\nJune 12\n\n\nDensity estimation\n\n\n\n\n\n\n\n\n\n\nJune 7\n\n\nDemo-lab: data visualization with ggplot2\n\n\n\n\n\n\n\n\n\n\nJune 13\n\n\nGeographical EDA using Shapefiles\n\n\n\n\n\n\n\n\n\n\nJune 7\n\n\nDemo-lab: Exploratory data analysis case studies\n\n\n\n\n\n\n\n\n\n\n\n\n\nUnsupervised Learning\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nData Visualization\n\n\n\n\nJune 14\n\n\nK-means\n\n\n\n\n\n\n\n\n\n\nClustering\n\n\n\n\nJune 15\n\n\nHierarchical clustering\n\n\n\n\n\n\n\n\n\n\nJune 16\n\n\nGaussian mixture models\n\n\n\n\n\n\n\n\n\n\nJune 19\n\n\nDemo-lab: clusteringJuneteenth holiday, but lab will be released\n\n\n\n\n\n\n\n\n\n\n\n\n\nPresentation Skills\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nPresenting\n\n\n\n\nJune 20\n\n\nWorking with xaringan and xaringanthemer\n\n\n\n\n\n\n\n\n\n\n\n\n\nMachine Learning\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nData Visualization\n\n\n\n\nJune 21\n\n\nModel assessment vs selection\n\n\n\n\n\n\n\n\n\n\nJune 22\n\n\nLinear regression\n\n\n\n\n\n\n\n\n\n\nSupervised Learning\n\n\n\n\nJune 23\n\n\nIntro to variable selection\n\n\n\n\n\n\n\n\n\n\nJune 26\n\n\nRegularization\n\n\n\n\n\n\n\n\n\n\nJune 26\n\n\nDemo-lab: Linear regression\n\n\n\n\n\n\n\n\n\n\nJune 27\n\n\nSupervised and unsupervised learning with Tidymodels\n\n\n\n\n\n\n\n\n\n\nJune 28\n\n\nDimension Reduction: Principal components analysis (PCA)\n\n\n\n\n\n\n\n\n\n\nJune 29\n\n\nPrincipal component regression and partial least squares\n\n\n\n\n\n\n\n\n\n\nJune 30\n\n\nGeneralized linear models (GLMs)\n\n\n\n\n\n\n\n\n\n\nJuly 6\n\n\nLogistic regression\n\n\n\n\n\n\n\n\n\n\nWorkflows\n\n\n\n\nJuly 7\n\n\nNonparametric regression\n\n\n\n\n\n\n\n\n\n\nDimension Reduction\n\n\n\n\nJune 26\n\n\nDemo-lab: Linear regression\n\n\n\n\n\n\n\n\n\n\nSupervised and Unsupervised Learning\n\n\n\n\nJuly 10\n\n\nDecision trees\n\n\n\n\n\n\n\n\n\n\nJuly 11\n\n\nRandom forests and gradient-boosted trees\n\n\n\n\n\n\n\n\n\n\n\n\n\nFinal project\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nFinal project\n\n\n\n\nJuly 28\n\n\nOptum Research Project Specification\n\n\n\n\n\n\n\n\n\n\nJuly 27\n\n\nCMSAC Research Project Specification\n\n\n\n\n\n\n\n\n\n\nJuly 27\n\n\nSURE 2023: Report Writing Guideline"
+    "text": "Here’s your roadmap for the semester!\n\nLecture (): This page contains the readings for the class session. These materials will typically be released right before each class, and in some cases, directly after the class.\nAssignment (): This page contains the instructions for each assignment, i.e., demo-lab or final research project materials.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOrientation\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nIntroduction\n\n\n\n\nJune 5\n\n\nWelcome to SURE 2023\n\n\n\n\n\n\n\n\n\n\n\n\n\nExploratory Data Analysis\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nData Exploring\n\n\n\n\nJune 5\n\n\nDemo-lab: Rstudio basics\n\n\n\n\n\n\n\n\n\n\nJune 6\n\n\nExploring data: Into the tidyverse\n\n\n\n\n\n\n\n\n\n\nJune 7\n\n\nThe grammar of graphics and ggplot2\n\n\n\n\n\n\n\n\n\n\nData Visualization\n\n\n\n\nJune 7\n\n\nDemo-lab: wrangling with dplyr\n\n\n\n\n\n\n\n\n\n\nJune 8\n\n\nVisualizing 1D categorical and continuous variables\n\n\n\n\n\n\n\n\n\n\nJune 9\n\n\nVisualizing 2D categorical and continuous by categorical\n\n\n\n\n\n\n\n\n\n\nJune 12\n\n\nDensity estimation\n\n\n\n\n\n\n\n\n\n\nJune 12\n\n\nDemo-lab: data visualization with ggplot2\n\n\n\n\n\n\n\n\n\n\nJune 13\n\n\nGeographical EDA using Shapefiles\n\n\n\n\n\n\n\n\n\n\nJune 14\n\n\nDemo-lab: Exploratory data analysis case studies\n\n\n\n\n\n\n\n\n\n\n\n\n\nUnsupervised Learning\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nData Visualization\n\n\n\n\nJune 14\n\n\nK-means\n\n\n\n\n\n\n\n\n\n\nClustering\n\n\n\n\nJune 15\n\n\nHierarchical clustering\n\n\n\n\n\n\n\n\n\n\nJune 16\n\n\nGaussian mixture models\n\n\n\n\n\n\n\n\n\n\nJune 19\n\n\nDemo-lab: clusteringJuneteenth holiday, but lab will be released\n\n\n\n\n\n\n\n\n\n\n\n\n\nPresentation Skills\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nPresenting\n\n\n\n\nJune 20\n\n\nWorking with xaringan and xaringanthemer\n\n\n\n\n\n\n\n\n\n\n\n\n\nMachine Learning\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nSupervised Learning\n\n\n\n\nJune 21\n\n\nModel assessment vs selection\n\n\n\n\n\n\n\n\n\n\nJune 22\n\n\nLinear regression\n\n\n\n\n\n\n\n\n\n\nJune 23\n\n\nIntro to variable selection\n\n\n\n\n\n\n\n\n\n\nJune 26\n\n\nRegularization\n\n\n\n\n\n\n\n\n\n\nJune 26\n\n\nDemo-lab: Linear regression\n\n\n\n\n\n\n\n\n\n\nJune 27\n\n\nSupervised and unsupervised learning with Tidymodels\n\n\n\n\n\n\n\n\n\n\nJune 28\n\n\nDimension Reduction: Principal components analysis (PCA)\n\n\n\n\n\n\n\n\n\n\nJune 29\n\n\nPrincipal component regression and partial least squares\n\n\n\n\n\n\n\n\n\n\nJune 30\n\n\nGeneralized linear models (GLMs)\n\n\n\n\n\n\n\n\n\n\nJuly 6\n\n\nLogistic regression\n\n\n\n\n\n\n\n\n\n\nJuly 7\n\n\nNonparametric regression\n\n\n\n\n\n\n\n\n\n\nJuly 10\n\n\nDemo lab: PCA and more regression\n\n\n\n\n\n\n\n\n\n\nSupervised and Unsupervised Learning\n\n\n\n\nJuly 10\n\n\nDecision trees\n\n\n\n\n\n\n\n\n\n\nJuly 11\n\n\nRandom forests and gradient-boosted trees\n\n\n\n\n\n\n\n\n\n\n\n\n\nFinal project\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nFinal project\n\n\n\n\nJuly 28\n\n\nOptum Research Project Specification\n\n\n\n\n\n\n\n\n\n\nJuly 27\n\n\nCMSAC Research Project Specification\n\n\n\n\n\n\n\n\n\n\nJuly 27\n\n\nSURE 2023: Report Writing Guideline"
   },
   {
     "objectID": "syllabus.html",
