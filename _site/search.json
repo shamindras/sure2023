@@ -4,28 +4,21 @@
     "href": "assignment/index.html",
     "title": "Assignments",
     "section": "",
-    "text": "You will get the most out of this seminar if you (1) attend regularly, (2) engage with the readings, and (3) write thoughtfully."
+    "text": "There are two main forms of assignments in the SURE 2023 program, namely:\nSome additional details on both are provided below. You can view all assignment materials by navigating the links in the left sidebar, or via the course schedule."
   },
   {
-    "objectID": "assignment/index.html#preparation",
-    "href": "assignment/index.html#preparation",
+    "objectID": "assignment/index.html#demo-labs",
+    "href": "assignment/index.html#demo-labs",
     "title": "Assignments",
-    "section": "",
-    "text": "You will get the most out of this seminar if you (1) attend regularly, (2) engage with the readings, and (3) write thoughtfully."
+    "section": "Demo-labs",
+    "text": "Demo-labs\nWe also provide you demo-lab materials for you to test out your understanding of the course content. Completing these demo-labs is strongly recommended to reinforce the material. There is no grading involved here, just learning."
   },
   {
-    "objectID": "assignment/index.html#final-project",
-    "href": "assignment/index.html#final-project",
+    "objectID": "assignment/index.html#research-project-deliverables",
+    "href": "assignment/index.html#research-project-deliverables",
     "title": "Assignments",
-    "section": "Final project",
-    "text": "Final project\nFor your final project, you will write a policy brief (3,000 words; including footnotes but excluding references). A policy brief is a concise summary of a particular issue, the policy options to deal with it, and some recommendations about the best option. In general, it is written for a non-specialized audience such as policymakers, NGO staff, journalists, and the general public. For this assignment, though, your policy brief readers are policymakers (politicians or civil servants). Assume that your readers do not have detailed knowledge about the topic/issue you explore. They are also not scientists or experts in the area of your choice. Assume that the policymakers are busy and they need to quickly understand your arguments.\nThere are two types of policy brief: (1) advocacy briefs that argue in favor of a particular course of action, and (2) objective briefs that gives balanced information for the policymaker to make up their decision. You will choose either of these types. You will write your brief about one specific topic. Topic examples include (but are not limited to!) questions like:"
-  },
-  {
-    "objectID": "assignment/index.html#exams",
-    "href": "assignment/index.html#exams",
-    "title": "Assignments",
-    "section": "Exams",
-    "text": "Exams\nThere are no exams! Read a bunch of things, write some things, participate in class. That’s it."
+    "section": "Research project deliverables",
+    "text": "Research project deliverables\nAs noted in our syllabus and schedule the only deliverables you have are your final (Optum or CMSAC) research project report, poster, and presentation. Although the research project won’t be formally graded, all of these deliverables will be presented by you to various important stakeholders in healthcare (Optum) and sports (CMSAC) data science community. So it is in your best interest to put your best foot forward!"
   },
   {
     "objectID": "assignment/optum-project-guidelines.html",
@@ -480,7 +473,7 @@
     "href": "index.html",
     "title": "\n            SURE 2023\n        ",
     "section": "",
-    "text": "SURE 2023\n        \n        \n            Explore cutting-edge statistics and data science methodology with applications in healthcare (Optum) and sports (CMSAC) analytics\n        \n        \n            Summer 2023Department of Statistics & Data ScienceCarnegie Mellon University\n        \n    \n    \n      \n        \n        \n        \n      \n    \n\n\n\n\n\n\nInstructors\n\n   Margaret Ellingwood  & Shamindra Shrotriya \n   mellingw@andrew.cmu.edu  & shamindra@cmu.edu  \n\n\n\n\n\n\n\n\n\n\nContacting us\nSlack the best way to get in contact with us. We will try to respond to all course-related messages within 24 hours (really), but also remember that life can be busy and chaotic for everyone (including us!), so if we don’t respond right away, don’t worry!"
+    "text": "SURE 2023\n        \n        \n            Explore cutting-edge statistics and data science methodology with applications in healthcare (Optum) and sports (CMSAC) analytics\n        \n        \n            Summer 2023Department of Statistics & Data ScienceCarnegie Mellon University\n        \n    \n    \n      \n        \n        \n        \n      \n    \n\n\n\n\n\nCourse details\n\n   Meg Ellingwood and Shamindra Shrotriya\n   Monday - Friday\n   9:30 – 4:00 PM\n   POS151 and PHA18A\n   June 5 – July 28, 2023"
   },
   {
     "objectID": "people.html",
@@ -515,7 +508,35 @@
     "href": "people.html#executive-team",
     "title": "SURE 2023",
     "section": "Executive team",
-    "text": "Executive team\n\n\n\n\n\n\n\n\n\n\nRon Yurko\n\n\nCMU Faculty\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Executive team\n\n\n\n\n\n\n\n\n\n\nJamie McGovern\n\n\nSpecial Faculty, Director of the Master’s in Statistical Practice Program (CMU)\n\n\n\n\n\n\n\n\n\n\n\n\n\nRebecca Nugent\n\n\nStephen E. and Joyce Fienberg Professor of Statistics & Data Science (CMU)\n\n\n\n\n\n\n\n\n\n\n\n\n\nRon Yurko\n\n\nAssistant Teaching Professor of Statistics & Data Science (CMU)\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "people/executive/mcgovern-jamie.html",
+    "href": "people/executive/mcgovern-jamie.html",
+    "title": "Jamie McGovern",
+    "section": "",
+    "text": "Home\n    People\n    Executive\n    Jamie McGovern"
+  },
+  {
+    "objectID": "people/executive/mcgovern-jamie.html#biography",
+    "href": "people/executive/mcgovern-jamie.html#biography",
+    "title": "Jamie McGovern",
+    "section": "Biography",
+    "text": "Biography\nJamie McGovern joined the Carnegie Mellon Department of Statistic & Data Science after a long career in management consulting. As Special Faculty and the Director of the Master of Statistical Practice (MSP) Program, Jamie is responsible for developing the professional skills of MSP students working to build competencies valued in industry and academia. With extensive consulting experience building and leading teams responsible for the development and delivery of global transformation engagements, Jamie works with industry partners to develop instructional MSP capstones that are central to the experiential educational philosophy of developing and practicing concepts while focusing on the context of real-world, practical application.\nAfter an extensive work history in Human Capital Management selling, solutioning, and delivering engagements related to business process re-engineering, strategic organizational design, and enablement of on-premise and cloud enterprise technologies, he most recently co-founded a data science consulting services organization with a mission statement of mentoring and upskilling underserved populations, using education and a public health intervention, and building employee competencies through deployment on analytic consulting projects.\nJamie has held a number of senior consulting industry roles. His experience over the prior 20+ years spans Life Sciences, Financial Services, Consumer Products, Energy, Telecommunications, and Media & Entertainment industries. In the area of Human Capital Management transformation and HR Operations, Jamie has led diverse, cross-border teams in the design and delivery functional and technical solutions geared towards improving the competitiveness of organizations in the global economy while building highly functional and capable practices and cross-border teams of consulting professionals.\nJamie’s areas of thought leadership include strategic talent development, employee data analytics design, Human Capital leading practices, knowledge sharing, and collaboration. He has been an invited speaker at industry conferences and academic events."
+  },
+  {
+    "objectID": "people/executive/nugent-rebecca.html",
+    "href": "people/executive/nugent-rebecca.html",
+    "title": "Rebecca Nugent",
+    "section": "",
+    "text": "Home\n    People\n    Executive\n    Rebecca Nugent"
+  },
+  {
+    "objectID": "people/executive/nugent-rebecca.html#biography",
+    "href": "people/executive/nugent-rebecca.html#biography",
+    "title": "Rebecca Nugent",
+    "section": "Biography",
+    "text": "Biography\nRebecca Nugent is the Stephen E. and Joyce Fienberg Professor of Statistics & Data Science and Head of the Carnegie Mellon Department of Statistics & Data Science. She received her PhD in Statistics from the University of Washington, her M.S. in Statistics from Stanford University, and her B.A. in Mathematics, Statistics, and Spanish from Rice University.\nDr. Nugent has expertise in designing and implementing data science/AI professional development programs for business leaders in industries including health care, finance, automotive/manufacturing, and life sciences. She was the faculty co-Director of the Moderna AI Academy and the Founding Director of the Statistics & Data Science Corporate Capstone program, an experiential learning initiative that matches groups of faculty and students with data science problems in industry, non-profits, and government organizations.\nShe has won several national and university teaching awards including the American Statistical Association Waller Award for Innovation in Statistics Education and serves as one of the co-editors of the Springer Texts in Statistics. She recently served as the co-chair for the National Academy of Sciences study on Improving Defense Acquisition Workforce Capability in Data Use and served on the NAS study on Envisioning the Data Science Discipline: The Undergraduate Perspective. Dr. Nugent has worked extensively in clustering and classification methodology with an emphasis on high-dimensional, big data problems and record linkage applications. Her current research focus is the development and deployment of low-barrier data analysis platforms that allow for adaptive instruction and the study of data science as a science."
   },
   {
     "objectID": "people/executive/yurko-ron.html",
@@ -718,7 +739,7 @@
     "href": "schedule.html",
     "title": "Schedule",
     "section": "",
-    "text": "Here’s your roadmap for the semester!\n\nClass (): This page contains the readings for the class session. Read these before our in-person class.\nAssignment (): This page contains the instructions for each assignment.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOrientation\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nIntroduction\n\n\n\n\nJune 5\n\n\nWelcome to SURE 2023\n\n\n\n\n\n\n\n\n\n\n\n\n\nExploratory Data Analysis\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nData Exploring\n\n\n\n\nJune 6\n\n\nExploring data: Into the tidyverse\n\n\n\n\n\n\n\n\n\n\nJune 7\n\n\nThe grammar of graphics and ggplot2\n\n\n\n\n\n\n\n\n\n\nData Visualization\n\n\n\n\nJune 8\n\n\nVisualizing 1D categorical and continuous variables\n\n\n\n\n\n\n\n\n\n\nJune 9\n\n\nVisualizing 2D categorical and continuous by categorical\n\n\n\n\n\n\n\n\n\n\nJune 12\n\n\nDensity estimation\n\n\n\n\n\n\n\n\n\n\nJune 13\n\n\nGeographical EDA using Shapefiles\n\n\n\n\n\n\n\n\n\n\n\n\n\nUnsupervised Learning\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nClustering\n\n\n\n\nJune 14\n\n\nK-means\n\n\n\n\n\n\n\n\n\n\nJune 15\n\n\nHierarchical clustering\n\n\n\n\n\n\n\n\n\n\nJune 16\n\n\nGaussian mixture models\n\n\n\n\n\n\n\n\n\n\n\n\n\nPresentation Skills\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nPresenting\n\n\n\n\nJune 20\n\n\nWorking with xaringan and xaringanthemer\n\n\n\n\n\n\n\n\n\n\n\n\n\nMachine Learning\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nSupervised Learning\n\n\n\n\nJune 21\n\n\nModel assessment vs selection\n\n\n\n\n\n\n\n\n\n\nJune 22\n\n\nLinear regression\n\n\n\n\n\n\n\n\n\n\nJune 23\n\n\nIntro to variable selection\n\n\n\n\n\n\n\n\n\n\nJune 26\n\n\nRegularization\n\n\n\n\n\n\n\n\n\n\nJune 27\n\n\nSupervised and unsupervised learning with Tidymodels\n\n\n\n\n\n\n\n\n\n\nJune 28\n\n\nDimension Reduction: Principal components analysis (PCA)\n\n\n\n\n\n\n\n\n\n\nJune 29\n\n\nPrincipal component regression and partial least squares\n\n\n\n\n\n\n\n\n\n\nJune 30\n\n\nGeneralized linear models (GLMs)\n\n\n\n\n\n\n\n\n\n\nWorkflows\n\n\n\n\nJuly 6\n\n\nLogistic regression\n\n\n\n\n\n\n\n\n\n\nDimension Reduction\n\n\n\n\nJuly 7\n\n\nNonparametric regression\n\n\n\n\n\n\n\n\n\n\nSupervised and Unsupervised Learning\n\n\n\n\nJuly 10\n\n\nDecision trees\n\n\n\n\n\n\n\n\n\n\nJuly 11\n\n\nRandom forests and gradient-boosted trees\n\n\n\n\n\n\n\n\n\n\n\n\n\nFinal project\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nFinal project\n\n\n\n\nJuly 28\n\n\nOptum Research Project Specification\n\n\n\n\n\n\n\n\n\n\nJuly 27\n\n\nCMSAC Research Project Specification\n\n\n\n\n\n\n\n\n\n\nJuly 27\n\n\nSURE 2023: Report Writing Guideline"
+    "text": "Here’s your roadmap for the semester!\n\nClass (): This page contains the readings for the class session. Read these before our in-person class.\nAssignment (): This page contains the instructions for each assignment.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOrientation\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nIntroduction\n\n\n\n\nJune 5\n\n\nWelcome to SURE 2023\n\n\n\n\n\n\n\n\n\n\n\n\n\nExploratory Data Analysis\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nData Exploring\n\n\n\n\nJune 5\n\n\nDemo-lab: Rstudio basics\n\n\n\n\n\n\n\n\n\n\nJune 6\n\n\nExploring data: Into the tidyverse\n\n\n\n\n\n\n\n\n\n\nJune 7\n\n\nThe grammar of graphics and ggplot2\n\n\n\n\n\n\n\n\n\n\nData Visualization\n\n\n\n\nJune 7\n\n\nDemo-lab: wrangling with dplyr\n\n\n\n\n\n\n\n\n\n\nJune 8\n\n\nVisualizing 1D categorical and continuous variables\n\n\n\n\n\n\n\n\n\n\nJune 9\n\n\nVisualizing 2D categorical and continuous by categorical\n\n\n\n\n\n\n\n\n\n\nJune 12\n\n\nDensity estimation\n\n\n\n\n\n\n\n\n\n\nJune 7\n\n\nDemo-lab: data visualization with ggplot2\n\n\n\n\n\n\n\n\n\n\nJune 13\n\n\nGeographical EDA using Shapefiles\n\n\n\n\n\n\n\n\n\n\nJune 7\n\n\nDemo-lab: Exploratory data analysis case studies\n\n\n\n\n\n\n\n\n\n\n\n\n\nUnsupervised Learning\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nData Visualization\n\n\n\n\nJune 14\n\n\nK-means\n\n\n\n\n\n\n\n\n\n\nClustering\n\n\n\n\nJune 15\n\n\nHierarchical clustering\n\n\n\n\n\n\n\n\n\n\nJune 16\n\n\nGaussian mixture models\n\n\n\n\n\n\n\n\n\n\nJune 19\n\n\nDemo-lab: clusteringJuneteenth holiday, but lab will be released\n\n\n\n\n\n\n\n\n\n\n\n\n\nPresentation Skills\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nPresenting\n\n\n\n\nJune 20\n\n\nWorking with xaringan and xaringanthemer\n\n\n\n\n\n\n\n\n\n\n\n\n\nMachine Learning\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nData Visualization\n\n\n\n\nJune 21\n\n\nModel assessment vs selection\n\n\n\n\n\n\n\n\n\n\nJune 22\n\n\nLinear regression\n\n\n\n\n\n\n\n\n\n\nSupervised Learning\n\n\n\n\nJune 23\n\n\nIntro to variable selection\n\n\n\n\n\n\n\n\n\n\nJune 26\n\n\nRegularization\n\n\n\n\n\n\n\n\n\n\nJune 26\n\n\nDemo-lab: Linear regression\n\n\n\n\n\n\n\n\n\n\nJune 27\n\n\nSupervised and unsupervised learning with Tidymodels\n\n\n\n\n\n\n\n\n\n\nJune 28\n\n\nDimension Reduction: Principal components analysis (PCA)\n\n\n\n\n\n\n\n\n\n\nJune 29\n\n\nPrincipal component regression and partial least squares\n\n\n\n\n\n\n\n\n\n\nJune 30\n\n\nGeneralized linear models (GLMs)\n\n\n\n\n\n\n\n\n\n\nJuly 6\n\n\nLogistic regression\n\n\n\n\n\n\n\n\n\n\nWorkflows\n\n\n\n\nJuly 7\n\n\nNonparametric regression\n\n\n\n\n\n\n\n\n\n\nDimension Reduction\n\n\n\n\nJune 26\n\n\nDemo-lab: Linear regression\n\n\n\n\n\n\n\n\n\n\nSupervised and Unsupervised Learning\n\n\n\n\nJuly 10\n\n\nDecision trees\n\n\n\n\n\n\n\n\n\n\nJuly 11\n\n\nRandom forests and gradient-boosted trees\n\n\n\n\n\n\n\n\n\n\n\n\n\nFinal project\n\n\n\n\n\n\n\nTitle\n\n\nClass\n\n\nAssignment\n\n\n\n\n\n\nFinal project\n\n\n\n\nJuly 28\n\n\nOptum Research Project Specification\n\n\n\n\n\n\n\n\n\n\nJuly 27\n\n\nCMSAC Research Project Specification\n\n\n\n\n\n\n\n\n\n\nJuly 27\n\n\nSURE 2023: Report Writing Guideline"
   },
   {
     "objectID": "syllabus.html",

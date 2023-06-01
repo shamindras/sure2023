@@ -16,11 +16,11 @@ contact_policy: >-
     Slack the best way to get in contact with us. We will try to respond to all course-related messages within 24 hours (*really*), but also remember that life can be busy and chaotic for everyone (including us!), so if we don't respond right away, don't worry!
 
 instructor_one:
-  name: Margaret Ellingwood
-  name_no_title: Margaret Ellingwood
+  name: Meg Ellingwood
+  name_no_title: Meg Ellingwood
   email: mellingw@andrew.cmu.edu
   url: "https://www.cmu.edu/dietrich/statistics-datascience/people/phd/margaret-ellingwood.html"
-  github: andrewheiss
+  github: mellingwood
   office: "FMS 317"
   contact_policy: >-
     Slack the best way to get in contact with me. I will try to respond to all course-related e-mails within 24 hours (*really*), but also remember that life can be busy and chaotic for everyone (including me!), so if I don't respond right away, don't worry!
@@ -41,10 +41,10 @@ instructor_two:
 course:
   number: "SURE 2023"
   semester: "Summer 2023"
-  days: "Tuesdays"
-  time: "4:30–7:00 PM"
-  location: "Baker Hall"
-  dates: "June 5–July 28, 2023"
+  days: "Monday - Friday"
+  time: "9:30 – 4:00 PM"
+  location: "POS151 and PHA18A"
+  dates: "June 5 – July 28, 2023"
   github: "https://www.github.com/andrewheiss/compasp23.classes.andrewheiss.com"
   url: "https://compasp23.classes.andrewheiss.com"
   copyright_year: "2023"

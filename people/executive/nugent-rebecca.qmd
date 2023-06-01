@@ -1,0 +1,54 @@
+---
+title: "Rebecca Nugent"
+sortby: "Nugent, Rebecca"
+subtitle: "Stephen E. and Joyce Fienberg Professor of Statistics & Data Science (CMU)"
+image: nugent-rebecca.jpg
+toc: false
+about:
+  id: person-profile
+  template: jolla
+---
+
+```{=html}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="../../index.html">Home</a></li>
+    <li class="breadcrumb-item"><a href="../../people.html">People</a></li>
+    <li class="breadcrumb-item active">Executive</li>
+    <li class="breadcrumb-item active" aria-current="page">{{< meta title >}}</li>
+  </ol>
+</nav>
+```
+
+:::{#person-profile}
+:::
+
+## Biography
+
+Rebecca Nugent is the Stephen E. and Joyce Fienberg Professor of Statistics &
+Data Science and Head of the Carnegie Mellon Department of Statistics & Data
+Science. She received her PhD in Statistics from the University of Washington,
+her M.S. in Statistics from Stanford University, and her B.A. in Mathematics,
+Statistics, and Spanish from Rice University.
+
+Dr. Nugent has expertise in designing and implementing data science/AI
+professional development programs for business leaders in industries including
+health care, finance, automotive/manufacturing, and life sciences. She was the
+faculty co-Director of the Moderna AI Academy and the Founding Director of the
+Statistics & Data Science Corporate Capstone program, an experiential learning
+initiative that matches groups of faculty and students with data science
+problems in industry, non-profits, and government organizations.
+
+She has won several national and university teaching awards including the
+American Statistical Association Waller Award for Innovation in Statistics
+Education and serves as one of the co-editors of the Springer Texts in
+Statistics. She recently served as the co-chair for the National Academy of
+Sciences study on Improving Defense Acquisition Workforce Capability in Data Use
+and served on the NAS study on Envisioning the Data Science Discipline: The
+Undergraduate Perspective. Dr. Nugent has worked extensively in clustering and
+classification methodology with an emphasis on high-dimensional, big data
+problems and record linkage applications. Her current research focus is the
+development and deployment of low-barrier data analysis platforms that allow for
+adaptive instruction and the study of data science as a science.  
+
+ 

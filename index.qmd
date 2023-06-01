@@ -26,32 +26,21 @@ withr::with_dir(here::here(), {
 
 ::: {.grid .course-details}
 
-<!-- ::: {.g-col-12 .g-col-sm-6 .g-col-md-4} -->
-::: {.g-col-8 .g-col-md-8}
+::: {.g-col-12 .g-col-sm-12 .g-col-md-12}
+### Course details
 
-### Instructors
-
-- {{< fa user >}} &nbsp; [{{< var instructor_one.name >}}]({{< var instructor_two.url >}}) &nbsp;& [{{< var instructor_two.name >}}]({{< var instructor_two.url >}})
-<!-- - {{< fa university >}} &nbsp; {{< var instructor.office >}} -->
-- {{< fa envelope >}} &nbsp; <a href="mailto:{{< var instructor_one.email >}}">{{< var instructor_one.email >}}</a>  &nbsp;& <a href="mailto:{{< var instructor_two.email >}}">{{< var instructor_two.email >}}</a>
-<!-- - {{< fa brands twitter >}} &nbsp; [{{< var instructor.twitter >}}](https://www.twitter.com/{{< var instructor.twitter >}}) -->
-<!-- - {{< fa calendar-check >}} &nbsp; [Schedule an appointment]({{< var instructor.appointment_url >}}) -->
+- {{< fa user >}} &nbsp; [{{< var instructor_one.name >}}]({{< var instructor_one.url >}})&nbsp;and&nbsp;[{{< var instructor_two.name >}}]({{< var instructor_two.url >}})
+- {{< fa calendar >}} &nbsp; {{< var course.days >}}
+- {{< fa clock >}} &nbsp; {{< var course.time >}}
+- {{< fa location-dot >}} &nbsp; {{< var course.location >}}
+- {{< fa calendar-alt >}} &nbsp; {{< var course.dates >}}
 :::
 
-<!-- ::: {.g-col-12 .g-col-sm-6 .g-col-md-4} -->
-<!-- ### Course details -->
+<!-- ::: {.g-col-6 .g-col-md-8 .contact-policy} -->
+<!-- ### Contacting us -->
 
-<!-- - {{< fa calendar >}} &nbsp; {{< var course.days >}} -->
-<!-- - {{< fa calendar-alt >}} &nbsp; {{< var course.dates >}} -->
-<!-- - {{< fa clock >}} &nbsp; {{< var course.time >}} -->
-<!-- - {{< fa location-dot >}} &nbsp; {{< var course.location >}} -->
+<!-- {{< var contact_policy >}} -->
 <!-- ::: -->
-
-::: {.g-col-6 .g-col-md-8 .contact-policy}
-### Contacting us
-
-{{< var contact_policy >}}
-:::
 
 :::
 

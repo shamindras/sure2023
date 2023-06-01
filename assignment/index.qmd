@@ -2,17 +2,28 @@
 title: "Assignments"
 ---
 
-## Preparation
+There are two main forms of assignments in the SURE 2023 program, namely:
 
-You will get the most out of this seminar if you (1) attend regularly, (2) engage with the readings, and (3) write thoughtfully.
+  - Demo-labs
+  - Final research project, poster and presentation
 
-## Final project
+Some additional details on both are provided below. You can view all assignment
+materials by navigating the links in the left sidebar, or via the [course
+schedule](../schedule.qmd).
 
-For your final project, you will write a policy brief (3,000 words; including footnotes but excluding references). A policy brief is a concise summary of a particular issue, the policy options to deal with it, and some recommendations about the best option. In general, it is written for a non-specialized audience such as policymakers, NGO staff, journalists, and the general public. For this assignment, though, your policy brief readers are policymakers (politicians or civil servants). Assume that your readers do not have detailed knowledge about the topic/issue you explore. They are also not scientists or experts in the area of your choice. Assume that the policymakers are busy and they need to quickly understand your arguments.
+## Demo-labs
 
-There are two types of policy brief: (1) advocacy briefs that argue in favor of a particular course of action, and (2) objective briefs that gives balanced information for the policymaker to make up their decision. You will choose either of these types.
-You will write your brief about one specific topic. Topic examples include (but are not limited to!) questions like:
+We also provide you demo-lab materials for you to test out your understanding of
+the course content. Completing these demo-labs is strongly recommended to
+reinforce the material. There is no grading involved here, just learning.
 
-## Exams
+## Research project deliverables
 
-There are no exams! Read a bunch of things, write some things, participate in class. That's it.
+As noted in our [syllabus](../syllabus.qmd) and [schedule](../schedule.qmd) the
+**only deliverables** you have are your final (Optum or CMSAC) research project
+report, poster, and presentation. Although the research project won't be
+formally graded, all of these deliverables will be presented by you to various
+important stakeholders in healthcare (Optum) and sports (CMSAC) data science
+community. So it is in your best interest to put your best foot forward!
+
+

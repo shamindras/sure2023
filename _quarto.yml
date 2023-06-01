@@ -25,7 +25,6 @@ website:
     image: "/files/cmu-statds-icon-hex-2-bg.png"
     card-style: summary_large_image
     creator: "@CMU_Stats"
-    # site: "@andrewheiss"
 
   open-graph:
     image: "/files/cmu-statds-icon-hex-2-bg.png"
@@ -150,7 +149,6 @@ website:
       [Creative Commons Attribution-NonCommercial 4.0 International license (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/)
     right: |
       Made with {{< fa brands r-project >}} and [Quarto](https://quarto.org/)<br>
-      [View the source at {{< fa brands github >}} GitHub]({{< var course.github >}})
 
 format:
   html:

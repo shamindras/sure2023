@@ -1,9 +1,8 @@
 ---
 title: "Ron Yurko"
 sortby: "Yurko, Ron"
-subtitle: "CMU Faculty"
+subtitle: "Assistant Teaching Professor of Statistics & Data Science (CMU)"
 image: yurko-ron.jpg
-started: "Summer 2023"
 toc: false
 resources: 
   - "yurko-ron_cv.pdf"
