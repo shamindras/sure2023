@@ -48,6 +48,8 @@ website:
         menu:
           - text: "SURE 2023 Computing Setup"
           - file: guides/computing-setup.qmd
+          - text: "SURE 2023 Exploring Pittsburgh"
+          - file: guides/pittsburgh-fun-activities.qmd
       # - icon: slack
       #   href: "https://cmu-sure-2023.slack.com"
       #   aria-label: Slack
