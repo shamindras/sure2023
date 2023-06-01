@@ -3,7 +3,7 @@ title: "Nick Kissel"
 sortby: "Kissel, Nick"
 subtitle: "TA Advisor (CMSAC)"
 image: kissel-nick.jpg
-started: "Spring 2023"
+started: "Fall 2019"
 ended: "Current"
 toc: false
 about:

@@ -1,0 +1,357 @@
+---
+title: "SURE 2023: Report Writing Guideline"
+---
+
+This guideline[^1] is intended to include elements necessary for a successful report
+applying statistical methods to answer research questions using real data. It
+cannot, however, list *every* element required to make a well-written,
+convincing, and comprehensive report.
+
+# Production
+
+  ---------------------------------------------------------------------------------------------------------
+                          Excellent                                                 Needs revision
+  ----------------------- --------------------------------------------------------- -----------------------
+  Reproducible report     Report is produced using [[R                              Report is produced in
+                          Markdown]{.underline}](https://rmarkdown.rstudio.com/),   Word or Google Docs, or
+                          [[Quarto]{.underline}](https://quarto.org/),              any tool that requires
+                          [[knitr]{.underline}](https://yihui.org/knitr/), or       manually pasting in
+                          similar tools that allow text and results to be generated figures and results
+                          from the same file                                        
+
+  Reproducibility         Results, tables, and figures are generated using code     Some results, tables,
+                          embedded in the document                                  or figures were
+                                                                                    manually created and
+                                                                                    pasted into the
+                                                                                    document
+
+  Format                  Report is a PDF with standard-size pages (8.5×11" or A4)  Report is not a PDF or
+                                                                                    has unusually sized
+                                                                                    pages
+  ---------------------------------------------------------------------------------------------------------
+
+# Executive Summary
+
+  -----------------------------------------------------------------------
+                          Excellent               Needs revision
+  ----------------------- ----------------------- -----------------------
+  Answers questions       Addresses all           Ignores some questions
+                          substantive questions   
+
+  Summarizes methods      Summarizes methods used Fails to note important
+                          and their limitations   caveats of the methods
+                                                  used
+
+  Suited for audience     Written in terms        Summary excessively
+                          understandable to a     mathematical or uses
+                          subject-area audience,  statistical jargon,
+                          rather than being       would be hard for
+                          written for             non-statistician to
+                          statisticians           understand
+
+  Stand-alone             Can be read so that the 
+                          *core* idea can be      
+                          understood without      
+                          reading the rest of the 
+                          report                  
+  -----------------------------------------------------------------------
+
+# 
+
+# Introduction
+
+  -----------------------------------------------------------------------
+                          Excellent               Needs revision
+  ----------------------- ----------------------- -----------------------
+  Motivates the problem   Introduction sets out   Unclear what questions
+                          substantive questions   will be answered in the
+                          to be answered and      report, or does not
+                          their importance        provide context for the
+                                                  questions that
+                                                  illustrates their
+                                                  importance
+
+  Gives theories or goals Introduction states     Unclear what theories
+                          theories or alternative will be tested using
+                          explanations to be      the data, or what
+                          tested using the data,  outcome will be
+                          or outcome to be        predicted and why
+                          predicted               
+
+  Describes data source   Introduction describes  Unclear what the source
+                          the source of the data  of the data was or how
+                          and summarizes its      it was collected;
+                          relevance to the        unclear how the data is
+                          problem                 relevant to the
+                                                  research questions at
+                                                  hand
+
+  Written for right       Introduction is         Introduction contains
+  audience                readable to expert on   lots of statistical
+                          the data's subject,     details or would be
+                          rather than being       hard for
+                          written for             non-statistician to
+                          statisticians           understand
+  -----------------------------------------------------------------------
+
+# Exploratory Data Analysis & Data Summary
+
+  -----------------------------------------------------------------------
+                          Excellent               Needs revision
+  ----------------------- ----------------------- -----------------------
+  Data is clear           Meaning of all relevant Many relevant variables
+                          variables given (with   not explained or have
+                          units, when known);     no units; unclear what
+                          size of dataset is      rows represent
+                          given                   
+
+  Data explored           Distributions of        Important aspects of
+                          variables checked;      variables not checked
+                          notable outliers        
+                          explained               
+
+  EDA is connected to     EDA supports the        EDA includes lots of
+  modeling                modeling by exploring   numbers and graphics
+                          relationships and       that are not useful,
+                          variables that will be  such as summary
+                          useful for model        statistics for every
+                                                  single variable; many
+                                                  figures don't show
+                                                  anything relevant to
+                                                  modeling or results, or
+                                                  text/caption does not
+                                                  say what is interesting
+                                                  about them
+
+  Missingness handled (if Missing data noted and  Missing data is ignored
+  present)                strategy to account for or inappropriate
+                          it explained            methods used to account
+                                                  for its effects
+
+  Limitations             Limitations of data for 
+                          the research questions  
+                          noted, including        
+                          problems with           
+                          generalizability or     
+                          omitted variables       
+  -----------------------------------------------------------------------
+
+# Methods
+
+These criteria apply to the statistical analysis used to answer **each**
+substantive question addressed in the report.
+
+  -----------------------------------------------------------------------
+                          Excellent               Needs revision
+  ----------------------- ----------------------- -----------------------
+  Connected to substance  Chosen analysis is      Analysis does not or
+                          clearly connected to    cannot answer the
+                          substantive question    substantive questions
+
+  Connection explained    Chosen analysis is      Text discusses models
+                          explained in terms of   and code but does not
+                          the substantive         explain how these
+                          question, not purely    connect to the
+                          technical               substantive question
+
+  Models explained        Report explains choices Unclear how or why the
+                          made in model building, models were made, or
+                          such as how variables   why variables were
+                          are coded or            chosen or transformed
+                          transformed, or which   
+                          variables are included  
+
+  Appropriateness         Analysis is supported   Unclear if model
+  verified                by diagnostics or       assumptions are checked
+                          proper metrics that     or if the model is
+                          assess its              appropriate for the
+                          appropriateness for the given data
+                          data                    
+
+  Choices justified       Text clearly explains   Unclear why modeling
+                          why this analysis was   choices were made,
+                          chosen over             whether chosen model is
+                          alternatives            better, or if
+                                                  alternatives were
+                                                  considered at all
+
+  Problems noted          Caveats and problems    Problems are hidden and
+                          are noted and their     their potential effect
+                          potential effect on     on results ignored; or
+                          results explained       problems are mentioned
+                                                  but their effect on
+                                                  conclusions is not
+                                                  described
+  -----------------------------------------------------------------------
+
+# Results
+
+  -----------------------------------------------------------------------------------------------------------------------------
+                          Excellent                                                                     Needs revision
+  ----------------------- ----------------------------------------------------------------------------- -----------------------
+  Results answer          Statistical results answer the questions asked                                Statistical results do
+  questions                                                                                             not answer the
+                                                                                                        substantive questions
+
+  Statistical results     Tests and estimates are presented clearly and accurately                      Explanation misstates
+  clearly presented                                                                                     what the results show
+                                                                                                        or misinterprets the
+                                                                                                        statistics
+
+  Statistical results     Statistical methods correctly implemented                                     Errors in code or math
+  correct                                                                                               mean the results are
+                                                                                                        incorrect
+
+  Hypotheses and          When hypothesis tests are used, the null hypothesis being tested is clearly   Unclear what is being
+  distributions clearly   stated, as is the null distribution of the statistic (e.g. χ^2^, *F*) and its tested or how the *p*
+  stated for tests        degrees of freedom (or, if the bootstrap is used, the method used is stated), values are being
+                          ideally in [[APA                                                              calculated
+                          format]{.underline}](https://psych.uw.edu/storage/writing_center/stats.pdf)   
+
+  Effect sizes given when Whenever possible, sizes of effects are given, not just their significance,   Results are presented
+  appropriate             and interpreted in substantive terms                                          as significant or
+                                                                                                        insignificant without
+                                                                                                        effect sizes
+
+  Demonstrates the        Sensitivity analysis provides a degree to which the proposed method can be    Provides only the
+  sensitivity analysis    trustworthy. Comparison with the alternatives (including baseline) bolsters   results based on the
+  and the comparison to   the reasoning for why a certain method was applied.                           proposed method without
+  the alternatives                                                                                      empirical comparison or
+                                                                                                        any stress test.
+  -----------------------------------------------------------------------------------------------------------------------------
+
+# Conclusion
+
+  -----------------------------------------------------------------------
+                          Excellent               Needs revision
+  ----------------------- ----------------------- -----------------------
+  Conclusion presents     Summarizes conclusions  Describes conclusions
+  results                 presented in report     not justified or
+                                                  described in the body
+                                                  of the report, or
+                                                  doesn't say conclusions
+
+  Conclusion notes        Conclusion notes any    Conclusion ignores
+  limitations             limitations of results  limitations of results
+                          and what could be done  or is too confident
+                          to address these        
+  -----------------------------------------------------------------------
+
+# Figures and Tables
+
+  -----------------------------------------------------------------------
+                          Excellent               Needs revision
+  ----------------------- ----------------------- -----------------------
+  Function and purpose    Connection between      Not clear what point
+                          figures and narrative   the figures are making
+                          is clear from text and  or how they support the
+                          caption                 argument; no captions
+                                                  given
+
+  Legibility and design   Figures are clear,      Figures are hard to
+                          simple, legible, and    read; fonts are often
+                          attractive              too small; some
+                                                  graphics are blurry or
+                                                  squished
+
+  Labeling                All legends and axes    Labels missing or use
+                          are clearly labeled     raw variable names
+                          (including units, when  instead of descriptive
+                          known)                  text
+
+  Choice of figures       Types of figures are    Figures do not make
+                          well-chosen,            intended points and
+                          illustrating the        should be replaced
+                          intended points clearly 
+
+  Used when needed        Figures are used        Many points should be
+                          whenever the text needs illustrated with
+                          them                    figures but are not
+
+  Numbering               Figures and tables are  Text refers to "figure
+                          numbered, and text      below", or it is
+                          refers to them by       unclear which figures
+                          number                  correspond to which
+                                                  results
+  -----------------------------------------------------------------------
+
+# Writing and Style
+
++----------------------+-----------------------+-----------------------+
+|                      | Excellent             | Needs revision        |
++======================+=======================+=======================+
+| Grammar and style    | Grammar is correct    | Grammatical or        |
+|                      | and style is          | spelling errors make  |
+|                      | appropriate to        | text hard to read     |
+|                      | audience              |                       |
++----------------------+-----------------------+-----------------------+
+| Formatting           | Formatting is clear   | Text is poorly        |
+|                      | and legible           | typeset or in unusual |
+|                      |                       | sizes; figures are in |
+|                      |                       | inconvenient places;  |
+|                      |                       | math is hard to read  |
++----------------------+-----------------------+-----------------------+
+| Logic and flow       | All text works to     | Purpose of some text  |
+|                      | support the           | is unclear; sections  |
+|                      | conclusions; there is | redundant or not      |
+|                      | a clear logical flow  | clearly split         |
+|                      | between sections      |                       |
++----------------------+-----------------------+-----------------------+
+| Precision            | Descriptions of       | Unclear what some     |
+|                      | methods and results   | results are or how    |
+|                      | are clear and         | the analysis was      |
+|                      | unambiguous           | conducted             |
++----------------------+-----------------------+-----------------------+
+| Uncertainty always   | Wherever results      | Many results not in   |
+| given                | appear in report,     | APA format or given   |
+|                      | they are presented    | without any           |
+|                      | with clear measures   | uncertainty           |
+|                      | of uncertainty, such  |                       |
+|                      | as confidence         |                       |
+|                      | intervals or standard |                       |
+|                      | errors, in [[APA      |                       |
+|                      | format]{.und          |                       |
+|                      | erline}](https://psyc |                       |
+|                      | h.uw.edu/storage/writ |                       |
+|                      | ing_center/stats.pdf) |                       |
++----------------------+-----------------------+-----------------------+
+| No code in report    | No code is presented  | Chunks of code are    |
+|                      | in the report, only   | shown directly in the |
+|                      | relevant results      | report                |
++----------------------+-----------------------+-----------------------+
+| No output in report  | No output is          | Raw output or warning |
+|                      | presented in the      | messages are included |
+|                      | report; results are   | directly in the       |
+|                      | formatted as tables   | report                |
+|                      | or plots, or given in |                       |
+|                      | the text              |                       |
++----------------------+-----------------------+-----------------------+
+| No math              | Report explains       | Report contains       |
+|                      | results in words,     | detailed mathematical |
+|                      | without mathematical  | derivations           |
+|                      | formulae or           |                       |
+|                      | derivations (except   |                       |
+|                      | definitions of        |                       |
+|                      | models, as required)  |                       |
++----------------------+-----------------------+-----------------------+
+| Sourcing (if         | References are        | Some references not   |
+| applicable)          | clearly given to      | given; text or        |
+|                      | information from      | figures used without  |
+|                      | outside sources;      | attribution.          |
+|                      | quotations clearly    |                       |
+|                      | mark any verbatim     | **Warning:** using    |
+|                      | text from sources     | text or figures from  |
+|                      |                       | other sources without |
+|                      |                       | *clear* attribution   |
+|                      |                       | is an academic        |
+|                      |                       | integrity violation.  |
++----------------------+-----------------------+-----------------------+
+| Citation style (if   | Citations formatted   | Citations poorly      |
+| applicable)          | in a common style     | formatted or          |
+|                      | used in statistics    | incomplete            |
+|                      | journals              |                       |
++----------------------+-----------------------+-----------------------+
+
+[^1]: We thank [Prof. Alex Reinhart](https://www.refsmmat.com/) for sharing
+these guidelines with us. They were originally developed by the teaching staff
+for the Undergraduate Advanced Data Analysis course (36-402), as taught at CMU.

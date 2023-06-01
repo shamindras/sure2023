@@ -3,18 +3,18 @@ title: "Lectures and Readings"
 toc: false
 ---
 
-Each lecture contains the relevant `pdf` slides, and sometimes additional useful
-resources for you to deeply explore a lecture topic. We will continue to update
-any additional resources, e.g., youtube links, articles, blog post tutorials
-etc., for a given lecture as needed. So please keep checking back in regularly
-throughout the program.
+Each lecture in the left sidebar contains the relevant `pdf` slides, and some
+additional useful resources for you to deeply explore a lecture topic. We will
+continually update any additional resources (e.g., youtube links, articles, blog
+post tutorials etc.) for a given lecture as needed. So please keep checking back
+in regularly throughout the program.
 
-::: {.callout-warning}
+::: {.callout-tip}
 ### Give us tips!
 
-You are also welcome to suggest new resources (links) for us to include for a 
-given topic page. Even referring to your own blog post is fine, as long as it 
-is relevant!
+You are also welcome to **suggest new resources (links)** for us to include for
+a given topic page. We're always keen to grow the body of knowledge contained in
+the lectures throughout the program.
 :::
 
 You can view all lecture materials by navigating the links in the left sidebar,

@@ -1,5 +1,5 @@
 ---
-title: "Optum Data Science Research Project Guidelines"
+title: "Optum Research Project Specification"
 ---
 
 ## Project Theme

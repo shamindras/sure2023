@@ -45,6 +45,10 @@ website:
         file: class/index.qmd
       - text: "Assignments"
         file: assignment/index.qmd
+      - text: "Guides"
+        menu:
+          - text: "SURE 2023 Computing Setup"
+          - file: guides/computing-setup.qmd
       - icon: slack
         href: "https://cmu-sure-2023.slack.com"
         aria-label: Slack
@@ -133,7 +137,10 @@ website:
             - assignment/index.qmd
         - section: "Final projects"
           contents:
-            - assignment/optum-project-guidelines.qmd
+            - text: "Optum Research Project Specification"
+              file: assignment/optum-project-guidelines.qmd
+            - text: "SURE 2023 Report Writing Guideline"
+              file: assignment/report-writing-guideline.qmd
 
   page-footer:
     left: |

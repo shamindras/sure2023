@@ -1,0 +1,297 @@
+---
+title: "Computing Setup"
+---
+
+Welcome to the Summer Undergraduate Research Experience (SURE) 2023 hosted by
+the Department of Statistics & Data Science at Carnegie Mellon University. We
+are excited to guide you through exciting topics in statistics and data science,
+focusing on applications in sports and health analytics.
+
+To get you started, please complete our step-by-step instructions for setting up
+the common tools that you will use throughout the program.
+
+---
+
+# `R` and `RStudio`
+
+`R` is an open-source programming language for statistical computing. `R` is
+widely-used in both academia and industry, due to its capacity for statistical
+analysis, data visualization, and data mining. **We will use `R` as our primary
+data science programming language for SURE 2023.**
+
+In order to use `R` effectively, we need a suitable editing environment, i.e.
+`RStudio`. For more context, `RStudio` is an integrated development environment
+(IDE) developed specifically for `R` programming. Although `R` can be run
+without `RStudio`, `RStudio` provides a more user-friendly experience with
+additional functionality.
+
+::: {.callout-warning}
+You are more than welcome to use any other IDE that supports `R`, e.g., `emacs`,
+`VIM`, `neovim`, `VSCode`, etc.
+
+However, the teaching staff will only provide support for the latest `RStudio`
+IDE.
+:::
+
+To download `R` and `RStudio`, first visit
+<https://posit.co/download/rstudio-desktop>.
+
+You will see the following two tasks to be completed: **1: Install `R`** and
+**2: Install `RStudio`**.
+
+## Step 1: Install `R`
+
+::: {.callout-note collapse="true"}
+
+## Install `R`
+
+(*Note that the following instructions apply to the latest `R` version (4.3.0)
+as of May 31, 2023*)
+
+Click on ***DOWNLOAD AND INSTALL R***. This will direct you to the CRAN
+(Comprehensive R Archive Network) website.
+
+**macOS**
+
+  - Click on ***Download R for macOS***.
+
+  - Choose the `.pkg` file suitable for your Mac (*Apple silicon (M1/M2) Macs*
+    or *older Intel Macs*.)
+
+  - Open the `.pkg` file after the download is complete.
+
+  - Follow the installation instructions.
+  
+**Windows**
+
+  - Click on ***Download R for Windows***.
+
+  - Click on ***install R for the first time*** (on the same line as the
+    ***base*** subdirectory.)
+
+  - Choose ***Download R 4.3.0 for Windows***.
+
+  - Open the `.exe` file after the download is complete.
+
+  - Follow the installation instructions.
+:::
+
+## Step 2: Install `RStudio`
+
+::: {.callout-important}
+## Important
+`R` **must** be installed before `RStudio`.
+:::
+
+::: {.callout-note collapse="true"}
+
+## Install `RStudio`
+
+Click on ***DOWNLOAD RSTUDIO DESKTOP...*** Your operating system is
+automatically detected. (If your OS is not correctly detected, scroll down and
+choose the right version for your system.)
+
+**macOS** 
+
+  - Open the `.dmg` file after the download is complete.
+
+  - Drag and drop it to your Applications folder.
+  
+**Windows** 
+
+  - Open the `.exe` file after the download is complete.
+
+  - Follow the installation instructions.
+
+Open `RStudio` once the installation is finished. You should get something
+similar to the image below. We will run a few commands later in the **Console
+pane**, which is located on the bottom left corner and highlighted in red.
+
+![](files/images/console.png)
+
+:::
+
+## Step 3: Check `R` and `RStudio` installations {#step3}
+
+Next, we run a quick check to verify that everything looks right after
+installations, 
+
+
+::: {.callout-note collapse="true"}
+
+## Post-installation check
+
+Open `RStudio` and type in the following command in the Console pane on the
+bottom left.
+
+```{r, eval=FALSE}
+version
+```
+
+This will print out the current version of `R` on your machine. The output
+should look similar to what shown below (the first 4 lines might be different,
+depending on your operating system.)
+
+```{r, echo=FALSE}
+version
+```
+
+The following gif shows what it looks like in action.
+
+<center>
+
+![](files/images/version.gif){height=300}
+
+</center>
+
+:::
+
+## Step 4: Install required packages
+
+We suggest that you install the following minimal set of `R` packages which are
+needed to get started with SURE 2023. We will recommend more packages for you to
+install as we progress through the program.
+
+::: {.callout-note collapse="true"}
+
+## Package installation
+
+In `R`, a package is a collection of functions, data and compiled code. In
+addition to a set of built-in base packages, there are numerous external `R`
+packages written by the community to add specific functionality.
+
+To get started with SURE 2023, you will need to install a minimal set of
+packages. Again, open `RStudio` and type in the following command in the Console
+pane on the bottom left (refer to the gif in [Step 3](#step3) for how to access
+the `RStudio` Console pane).
+
+```{r, eval=FALSE}
+rec_packages <- c("tidyverse", "styler", "xaringan", "xaringanthemer", 
+                  "xaringanExtra", "tidymodels")
+install.packages(rec_packages)
+```
+
+We can verify successful package installation, e.g., for the `tidyverse`, which
+is arguably the most popular `R` package for data science. To do this, run the
+following command in the `RStudio` Console pane.
+
+```{r, eval=FALSE}
+library(tidyverse)
+```
+
+You should get a message similar to the output below.
+
+```{r, echo=FALSE}
+library(tidyverse)
+```
+
+:::
+
+<!-- ::: {.callout-warning} -->
+<!-- ## Important -->
+<!-- Packages should be **installed** only once. Packages should be **loaded** at the start of every new `R` session. -->
+<!-- ::: -->
+
+---
+
+# Resources
+
+Here are some selected resources by the teaching staff for getting started with
+`R` and data science. Clicking on the images will direct you to the website of
+these references.
+
+::: {.callout-important}
+You do **not** need to know all of the materials contained in these resources
+**before** starting SURE 2023. We will introduce you to most of these contents
+throughout the program. However, we recommend using them regularly as additional
+references.
+:::
+
+## Books
+
+::: {.callout-note collapse="true"}
+
+## R for Data Science
+
+[![](https://d33wubrfki0l68.cloudfront.net/b88ef926a004b0fce72b2526b0b5c4413666a4cb/24a30/cover.png){height=180}](https://r4ds.had.co.nz/)
+
+A great introduction to doing data science in `R`. It provides a thorough overview of basic data science tasks, most notably data tidying, wrangling, and visualization with the `tidyverse`.
+
+:::
+
+::: {.callout-note collapse="true"}
+
+## Modern Data Science with R
+
+[![](https://mdsr-book.github.io/mdsr2e/gfx/mdsr2e_cover.png){height=180}](https://mdsr-book.github.io/mdsr2e/)
+
+Another good introductory book for data science. It contains a wide array of
+topics, including a chapter on data science ethics and special topics on
+geospatial data.
+
+:::
+
+::: {.callout-note collapse="true"}
+
+## An Introduction to Statistical Learning
+
+[![](https://images.squarespace-cdn.com/content/v1/5ff2adbe3fe4fe33db902812/1611294680091-25SIDM9AHA8ECIFFST23/Screen+Shot+2021-01-21+at+11.02.06+AM.png){height=200}](https://www.statlearning.com/) 
+
+A simple introduction to statistical machine learning without much technical
+detail. It covers modeling concepts that we will be discussing in this program
+such as classification, regression, variable selection, clustering, and
+tree-based methods.
+
+:::
+
+## Websites
+
+::: {.callout-note collapse="true"}
+
+## `ggplot2` references
+[![](https://ggplot2.tidyverse.org/logo.png){height=150}](https://ggplot2.tidyverse.org/)
+
+Featuring `ggplot2` cheatsheet, function documentations, FAQs, and extensions.
+
+:::
+
+::: {.callout-tip collapse="true"}
+
+## Good coding style
+
+[![](https://raw.githubusercontent.com/lorenzwalthert/some_raw_data/master/styler_0.1.gif){height=300}](https://styler.r-lib.org/)
+
+The [tidyverse style guide](https://style.tidyverse.org/) is a great reference
+for good coding style. It is supported by the
+[`styler`](https://styler.r-lib.org/) package in `R`. The figure above provides
+a simple demonstration for code formatting with `styler`, taken from the package
+site.
+
+:::
+
+## Videos
+
+::: {.callout-note collapse="true"}
+
+## David Robinson's TidyTuesday screencasts
+
+[![](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/static/tt_logo.png){height=150}](https://www.youtube.com/@safe4democracy/streams)
+
+Each video is a detailed walk-through on how to approach, clean, summarize,
+visualize, and analyze a dataset provided by the
+[TidyTuesday](https://github.com/rfordatascience/tidytuesday) project. Useful
+`R` tips and tricks are often offered. For context, TidyTuesday releases a
+weekly dataset, aiming to promote data analysis with the `tidyverse` suite of
+packages. Numerous examples of TidyTuesday contributions (e.g., visualizations)
+can be found under the [\#TidyTuesday](https://twitter.com/hashtag/TidyTuesday)
+Twitter hashtag.
+  
+:::  
+
+---
+
+# Slack and Zoom
+
+`r fontawesome::fa("slack")` &nbsp; We will be using [Slack](link) for communication throughout the program. We highly recommend having the Slack app downloaded on both your computer and phone.
+
+`r fontawesome::fa("video")` $\text{}$ Occasionally, we will have virtual talks on Zoom. Please make sure [Zoom](https://zoom.us/) is installed and up-to-date on your device(s).
