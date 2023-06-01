@@ -15,16 +15,16 @@ csl: files/bib/chicago-author-date.csl
 description-meta: "Explore cutting-edge statistics and data science methodology with applications in sports and health analytics"
 
 website:
-  image: "/files/cmu-statds-icon-hex-2-bg.png"
+  # image: "/files/cmu-statds-icon-hex-2-bg.png"
   title: "SURE 2023"
-  site-url: "https://compasp23.classes.andrewheiss.com"
+  site-url: "https://cmu-sure-2023.netlify.app/"
 
   favicon: "/files/cmu-statds-icon-hex-2-bg.png"
 
   twitter-card:
     image: "/files/cmu-statds-icon-hex-2-bg.png"
     card-style: summary_large_image
-    creator: "@andrewheiss"
+    creator: "@CMU_Stats"
     # site: "@andrewheiss"
 
   open-graph:
