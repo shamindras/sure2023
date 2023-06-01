@@ -10,17 +10,17 @@ listing:
     fields: [image, title, subtitle]
     grid-item-align: center
     sort: sortby
-    field-display-names: 
-      started: "Started"
+    # field-display-names: 
+    #   started: "Started"
   - id: research-assistants
     contents: "people/ta/*.qmd"
     type: grid
     image-height: 225px
     grid-columns: 3
     sort: sortby
-    fields: [image, title, subtitle, started]
-    field-display-names:
-      started: "Started"
+    fields: [image, title, subtitle]
+    # field-display-names:
+    #   started: "Started"
     grid-item-align: center
   - id: student-support
     contents: "people/student_support/*.qmd"
@@ -28,9 +28,9 @@ listing:
     image-height: 225px
     grid-columns: 3
     sort: sortby
-    fields: [image, title, subtitle, started]
-    field-display-names:
-      started: "Started"
+    fields: [image, title, subtitle]
+    # field-display-names:
+    #   started: "Started"
     grid-item-align: center    
   - id: executive-staff
     contents: "people/executive/*.qmd"
@@ -38,25 +38,11 @@ listing:
     image-height: 225px
     grid-columns: 3
     sort: sortby
-    fields: [image, title, subtitle, started]
-    field-display-names:
-      started: "Started"
+    fields: [image, title, subtitle]
+    # field-display-names:
+    #   started: "Started"
     grid-item-align: center    
 ---
-  
-  <!-- - id: alumni -->
-  <!--   contents: "people/alumni/*.qmd" -->
-  <!--   type: table -->
-  <!--   sort: sortby -->
-  <!--   fields: [title, subtitle, started, ended] -->
-  <!--   sort-ui: [title, subtitle, started, ended] -->
-  <!--   filter-ui: [title, subtitle, started, ended] -->
-  <!--   field-display-names:  -->
-  <!--     title: "Name" -->
-  <!--     subtitle: "Role" -->
-  <!--     started: "Started" -->
-  <!--     ended: "Ended" -->
-<!-- --- -->
 
 ```{=html}
 <nav aria-label="breadcrumb">
