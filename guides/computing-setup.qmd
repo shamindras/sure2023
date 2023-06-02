@@ -244,6 +244,10 @@ Here are some selected resources by the teaching staff for getting started with
 `R` and data science. **Clicking on the contained thumbnail images** will direct
 you to the website of these references.
 
+Inside each of the resource callouts below are helpful descriptive summaries
+from your TA Advisor [Quang](/people/staff/nguyen-quang.qmd). These help explain
+how you can get the **most** out of each resource.
+
 ::: {.callout-important}
 You do **not** need to know all of the materials contained in these resources
 **before** starting SURE 2023. We will introduce you to most of these contents

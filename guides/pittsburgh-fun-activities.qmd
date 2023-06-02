@@ -3,7 +3,7 @@ title: "Fun activities to do in Pittsburgh"
 ---
 
 ::: {.callout-tip}
-### A friendly note from your friendly co-instructor Meg
+### A friendly note from your friendly co-instructor [Meg](/people/staff/ellingwood-meg.qmd)
 
 Pittsburgh gets a bad rap, but I've found it to be a really fun, active, vibrant
 city! To that end, as an instructor I want you to get the most out of this

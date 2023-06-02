@@ -19,24 +19,21 @@ instructor_one:
   name: Meg Ellingwood
   name_no_title: Meg Ellingwood
   email: mellingw@andrew.cmu.edu
-  url: "https://www.cmu.edu/dietrich/statistics-datascience/people/phd/margaret-ellingwood.html"
+  url: "https://cmu-sure-2023.netlify.app/people/staff/ellingwood-meg.html"
   github: mellingwood
-  office: "FMS 317"
+  office: "PH A18A"
   contact_policy: >-
     Slack the best way to get in contact with me. I will try to respond to all course-related e-mails within 24 hours (*really*), but also remember that life can be busy and chaotic for everyone (including me!), so if I don't respond right away, don't worry!
-  appointment_url: https://calendly.com/andrewheiss/
 
 instructor_two:
   name: Shamindra Shrotriya
   name_no_title: Shamindra Shrotriya
-  email: shamindra@cmu.edu
-  url: "https://www.shamindras.com"
+  email: sshrotri@andrew.cmu.edu
+  url: "https://cmu-sure-2023.netlify.app/people/staff/shrotriya-shamindra.html"
   github: shamindras
-  office: "BH 232G"
+  office: "POS 151"
   contact_policy: >-
     E-mail is the best way to get in contact with me. I will try to respond to all course-related e-mails within 24 hours (*really*), but also remember that life can be busy and chaotic for everyone (including me!), so if I don't respond right away, don't worry!
-  appointment_url: https://calendly.com/andrewheiss/
-
 
 course:
   number: "SURE 2023"

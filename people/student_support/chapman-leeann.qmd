@@ -1,0 +1,34 @@
+---
+title: "LeeAnn Chapman"
+sortby: "Chapman, LeeAnn"
+subtitle: "SURE 2023 Program Accounting Assistant"
+image: chapman-leeann.jpg
+toc: false
+about:
+  id: person-profile
+  template: jolla
+---
+
+```{=html}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="../../index.html">Home</a></li>
+    <li class="breadcrumb-item"><a href="../../people.html">People</a></li>
+    <li class="breadcrumb-item active">Student Support</li>
+    <li class="breadcrumb-item active" aria-current="page">{{< meta title >}}</li>
+  </ol>
+</nav>
+```
+
+:::{#person-profile}
+:::
+
+## Biography
+
+Lee Ann Chapman is an Accounting Assistant in the Department of Statistics and
+Data Science. Moving back to Pittsburgh from Florida, Lee Ann joined the
+department in 2022 and works closely with the department Business Manager with
+the daily financial function of the department as well as assisting the Program
+Administrator with various departmental events throughout the year.
+
+

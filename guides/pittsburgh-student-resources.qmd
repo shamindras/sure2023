@@ -3,7 +3,7 @@ title: "Pittsburgh-based resources"
 ---
 
 ::: {.callout-tip}
-### A friendly note from your friendly Academic Advisor Glenn
+### A friendly note from your friendly Academic Advisor [Glenn](/people/student_support/clune-glenn.qmd)
 
 Welcome to Pittsburgh! This fantastic city will be your home for the
 next two months, and we want to make sure you have access to any support
