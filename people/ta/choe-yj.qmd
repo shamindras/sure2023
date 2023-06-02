@@ -12,10 +12,10 @@ about:
   links:
     - icon: github
       text: github
-      href: https://github.com/nkissel
+      href: https://github.com/yjchoe
     - icon: link
       text: website
-      href: https://nkissel.github.io/
+      href: https://yjchoe.github.io/
 ---
 
 ```{=html}
@@ -36,5 +36,5 @@ YJ Choe is a fifth-year joint Ph.D. student in Statistics and Machine Learning
 at Carnegie Mellon University, advised by Prof. Aaditya Ramdas. He is broadly
 interested in statistical machine learning, with a recent focus on sequential
 inference, game-theoretic statistics, forecast evaluation, and causal inference.
-Previously, YJ was an industry researcher working on deep learningmethods for
+Previously, YJ was an industry researcher working on deep learning methods for
 natural language processing.
