@@ -57,6 +57,7 @@ All lecture and assignment materials provided are free! There is no need to purc
 -   [Lectures](/classes/index.qmd) and [lab materials](/assignment/index.qmd) will be openly accessible via links in our [schedule](schedule.qmd).
 
 -   Additional (free!) supplementary resources can be found [here](/guides/computing-setup.qmd#sec-computing-setup-resources).  
+
 # Program Objectives
 
 As a Summer Undergraduate Research Experience (SURE), the purpose of

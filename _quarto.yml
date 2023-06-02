@@ -52,6 +52,8 @@ website:
           - file: guides/pittsburgh-student-resources.qmd
           - text: "SURE 2023 Exploring Pittsburgh"
           - file: guides/pittsburgh-fun-activities.qmd
+          - text: "SURE 2023 Website Credits"
+          - file: credits.qmd
       # - icon: slack
       #   href: "https://cmu-sure-2023.slack.com"
       #   aria-label: Slack
@@ -153,6 +155,7 @@ website:
       [Creative Commons Attribution-NonCommercial 4.0 International license (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/)
     right: |
       Made with {{< fa brands r-project >}} and [Quarto](https://quarto.org/)<br>
+      With {{< fa solid heart >}} to our [Website Credits](/credits.qmd)
 
 format:
   html:

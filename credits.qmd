@@ -1,0 +1,37 @@
+---
+title: "Website Credits"
+---
+
+This SURE 2023 website is built by leveraging tools and materials generously
+made available by members of the open source software community. We would like
+to list **some**[^1] of the key resources we utilized to create this website:
+
+
+  - This website is made with [{{\< fa brands r-project
+    \>}}](https://cran.r-project.org/) and [Quarto](https://quarto.org/). Both
+    are incredible data science resources, with a rich and generous open source
+    community.
+  
+  - [Prof. Andrew Heiss](https://www.andrewheiss.com/) and his [openly
+  available](https://github.com/andrewheiss/compasp23.classes.andrewheiss.com)
+  quarto website source files for the [PMAP 8441
+  course](https://compasp23.classes.andrewheiss.com/). This is an extremely
+  elegant use of [quarto](https://quarto.org/) to build a highly scalable
+  academic course website. We were able to adapt it directly for our specific
+  contents. We are so grateful to Prof. Heiss for sharing his materials openly
+  for others (i.e., us!) to benefit.
+
+- We are grateful to the [Affcom Lab](https://affcom.ku.edu/) for making their
+  quarto website source files [available
+  openly](https://github.com/andrewheiss/compasp23.classes.andrewheiss.com).
+  In particular we directly utilized their [staff page
+  template](https://affcom.ku.edu/people.html) to build our [team
+  page](/people.qmd).
+  
+- Our website hex sticker logo was generously made by [Quang
+  Nguyen](/people/ta/nguyen-quang.qmd) based on the source logo shared with us
+  by Samantha Nielsen (CMU).
+
+[^1]: Trying to list **every** possible resource is a [sisyphean
+task](https://en.wikipedia.org/wiki/Sisyphus), which we won't attempt to do
+here.
