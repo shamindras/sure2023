@@ -1,0 +1,58 @@
+---
+title: "Syllabus"
+---
+
+```{r setup, message=FALSE, warning=FALSE, include=FALSE}
+library(dplyr)
+library(tibble)
+library(pander)
+```
+
+<!-- :::: {.grid .course-details .course-details-smaller} -->
+
+<!-- ::: {.g-col-6} -->
+<!-- ### Instructor -->
+
+<!-- - {{< fa user >}} &nbsp; [{{< var instructor.name >}}]({{< var instructor.url >}}) -->
+<!-- - {{< fa university >}} &nbsp; {{< var instructor.office >}} -->
+<!-- - {{< fa envelope >}} &nbsp; <a href="mailto:{{< var instructor.email >}}">{{< var instructor.email >}}</a> -->
+<!-- - {{< fa brands twitter >}} &nbsp; [{{< var instructor.twitter >}}](https://www.twitter.com/{{< var instructor.twitter >}}) -->
+<!-- - {{< fa calendar-check >}} &nbsp; [Schedule an appointment]({{< var instructor.appointment_url >}}) -->
+<!-- ::: -->
+
+<!-- ::: {.g-col-6} -->
+<!-- ### Course details -->
+
+<!-- - {{< fa calendar >}} &nbsp; {{< var course.days >}} -->
+<!-- - {{< fa calendar-alt >}} &nbsp; {{< var course.dates >}} -->
+<!-- - {{< fa clock >}} &nbsp; {{< var course.time >}} -->
+<!-- - {{< fa location-dot >}} &nbsp; {{< var course.location >}} -->
+<!-- ::: -->
+
+<!-- :::: -->
+
+
+## Course objectives
+
+TODO: Add details here
+
+- **Critically assess research** about healthcare and sports data science.
+- **Conduct your own research** on issues in healthcare or sports data science.
+
+
+## Course materials
+
+There is no textbook for this class, and all of the readings are free (!!). 
+
+::: {.callout-warning}
+### Don't buy anything!
+
+**Do not purchase any articles for this class—all readings are freely accessible on iCollege.**
+:::
+
+
+## Attendance and participation
+
+You're expected to come to class each Tuesday prepared, having (1) carefully read the material and (2) completed the weekly reading report.
+
+Attendance and participation are *crucial* to your success in this course. However, we're in the middle of a deadly global pandemic and *so many people* are getting sick. If you are sick or are incapable of participating meaningfully in class (e.g. you have stayed up all night and are going to fall asleep in class), please stay home.

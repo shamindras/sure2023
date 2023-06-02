@@ -194,7 +194,7 @@ library(tidyverse)
 
 ---
 
-# Resources
+# Resources {#sec-computing-setup-resources}
 
 Here are some selected resources by the teaching staff for getting started with
 `R` and data science. **Clicking on the contained thumbnail images** will direct
