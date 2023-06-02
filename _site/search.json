@@ -1,0 +1,856 @@
+[
+  {
+    "objectID": "assignment/index.html",
+    "href": "assignment/index.html",
+    "title": "Assignments",
+    "section": "",
+    "text": "There are two main forms of assignments in the SURE 2023 program, namely:\nSome additional details on both are provided below. You can view all assignment materials by navigating the links in the left sidebar, or via the schedule."
+  },
+  {
+    "objectID": "assignment/index.html#demo-labs",
+    "href": "assignment/index.html#demo-labs",
+    "title": "Assignments",
+    "section": "Demo-labs",
+    "text": "Demo-labs\nWe also provide you demo-lab materials for you to test out your understanding of the course content. They are usually released once or twice a week, as per the schedule. Completing these demo-labs is strongly recommended to help you reinforce the material. There is no grading involved here, just learning. So don’t hesitate to reach out to your fellow peers, TA Advisors, and course instructors for help."
+  },
+  {
+    "objectID": "assignment/index.html#research-project-deliverables",
+    "href": "assignment/index.html#research-project-deliverables",
+    "title": "Assignments",
+    "section": "Research project deliverables",
+    "text": "Research project deliverables\nAs noted in our syllabus and schedule the only deliverables you have are your final (Optum or CMSAC) research project report, poster, and presentation.\n\n\n\n\n\n\nResearch project deliverables\n\n\n\nWe reemphasize that the research project won’t be formally graded. However your three research deliverables will be presented by you to various important (executive) stakeholders in healthcare (Optum) and the sports (CMSAC) data science community.\nSo it is in your best interest to put your best foot forward, since it will be of great benefit for your future data science career!\n\n\nYou can view all assignment materials by navigating the links in the left sidebar, or via the schedule."
+  },
+  {
+    "objectID": "assignment/optum-project-guidelines.html",
+    "href": "assignment/optum-project-guidelines.html",
+    "title": "Optum Research Project Specification",
+    "section": "",
+    "text": "“The impact of race, social and demographic factors on health, survival, and mortality.”\nThe motivation and purpose for the 2023 Optum project is to highlight the issues and external factors that impact people’s mental and physical health, which ultimately determine the quality of one’s life. This project will example opportunities to improve disparities by identifying social, racial, demographic factors that impact and predict quality of mental and physical health.\n\n\nEach student has been allocated into a project team (of up to 4 students). Each project team has been assigned a specific project research topic using the above general theme as a prompt. Your goal is to complete the required project deliverables for your assigned project, in accordance with the guidelines detailed in the remainder of this document."
+  },
+  {
+    "objectID": "assignment/optum-project-guidelines.html#project-theme",
+    "href": "assignment/optum-project-guidelines.html#project-theme",
+    "title": "Optum Research Project Specification",
+    "section": "",
+    "text": "“The impact of race, social and demographic factors on health, survival, and mortality.”\nThe motivation and purpose for the 2023 Optum project is to highlight the issues and external factors that impact people’s mental and physical health, which ultimately determine the quality of one’s life. This project will example opportunities to improve disparities by identifying social, racial, demographic factors that impact and predict quality of mental and physical health.\n\n\nEach student has been allocated into a project team (of up to 4 students). Each project team has been assigned a specific project research topic using the above general theme as a prompt. Your goal is to complete the required project deliverables for your assigned project, in accordance with the guidelines detailed in the remainder of this document."
+  },
+  {
+    "objectID": "assignment/optum-project-guidelines.html#project-deliverables",
+    "href": "assignment/optum-project-guidelines.html#project-deliverables",
+    "title": "Optum Research Project Specification",
+    "section": "Project deliverables",
+    "text": "Project deliverables\nThis project has the following three key deliverables, due in the final week (starting 07/241):\n\nReproducible project report\n\nThis report is to be written as either an Rmarkdown or a quarto markdown file.\nSubmitted as rendered pdf and html output formats.\nThe report must comply with the rubric provided.\n\nProject poster\n\nRequired to be an A2 landscape size.\nSubmitted as a pdf output format, and a printed copy for the poster session.\n\nProject slide deck and presentation\n\nExecutive pdf output summary of key poster results (maximum 5 slides).\nUsed in a 5 minute presentation by the entire team on the final day.\n\n\nIt is important to know that the project poster is summarized directly from the project report, and the slide deck further summarizes the key insights from both the project report and poster. The project report thus contains all of the detailed reproducible analysis for your research question. However you are expected (and advised) to work on both the project report and poster concurrently to meet the weekly project milestones.\nAll three project deliverables must only use open data (see data guidelines), and will be publicly linked on our showcase website. The project report analysis must be made available online. It must be fully reproducible and developed only using open source software as taught in the course."
+  },
+  {
+    "objectID": "assignment/optum-project-guidelines.html#benefits-of-the-program",
+    "href": "assignment/optum-project-guidelines.html#benefits-of-the-program",
+    "title": "Optum Research Project Specification",
+    "section": "Benefits of the Program",
+    "text": "Benefits of the Program\nThese three deliverables are designed to be openly accessible research projects. The main benefits to you in completing them successfully include (but are not limited to) the following:\n\nNetworking opportunities: you will actively present your poster and slides to Optum Executives and CMU Statistics & Data Science faculty.\nBuilding a public data science portfolio: your report, poster, and slide deck will be publicly shared as part of our program showcase.\nDeveloping marketable skills: the project involves collaborative software skills essential to industry and academia (version control, reproducibility), in addition to the statistical techniques you learn. Most importantly, you will practice communicating your work to a broad audience.\n\nProducing high quality project deliverables is an ideal way to broadcast your research for future health and data science related job-search purposes. So please put your best foot forward!"
+  },
+  {
+    "objectID": "assignment/optum-project-guidelines.html#research-topic-guidelines",
+    "href": "assignment/optum-project-guidelines.html#research-topic-guidelines",
+    "title": "Optum Research Project Specification",
+    "section": "Research Topic Guidelines",
+    "text": "Research Topic Guidelines\nUsing the general project theme and the required data guidelines, your project team has been assigned to one of the following 4 research topics.\n\nFinal Research Topics\n\nPremature deaths.\n\nTA Advisor: Akshay Prasadan\nDo income inequality, unemployment and high school completion rates affect the number of premature deaths of certain racial groups at the county level?\n\nPreventable hospital stays:\n\nTA Advisor: Beomjo Park\nDo income inequality, unemployment and high school completion rates affect the number of preventable hospital stays of certain racial groups at the county level?\n\nMental health:\n\nTA Advisor: YJ Choe\nDo the number of mental health professionals per county affect the number of poor mental health days?\n\nDrug overdose alcohol related deaths:\n\nTA Advisor: Alec McClean\nAre there demographic and social factors that are predictors of drug overdose, alcohol-related incidents (e.g., driving accidents)?\n\n\n\n\nExploratory and Predictive modeling\nIn preparing your three project deliverables, you should focus on both:\n\nExploratory analysis: Create visualizations to explore the underlying structure of key demographics and social determinants in the data, gaining insight about distributions and relationships between variables. These should be ideally based on reasoned hypotheses by the team.\nPredictive modeling: Are there demographic and social determinants, access to care factors that are predictors of physical and emotional health. These could be the outcome of carefully applied predictive models."
+  },
+  {
+    "objectID": "assignment/optum-project-guidelines.html#data-guidelines",
+    "href": "assignment/optum-project-guidelines.html#data-guidelines",
+    "title": "Optum Research Project Specification",
+    "section": "Data Guidelines",
+    "text": "Data Guidelines\n\nRequired: County Health Rankings Data\nIn order to complete this project successfully, you must utilize (and appropriately cite) relevant datasets as detailed below:\n\nRequired data source: The County Health Rankings Data\nThe County Health Rankings Data as collected by the University of Wisconsin Population Health Institute, ranks every county in each state on their Health Outcomes and Health Factors. This dataset also contains the measurements used to calculate the rankings for each county.\nWe recommend reading the background information and video explainers for details.\nIn particular you must (at minimum) utilize the 2023 ranking measures which can provide more insight into the most recent health ranking outcomes priorities. This can be used to better shape your project topic and related hypotheses.\nYour analysis should mainly be done at the entire United States scale (as feasible). However you are welcome to focus on some specific counties/states to test more granular spatial hypotheses.\nAll data used must be publicly available. Any personally identifiable data, or data that is not openly accessible must be removed from your project deliverables before submission.\n\n\n\nOptional: Additional Suggestions and Data Sources\nThe following are some additional guidelines and data sources which you can consider during the course of your project analysis:\n\nThe County Health Rankings Data are typically collected over time.\n\nConsider doing a temporal or trend analysis for your analyses.\nFor predictive modeling consider adding time-varying features or forecasting an outcome, with suitable uncertainty quantification.\n\nConsider whether this County Health Rankings Data can be augmented with other publicly available datasets, over the time periods.\n\nConsider spatiotemporally merging on US Census, or COVID19 data to the County Health Rankings Data.\nSuch data is publicly accessible in R using the {tidycensus} and {covidcast} packages, for example.\nWe note that the County Health Rankings Data is a requirement, but these optional augmented datasets can help you test, and sharpen your hypotheses for some of the collected ranking metrics across US Counties."
+  },
+  {
+    "objectID": "assignment/optum-project-guidelines.html#project-logistics",
+    "href": "assignment/optum-project-guidelines.html#project-logistics",
+    "title": "Optum Research Project Specification",
+    "section": "Project Logistics",
+    "text": "Project Logistics\n\nProject Teams and TA advisor\n\nBased on your pre-course Optum survey topic preferences, each student has been assigned to a project team of (up to) four students.\nYour project team has already been assigned to a research topic.\nYou will maintain this assigned team structure and project topic throughout the program.\nTA Advisor: Your project team will be assigned a TA advisor. Your assigned TA advisor will be your project teams’ primary point of contact throughout the program.\nAll students however are expected to do the majority of the project work together, including collecting datasets, formulating hypotheses, EDA, and predictive modeling etc.\nThe TA advisor will help project guidance and mentorship and mainly help resolve any high level technical issues during your project work.\nAll “project-lab” activities throughout the program will involve meeting with your assigned project team members and typically the TA advisor.\nIt is important for your team members to meet during the assigned times and ensure that you meet the weekly project milestones.\nStudent teams are encouraged to meet during free times during the workday, outside of lectures to continue making progress on the final project.\n\n\n\n\n\n\nProject Milestones\nThese project milestones are to be met the Friday of each week. During your Friday project lab session, the head instructor (Shamindra Shrotriya) will briefly meet with your project team and your TA advisor. During this meeting, you will provide quick progress update on that weeks’ project milestones, as detailed below:\n\nWeek 1:\n\nMeet your team and TA advisor.\nStart to understand your topic of interest and start noting formulating specific hypotheses.\nYour TA advisor will help you set up a collaboration workflow (e.g., Dropbox, Github).\nSet up the project report document as either a Rmarkdown or a quarto markdown file, and start populating it.\n\nWeek 2:\n\nFormulate initial key hypotheses with TA advisor.\nSource initial datasets and read them into R.\nDo some basic exploratory data analysis (EDA), i.e., produce some summary plots and update your project report. This may change, but keep adding in findings.\nTA Advisor to set up an overleaf project poster file for the team. Must be A2 landscape format. Your team can use other formats per your preference.\nStart also populating some poster sections like the introduction, data sources, and placeholder for the conclusion. Mirror these from your project report.\nYour project report and poster should be done concurrently to save time!\n\nWeek 3:\n\nMore hypotheses should be tested and introduction, data sources section should be finalized in both the project report and project poster.\nAdditional exploratory plot with commentary should be finalized in both the project report and project poster.\nCarefully list assumptions, not just insights when summarizing any findings.\nStart preparing predictive modeling questions of interest and source some datasets in R to help answer the questions.\n\nWeek 4:\n\nAdditional exploratory plots with commentary should be finalized in both the project report and project poster.\nPredictive models should be run. Check which predictors provide most explanatory power for the outcome. Note down key assumptions and data limitations as you draft your report and poster findings.\n\nWeek 5:\n\nRefine your predictive models. Draft predictive questions section in the poster, including question, data, and methodology used. Explain your model and variable selection procedures used.\nReport should be drafted at this stage, similar to the poster.\n\nWeek 6:\n\nPolish the report and poster. Ensure that you can generate pdf and html files for the report submission.\nCreate a basic slide deck and summarize main results. This should be a quarto markdown reveal.js document, as taught in the course lectures.\nYou will have only 5 minutes for your presentation, so it should be a maximum of 5 slides.\n\nWeek 7:\n\nOptum HQ visit 07/17 to 07/20 (inclusive).\nNot much work to do this week.\nJust keep polishing the report and poster session in the background on the Friday project-lab.\n\nWeek 8:\n\nSubmit your project poster pdf by 07/27 to allow for printing.\nSubmit your project report pdf and html files by 07/27.\nSubmit your project slide deck pdf by 07/27."
+  },
+  {
+    "objectID": "assignment/optum-project-guidelines.html#footnotes",
+    "href": "assignment/optum-project-guidelines.html#footnotes",
+    "title": "Optum Research Project Specification",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nDetails on deliverable due dates will be announced after semester starts. Stay tuned!↩︎"
+  },
+  {
+    "objectID": "assignment/report-writing-guideline.html",
+    "href": "assignment/report-writing-guideline.html",
+    "title": "SURE 2023: Report Writing Guideline",
+    "section": "",
+    "text": "This guideline1 is intended to include elements necessary for a successful report applying statistical methods to answer research questions using real data. It cannot, however, list every element required to make a well-written, convincing, and comprehensive report."
+  },
+  {
+    "objectID": "assignment/report-writing-guideline.html#footnotes",
+    "href": "assignment/report-writing-guideline.html#footnotes",
+    "title": "SURE 2023: Report Writing Guideline",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nWe thank Prof. Alex Reinhart for sharing these guidelines with us. They were originally developed by the teaching staff for the Undergraduate Advanced Data Analysis course (36-402), as taught at CMU.↩︎"
+  },
+  {
+    "objectID": "class/01-class.html",
+    "href": "class/01-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/01-class.html#slides",
+    "href": "class/01-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/02-class.html",
+    "href": "class/02-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/02-class.html#slides",
+    "href": "class/02-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/03-class.html",
+    "href": "class/03-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/03-class.html#slides",
+    "href": "class/03-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/04-class.html",
+    "href": "class/04-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/04-class.html#slides",
+    "href": "class/04-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/05-class.html",
+    "href": "class/05-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/05-class.html#slides",
+    "href": "class/05-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/06-class.html",
+    "href": "class/06-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/06-class.html#slides",
+    "href": "class/06-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/08-class.html",
+    "href": "class/08-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/08-class.html#slides",
+    "href": "class/08-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/09-class.html",
+    "href": "class/09-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/09-class.html#slides",
+    "href": "class/09-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/10-class.html",
+    "href": "class/10-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/10-class.html#slides",
+    "href": "class/10-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/11-class.html",
+    "href": "class/11-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/11-class.html#slides",
+    "href": "class/11-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/12-class.html",
+    "href": "class/12-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/12-class.html#slides",
+    "href": "class/12-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/13-class.html",
+    "href": "class/13-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/13-class.html#slides",
+    "href": "class/13-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/14-class.html",
+    "href": "class/14-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/14-class.html#slides",
+    "href": "class/14-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/15-class.html",
+    "href": "class/15-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/15-class.html#slides",
+    "href": "class/15-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/16-class.html",
+    "href": "class/16-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/16-class.html#slides",
+    "href": "class/16-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/17-class.html",
+    "href": "class/17-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/17-class.html#slides",
+    "href": "class/17-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/18-class.html",
+    "href": "class/18-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/18-class.html#slides",
+    "href": "class/18-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/19-class.html",
+    "href": "class/19-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/19-class.html#slides",
+    "href": "class/19-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/20-class.html",
+    "href": "class/20-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/20-class.html#slides",
+    "href": "class/20-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/21-class.html",
+    "href": "class/21-class.html",
+    "title": "Introduction and Welcome to SURE 2123",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/21-class.html#slides",
+    "href": "class/21-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2123",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/22-class.html",
+    "href": "class/22-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/22-class.html#slides",
+    "href": "class/22-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/23-class.html",
+    "href": "class/23-class.html",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/23-class.html#slides",
+    "href": "class/23-class.html#slides",
+    "title": "Introduction and Welcome to SURE 2023",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "class/index.html",
+    "href": "class/index.html",
+    "title": "Lectures and Readings",
+    "section": "",
+    "text": "Each lecture in the left sidebar contains the relevant pdf slides, and some additional useful resources for you to deeply explore a lecture topic. We will continually update any additional resources (e.g., youtube links, articles, blog post tutorials etc.) for a given lecture as needed. So please keep checking back in regularly throughout the program.\n\n\n\n\n\n\nGive us tips!\n\n\n\nYou are also welcome to suggest new resources (links) for us to include for a given topic page. We’re always keen to grow the body of knowledge contained in the lectures throughout the program.\n\n\nYou can view all lecture materials by navigating the links in the left sidebar, or via the schedule."
+  },
+  {
+    "objectID": "code-of-conduct.html",
+    "href": "code-of-conduct.html",
+    "title": "Code of Conduct",
+    "section": "",
+    "text": "Students participating in our Summer Undergraduate Research Experience (SURE) here at Carnegie Mellon are to consider themselves part of the Carnegie Mellon academic community and are expected to meet and maintain the highest personal and professional ethics and conduct.\nWe are committed to cultivating a transformative and educational experience, as well as safeguarding personal health and well-being. We require students to act with personal and intellectual integrity, to speak honestly, and to treat themselves and others with the utmost respect.\nStudents participating in the program are expected to:\n\nRespect the rights of your instructors, assistants and other staff, as well as your peers\nPromote the health and safety of all members of our diverse community\nTreat others with honesty and fairness\nParticipate in the program with the highest level of professionalism and motivation to learn\nRespect the property of others as well as that of Carnegie Mellon\nUnderstand and abide by all Carnegie Mellon community standards as well as all local, state, and federal laws\nAttend, be on time for, and actively participate in all program sessions.\n\nAll participating students are expected to have timely attendance and to participate in all mandatory program sessions, including all in-person, virtual, and group activities. All students are expected to be present, prepared, and ready to actively engage in each session. Student engagement is central to the program and pivotal to the overall success of the summer experience.\n\nIf you believe you will need to be absent for an upcoming session for any reason (illness, personal reasons, etc.), you will need to contact your Summer Program Director and Program Advisor as proactively as possible to communicate any potential absences.\nPlease note: extended and/or unexcused absences may incur potential consequences, up to and including dismissal from the program and the termination of your stipend\n\nThe Statistics & Data Science department and Carnegie Mellon prohibits conduct that creates a hostile environment for faculty, staff, students, or other parties. Examples include:\n\nDisrespect toward an instructor, peer, or other members of the Statistics & Data Science community\nAbusive, intimidating, hostile or obscene language, gestures, or behavior\nAny kind of discrimination or harassment that would create a hostile or abusive environment for any member of our community\nAny kind of unwelcome coercive, exploitive, or other forms of prohibited sexual misconduct\n\nAny form of sexual misconduct will not be tolerated by the program. All participating students are expected to read and become familiar with Carnegie Mellon’s sexual misconduct policies and will be expected to abide by them beginning the your first day here. All students are subject to CMU’s Title IX office policies and procedures as well as any related potential disciplinary action.\nIf students need any kind of support or assistance during their time here, please contact one of the following SURE 2023 staff:\n\nGlenn Clune: SURE Academic Advisor Email: gclune@andrew.cmu.edu Office Location: Baker Hall 132L In office: Monday & Tuesday\nTeraya White: SURE Academic Advisor Email: terayaw@andrew.cmu.edu\nJamie McGovern: SURE Program Director Email: jamiemcg@andrew.cmu.edu\n\nWhen all members of the community uphold these values, we are able to provide a formative and collaborative experience for all summer program participants."
+  },
+  {
+    "objectID": "guides/computing-setup.html",
+    "href": "guides/computing-setup.html",
+    "title": "Computing Setup",
+    "section": "",
+    "text": "Welcome to the Summer Undergraduate Research Experience (SURE) 2023 hosted by the Department of Statistics & Data Science at Carnegie Mellon University. We are excited to guide you through exciting topics in statistics and data science, focusing on applications in sports and health analytics.\nTo get you started, please complete our step-by-step instructions for setting up the common tools that you will use throughout the program."
+  },
+  {
+    "objectID": "guides/computing-setup.html#step-1-install-r",
+    "href": "guides/computing-setup.html#step-1-install-r",
+    "title": "Computing Setup",
+    "section": "Step 1: Install R",
+    "text": "Step 1: Install R\n\n\n\n\n\n\nInstall R\n\n\n\n\n\n(Note that the following instructions apply to the latest R version (4.3.0) as of May 31, 2023)\nClick on DOWNLOAD AND INSTALL R. This will direct you to the CRAN (Comprehensive R Archive Network) website.\nmacOS\n\nClick on Download R for macOS.\nChoose the .pkg file suitable for your Mac (Apple silicon (M1/M2) Macs or older Intel Macs.)\nOpen the .pkg file after the download is complete.\nFollow the installation instructions.\n\nWindows\n\nClick on Download R for Windows.\nClick on install R for the first time (on the same line as the base subdirectory.)\nChoose Download R 4.3.0 for Windows.\nOpen the .exe file after the download is complete.\nFollow the installation instructions."
+  },
+  {
+    "objectID": "guides/computing-setup.html#step-2-install-rstudio",
+    "href": "guides/computing-setup.html#step-2-install-rstudio",
+    "title": "Computing Setup",
+    "section": "Step 2: Install RStudio",
+    "text": "Step 2: Install RStudio\n\n\n\n\n\n\nImportant\n\n\n\nR must be installed before RStudio.\n\n\n\n\n\n\n\n\nInstall RStudio\n\n\n\n\n\nClick on DOWNLOAD RSTUDIO DESKTOP… Your operating system is automatically detected. (If your OS is not correctly detected, scroll down and choose the right version for your system.)\nmacOS\n\nOpen the .dmg file after the download is complete.\nDrag and drop it to your Applications folder.\n\nWindows\n\nOpen the .exe file after the download is complete.\nFollow the installation instructions.\n\nOpen RStudio once the installation is finished. You should get something similar to the image below. We will run a few commands later in the Console pane, which is located on the bottom left corner and highlighted in red."
+  },
+  {
+    "objectID": "guides/computing-setup.html#step3",
+    "href": "guides/computing-setup.html#step3",
+    "title": "Computing Setup",
+    "section": "Step 3: Check R and RStudio installations",
+    "text": "Step 3: Check R and RStudio installations\nNext, we run a quick check to verify that everything looks right after installations,\n\n\n\n\n\n\nPost-installation check\n\n\n\n\n\nOpen RStudio and type in the following command in the Console pane on the bottom left.\n\nversion\n\nThis will print out the current version of R on your machine. The output should look similar to what shown below (the first 4 lines might be different, depending on your operating system.)\n\n\n               _                           \nplatform       x86_64-apple-darwin20       \narch           x86_64                      \nos             darwin20                    \nsystem         x86_64, darwin20            \nstatus                                     \nmajor          4                           \nminor          3.0                         \nyear           2023                        \nmonth          04                          \nday            21                          \nsvn rev        84292                       \nlanguage       R                           \nversion.string R version 4.3.0 (2023-04-21)\nnickname       Already Tomorrow            \n\n\nThe following gif shows what it looks like in action."
+  },
+  {
+    "objectID": "guides/computing-setup.html#step-4-install-required-packages",
+    "href": "guides/computing-setup.html#step-4-install-required-packages",
+    "title": "Computing Setup",
+    "section": "Step 4: Install required packages",
+    "text": "Step 4: Install required packages\nWe suggest that you install the following minimal set of R packages which are needed to get started with SURE 2023. We will recommend more packages for you to install as we progress through the program.\n\n\n\n\n\n\nPackage installation\n\n\n\n\n\nIn R, a package is a collection of functions, data and compiled code. In addition to a set of built-in base packages, there are numerous external R packages written by the community to add specific functionality.\nTo get started with SURE 2023, you will need to install a minimal set of packages. Again, open RStudio and type in the following command in the Console pane on the bottom left (refer to the gif in Step 3 for how to access the RStudio Console pane).\n\nrec_packages &lt;- c(\"tidyverse\", \"styler\", \"xaringan\", \"xaringanthemer\", \n                  \"xaringanExtra\", \"tidymodels\")\ninstall.packages(rec_packages)\n\nWe can verify successful package installation, e.g., for the tidyverse, which is arguably the most popular R package for data science. To do this, run the following command in the RStudio Console pane.\n\nlibrary(tidyverse)\n\nYou should get a message similar to the output below.\n\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.0     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.1     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.1     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors"
+  },
+  {
+    "objectID": "guides/computing-setup.html#books",
+    "href": "guides/computing-setup.html#books",
+    "title": "Computing Setup",
+    "section": "Books",
+    "text": "Books\n\n\n\n\n\n\nR for Data Science\n\n\n\n\n\n\n\n\n\n\nA great introduction to doing data science in R. It provides a thorough overview of basic data science tasks, most notably data tidying, wrangling, and visualization with the tidyverse.\n\n\n\n\n\n\n\n\n\nModern Data Science with R\n\n\n\n\n\n\n\n\n\n\nAnother good introductory book for data science. It contains a wide array of topics, including a chapter on data science ethics and special topics on geospatial data.\n\n\n\n\n\n\n\n\n\nAn Introduction to Statistical Learning\n\n\n\n\n\n\n\n\n\n\nA simple introduction to statistical machine learning without much technical detail. It covers modeling concepts that we will be discussing in this program such as classification, regression, variable selection, clustering, and tree-based methods."
+  },
+  {
+    "objectID": "guides/computing-setup.html#websites",
+    "href": "guides/computing-setup.html#websites",
+    "title": "Computing Setup",
+    "section": "Websites",
+    "text": "Websites\n\n\n\n\n\n\nggplot2 references\n\n\n\n\n\n\n\n\n\n\nFeaturing ggplot2 cheatsheet, function documentations, FAQs, and extensions.\n\n\n\n\n\n\n\n\n\nGood coding style\n\n\n\n\n\n\n\n\n\n\nThe tidyverse style guide is a great reference for good coding style. It is supported by the styler package in R. The figure above provides a simple demonstration for code formatting with styler, taken from the package site."
+  },
+  {
+    "objectID": "guides/computing-setup.html#videos",
+    "href": "guides/computing-setup.html#videos",
+    "title": "Computing Setup",
+    "section": "Videos",
+    "text": "Videos\n\n\n\n\n\n\nDavid Robinson’s TidyTuesday screencasts\n\n\n\n\n\n\n\n\n\n\nEach video is a detailed walk-through on how to approach, clean, summarize, visualize, and analyze a dataset provided by the TidyTuesday project. Useful R tips and tricks are often offered. For context, TidyTuesday releases a weekly dataset, aiming to promote data analysis with the tidyverse suite of packages. Numerous examples of TidyTuesday contributions (e.g., visualizations) can be found under the #TidyTuesday Twitter hashtag."
+  },
+  {
+    "objectID": "guides/pittsburgh-fun-activities.html",
+    "href": "guides/pittsburgh-fun-activities.html",
+    "title": "Fun activities to do in Pittsburgh",
+    "section": "",
+    "text": "A friendly note from your friendly co-instructor Meg\n\n\n\nPittsburgh gets a bad rap, but I’ve found it to be a really fun, active, vibrant city! To that end, as an instructor I want you to get the most out of this program, both academically and personally, so I’ve compiled a list of fun activities that you could try if you find yourself bored in the evenings or on the weekends. Note that it may be a bit biased. I haven’t tried/visited each of these things, but the ones I haven’t done myself still come highly recommended from friends in town. I hope you can get out there and do some cool stuff!\n–Meg\n\n\n\nIf you’re into sports\nPittsburgh sports are awesome (regardless of how well the teams may or may not be doing in their respective seasons…). It’s a big deal here. Also, fun fact, the city requires all professional teams to have Black & Gold as their colors.\n\nPittsburgh Pirates (MLB)\n\nArguably one of the most beautiful stadium views in baseball (looks out over downtown PGH)\nTickets usually quite accessible, compared to other MLB teams, can be found here\n\nPittsburgh Riverhounds SC (USL Championship)\n\nFirst-tier experience for second-tier prices, find tickets here\n\nPittsburgh Steelers (NFL, out of season)\nPittsburgh Penguins (NHL, out of season)\n\n\n\nIf you love nature\n\nPhipps Conservatory\n\nBeautiful botanical gardens just a stone’s throw away from campus\nLots of cool events, see the website for details\n\nFrick Park\n\nFantastic walking/running trails, great hammock spots\nHonestly feels like you’ve escaped to the wilderness but you’re still in Pittsburgh\n\nSchenley Park\n\nEven closer to campus than Frick, somewhat smaller but equally beautiful\nThe sunset over Flagstaff Hill is just *chef’s kiss*\n\nThree Rivers Heritage Trail\n\nPaved trail for walking/running/biking\nCan be accessed from various points around the city, I usually go to the Southside Riverfront Park for long runs\n\n\n\n\nIf you like culture\n\nCarnegie Library\n\nA whole network of libraries across the city, but it’s main location is at the Museum on Forbes (see below)\nLots of events available, and just a cool spot\n\nCarnegie Museum\n\nActually four museums, including the Museum of Art, Museum of Natural History, Science Center, and the Andy Warhol Museum\nI can personally vouch for the Science Center being really fun, but I’ve heard the others are quite cool as well, and a few of them are walking distance from campus\n\nVarious festivals\n\nYou can find a list of annual events here– Picklesburgh is a personal favorite!\nThere are also plenty of nice farmers markets to check out\n\n\n\n\nGenerally cool areas to explore\n\nStrip District\n\nSpecialty grocery stores (Korean, Mexican, Italian, etc.)\nRestaurants, coffee shops, various other food-related activities\n\nDowntown (Dahntahn)\n\nPoint State Park sits at the confluence of the Allegheny and Monongahela\nThe Duquesne Incline is a classic Pittsburgh tourist activity\n\nLawrenceville (Butler St.), Shadyside (Walnut St.), Squirrel Hill (Murray Ave)\n\nNeighborhoods with some nice shopping/restaurant areas\n\nSome restaurants that I recommend (again, biased, not exhaustive)\n\nKiin Lao (prev. Bangkok Balcony, Squirrel Hill)\nUdipi (Monroeville, very far but so delicious, no online presence whatsoever)\nStack’d (Oakland, custom burgers, very close to campus)\nIron Born Pizza (Detroit-style, which I did not know existed, good delivery option)"
+  },
+  {
+    "objectID": "guides/pittsburgh-student-resources.html",
+    "href": "guides/pittsburgh-student-resources.html",
+    "title": "Pittsburgh-based resources",
+    "section": "",
+    "text": "A friendly note from your friendly Academic Advisor Glenn\n\n\n\nWelcome to Pittsburgh! This fantastic city will be your home for the next two months, and we want to make sure you have access to any support systems you may need during that time. We hope that you’ll be able to get everything possible out of the SURE program, so these resources should help alleviate any stress that could arise elsewhere. We’ve collated the following list of Pittsburgh-based resources to assist you, should you have need during the program.\n–Glenn"
+  },
+  {
+    "objectID": "guides/pittsburgh-student-resources.html#sponsored-cmu-id",
+    "href": "guides/pittsburgh-student-resources.html#sponsored-cmu-id",
+    "title": "Pittsburgh-based resources",
+    "section": "Sponsored CMU ID",
+    "text": "Sponsored CMU ID\nA CMU sponsored ID is an optional, additional expense for students that can provide the following:\n\nGeneral building access\nFitness Center Access (classes not included)\nLibrary access & borrowing of books\nCMU campus shuttles & escort services\n\nPlease note that Pittsburgh Bus Transit is not included"
+  },
+  {
+    "objectID": "guides/pittsburgh-student-resources.html#pittsburgh-bustransit-pass",
+    "href": "guides/pittsburgh-student-resources.html#pittsburgh-bustransit-pass",
+    "title": "Pittsburgh-based resources",
+    "section": "Pittsburgh Bus/Transit Pass",
+    "text": "Pittsburgh Bus/Transit Pass\nIf you would like to utilize public transit to get from your program housing to campus, or to explore what Pittsburgh has to offer, please see the below links for more information:\n\nCurrent Bus Fares\nGetting a bus/fare pass\nPersonally, I recommend both Google Maps (for optimal mapping and outlining of routes) and the Transit app (for real-time tracking of busses) to coordinate bus plans"
+  },
+  {
+    "objectID": "guides/pittsburgh-student-resources.html#medicalwellness-resources",
+    "href": "guides/pittsburgh-student-resources.html#medicalwellness-resources",
+    "title": "Pittsburgh-based resources",
+    "section": "Medical/Wellness Resources",
+    "text": "Medical/Wellness Resources\nIf you find yourself in need of physical, mental, or emotional attention, please utilize these local institutions for assistance:\n\nUPMC Urgent Care Shadyside\n\n5231 Centre Ave, Pittsburgh, PA 15232\n412-623-4114\n\nUPMC Presbyterian Hospital\n\n200 Lothrop St, Pittsburgh, PA 15213\n412-755-2307\n\nAllegheny Health Network Emergency Care Brentwood\n\n3290 Saw Mill Run Blvd, Brentwood, PA 15227\n\nResolve Crisis Services\n\n333 North Braddock Ave, Pittsburgh, PA 15213\n1-888-796-8226\n\nAllies for Health and Well-Being\n\nMedical support and community-based resources for individuals living with or at risk for HIV, viral hepatitis, and other sexually transmitted infections\nLocal support and resources for members of the LGBTQ community"
+  },
+  {
+    "objectID": "guides/pittsburgh-student-resources.html#food-insecurity",
+    "href": "guides/pittsburgh-student-resources.html#food-insecurity",
+    "title": "Pittsburgh-based resources",
+    "section": "Food Insecurity",
+    "text": "Food Insecurity\nIf you find yourself struggling with having enough food to get through your time here, please contact the following resource for assistance:\n\nGreater Pittsburgh Community Food Bank 412-460-3663 ext. 655"
+  },
+  {
+    "objectID": "guides/pittsburgh-student-resources.html#finding-a-faith-community",
+    "href": "guides/pittsburgh-student-resources.html#finding-a-faith-community",
+    "title": "Pittsburgh-based resources",
+    "section": "Finding a Faith Community",
+    "text": "Finding a Faith Community\nIf you are part of a religious community and want to find a local community during your\ntime here, please use the following resource to find a faith community:\n\nCMU Council of Religious Advisors"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "\n            SURE 2023\n        ",
+    "section": "",
+    "text": "SURE 2023\n        \n        \n            Explore cutting-edge statistics and data science methodology with applications in healthcare (Optum) and sports (CMSAC) analytics\n        \n        \n            Summer 2023Department of Statistics & Data ScienceCarnegie Mellon University\n        \n    \n    \n      \n        \n        \n        \n      \n    \n\n\n\n\n\nCourse details\n\n   Meg Ellingwood and Shamindra Shrotriya\n   Monday - Friday\n   9:30 – 4:00 PM\n   POS151 and PHA18A\n   June 5 – July 28, 2023"
+  },
+  {
+    "objectID": "people.html",
+    "href": "people.html",
+    "title": "SURE 2023",
+    "section": "",
+    "text": "Home\n    People"
+  },
+  {
+    "objectID": "people.html#instructors",
+    "href": "people.html#instructors",
+    "title": "SURE 2023",
+    "section": "Instructors",
+    "text": "Instructors\n\n\n\n\n\n\n\n\n\n\nMeg Ellingwood\n\n\nSURE 2023 Faculty (CMSAC)\n\n\n\n\n\n\n\n\n\n\n\n\n\nShamindra Shrotriya\n\n\nSURE 2023 Faculty (Optum)\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "people.html#ta-advisors",
+    "href": "people.html#ta-advisors",
+    "title": "SURE 2023",
+    "section": "TA Advisors",
+    "text": "TA Advisors\n\n\n\n\n\n\n\n\n\n\nYuchen Chen\n\n\nTA Advisor (CMSAC)\n\n\n\n\n\n\n\n\n\n\n\n\n\nYJ Choe\n\n\nTA Advisor (Optum)\n\n\n\n\n\n\n\n\n\n\n\n\n\nNick Kissel\n\n\nTA Advisor (CMSAC)\n\n\n\n\n\n\n\n\n\n\n\n\n\nAlec McClean\n\n\nTA Advisor (Optum)\n\n\n\n\n\n\n\n\n\n\n\n\n\nQuang Nguyen\n\n\nTA Advisor (CMSAC)\n\n\n\n\n\n\n\n\n\n\n\n\n\nBeomjo Park\n\n\nTA Advisor (Optum)\n\n\n\n\n\n\n\n\n\n\n\n\n\nAkshay Prasadan\n\n\nTA Advisor (CMSAC)\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "people.html#student-support",
+    "href": "people.html#student-support",
+    "title": "SURE 2023",
+    "section": "Student Support",
+    "text": "Student Support\n\n\n\n\n\n\n\n\n\n\nGlenn Clune\n\n\nSURE 2023 Academic Advisor, Academic Program Manager\n\n\n\n\n\n\n\n\n\n\n\n\n\nJessica Paschke\n\n\nSURE 2023 Program Administrator\n\n\n\n\n\n\n\n\n\n\n\n\n\nTeraya White\n\n\nSURE 2023 Academic Advisor\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "people.html#executive-team",
+    "href": "people.html#executive-team",
+    "title": "SURE 2023",
+    "section": "Executive team",
+    "text": "Executive team\n\n\n\n\n\n\n\n\n\n\nJamie McGovern\n\n\nSpecial Faculty, Director of the Master’s in Statistical Practice Program (CMU)\n\n\n\n\n\n\n\n\n\n\n\n\n\nRebecca Nugent\n\n\nStephen E. and Joyce Fienberg Professor of Statistics & Data Science (CMU)\n\n\n\n\n\n\n\n\n\n\n\n\n\nRon Yurko\n\n\nAssistant Teaching Professor of Statistics & Data Science (CMU)\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "people/executive/mcgovern-jamie.html",
+    "href": "people/executive/mcgovern-jamie.html",
+    "title": "Jamie McGovern",
+    "section": "",
+    "text": "Home\n    People\n    Executive team\n    Jamie McGovern"
+  },
+  {
+    "objectID": "people/executive/mcgovern-jamie.html#biography",
+    "href": "people/executive/mcgovern-jamie.html#biography",
+    "title": "Jamie McGovern",
+    "section": "Biography",
+    "text": "Biography\nJamie McGovern joined the Carnegie Mellon Department of Statistic & Data Science after a long career in management consulting. As Special Faculty and the Director of the Master of Statistical Practice (MSP) Program, Jamie is responsible for developing the professional skills of MSP students working to build competencies valued in industry and academia. With extensive consulting experience building and leading teams responsible for the development and delivery of global transformation engagements, Jamie works with industry partners to develop instructional MSP capstones that are central to the experiential educational philosophy of developing and practicing concepts while focusing on the context of real-world, practical application.\nAfter an extensive work history in Human Capital Management selling, solutioning, and delivering engagements related to business process re-engineering, strategic organizational design, and enablement of on-premise and cloud enterprise technologies, he most recently co-founded a data science consulting services organization with a mission statement of mentoring and upskilling underserved populations, using education and a public health intervention, and building employee competencies through deployment on analytic consulting projects.\nJamie has held a number of senior consulting industry roles. His experience over the prior 20+ years spans Life Sciences, Financial Services, Consumer Products, Energy, Telecommunications, and Media & Entertainment industries. In the area of Human Capital Management transformation and HR Operations, Jamie has led diverse, cross-border teams in the design and delivery functional and technical solutions geared towards improving the competitiveness of organizations in the global economy while building highly functional and capable practices and cross-border teams of consulting professionals.\nJamie’s areas of thought leadership include strategic talent development, employee data analytics design, Human Capital leading practices, knowledge sharing, and collaboration. He has been an invited speaker at industry conferences and academic events."
+  },
+  {
+    "objectID": "people/executive/nugent-rebecca.html",
+    "href": "people/executive/nugent-rebecca.html",
+    "title": "Rebecca Nugent",
+    "section": "",
+    "text": "Home\n    People\n    Executive team\n    Rebecca Nugent"
+  },
+  {
+    "objectID": "people/executive/nugent-rebecca.html#biography",
+    "href": "people/executive/nugent-rebecca.html#biography",
+    "title": "Rebecca Nugent",
+    "section": "Biography",
+    "text": "Biography\nRebecca Nugent is the Stephen E. and Joyce Fienberg Professor of Statistics & Data Science and Head of the Carnegie Mellon Department of Statistics & Data Science. She received her PhD in Statistics from the University of Washington, her M.S. in Statistics from Stanford University, and her B.A. in Mathematics, Statistics, and Spanish from Rice University.\nDr. Nugent has expertise in designing and implementing data science/AI professional development programs for business leaders in industries including health care, finance, automotive/manufacturing, and life sciences. She was the faculty co-Director of the Moderna AI Academy and the Founding Director of the Statistics & Data Science Corporate Capstone program, an experiential learning initiative that matches groups of faculty and students with data science problems in industry, non-profits, and government organizations.\nShe has won several national and university teaching awards including the American Statistical Association Waller Award for Innovation in Statistics Education and serves as one of the co-editors of the Springer Texts in Statistics. She recently served as the co-chair for the National Academy of Sciences study on Improving Defense Acquisition Workforce Capability in Data Use and served on the NAS study on Envisioning the Data Science Discipline: The Undergraduate Perspective. Dr. Nugent has worked extensively in clustering and classification methodology with an emphasis on high-dimensional, big data problems and record linkage applications. Her current research focus is the development and deployment of low-barrier data analysis platforms that allow for adaptive instruction and the study of data science as a science."
+  },
+  {
+    "objectID": "people/executive/yurko-ron.html",
+    "href": "people/executive/yurko-ron.html",
+    "title": "Ron Yurko",
+    "section": "",
+    "text": "Home\n    People\n    Executive team\n    Ron Yurko"
+  },
+  {
+    "objectID": "people/executive/yurko-ron.html#biography",
+    "href": "people/executive/yurko-ron.html#biography",
+    "title": "Ron Yurko",
+    "section": "Biography",
+    "text": "Biography\nRon Yurko is an Assistant Teaching Professor in the Department of Statistics & Data Science at Carnegie Mellon University. He received his PhD in Statistics at CMU in 2022 under supervision of Professor Kathryn Roeder and Professor Max G’Sell. His research focuses on developing methods at the interface of inference and machine learning, oriented towards problems in statistical genetics and sports analytics. Previously, he received his BS in Statistics (also) at CMU in 2015, briefly worked in finance, as well as with the Pittsburgh Pirates and Zelus Analytics."
+  },
+  {
+    "objectID": "people/staff/ellingwood-meg.html",
+    "href": "people/staff/ellingwood-meg.html",
+    "title": "Meg Ellingwood",
+    "section": "",
+    "text": "Home\n    People\n    Instructors\n    Meg Ellingwood"
+  },
+  {
+    "objectID": "people/staff/ellingwood-meg.html#biography",
+    "href": "people/staff/ellingwood-meg.html#biography",
+    "title": "Meg Ellingwood",
+    "section": "Biography",
+    "text": "Biography\nMeg Ellingwood is a second-year student in the PhD program in statistics at CMU. She graduated from Kenyon College and briefly taught high school statistics before entering graduate school. Meg participated as a student in CMSACamp Summer 2020, as a TA in Summer 2021 and 2022, and she is thrilled to be an instructor this summer. She is interested in applications of statistics and data science in sports, public health, and neuroscience."
+  },
+  {
+    "objectID": "people/staff/shrotriya-shamindra.html",
+    "href": "people/staff/shrotriya-shamindra.html",
+    "title": "Shamindra Shrotriya",
+    "section": "",
+    "text": "Home\n    People\n    Instructors\n    Shamindra Shrotriya"
+  },
+  {
+    "objectID": "people/staff/shrotriya-shamindra.html#biography",
+    "href": "people/staff/shrotriya-shamindra.html#biography",
+    "title": "Shamindra Shrotriya",
+    "section": "Biography",
+    "text": "Biography\nTODO: Add bio here"
+  },
+  {
+    "objectID": "people/student_support/clune-glenn.html",
+    "href": "people/student_support/clune-glenn.html",
+    "title": "Glenn Clune",
+    "section": "",
+    "text": "Home\n    People\n    Student Support\n    Glenn Clune"
+  },
+  {
+    "objectID": "people/student_support/clune-glenn.html#biography",
+    "href": "people/student_support/clune-glenn.html#biography",
+    "title": "Glenn Clune",
+    "section": "Biography",
+    "text": "Biography\nGlenn Clune is part of the undergraduate advising team for our Statistics & Data Science students. Starting with the department in the summer of 2018, he has continually strived to help students feel welcome and supported during their time with the department, and has maintained a particular commitment to supporting first generation, underrepresented and underprivileged students navigate through the challenges of higher education."
+  },
+  {
+    "objectID": "people/student_support/paschke-jessica.html",
+    "href": "people/student_support/paschke-jessica.html",
+    "title": "Jessica Paschke",
+    "section": "",
+    "text": "Home\n    People\n    Student Support\n    Jessica Paschke"
+  },
+  {
+    "objectID": "people/student_support/paschke-jessica.html#biography",
+    "href": "people/student_support/paschke-jessica.html#biography",
+    "title": "Jessica Paschke",
+    "section": "Biography",
+    "text": "Biography\nJess Paschke is the Assistant Business Manager and Project Administrator for the Department of Statistics & Data Science. She began working with the department in 2014. Jess works closely with the Department Head and Business Manager on large department events, projects, and programs."
+  },
+  {
+    "objectID": "people/student_support/white-teraya.html",
+    "href": "people/student_support/white-teraya.html",
+    "title": "Teraya White",
+    "section": "",
+    "text": "Home\n    People\n    Student Support\n    Teraya White"
+  },
+  {
+    "objectID": "people/student_support/white-teraya.html#biography",
+    "href": "people/student_support/white-teraya.html#biography",
+    "title": "Teraya White",
+    "section": "Biography",
+    "text": "Biography\nAs the Academic Program Manager for Carnegie Mellon University’s Master of Statistical Practice (MSP) Program in the Department of Statistics & Data Science, Teraya works closely with students on developing industry-valued competencies and navigating a highly dynamic job market. She is a champion for Diversity, Equity, and Inclusion within the Dietrich College of Humanities and Social Sciences, expanding CMU’s recruiting presence at Historically Black Colleges and Universities (HBCUs) and presenting educational opportunities to historically underrepresented groups at the American Statistical Society-sponsored StatFest conference.\nTeraya also assists with the popular Pittsburgh Women in Data Science conference (WiDS), featuring thought leadership shared by women speakers from academia and industry. She also co-led the recruiting of Pittsburgh Public Schools students for a data science summer program in the Department of Statistics & Data Sciences at Carnegie Mellon University."
+  },
+  {
+    "objectID": "people/ta/chen-yuchen.html",
+    "href": "people/ta/chen-yuchen.html",
+    "title": "Yuchen Chen",
+    "section": "",
+    "text": "Home\n    People\n    TA Advisors\n    Yuchen Chen"
+  },
+  {
+    "objectID": "people/ta/chen-yuchen.html#biography",
+    "href": "people/ta/chen-yuchen.html#biography",
+    "title": "Yuchen Chen",
+    "section": "Biography",
+    "text": "Biography\nYuchen Chen is a first year PhD student in statistics at CMU. His research interests are in survival analysis, semi-parametric statistics and distribution-free inference. He received a BA in Mathematics at the University of Chicago."
+  },
+  {
+    "objectID": "people/ta/choe-yj.html",
+    "href": "people/ta/choe-yj.html",
+    "title": "YJ Choe",
+    "section": "",
+    "text": "Home\n    People\n    TA Advisors\n    YJ Choe\n  \n\n\n  \n \n \n  \n   \n  \n    \n     github\n  \n  \n    \n     website\n  \n\n\n\nYJ Choe is a fifth-year joint Ph.D. student in Statistics and Machine Learning at Carnegie Mellon University, advised by Prof. Aaditya Ramdas. He is broadly interested in statistical machine learning, with a recent focus on sequential inference, game-theoretic statistics, forecast evaluation, and causal inference. Previously, YJ was an industry researcher working on deep learningmethods for natural language processing."
+  },
+  {
+    "objectID": "people/ta/kissel-nick.html",
+    "href": "people/ta/kissel-nick.html",
+    "title": "Nick Kissel",
+    "section": "",
+    "text": "Home\n    People\n    TA Advisors\n    Nick Kissel"
+  },
+  {
+    "objectID": "people/ta/kissel-nick.html#biography",
+    "href": "people/ta/kissel-nick.html#biography",
+    "title": "Nick Kissel",
+    "section": "Biography",
+    "text": "Biography\nNicholas Kissel is a fourth year statistics PhD student at CMU. He received an MS in statistics and BS in math & statistics from Pitt in 2019. He is am primarily interested in developing methods for generating model confidence sets. More broadly, he is interested in creating inferential procedures for machine learning modeling methods, as well as developing accessible statistical tools that areapplicable to natural and social science research."
+  },
+  {
+    "objectID": "people/ta/mcclean-alec.html",
+    "href": "people/ta/mcclean-alec.html",
+    "title": "Alec McClean",
+    "section": "",
+    "text": "Home\n    People\n    TA Advisors\n    Alec McClean"
+  },
+  {
+    "objectID": "people/ta/mcclean-alec.html#biography",
+    "href": "people/ta/mcclean-alec.html#biography",
+    "title": "Alec McClean",
+    "section": "Biography",
+    "text": "Biography\nAlec McClean is a fourth year PhD student at CMU. His research interests are at the intersection of statistics, machine learning, and causal inference. He received a BA in Mathematics and Economics from Swarthmore College in 2016."
+  },
+  {
+    "objectID": "people/ta/nguyen-quang.html",
+    "href": "people/ta/nguyen-quang.html",
+    "title": "Quang Nguyen",
+    "section": "",
+    "text": "Home\n    People\n    TA Advisors\n    Quang Nguyen"
+  },
+  {
+    "objectID": "people/ta/nguyen-quang.html#biography",
+    "href": "people/ta/nguyen-quang.html#biography",
+    "title": "Quang Nguyen",
+    "section": "Biography",
+    "text": "Biography\nQuang Nguyen is a first year PhD student in the Department of Statistics and Data Science at CMU. His current research is on statistical network analysis with application in criminology. He is also broadly interested in applications of statistics and machine learning in sports with focus on player tracking data. Quang previously received his MS in Applied Statistics from Loyola University Chicago and BS in Mathematics and Data Science from Wittenberg University. He is a die-hard supporter of Manchester United."
+  },
+  {
+    "objectID": "people/ta/park-beomjo.html",
+    "href": "people/ta/park-beomjo.html",
+    "title": "Beomjo Park",
+    "section": "",
+    "text": "Home\n    People\n    TA Advisors\n    Beomjo Park"
+  },
+  {
+    "objectID": "people/ta/park-beomjo.html#biography",
+    "href": "people/ta/park-beomjo.html#biography",
+    "title": "Beomjo Park",
+    "section": "Biography",
+    "text": "Biography\nBeomjo Park is a fifth-year Ph.D. student in the Dept. of Statistics & Data Science at Carnegie Mellon University. Under the guidance of Sivaraman Balakrishnan and Larry Wasserman, his research focuses on robust statistical inference, specifically addressing model misspecification and data corruption. His previous work includes interdisciplinary applications in Oceanography and Biostatistics, with a central emphasis on Bayesian semiparametric models and variational inference."
+  },
+  {
+    "objectID": "people/ta/prasadan-akshay.html",
+    "href": "people/ta/prasadan-akshay.html",
+    "title": "Akshay Prasadan",
+    "section": "",
+    "text": "Home\n    People\n    TA Advisors\n    Akshay Prasadan"
+  },
+  {
+    "objectID": "people/ta/prasadan-akshay.html#biography",
+    "href": "people/ta/prasadan-akshay.html#biography",
+    "title": "Akshay Prasadan",
+    "section": "Biography",
+    "text": "Biography\nAkshay Prasadan is a third year PhD student at CMU, working with Matey Neykov on research topics in the areas of minimax theory, constrained estimation, and Gaussian sequence models. He received a BS in Mathematics and Economics at The Ohio State University. He is a Pittsburgh local and is passionate about the stock market."
+  },
+  {
+    "objectID": "schedule.html",
+    "href": "schedule.html",
+    "title": "Schedule",
+    "section": "",
+    "text": "Here’s your roadmap for the semester!\n\nLecture (): This page contains the readings for the class session. These materials will typically be released right before each class, and in some cases, directly after the class.\nAssignment (): This page contains the instructions for each assignment, i.e., demo-lab or final research project materials.\n\n\nOrientation\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nIntroduction\n\n\n\n\nJune 5\n\n\nWelcome to SURE 2023\n\n\n\n\n\n\n\n\n\n\n\n\n\nExploratory Data Analysis\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nData Exploring\n\n\n\n\nJune 5\n\n\nDemo-lab: Rstudio basics\n\n\n\n\n\n\n\n\n\n\nJune 6\n\n\nExploring data: Into the tidyverse\n\n\n\n\n\n\n\n\n\n\nJune 7\n\n\nThe grammar of graphics and ggplot2\n\n\n\n\n\n\n\n\n\n\nData Visualization\n\n\n\n\nJune 7\n\n\nDemo-lab: wrangling with dplyr\n\n\n\n\n\n\n\n\n\n\nJune 8\n\n\nVisualizing 1D categorical and continuous variables\n\n\n\n\n\n\n\n\n\n\nJune 9\n\n\nVisualizing 2D categorical and continuous by categorical\n\n\n\n\n\n\n\n\n\n\nJune 12\n\n\nDensity estimation\n\n\n\n\n\n\n\n\n\n\nJune 12\n\n\nDemo-lab: data visualization with ggplot2\n\n\n\n\n\n\n\n\n\n\nJune 13\n\n\nGeographical EDA using Shapefiles\n\n\n\n\n\n\n\n\n\n\nJune 14\n\n\nDemo-lab: Exploratory data analysis case studies\n\n\n\n\n\n\n\n\n\n\n\n\n\nUnsupervised Learning\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nData Visualization\n\n\n\n\nJune 14\n\n\nK-means\n\n\n\n\n\n\n\n\n\n\nClustering\n\n\n\n\nJune 15\n\n\nHierarchical clustering\n\n\n\n\n\n\n\n\n\n\nJune 16\n\n\nGaussian mixture models\n\n\n\n\n\n\n\n\n\n\nJune 19\n\n\nDemo-lab: clusteringJuneteenth holiday, but lab will be released\n\n\n\n\n\n\n\n\n\n\n\n\n\nPresentation Skills\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nPresenting\n\n\n\n\nJune 20\n\n\nWorking with xaringan and xaringanthemer\n\n\n\n\n\n\n\n\n\n\n\n\n\nMachine Learning\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nSupervised Learning\n\n\n\n\nJune 21\n\n\nModel assessment vs selection\n\n\n\n\n\n\n\n\n\n\nJune 22\n\n\nLinear regression\n\n\n\n\n\n\n\n\n\n\nJune 23\n\n\nIntro to variable selection\n\n\n\n\n\n\n\n\n\n\nJune 26\n\n\nRegularization\n\n\n\n\n\n\n\n\n\n\nJune 26\n\n\nDemo-lab: Linear regression\n\n\n\n\n\n\n\n\n\n\nJune 27\n\n\nSupervised and unsupervised learning with Tidymodels\n\n\n\n\n\n\n\n\n\n\nJune 28\n\n\nDimension Reduction: Principal components analysis (PCA)\n\n\n\n\n\n\n\n\n\n\nJune 29\n\n\nPrincipal component regression and partial least squares\n\n\n\n\n\n\n\n\n\n\nJune 30\n\n\nGeneralized linear models (GLMs)\n\n\n\n\n\n\n\n\n\n\nJuly 6\n\n\nLogistic regression\n\n\n\n\n\n\n\n\n\n\nJuly 7\n\n\nNonparametric regression\n\n\n\n\n\n\n\n\n\n\nJuly 10\n\n\nDemo lab: PCA and more regression\n\n\n\n\n\n\n\n\n\n\nSupervised and Unsupervised Learning\n\n\n\n\nJuly 10\n\n\nDecision trees\n\n\n\n\n\n\n\n\n\n\nJuly 11\n\n\nRandom forests and gradient-boosted trees\n\n\n\n\n\n\n\n\n\n\n\n\n\nFinal project\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nFinal project\n\n\n\n\nJuly 28\n\n\nOptum Research Project Specification\n\n\n\n\n\n\n\n\n\n\nJuly 27\n\n\nCMSAC Research Project Specification\n\n\n\n\n\n\n\n\n\n\nJuly 27\n\n\nSURE 2023: Report Writing Guideline"
+  },
+  {
+    "objectID": "syllabus-old.html",
+    "href": "syllabus-old.html",
+    "title": "Syllabus",
+    "section": "",
+    "text": "TODO: Add details here\n\nCritically assess research about healthcare and sports data science.\nConduct your own research on issues in healthcare or sports data science."
+  },
+  {
+    "objectID": "syllabus-old.html#course-objectives",
+    "href": "syllabus-old.html#course-objectives",
+    "title": "Syllabus",
+    "section": "",
+    "text": "TODO: Add details here\n\nCritically assess research about healthcare and sports data science.\nConduct your own research on issues in healthcare or sports data science."
+  },
+  {
+    "objectID": "syllabus-old.html#course-materials",
+    "href": "syllabus-old.html#course-materials",
+    "title": "Syllabus",
+    "section": "Course materials",
+    "text": "Course materials\nThere is no textbook for this class, and all of the readings are free (!!).\n\n\n\n\n\n\nDon’t buy anything!\n\n\n\nDo not purchase any articles for this class—all readings are freely accessible on iCollege."
+  },
+  {
+    "objectID": "syllabus-old.html#attendance-and-participation",
+    "href": "syllabus-old.html#attendance-and-participation",
+    "title": "Syllabus",
+    "section": "Attendance and participation",
+    "text": "Attendance and participation\nYou’re expected to come to class each Tuesday prepared, having (1) carefully read the material and (2) completed the weekly reading report.\nAttendance and participation are crucial to your success in this course. However, we’re in the middle of a deadly global pandemic and so many people are getting sick. If you are sick or are incapable of participating meaningfully in class (e.g. you have stayed up all night and are going to fall asleep in class), please stay home."
+  },
+  {
+    "objectID": "syllabus.html",
+    "href": "syllabus.html",
+    "title": "Syllabus",
+    "section": "",
+    "text": "Welcome to the Summer Undergraduate Research Experience (SURE) 2023. The purpose of this program is to explore cutting-edge statistics and data science methodology with applications in healthcare and sports analytics.\nSURE 2023 is only made possible through the generous and ongoing support by our program partners in healthcare (Optum), and sports data science (CMSAC)."
+  },
+  {
+    "objectID": "syllabus.html#lectures",
+    "href": "syllabus.html#lectures",
+    "title": "Syllabus",
+    "section": "Lectures",
+    "text": "Lectures\nLectures will be delivered to both Optum and CMSAC students together. Each morning, we will cover topics in data science, including: data wrangling, exploratory data analysis, and both supervised/unsupervised learning. Separately, Tuesday afternoons will feature lectures on data engineering, including: the UNIX, SQL, tmux, etc.."
+  },
+  {
+    "objectID": "syllabus.html#domain-specific-presentations",
+    "href": "syllabus.html#domain-specific-presentations",
+    "title": "Syllabus",
+    "section": "Domain-specific presentations",
+    "text": "Domain-specific presentations\nAround mid-day, most days of the summer, you will also have presentations from industry professionals in your domain area. On the Optum side, there is a full slate of mandatory virtual talks from members of the United Health Group (UHG) to familiarize you with the work they do and give career advice. These are a fantastic networking opportunity for Optum students for future career opportunities. For the sports side, the first few weeks will involve sports analysts coming in to pitch projects in baseball, hockey, basketball, and soccer. You’ll have the chance to then choose one of these projects to work on for the rest of the summer. There will also be various visitors later on to speak about working in sports analytics."
+  },
+  {
+    "objectID": "syllabus.html#demo-labs",
+    "href": "syllabus.html#demo-labs",
+    "title": "Syllabus",
+    "section": "Demo labs",
+    "text": "Demo labs\nThen, on Monday afternoons (and some Wednesdays at the beginning of the program), you’ll be able to get hands-on practice applying methods in data science with demo labs run by the program TAs. These labs will be conducted separately for the two groups. All materials (Optum and CMSAC) will be made available on this course website, if you want extra practice from both health and sports domains."
+  },
+  {
+    "objectID": "syllabus.html#project-labs",
+    "href": "syllabus.html#project-labs",
+    "title": "Syllabus",
+    "section": "Project labs",
+    "text": "Project labs\nFinally, the most important component of the program is the research project, and associated deliverables. In dedicated project-lab sessions, you’ll work in a group of 2-4 students to analyze a dataset in health or sports analytics to answer a research question that is important to practitioners in your field. Past projects have examined geographic differences in the impact of the opioid epidemic, built models to predict passing or running plays in the NFL, and performed cluster analysis of NBA and WNBA players. At the end of the program, you’ll hand in a report summarizing your findings, create a poster, and deliver a short presentation to the community and project stakeholders."
+  },
+  {
+    "objectID": "syllabus.html#course-website",
+    "href": "syllabus.html#course-website",
+    "title": "Syllabus",
+    "section": "Course Website",
+    "text": "Course Website\nThis SURE 2023 website will be the main “home base” for the entirety of the program. You are expected to check it regularly throughout each day in the program for any updates. All lecture and demo-lab materials will be provided on the site, freely available. As stated before, there is no textbook for this program, just lecture slides that you’ll be able to access via the schedule. There you will also find specifications for the projects and lab files.\nFor non-academic concerns, we have compiled a list of helpful guides, e.g., computing setup, Pittsburgh-based resources, fun local activities. We also have dedicated staff bios to help you quickly find the right person for any questions that might arise. Keep browsing around, we’ll keep adding to it over the program to make it your ‘one-stop-shop’ for all your major concerns."
+  },
+  {
+    "objectID": "syllabus.html#schedule",
+    "href": "syllabus.html#schedule",
+    "title": "Syllabus",
+    "section": "Schedule",
+    "text": "Schedule\nIn addition to the website, we will be using an online calendar, which you can and should add to your personal scheduling software of choice (Google, iCal, Outlook, etc.), and which you will be expected to keep track of. You will receive a link to this calendar via email. It will be the most up-to-date source of information about when and where things will be happening in the program.\nA glimpse of a ‘typical’ week, via the Google Calendar, is as follows:\n\n\n\nAs mentioned, data-science lectures for all SURE 2023 students will take place in the morning. Then there will be separate presentations for the Optum and CMSAC groups around lunchtime, and in the afternoon we will have demo-labs, data-engineering, and project labs. As mentioned, you are expected to attend program activities in-person during the standard workday.\nAll SURE and Optum-only activities will take place in Posner Hall (POS 151). All CMSAC will take place in Porter Hall (PH A18A) for the duration of the program. Just two rooms to remember, how easy is that!\nIn terms of lecture and lab contents, please regularly refer to the schedule. Please note that the planned schedule is subject to change at the discretion of the teaching staff.\n\nBreaks and Holidays\nIt’s important to take good rest during research. Aside from weekend breaks, we have the following planned breaks and holidays during the program\n\nJuneteenth: Monday 06/19.\nIndependence Day break: Monday 07/03 to Wed 07/05 (inclusive)\n(Optum only) site visit: Monday 07/17 to Thu 07/20 (inclusive)"
+  },
+  {
+    "objectID": "syllabus.html#using-slack-effectively",
+    "href": "syllabus.html#using-slack-effectively",
+    "title": "Syllabus",
+    "section": "Using Slack effectively",
+    "text": "Using Slack effectively\nYou will receive an invitation to a Slack workspace for the summer program. This will be the main communication channel for students, faculty, and staff for real time announcements and quick questions. You should check Slack frequently, especially during working hours. Slack messages are preferable to emails, but if official channels are required then email may be more appropriate.\nIn order to use Slack effectively, please note the following guidelines. Akshay and Yuchen will be the Slack Champions who will help manage our Slack workspace according to these guidelines.\n\nAsk each other/teaching staff questions first.\n\nWe encourage you to reach out to your peers in DMs, group chats, in-person, etc. for help before pinging a TA or instructor.\nComplicated statistical/programming questions are best asked in person during office hours or labs.\n\nSlack etiquette\n\nTo keep the channels organized, please respond using threads, as opposed to starting a new thread each message.\nMemes and off-topic discussions should be posted outside of the main channels, in their own dedicated #random channel.\nAll Slack communication must abide by the code of conduct.\n\nPublic channels\n\n#announcements: All major program-wide announcements will be posted here, e.g., room changes and lunch logistics.\n#general: Questions/discussion pertaining to the broader program (Optum or CMSAC)\n#random: Post your memes, off-topic conversations, outside-events, etc.\n\nPrivate channels\n\n#optum: Private channel for Optum students only and course instructors\n#cmsac: Private channel for CMSAC students only and course instructors\nProject Groups: During the first week, each research group and their TA advisor should create a private channel for their day-to-day communication.\n\nFixed usage hours\n\nTAs or Instructors will generally be active and responsive on Slack during program hours, i.e., 9:30am-4pm weekdays, not on weekends/holidays, etc."
+  }
+]
