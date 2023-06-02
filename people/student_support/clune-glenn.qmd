@@ -1,7 +1,7 @@
 ---
 title: "Glenn Clune"
 sortby: "Clune, Glenn"
-subtitle: "SURE Academic Advisor, Academic Program Manager"
+subtitle: "SURE 2023 Academic Advisor, Academic Program Manager"
 image: clune-glenn.jpg
 started: "Summer 2018"
 toc: false

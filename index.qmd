@@ -1,6 +1,6 @@
 ---
 title: "SURE 2023"
-subtitle: "Explore cutting-edge statistics and data science methodology with applications in healthcare (Optum) and sports (CMSAC) analytics"
+subtitle: "Explore cutting-edge statistics and data science methodology with applications in healthcare ([Optum](https://www.stat.cmu.edu/summerbridge/)) and sports ([CMSAC](https://www.stat.cmu.edu/cmsac/)) analytics"
 details: |
   Summer 2023<br>Department of Statistics & Data Science<br>Carnegie Mellon University
 sidebar: false

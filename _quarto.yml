@@ -48,6 +48,8 @@ website:
         menu:
           - text: "SURE 2023 Computing Setup"
           - file: guides/computing-setup.qmd
+          - text: "SURE 2023 Pittsburgh Resources"
+          - file: guides/pittsburgh-student-resources.qmd
           - text: "SURE 2023 Exploring Pittsburgh"
           - file: guides/pittsburgh-fun-activities.qmd
       # - icon: slack
