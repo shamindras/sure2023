@@ -12,6 +12,8 @@ focusing on applications in sports and health analytics.
 
 To get you started, please complete our step-by-step instructions for setting up
 the common tools that you will use throughout the program.
+
+--Quang
 :::
 
 ---
