@@ -54,9 +54,9 @@ website:
           - file: guides/pittsburgh-fun-activities.qmd
           - text: "SURE 2023 Website Credits"
           - file: credits.qmd
-      # - icon: slack
-      #   href: "https://cmu-sure-2023.slack.com"
-      #   aria-label: Slack
+      - icon: slack
+        href: "https://cmu-sure-2023.slack.com"
+        aria-label: Slack
 
   sidebar:
     - title: "Classes"
