@@ -35,8 +35,8 @@ about:
 ## Biography
 
 Nicholas Kissel is a fourth year statistics PhD student at CMU. He received an
-MS in statistics and BS in math & statistics from Pitt in 2019. He is am
-primarily interested in developing methods for generating model confidence sets.
-More broadly, he is interested in creating inferential procedures for machine
+MS in statistics and BS in math & statistics from Pitt in 2019. He is primarily
+interested in developing methods for generating model confidence sets. More
+broadly, he is interested in creating inferential procedures for machine
 learning modeling methods, as well as developing accessible statistical tools
-that areapplicable to natural and social science research.
+that are applicable to natural and social science research.

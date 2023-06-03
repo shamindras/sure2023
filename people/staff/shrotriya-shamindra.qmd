@@ -38,19 +38,19 @@ about:
 
 ## Biography
 
-Shamindra received his PhD from in the Department of Statistics & Data Science
+Shamindra received his PhD from the Department of Statistics & Data Science
 at Carnegie Mellon University in Fall 2022. He was extremely fortunate to be
-advised by Matey Neykov. Shamindra's primary research interests focus density
+advised by Matey Neykov. Shamindra's primary research interests focus on density
 estimation, isotonic regression, and location-scale estimation. He is also
 actively interested in application-driven methodology, including spatiotemporal
 modeling (wildfire prediction), and also statistical ranking. In the latter
 case, he was fortunate to present a paper at the CMSACamp in 2019.
 
 Prior to his PhD, he worked for eight years in industry first as a private and
-public sector actuary, before branching out into broader data science and data
-engineering in the online and supermarket retail sectors. He also holds a MA in
-Statistics from UC Berkeley, and a BCom majoring in Actuarial Studies and
-Finance from the University of New South Wales.
+public sector actuary, before then branching out into broader data science and
+data engineering in the online and supermarket retail sectors. He also holds a
+MA in Statistics from UC Berkeley, and a BCom majoring in Actuarial Studies and
+Finance from the University of New South Wales, Australia.
 
 He grew up in Australia, so feel free to talk to him about cricket, rugby union,
 etc. But importantly reach out to him with any queries during SURE 2023!

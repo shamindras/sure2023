@@ -1,7 +1,7 @@
 ---
 title: "LeeAnn Chapman"
 sortby: "Chapman, LeeAnn"
-subtitle: "SURE 2023 Program Accounting Assistant"
+subtitle: "SURE 2023 Accounting Assistant"
 image: chapman-leeann.jpg
 toc: false
 about:

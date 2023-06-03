@@ -431,7 +431,7 @@
     "href": "guides/computing-setup.html",
     "title": "Computing Setup",
     "section": "",
-    "text": "Welcome to the Summer Undergraduate Research Experience (SURE) 2023 hosted by the Department of Statistics & Data Science at Carnegie Mellon University. We are excited to guide you through exciting topics in statistics and data science, focusing on applications in sports and health analytics.\nTo get you started, please complete our step-by-step instructions for setting up the common tools that you will use throughout the program."
+    "text": "A friendly note from your friendly co-instructor Quang\n\n\n\nWelcome to the Summer Undergraduate Research Experience (SURE) 2023 hosted by the Department of Statistics & Data Science at Carnegie Mellon University. We are excited to guide you through exciting topics in statistics and data science, focusing on applications in sports and health analytics.\nTo get you started, please complete our step-by-step instructions for setting up the common tools that you will use throughout the program."
   },
   {
     "objectID": "guides/computing-setup.html#step-1-install-r",
@@ -571,7 +571,7 @@
     "href": "people.html#student-support",
     "title": "SURE 2023",
     "section": "Student Support",
-    "text": "Student Support\n\n\n\n\n\n\n\n\n\n\nLeeAnn Chapman\n\n\nSURE 2023 Program Accounting Assistant\n\n\n\n\n\n\n\n\n\n\n\n\n\nGlenn Clune\n\n\nSURE 2023 Academic Advisor, Academic Program Manager\n\n\n\n\n\n\n\n\n\n\n\n\n\nJessica Paschke\n\n\nSURE 2023 Program Administrator\n\n\n\n\n\n\n\n\n\n\n\n\n\nTeraya White\n\n\nSURE 2023 Academic Advisor\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Student Support\n\n\n\n\n\n\n\n\n\n\nLeeAnn Chapman\n\n\nSURE 2023 Accounting Assistant\n\n\n\n\n\n\n\n\n\n\n\n\n\nGlenn Clune\n\n\nSURE 2023 Academic Advisor, Academic Program Manager\n\n\n\n\n\n\n\n\n\n\n\n\n\nJessica Paschke\n\n\nSURE 2023 Program Administrator\n\n\n\n\n\n\n\n\n\n\n\n\n\nTeraya White\n\n\nSURE 2023 Academic Advisor\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "people.html#executive-team",
@@ -648,7 +648,7 @@
     "href": "people/staff/shrotriya-shamindra.html#biography",
     "title": "Shamindra Shrotriya",
     "section": "Biography",
-    "text": "Biography\nShamindra received his PhD from in the Department of Statistics & Data Science at Carnegie Mellon University in Fall 2022. He was extremely fortunate to be advised by Matey Neykov. Shamindra’s primary research interests focus density estimation, isotonic regression, and location-scale estimation. He is also actively interested in application-driven methodology, including spatiotemporal modeling (wildfire prediction), and also statistical ranking. In the latter case, he was fortunate to present a paper at the CMSACamp in 2019.\nPrior to his PhD, he worked for eight years in industry first as a private and public sector actuary, before branching out into broader data science and data engineering in the online and supermarket retail sectors. He also holds a MA in Statistics from UC Berkeley, and a BCom majoring in Actuarial Studies and Finance from the University of New South Wales.\nHe grew up in Australia, so feel free to talk to him about cricket, rugby union, etc. But importantly reach out to him with any queries during SURE 2023!"
+    "text": "Biography\nShamindra received his PhD from the Department of Statistics & Data Science at Carnegie Mellon University in Fall 2022. He was extremely fortunate to be advised by Matey Neykov. Shamindra’s primary research interests focus on density estimation, isotonic regression, and location-scale estimation. He is also actively interested in application-driven methodology, including spatiotemporal modeling (wildfire prediction), and also statistical ranking. In the latter case, he was fortunate to present a paper at the CMSACamp in 2019.\nPrior to his PhD, he worked for eight years in industry first as a private and public sector actuary, before then branching out into broader data science and data engineering in the online and supermarket retail sectors. He also holds a MA in Statistics from UC Berkeley, and a BCom majoring in Actuarial Studies and Finance from the University of New South Wales, Australia.\nHe grew up in Australia, so feel free to talk to him about cricket, rugby union, etc. But importantly reach out to him with any queries during SURE 2023!"
   },
   {
     "objectID": "people/student_support/chapman-leeann.html",
@@ -739,7 +739,7 @@
     "href": "people/ta/kissel-nick.html#biography",
     "title": "Nick Kissel",
     "section": "Biography",
-    "text": "Biography\nNicholas Kissel is a fourth year statistics PhD student at CMU. He received an MS in statistics and BS in math & statistics from Pitt in 2019. He is am primarily interested in developing methods for generating model confidence sets. More broadly, he is interested in creating inferential procedures for machine learning modeling methods, as well as developing accessible statistical tools that areapplicable to natural and social science research."
+    "text": "Biography\nNicholas Kissel is a fourth year statistics PhD student at CMU. He received an MS in statistics and BS in math & statistics from Pitt in 2019. He is primarily interested in developing methods for generating model confidence sets. More broadly, he is interested in creating inferential procedures for machine learning modeling methods, as well as developing accessible statistical tools that are applicable to natural and social science research."
   },
   {
     "objectID": "people/ta/mcclean-alec.html",
@@ -803,34 +803,6 @@
     "title": "Schedule",
     "section": "",
     "text": "Here’s your roadmap for the semester!\n\nLecture (): This page contains the readings for the class session. These materials will typically be released right before each class, and in some cases, directly after the class.\nAssignment (): This page contains the instructions for each assignment, i.e., demo-lab or final research project materials.\n\n\nOrientation\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nIntroduction\n\n\n\n\nJune 5\n\n\nWelcome to SURE 2023\n\n\n\n\n\n\n\n\n\n\n\n\n\nExploratory Data Analysis\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nData Exploring\n\n\n\n\nJune 5\n\n\nDemo-lab: Rstudio basics\n\n\n\n\n\n\n\n\n\n\nJune 6\n\n\nExploring data: Into the tidyverse\n\n\n\n\n\n\n\n\n\n\nJune 7\n\n\nThe grammar of graphics and ggplot2\n\n\n\n\n\n\n\n\n\n\nData Visualization\n\n\n\n\nJune 7\n\n\nDemo-lab: wrangling with dplyr\n\n\n\n\n\n\n\n\n\n\nJune 8\n\n\nVisualizing 1D categorical and continuous variables\n\n\n\n\n\n\n\n\n\n\nJune 9\n\n\nVisualizing 2D categorical and continuous by categorical\n\n\n\n\n\n\n\n\n\n\nJune 12\n\n\nDensity estimation\n\n\n\n\n\n\n\n\n\n\nJune 12\n\n\nDemo-lab: data visualization with ggplot2\n\n\n\n\n\n\n\n\n\n\nJune 13\n\n\nGeographical EDA using Shapefiles\n\n\n\n\n\n\n\n\n\n\nJune 14\n\n\nDemo-lab: Exploratory data analysis case studies\n\n\n\n\n\n\n\n\n\n\n\n\n\nUnsupervised Learning\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nData Visualization\n\n\n\n\nJune 14\n\n\nK-means\n\n\n\n\n\n\n\n\n\n\nClustering\n\n\n\n\nJune 15\n\n\nHierarchical clustering\n\n\n\n\n\n\n\n\n\n\nJune 16\n\n\nGaussian mixture models\n\n\n\n\n\n\n\n\n\n\nJune 19\n\n\nDemo-lab: clusteringJuneteenth holiday, but lab will be released\n\n\n\n\n\n\n\n\n\n\n\n\n\nPresentation Skills\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nPresenting\n\n\n\n\nJune 20\n\n\nWorking with xaringan and xaringanthemer\n\n\n\n\n\n\n\n\n\n\n\n\n\nMachine Learning\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nSupervised Learning\n\n\n\n\nJune 21\n\n\nModel assessment vs selection\n\n\n\n\n\n\n\n\n\n\nJune 22\n\n\nLinear regression\n\n\n\n\n\n\n\n\n\n\nJune 23\n\n\nIntro to variable selection\n\n\n\n\n\n\n\n\n\n\nJune 26\n\n\nRegularization\n\n\n\n\n\n\n\n\n\n\nJune 26\n\n\nDemo-lab: Linear regression\n\n\n\n\n\n\n\n\n\n\nJune 27\n\n\nSupervised and unsupervised learning with Tidymodels\n\n\n\n\n\n\n\n\n\n\nJune 28\n\n\nDimension Reduction: Principal components analysis (PCA)\n\n\n\n\n\n\n\n\n\n\nJune 29\n\n\nPrincipal component regression and partial least squares\n\n\n\n\n\n\n\n\n\n\nJune 30\n\n\nGeneralized linear models (GLMs)\n\n\n\n\n\n\n\n\n\n\nJuly 6\n\n\nLogistic regression\n\n\n\n\n\n\n\n\n\n\nJuly 7\n\n\nNonparametric regression\n\n\n\n\n\n\n\n\n\n\nJuly 10\n\n\nDemo lab: PCA and more regression\n\n\n\n\n\n\n\n\n\n\nSupervised and Unsupervised Learning\n\n\n\n\nJuly 10\n\n\nDecision trees\n\n\n\n\n\n\n\n\n\n\nJuly 11\n\n\nRandom forests and gradient-boosted trees\n\n\n\n\n\n\n\n\n\n\n\n\n\nFinal project\n\n\n\n\n\n\n\nTitle\n\n\nLecture\n\n\nAssignment\n\n\n\n\n\n\nFinal project\n\n\n\n\nJuly 28\n\n\nOptum Research Project Specification\n\n\n\n\n\n\n\n\n\n\nJuly 27\n\n\nCMSAC Research Project Specification\n\n\n\n\n\n\n\n\n\n\nJuly 27\n\n\nSURE 2023: Report Writing Guideline"
-  },
-  {
-    "objectID": "syllabus-old.html",
-    "href": "syllabus-old.html",
-    "title": "Syllabus",
-    "section": "",
-    "text": "TODO: Add details here\n\nCritically assess research about healthcare and sports data science.\nConduct your own research on issues in healthcare or sports data science."
-  },
-  {
-    "objectID": "syllabus-old.html#course-objectives",
-    "href": "syllabus-old.html#course-objectives",
-    "title": "Syllabus",
-    "section": "",
-    "text": "TODO: Add details here\n\nCritically assess research about healthcare and sports data science.\nConduct your own research on issues in healthcare or sports data science."
-  },
-  {
-    "objectID": "syllabus-old.html#course-materials",
-    "href": "syllabus-old.html#course-materials",
-    "title": "Syllabus",
-    "section": "Course materials",
-    "text": "Course materials\nThere is no textbook for this class, and all of the readings are free (!!).\n\n\n\n\n\n\nDon’t buy anything!\n\n\n\nDo not purchase any articles for this class—all readings are freely accessible on iCollege."
-  },
-  {
-    "objectID": "syllabus-old.html#attendance-and-participation",
-    "href": "syllabus-old.html#attendance-and-participation",
-    "title": "Syllabus",
-    "section": "Attendance and participation",
-    "text": "Attendance and participation\nYou’re expected to come to class each Tuesday prepared, having (1) carefully read the material and (2) completed the weekly reading report.\nAttendance and participation are crucial to your success in this course. However, we’re in the middle of a deadly global pandemic and so many people are getting sick. If you are sick or are incapable of participating meaningfully in class (e.g. you have stayed up all night and are going to fall asleep in class), please stay home."
   },
   {
     "objectID": "syllabus.html",

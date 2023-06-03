@@ -11,9 +11,10 @@ library(pander)
 
 <!-- # Welcome to SURE 2023 -->
 
-Welcome to the Summer Undergraduate Research Experience (SURE) 2023. The purpose
-of this program is to explore cutting-edge statistics and data science
-methodology with applications in healthcare and sports analytics.
+Welcome to the **S**ummer **U**ndergraduate **R**esearch **E**xperience
+(**SURE**) **2023**. The purpose of this program is to explore cutting-edge
+statistics and data science methodology with applications in healthcare and
+sports analytics.
 
 SURE 2023 is only made possible through the generous and ongoing support by our
 program partners in healthcare
@@ -37,10 +38,10 @@ following CMU Statistics & Data Science team:
 
 **Student Support Team**
 
-- [LeeAnn Chapman]() (Financial administration) 
-- [Glenn Clune](/people/student_support/clune-glenn.qmd) (SURE 2023 Academic advisor, Academic Program Manager) 
+- [LeeAnn Chapman](/people/student_support/chapman-leeann.qmd) (Accounting Assistant) 
+- [Glenn Clune](/people/student_support/clune-glenn.qmd) (Academic advisor, Academic Program Manager) 
 - [Jessica Paschke](/people/student_support/paschke-jessica.qmd) (Program Administrator)
-- [Teraya White](/people/student_support/white-teraya.qmd) (SURE 2023 Academic advisor)
+- [Teraya White](/people/student_support/white-teraya.qmd) (Academic advisor)
 
 **Executive Team**
 

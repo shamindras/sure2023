@@ -2,6 +2,9 @@
 title: "Computing Setup"
 ---
 
+::: {.callout-tip}
+### A friendly note from your friendly co-instructor [Quang](/people/ta/nguyen-quang.qmd)
+
 Welcome to the Summer Undergraduate Research Experience (SURE) 2023 hosted by
 the Department of Statistics & Data Science at Carnegie Mellon University. We
 are excited to guide you through exciting topics in statistics and data science,
@@ -9,6 +12,7 @@ focusing on applications in sports and health analytics.
 
 To get you started, please complete our step-by-step instructions for setting up
 the common tools that you will use throughout the program.
+:::
 
 ---
 
@@ -338,8 +342,37 @@ Twitter hashtag.
 
 ---
 
-# Slack and Zoom
+# Slack and Zoom/Microsoft Teams
 
-`r fontawesome::fa("slack")` &nbsp; We will be using [Slack](link) for communication throughout the program. We highly recommend having the Slack app downloaded on both your computer and phone.
+`r fontawesome::fa("slack")` $\text{}$ We will be using [Slack](link) for **real-time
+communication** throughout the program. We highly recommend having the Slack app
+downloaded on both your computer and phone.
 
-`r fontawesome::fa("video")` $\text{}$ Occasionally, we will have virtual talks on Zoom. Please make sure [Zoom](https://zoom.us/) is installed and up-to-date on your device(s).
+`r fontawesome::fa("video")` $\text{}$ We will have **daily** virtual talks on
+Zoom or Microsoft Teams. Please make sure [Zoom](https://zoom.us/) and
+[Microsoft Teams
+App](https://www.microsoft.com/en-us/microsoft-teams/download-app) are both
+installed and up-to-date on your device(s).
+
+---
+
+# CMU WiFi (in housing and on campus)
+
+`r fontawesome::fa("wifi")` $\text{}$ When you arrive at your **CMU housing**,
+or on the **CMU campus** you will receive a printed (paper) card which contains
+your **personal CMU WiFi username and password** (for SURE 2023). You must keep
+your assigned card secure and private. To login to CMU WiFi, do the following
+(inside your CMU housing, or on CMU campus):
+
+::: {.callout-tip}
+### Instruction: Setting up CMU campus and Housing WiFi
+
+1. Grab your personal CMU WiFi printed card.
+2. Go to [identity.andrew.cmu.edu](identity.andrew.cmu.edu).
+3. Enter the guest ID and initial password.
+4. Click Login.
+5. Follow the on-screen steps to set a secure password for the guest account.
+:::
+
+The deadline to complete this is **2pm June 5th, 2023**. Though most likely you 
+will want to complete it the moment you arrive at your housing!
