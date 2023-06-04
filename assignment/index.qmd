@@ -26,11 +26,13 @@ or via the [schedule](../schedule.qmd).
 
 ### Downloading demo labs (on your laptop)
 
-You can also download the Quarto Markdown (`.qmd`) demo-lab files using the 
+You can also download the RMarkdown (`.Rmd`) demo-lab files using the 
 convenient links below:
 
 ::: {.callout appearance="minimal"}
-<i class="bi bi-download"></i> [Demo Lab 1 (Intro to `R`)](demo-lab-01.qmd){download="demo-lab-01.qmd"}
+**Download Demo Lab 1 (Intro to `R`):** {{\< downloadthis demo-lab-01.qmd
+dname="demo-lab-01.Rmd" label="demo-lab-01.Rmd" icon="file-earmark"
+type="success" \>}}
 :::
 
 ## Research project deliverables
