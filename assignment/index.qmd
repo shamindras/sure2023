@@ -7,9 +7,7 @@ There are two main forms of assignments in the SURE 2023 program, namely:
   - Demo-labs
   - Final research project, poster, and presentation
 
-Some additional details on both are provided below. You can view all assignment
-materials by navigating the links in the left sidebar, or via the
-[schedule](../schedule.qmd).
+Some additional details on both are provided below.
 
 ## Demo-labs
 
@@ -19,6 +17,21 @@ the course content. They are usually released once or twice a week, as per the
 to help you reinforce the material. There is no grading involved here, just
 learning. So don't hesitate to reach out to your fellow peers, TA Advisors, and
 course instructors for help.
+
+### Viewing demo labs (in your browser)
+
+You can view all demo lab materials in your browser (e.g., Chrome/Firefox) by
+navigating the links in the left sidebar, under the 'Demo Lab' dropdown header,
+or via the [schedule](../schedule.qmd).
+
+### Downloading demo labs (on your laptop)
+
+You can also download the Quarto Markdown (`.qmd`) demo-lab files using the 
+convenient links below:
+
+::: {.callout appearance="minimal"}
+<i class="bi bi-download"></i> [Demo Lab 1 (Intro to `R`)](demo-lab-01.qmd){download="demo-lab-01.qmd"}
+:::
 
 ## Research project deliverables
 

@@ -140,6 +140,10 @@ website:
         - section: "Overview"
           contents:
             - assignment/index.qmd
+        - section: "Demo Labs"
+          contents:
+            - text: "Demo Lab 1: Intro to R"
+              file: assignment/demo-lab-01.qmd
         - section: "Final projects"
           contents:
             - text: "Optum Research Project Specification"
