@@ -1,6 +1,6 @@
 ---
-title: "Introduction and Welcome to SURE 2023"
-date: "2023-06-05"
+title: "Exploring data: Into the tidyverse"
+date: "2023-06-06"
 ---
 
 ```{r slides-videos, echo=FALSE, include=FALSE}
