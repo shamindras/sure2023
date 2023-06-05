@@ -1,6 +1,6 @@
 group,subgroup,date,title,deadline,class,assignment,note
-Orientation,Introduction,2023-06-05,Welcome to SURE 2023,,,,
-Exploratory Data Analysis,Data Exploring,2023-06-05,Demo-lab: Rstudio basics,,,,
+Orientation,Introduction,2023-06-05,Welcome to SURE 2023,,class/_files/01-slides,,
+Exploratory Data Analysis,Data Exploring,2023-06-05,Demo-lab: Rstudio basics,,,assignment/demo-lab-01,
 Exploratory Data Analysis,Data Exploring,2023-06-06,Exploring data: Into the tidyverse,,,,
 Exploratory Data Analysis,Data Visualization,2023-06-07,The grammar of graphics and ggplot2,,,,
 Exploratory Data Analysis,Data Visualization,2023-06-07,Demo-lab: wrangling with dplyr,,,,

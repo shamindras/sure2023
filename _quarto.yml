@@ -67,12 +67,12 @@ website:
         - section: "Overview"
           contents:
             - class/index.qmd
-        # - section: "Lectures"
-        #   contents:
-        #     - section: "Orientation"
-        #       contents:
-        #         - text: "1: Welcome to SURE 2023"
-        #           file: class/01-class.qmd
+        - section: "Lectures"
+          contents:
+            - section: "Orientation"
+              contents:
+                - text: "1: Welcome to SURE 2023"
+                  file: class/01-class.qmd
         #     - section: "Exploratory Data Analysis"
         #       contents:
         #         - text: "2: Exploring Data: Into the tidyverse"
