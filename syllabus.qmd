@@ -264,7 +264,7 @@ of information about when and where things will be happening in the program.
 
 A glimpse of a 'typical' week, via the Google Calendar, is as follows:
 
-> ![](./files/syllabus-daily-sure-schedule.png){width="6.5in" height="2.9722222222222223in"}
+> ![](./files/syllabus-daily-sure-schedule.png)
 
 As mentioned, data-science lectures for all SURE 2023 students will take place
 in the morning. Then there will be separate presentations for the Optum and
