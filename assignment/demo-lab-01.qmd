@@ -1,6 +1,12 @@
 ---
 title: "Getting Started with R"
 date: "June 5, 2023"
+format:
+  html: 
+    code-tools:
+      source: true
+      toggle: false
+      caption: none
 ---
 
 ## Install R and RStudio

@@ -4,7 +4,7 @@ Exploratory Data Analysis,Data Exploring,2023-06-05,Demo-lab: Rstudio basics,,,a
 Exploratory Data Analysis,Data Exploring,2023-06-06,Exploring data: Into the tidyverse,,class/02-class,,
 Data Engineering,UNIX Philosophy,2023-06-06,Getting acquainted with the UNIX philosophy,,data_eng/01-class-data-eng,,
 Exploratory Data Analysis,Data Visualization,2023-06-07,The grammar of graphics and ggplot2,,class/03-class,,
-Exploratory Data Analysis,Data Visualization,2023-06-07,Demo-lab: wrangling with dplyr,,,,
+Exploratory Data Analysis,Data Visualization,2023-06-07,Demo-lab: wrangling with dplyr,,,assignment/demo-lab-02,
 Exploratory Data Analysis,Data Visualization,2023-06-08,Visualizing 1D categorical and continuous variables,,,,
 Exploratory Data Analysis,Data Visualization,2023-06-09,Visualizing 2D categorical and continuous by categorical,,,,
 Exploratory Data Analysis,Data Visualization,2023-06-12,Density estimation,,,,

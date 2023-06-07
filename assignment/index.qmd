@@ -30,8 +30,19 @@ You can also download the RMarkdown (`.Rmd`) demo-lab files using the
 convenient links below:
 
 ::: {.callout appearance="minimal"}
-**Download Demo Lab 1 (Intro to `R`):** {{\< downloadthis _files/demo-labs/demo-lab-01.Rmd
+Download **Demo Lab 1 (Intro to `R`):** 
+
+{{\< downloadthis _files/demo-labs/demo-lab-01.Rmd
 dname="demo-lab-01" label="demo-lab-01.Rmd" icon="file-earmark"
+type="success" \>}}
+
+Download **Demo Lab 2 (data wrangling with `dplyr`):** 
+
+{{\< downloadthis _files/demo-labs/demo-lab-02.Rmd
+dname="demo-lab-02" label="demo-lab-02.Rmd" icon="file-earmark"
+type="success" \>}} 
+{{\< downloadthis _files/demo-labs/demo-lab-02-supp.zip
+dname="demo-lab-02-supp" label="demo-lab-02-supp.zip" icon="file-earmark"
 type="success" \>}}
 :::
 
