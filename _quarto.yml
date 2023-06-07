@@ -83,8 +83,8 @@ website:
               contents:
                 - text: "2: Exploring Data: Into the tidyverse"
                   file: class/02-class.qmd
-                # - text: "3: The grammar of graphics and ggplot2"
-                #   file: class/03-class.qmd
+                - text: "3: The grammar of graphics and ggplot2"
+                  file: class/03-class.qmd
                 # - text: "4: Visualizing 1D categorical and continuous variables"
                 #   file: class/04-class.qmd
                 # - text: "5: Visualizing 2D categorical and continuous by categorical variables"

@@ -18,7 +18,7 @@ class: center, middle, inverse, title-slide
 ## The grammar of graphics and ggplot2
 ]
 .date[
-### June 8th, 2022
+### June 7th, 2023
 ]
 
 ---
@@ -69,8 +69,8 @@ Batting &lt;- as_tibble(Batting)
 year_batting_summary &lt;- Batting %&gt;%
   filter(lgID %in% c("AL", "NL")) %&gt;%
   group_by(yearID) %&gt;%
-  summarize_at(vars(H, HR, SO, BB, AB),
-               sum, na.rm = TRUE) %&gt;%
+  summarize(across(c(H, HR, SO, BB, AB),
+                   sum, na.rm = TRUE)) %&gt;%
   mutate(batting_avg = H / AB)
 ```
  

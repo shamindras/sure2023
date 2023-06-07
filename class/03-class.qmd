@@ -1,6 +1,6 @@
 ---
-title: "Introduction and Welcome to SURE 2023"
-date: "2023-06-05"
+title: "The grammar of graphics and ggplot2"
+date: "2023-06-07"
 ---
 
 ```{r slides-videos, echo=FALSE, include=FALSE}
@@ -21,4 +21,11 @@ slide_buttons("/slides/03-slides", output_type = "pdf")
 
 ```{=html}
 <iframe width="780" height="500" src="/slides/03-slides.pdf" title="Lecture 1"></iframe>
+```
+
+These were additional supplementary slides which [Shamindra](/people/staff/shrotriya-shamindra.qmd)
+went through to describe the `%>%` operator and function composition.
+
+```{=html}
+<iframe width="780" height="500" src="/class/_files/data_sci/03-slides-supp.pdf" title="Lecture 1"></iframe>
 ```
