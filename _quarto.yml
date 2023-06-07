@@ -67,7 +67,13 @@ website:
         - section: "Overview"
           contents:
             - class/index.qmd
-        - section: "Lectures"
+        - section: "Data Engineering Lectures"
+          contents:
+            - section: "UNIX"
+              contents:
+                - text: "1: Getting acquainted with the UNIX philosophy"
+                  file: data_eng/01-class-data-eng.qmd
+        - section: "Data Science Lectures"
           contents:
             - section: "Orientation"
               contents:

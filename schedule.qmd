@@ -24,12 +24,13 @@ ical_url_absolute <- paste0(base_url, "/", schedule_ical_file)
 Here's your roadmap for the semester!
 
   - [**Lecture**](/class/index.qmd) ({{\< fa book-open-reader \>}}): This page
-    contains the readings for the class session. These materials will typically 
-    be released _right_ before each class, and in some cases, _directly after_ the 
-    class.
+    contains the slides (and additional readings) for the data science or data
+    engineering lectures. These materials will typically be released *right*
+    after each class, and in some cases, *directly before* the class.
 
   - [**Assignment**](/assignment/index.qmd) ({{\< fa pen-ruler \>}}): This page
-    contains the instructions for each assignment, i.e., demo-lab or final research project materials.
+    contains the instructions for each assignment, i.e., demo-lab or final
+    research project materials.
 
 ```{r build-table, include=FALSE}
 show_table <- function(group_id) {
