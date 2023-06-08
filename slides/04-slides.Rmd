@@ -1,7 +1,7 @@
 ---
 title: "Data Visualization"
 subtitle: "Visualizing 1D categorical and continuous variables"
-date: "June 9th, 2022"
+date: "June 8th, 2023"
 output:
   xaringan::moon_reader:
     lib_dir: "libs"
@@ -66,7 +66,7 @@ How can we summarize `batted_ball_type` and other categorical variables?
 ```{r batted-ball-bar, eval = FALSE}
 ohtani_batted_balls %>%
   ggplot(aes(x = batted_ball_type)) +
-  geom_bar() + #<<
+  geom_bar() +
   theme_bw()
 ```
 
@@ -102,7 +102,7 @@ __Marginal distribution__: probability that categorical variable X (e.g., `batte
 ```{r batted-ball-bar-prop, eval = FALSE}
 ohtani_batted_balls %>%
   ggplot(aes(x = batted_ball_type)) +
-  geom_bar(aes(y = after_stat(count) / sum(after_stat(count)))) + #<<
+  geom_bar(aes(y = after_stat(count) / sum(after_stat(count)))) +
   theme_bw()
 ```
 
@@ -125,14 +125,14 @@ ohtani_batted_balls %>%
 .pull-left[
 ```{r batted-ball-bar-prop2, eval = FALSE}
 ohtani_batted_balls %>%
-  group_by(batted_ball_type) %>% #<<
-  summarize(count = n()) %>% #<<
-  ungroup() %>% #<<
-  mutate(total = sum(count), #<<
-         prop = count / total) %>% #<<
+  group_by(batted_ball_type) %>%
+  summarize(count = n()) %>%
+  ungroup() %>%
+  mutate(total = sum(count),
+         prop = count / total) %>%
   ggplot(aes(x = batted_ball_type)) +
-  geom_bar(aes(y = prop), #<<
-           stat = "identity") + #<<
+  geom_bar(aes(y = prop),
+           stat = "identity") +
   theme_bw()
 ```
 
@@ -194,15 +194,15 @@ ohtani_batted_balls %>%
   ungroup() %>% 
   mutate(total = sum(count),
          prop = count / total,
-         se = sqrt(prop * (1 - prop) / total),  #<<
-         lower = prop - 2 * se,  #<<
-         upper = prop + 2 * se) %>% #<<
+         se = sqrt(prop * (1 - prop) / total),
+         lower = prop - 2 * se, 
+         upper = prop + 2 * se) %>% 
   ggplot(aes(x = batted_ball_type)) +
   geom_bar(aes(y = prop),
            stat = "identity") + 
-  geom_errorbar(aes(ymin = lower, #<<
-                    ymax = upper), #<<
-                color = "red") + #<<
+  geom_errorbar(aes(ymin = lower, 
+                    ymax = upper), 
+                color = "red") + 
   theme_bw()
 ```
 
@@ -231,9 +231,9 @@ ohtani_batted_balls %>%
          se = sqrt(prop * (1 - prop) / total),  
          lower = prop - 2 * se, 
          upper = prop + 2 * se,
-         batted_ball_type = #<<
-           fct_reorder(batted_ball_type, #<<
-                       prop)) %>% #<<
+         batted_ball_type = 
+           fct_reorder(batted_ball_type, 
+                       prop)) %>% 
   ggplot(aes(x = batted_ball_type)) +
   geom_bar(aes(y = prop),
            stat = "identity") + 
@@ -259,6 +259,8 @@ ohtani_batted_balls %>%
 
 --
 __This is the only pie chart I will show you all summer__
+
+(Note: These slides originally come from Professor Yurko, a known hater of pie charts)
 
 ---
 
@@ -294,10 +296,10 @@ sd(ohtani_batted_balls$exit_velocity)
 
 ```{r boxplot, eval = FALSE}
 ohtani_batted_balls %>%
-  ggplot(aes(y = exit_velocity)) + #<<
-  geom_boxplot(aes(x = "")) + #<<
+  ggplot(aes(y = exit_velocity)) + 
+  geom_boxplot(aes(x = "")) + 
   theme_bw() +
-  coord_flip() #<<
+  coord_flip() 
 ```
 
 - __Pros__:
@@ -326,8 +328,8 @@ _Why use `aes(x = "")` inside `geom_boxplot()`?_
 
 ```{r histogram, eval = FALSE}
 ohtani_batted_balls %>%
-  ggplot(aes(x = exit_velocity)) + #<<
-  geom_histogram() + #<<
+  ggplot(aes(x = exit_velocity)) + 
+  geom_histogram() + 
   theme_bw() 
 ```
 
@@ -362,8 +364,8 @@ $$
 library(ggbeeswarm)
 ohtani_batted_balls %>%
   ggplot(aes(y = exit_velocity)) + 
-  geom_beeswarm(aes(x = ""), #<<
-                cex = 3) + #<<
+  geom_beeswarm(aes(x = ""), 
+                cex = 3) + 
   theme_bw() +
   coord_flip()
 ```
@@ -394,7 +396,7 @@ _What does `cex = 3` do?_
 ```{r violin, eval = FALSE}
 ohtani_batted_balls %>%
   ggplot(aes(y = exit_velocity)) + 
-  geom_violin(aes(x = "")) + #<<
+  geom_violin(aes(x = "")) + 
   theme_bw() +
   coord_flip()
 ```
@@ -422,7 +424,7 @@ ohtani_batted_balls %>%
   ggplot(aes(y = exit_velocity,
              x = "")) + 
   geom_violin() + 
-  geom_boxplot(width = .2) + #<<
+  geom_boxplot(width = .2) + 
   theme_bw() +
   coord_flip()
 ```
@@ -483,7 +485,7 @@ $$\hat{F}_n(x)  = \frac{\text{# obs. with variable} \leq x}{n} = \frac{1}{n} \su
 ```{r ecdf, eval = FALSE}
 ohtani_batted_balls %>%
   ggplot(aes(x = exit_velocity)) + 
-  stat_ecdf() + #<<
+  stat_ecdf() + 
   theme_bw()
 ```
 
@@ -512,8 +514,8 @@ ohtani_batted_balls %>%
 
 ```{r rugplot, eval = FALSE}
 ohtani_batted_balls %>%
-  ggplot(aes(x = exit_velocity)) + #<<
-  geom_rug(alpha = 0.7) + #<<
+  ggplot(aes(x = exit_velocity)) + 
+  geom_rug(alpha = 0.7) + 
   theme_bw()
 ```
 
@@ -538,9 +540,9 @@ ohtani_batted_balls %>%
 
 ```{r rugplot-hist, eval = FALSE}
 ohtani_batted_balls %>%
-  ggplot(aes(x = exit_velocity)) + #<<
-  geom_rug(alpha = 0.7) + #<<
-  geom_histogram() + #<<
+  ggplot(aes(x = exit_velocity)) + 
+  geom_rug(alpha = 0.7) + 
+  geom_histogram() + 
   theme_bw()
 ```
 
@@ -551,9 +553,9 @@ ohtani_batted_balls %>%
 .pull-right[
 ```{r rugplot-ecdf, eval = FALSE}
 ohtani_batted_balls %>%
-  ggplot(aes(x = exit_velocity)) + #<<
-  geom_rug(alpha = 0.7) + #<<
-  stat_ecdf() + #<<
+  ggplot(aes(x = exit_velocity)) + 
+  geom_rug(alpha = 0.7) + 
+  stat_ecdf() + 
   theme_bw()
 ```
 
@@ -573,10 +575,10 @@ ohtani_batted_balls %>%
 
 ```{r scatter, eval = FALSE}
 ohtani_batted_balls %>%
-  ggplot(aes(x = exit_velocity, #<<
-             y = launch_angle)) + #<<
-  geom_point() + #<<
-  geom_rug(alpha = 0.4) + #<<
+  ggplot(aes(x = exit_velocity, 
+             y = launch_angle)) + 
+  geom_point() + 
+  geom_rug(alpha = 0.4) + 
   theme_bw()
 ```
 
