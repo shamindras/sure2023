@@ -3,7 +3,7 @@ title: "Computing Setup"
 ---
 
 ::: {.callout-tip}
-### A friendly note from your friendly co-instructor [Quang](/people/ta/nguyen-quang.qmd)
+### A friendly note from your friendly TA advisor [Quang](/people/ta/nguyen-quang.qmd)
 
 Welcome to the Summer Undergraduate Research Experience (SURE) 2023 hosted by
 the Department of Statistics & Data Science at Carnegie Mellon University. We
@@ -309,20 +309,6 @@ Featuring `ggplot2` cheatsheet, function documentations, FAQs, and extensions.
 
 :::
 
-::: {.callout-tip collapse="true"}
-
-## Good coding style
-
-[![](https://raw.githubusercontent.com/lorenzwalthert/some_raw_data/master/styler_0.1.gif){height=300}](https://styler.r-lib.org/)
-
-The [tidyverse style guide](https://style.tidyverse.org/) is a great reference
-for good coding style. It is supported by the
-[`styler`](https://styler.r-lib.org/) package in `R`. The figure above provides
-a simple demonstration for code formatting with `styler`, taken from the package
-site.
-
-:::
-
 ## Videos
 
 ::: {.callout-note collapse="true"}
@@ -340,7 +326,87 @@ packages. Numerous examples of TidyTuesday contributions (e.g., visualizations)
 can be found under the [\#TidyTuesday](https://twitter.com/hashtag/TidyTuesday)
 Twitter hashtag.
   
-:::  
+::: 
+
+## `RStudio` Customization
+
+::: {.callout-tip collapse="true"}
+
+## Code formatting
+
+[![](https://raw.githubusercontent.com/lorenzwalthert/some_raw_data/master/styler_0.1.gif){height=300}](https://styler.r-lib.org/)
+
+The [tidyverse style guide](https://style.tidyverse.org/) is a great reference
+for good coding style. It is supported by the
+[`styler`](https://styler.r-lib.org/) package in `R`. The figure above provides
+a simple demonstration for code formatting with `styler`, taken from the package
+site.
+
+:::
+
+
+::: {.callout-tip collapse="true"}
+
+## RStudio theme
+
+`RStudio` can be customized with different themes. To explore built-in themes,
+
+* Navigate to the menu bar at the top of your screen
+* Choose **Tools** $\rightarrow$ **Global Options** $\rightarrow$ **Appearance**
+* Change your RStudio theme under **Editor theme**
+
+Note that within the **Appearance** tab, there are also options for changing your **Editor font**, **Editor font size**, etc.
+
+The following gif illustrates a theme switch from *Textmate (default)* to *Tomorrow Night Bright*, which is the theme used by your TA advisor [Quang](/people/ta/nguyen-quang.qmd).
+
+<center>
+
+![](files/images/rstudio-theme.gif)
+
+</center>
+
+Further, the [`rsthemes`](https://github.com/gadenbuie/rsthemes) package provides additional options to the original built-in themes.
+The package can be installed with the following command:
+
+```{r, eval=FALSE}
+install.packages(
+  "rsthemes",
+  repos = c(gadenbuie = 'https://gadenbuie.r-universe.dev', getOption("repos"))
+)
+```
+
+You can then follow the same instructions as above and select your favorite theme.
+For your information, your co-instructor [Shamindra](/people/staff/shrotriya-shamindra.qmd) uses the *Dracula* theme.
+
+
+:::
+
+::: {.callout-tip collapse="true"}
+
+## Font ligatures
+
+(*This section is heavily borrowed from [Jeffrey Girard](https://jmgirard.com/)'s excellent blog post on [Using Fira Code Ligatures in RStudio](https://jmgirard.com/firacode/). Please check out the linked article for step-by-step instructions.*)
+
+To quote the blog post (which quoted the [Fira Code README](https://github.com/tonsky/FiraCode)):
+
+<blockquote><p><strong>Problem</strong></p>
+<p>Programmers use a lot of symbols, often encoded with several characters. For the human brain, sequences like <code>-&gt;</code>, <code>&lt;=</code> or <code>:=</code> are single logical tokens, even if they take two or three characters on the screen. Your eye spends a non-zero amount of energy to scan, parse and join multiple characters into a single logical one. Ideally, all programming languages should be designed with full-fledged Unicode symbols for operators, but that&#8217;s not the case yet.</p>
+<p><strong>Solution</strong></p>
+<p>Fira Code is a free monospaced font containing ligatures for common programming multi-character combinations. This is just a font rendering feature: underlying code remains ASCII-compatible. This helps to read and understand code faster. For some frequent sequences like <code>..</code> or <code>//</code>, ligatures allow us to correct spacing.</p></blockquote>
+
+Here are some examples of ligatures for common operators in `R`.
+
+|Without ligature|With ligature|
+|:--------------:|:-----------:|
+|`x <- 10`| <img decoding="async" src="https://jmgirard.com/wp-content/uploads/2022/06/left_arrow.png" alt="" height="18"></p> |
+|`x <= y` | <img decoding="async" src="https://jmgirard.com/wp-content/uploads/2022/06/less_equal.png" alt="" height="18"></p> |
+|`x >= y` | <img decoding="async" src="https://jmgirard.com/wp-content/uploads/2022/06/more_equal.png" alt="" height="18"></p> |
+|`x == y` | <img decoding="async" src="https://jmgirard.com/wp-content/uploads/2022/06/equal.png" alt="" height="18"></p>      |
+|`x != y` | <img decoding="async" src="https://jmgirard.com/wp-content/uploads/2022/06/not_equal.png" alt="" height="18"></p>  |
+
+Once again, please see the aforementioned blog post for a detailed instruction of how to set up ligatures in `RStudio`.
+
+:::
 
 ---
 
