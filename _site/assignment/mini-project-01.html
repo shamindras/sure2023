@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Explore cutting-edge statistics and data science methodology with applications in sports and health analytics">
+
+<title>SURE 2023 - EDA Mini-Project Requirements and Data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="..//files/cmu-statds-icon-hex-2-bg.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<meta property="og:title" content="SURE 2023 - EDA Mini-Project Requirements and Data">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://cmu-sure-2023.netlify.app//files/cmu-statds-icon-hex-2-bg.png">
+<meta property="og:site-name" content="SURE 2023">
+<meta property="og:locale" content="en_US">
+<meta property="og:image:height" content="2000">
+<meta property="og:image:width" content="1728">
+<meta name="twitter:title" content="SURE 2023 - EDA Mini-Project Requirements and Data">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://cmu-sure-2023.netlify.app//files/cmu-statds-icon-hex-2-bg.png">
+<meta name="twitter:creator" content="@CMU_Stats">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image-height" content="2000">
+<meta name="twitter:image-width" content="1728">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../files/cmu-statds-icon-hex-2-bg.png" alt="SURE 2023 logo." class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">SURE 2023</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../people.html" rel="" target="">
+ <span class="menu-text">Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../syllabus.html" rel="" target="">
+ <span class="menu-text">Syllabus</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../schedule.html" rel="" target="">
+ <span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../class/index.html" rel="" target="">
+ <span class="menu-text">Lectures</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="../assignment/index.html" rel="" target="" aria-current="page">
+ <span class="menu-text">Assignments</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-guides" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Guides</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-guides">    
+        <li class="dropdown-header">SURE 2023 Computing Setup</li>
+        <li>
+    <a class="dropdown-item" href="../guides/computing-setup.html" rel="" target="">
+ <span class="dropdown-text">Computing Setup</span></a>
+  </li>  
+        <li class="dropdown-header">SURE 2023 Pittsburgh Resources</li>
+        <li>
+    <a class="dropdown-item" href="../guides/pittsburgh-student-resources.html" rel="" target="">
+ <span class="dropdown-text">Pittsburgh-based resources</span></a>
+  </li>  
+        <li class="dropdown-header">SURE 2023 Exploring Pittsburgh</li>
+        <li>
+    <a class="dropdown-item" href="../guides/pittsburgh-fun-activities.html" rel="" target="">
+ <span class="dropdown-text">Fun activities to do in Pittsburgh</span></a>
+  </li>  
+        <li class="dropdown-header">SURE 2023 Website Credits</li>
+        <li>
+    <a class="dropdown-item" href="../credits.html" rel="" target="">
+ <span class="dropdown-text">Website Credits</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://cmu-sure-2023.slack.com" rel="" target=""><i class="bi bi-slack" role="img" aria-label="Slack">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../assignment/mini-project-01.html">CMSAC Mini projects</a></li><li class="breadcrumb-item"><a href="../assignment/mini-project-01.html">EDA Mini-Project 1: Requirements and Data</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Overview</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../assignment/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Assignments</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Demo Labs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../assignment/demo-lab-01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Demo Lab 1: Intro to R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../assignment/demo-lab-02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Demo Lab 2: Data wrangling with dplyr</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">CMSAC Mini projects</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../assignment/mini-project-01.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">EDA Mini-Project 1: Requirements and Data</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Final projects</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../assignment/optum-project-guidelines.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Optum Research Project Specification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../assignment/report-writing-guideline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">SURE 2023 Report Writing Guideline</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#deliverables" id="toc-deliverables" class="nav-link" data-scroll-target="#deliverables">Deliverables</a></li>
+  <li><a href="#timeline" id="toc-timeline" class="nav-link" data-scroll-target="#timeline">Timeline</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a>
+  <ul class="collapse">
+  <li><a href="#eda-projects-data-overview" id="toc-eda-projects-data-overview" class="nav-link" data-scroll-target="#eda-projects-data-overview">EDA projects data overview</a></li>
+  <li><a href="#nba-player-statistics" id="toc-nba-player-statistics" class="nav-link" data-scroll-target="#nba-player-statistics">NBA Player Statistics</a></li>
+  <li><a href="#wnba-shots" id="toc-wnba-shots" class="nav-link" data-scroll-target="#wnba-shots">WNBA Shots</a></li>
+  <li><a href="#nfl-team-statistics" id="toc-nfl-team-statistics" class="nav-link" data-scroll-target="#nfl-team-statistics">NFL Team Statistics</a></li>
+  <li><a href="#nhl-shots" id="toc-nhl-shots" class="nav-link" data-scroll-target="#nhl-shots">NHL Shots</a></li>
+  <li><a href="#nwsl-team-statistics" id="toc-nwsl-team-statistics" class="nav-link" data-scroll-target="#nwsl-team-statistics">NWSL Team Statistics</a></li>
+  <li><a href="#wta-grand-slam-matches" id="toc-wta-grand-slam-matches" class="nav-link" data-scroll-target="#wta-grand-slam-matches">WTA Grand Slam Matches</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header">
+<h1 class="title display-7">EDA Mini-Project Requirements and Data</h1>
+
+</header>
+
+<section id="overview" class="level3">
+<h3 class="anchored" data-anchor-id="overview">Overview</h3>
+<p>This mini-project will begin on Thursday, June 8 and conclude with a 10 minute (maximum) presentation one week later on Friday, June 12. Students will be paired into groups of two or three and randomly assigned one of six sports datasets. The goal of this project is to practice understanding the data structure of a dataset, generating hypotheses and using exploratory data analysis and data visualization to attempt to answer these hypotheses.</p>
+</section>
+<section id="deliverables" class="level3">
+<h3 class="anchored" data-anchor-id="deliverables">Deliverables</h3>
+<p>Each team is expected to produce slides to accompany their 5 minute presentation with the following information:</p>
+<ul>
+<li>Explanation of the data structure of the dataset</li>
+<li>Three hypotheses about the dataset</li>
+<li>Three data visualizations exploring the hypothesis, at least two of which must be multivariate. Each visualization must be in a different format from the other two, and you must have at least one categorical and one continuous visualization.</li>
+<li>One clustering example</li>
+<li>Conclusions reached for the hypothesis using the data visualizations</li>
+</ul>
+</section>
+<section id="timeline" class="level3">
+<h3 class="anchored" data-anchor-id="timeline">Timeline</h3>
+<p>Groups and datasets will be assigned during the lab session on Thursday 6/8. You will then have the rest of that lab session, as well as the lab sessions Monday, Wednesday, and Thursday of the following week to complete the mini-project</p>
+<p><strong>Thursday, June 15 @ 5:00pm EST</strong> - Slides must be completed and ready for presentation. Send your slides to Meg’s email (mellingw@andrew.cmu.edu). All code and visualizations must be done in <code>R</code>, but the slides may be created in any program.</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<section id="eda-projects-data-overview" class="level3">
+<h3 class="anchored" data-anchor-id="eda-projects-data-overview">EDA projects data overview</h3>
+<p>There are six different datasets for the EDA projects (linked here):</p>
+<ul>
+<li><a href="https://shorturl.at/hAFV4">NBA Player Statistics</a></li>
+<li><a href="https://shorturl.at/fit17">WNBA Shots</a></li>
+<li><a href="https://shorturl.at/jnuEP">NFL Team Statistics</a></li>
+<li><a href="https://shorturl.at/tNQUX">NHL Shots</a></li>
+<li><a href="https://shorturl.at/iEF14">NWSL Team Statistics</a></li>
+<li><a href="https://shorturl.at/cJL67">WTA Grand Slam Matches</a></li>
+</ul>
+<p>These datasets were curated by Ron Yurko as part of the <a href="https://data.scorenetwork.org/">SCORE project</a>, and his description of each dataset can be found below.</p>
+</section>
+<section id="nba-player-statistics" class="level3">
+<h3 class="anchored" data-anchor-id="nba-player-statistics">NBA Player Statistics</h3>
+<p>The <a href="https://www.nba.com/">National Basketball Association (NBA)</a> is the top men’s professional basketball league in the world. While players have predefined positions, the sport is becoming increasingly <em>positionless</em> - with centers attempting more three point shots and guards driving the ball inside to dunk. With this dataset, you can explore clustering NBA players based on various types of statistics and compare your players labels to the predefined positions.</p>
+<p>This dataset contains statistics about 812 player-team stints for during the 2021-2022 NBA regular season. For players that played for <span class="math inline">\(T\)</span> teams during the season (due to trade), there are <span class="math inline">\(T+1\)</span> rows with one row for their performance with each of the <span class="math inline">\(T\)</span> teams and another row indicating their total performance (where <code>tm = TOT</code>) across the full season regardless of team. The counting stats are reported on a per 100 team possessions scale, to normalize for playing time differences.</p>
+<p>The data was collected using the <a href="https://github.com/rtelmore/ballr"><code>ballr</code> package in <code>R</code></a>., which gathers data from <a href="https://www.basketball-reference.com//leagues/NBA_2022_per_poss.html">basketball-reference.com</a>.</p>
+<table class="table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 76%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>player</td>
+<td>Name of player</td>
+</tr>
+<tr class="even">
+<td>pos</td>
+<td>Player’s designated position</td>
+</tr>
+<tr class="odd">
+<td>age</td>
+<td>Player’s age on February 1st of the season</td>
+</tr>
+<tr class="even">
+<td>tm</td>
+<td>Name of team</td>
+</tr>
+<tr class="odd">
+<td>g</td>
+<td>Number of games</td>
+</tr>
+<tr class="even">
+<td>gs</td>
+<td>Number of games started</td>
+</tr>
+<tr class="odd">
+<td>mp</td>
+<td>Number of minutes played</td>
+</tr>
+<tr class="even">
+<td>fg</td>
+<td>Field goals per 100 team possessions</td>
+</tr>
+<tr class="odd">
+<td>fga</td>
+<td>Field goal attempts per 100 team possessions</td>
+</tr>
+<tr class="even">
+<td>fgpercent</td>
+<td>Field goal percentage</td>
+</tr>
+<tr class="odd">
+<td>x3p</td>
+<td>3 point field goals per 100 team possessions</td>
+</tr>
+<tr class="even">
+<td>x3pa</td>
+<td>3 point field goal attempts per 100 team possessions</td>
+</tr>
+<tr class="odd">
+<td>x3ppercent</td>
+<td>3 point field goal percentage</td>
+</tr>
+<tr class="even">
+<td>x2p</td>
+<td>2 point field goals per 100 team possessions</td>
+</tr>
+<tr class="odd">
+<td>x2pa</td>
+<td>2 point field goal attempts per 100 team possessions</td>
+</tr>
+<tr class="even">
+<td>x2ppercent</td>
+<td>2 point field goal percentage</td>
+</tr>
+<tr class="odd">
+<td>ft</td>
+<td>Free throws per 100 team possessions</td>
+</tr>
+<tr class="even">
+<td>fta</td>
+<td>Free throw attempts per 100 team possessions</td>
+</tr>
+<tr class="odd">
+<td>ftpercent</td>
+<td>Free throw percentage</td>
+</tr>
+<tr class="even">
+<td>orb</td>
+<td>Offensive rebounds per 100 team possessions</td>
+</tr>
+<tr class="odd">
+<td>drb</td>
+<td>Defensive rebounds per 100 team possessions</td>
+</tr>
+<tr class="even">
+<td>trb</td>
+<td>Total rebounds per 100 team possessions</td>
+</tr>
+<tr class="odd">
+<td>ast</td>
+<td>Assists per 100 team possessions</td>
+</tr>
+<tr class="even">
+<td>stl</td>
+<td>Steals per 100 team possessions</td>
+</tr>
+<tr class="odd">
+<td>blk</td>
+<td>Blocks per 100 team possessions</td>
+</tr>
+<tr class="even">
+<td>tov</td>
+<td>Turnovers per 100 team possessions</td>
+</tr>
+<tr class="odd">
+<td>pf</td>
+<td>Personal fouls per 100 team possessions</td>
+</tr>
+<tr class="even">
+<td>pts</td>
+<td>Points per 100 team possessions</td>
+</tr>
+<tr class="odd">
+<td>ortg</td>
+<td>Offensive Rating - an estimate of points produced per 100 possessions scale</td>
+</tr>
+<tr class="even">
+<td>drtg</td>
+<td>Defensive Rating - an estimate of points allowed per 100 possessions scale</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="wnba-shots" class="level3">
+<h3 class="anchored" data-anchor-id="wnba-shots">WNBA Shots</h3>
+<p>The <a href="https://www.wnba.com/">Women’s National Basketball Association (WNBA)</a> is the top professional women’s basketball league in the world. The league records every shot players take along with contextual information about the shot such as its location, a description of the shot type, as well as the outcome. With this dataset, you can predict the success of each shot attempt to compute the expected value of shot types and compare team decision making.</p>
+<p>This dataset contains information about 41,497 shots during the 2021-2022 WNBA season.</p>
+<p>The data was collected using the <a href="https://wehoop.sportsdataverse.org/"><code>wehoop</code> package in <code>R</code></a>.</p>
+<table class="table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 76%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>game_id</td>
+<td>Unique integer ID for each WNBA game</td>
+</tr>
+<tr class="even">
+<td>game_play_number</td>
+<td>Integer indicating the recorded play number for the shot attempt, where 1 indicates the first play of the game</td>
+</tr>
+<tr class="odd">
+<td>desc</td>
+<td>String detailed description of shot attempt</td>
+</tr>
+<tr class="even">
+<td>shot_type</td>
+<td>String description of the shot type (e.g., dunk, layup, jump shot, etc.)</td>
+</tr>
+<tr class="odd">
+<td>made_shot</td>
+<td>Boolean denoting if the shot was made (TRUE) or not (FALSE)</td>
+</tr>
+<tr class="even">
+<td>shot_value</td>
+<td>Numeric value of the shot outcome (0 for shots that were not made, and a positive value for made shots)</td>
+</tr>
+<tr class="odd">
+<td>coordinate_x</td>
+<td>Horizontal location in feet of shot attempt where the hoop would be located at 25 feet</td>
+</tr>
+<tr class="even">
+<td>coordinate_y</td>
+<td>Vertical location in feet of shot attempt with respect to the target hoop (the hoop should be a little in front of 0 but the coordinate system is not exact)</td>
+</tr>
+<tr class="odd">
+<td>shooting_team</td>
+<td>String name of the team taking the shot</td>
+</tr>
+<tr class="even">
+<td>home_name</td>
+<td>String name of the home team</td>
+</tr>
+<tr class="odd">
+<td>away_name</td>
+<td>String name of the away team</td>
+</tr>
+<tr class="even">
+<td>home_score</td>
+<td>Integer value of the home team score after the shot</td>
+</tr>
+<tr class="odd">
+<td>away_score</td>
+<td>Integer value of the away team score after the shot</td>
+</tr>
+<tr class="even">
+<td>qtr</td>
+<td>Integer denoting the quarter/period in the game</td>
+</tr>
+<tr class="odd">
+<td>quarter_seconds_remaining</td>
+<td>Numeric integer value for number of seconds remaining in quarter/period</td>
+</tr>
+<tr class="even">
+<td>game_seconds_remaining</td>
+<td>Numeric integer value for number of seconds remaining in game</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="nfl-team-statistics" class="level3">
+<h3 class="anchored" data-anchor-id="nfl-team-statistics">NFL Team Statistics</h3>
+<p>The <a href="https://www.nfl.com/">National Football League (NFL)</a> is the top professional American football league in the world. While a team’s record ultimately determines whether or not they make the playoffs, their score differential (points for - points against) is often a better indicator of a team’s ability. But what aspects of a team’s performance are related to their point differential? Is passing more important than rushing? What about offense in comparison to defense? The NFL records a variety of statistics, and the <a href="">public NFL analytics community</a> have <a href="https://arxiv.org/abs/1802.00998">developed advanced metrics</a> such as expected points added (EPA) that provide deeper insight into a team’s performance. With this dataset of statistics dating back to 1999, you can explore variation between teams since as well as which types of statistics are relevant predictor variables of record and point differential.</p>
+<p>This dataset contains statistics about the regular season performance for each NFL team from 1999 to 2022 team. The data was collected using the <a href="https://nflreadr.nflverse.com/index.html"><code>nflreadr</code> package in <code>R</code></a>.</p>
+<p>Each row in the dataset corresponds to a single NFL team in a single regular season. There are a total of 765 team-seasons, with 56 total columns. The column names are organized below by the type of information they contain, with the first set of columns being self-explanatory:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>season</td>
+<td>Regular season year of team’s statistics</td>
+</tr>
+<tr class="even">
+<td>team</td>
+<td>NFL team three letter abbreviation</td>
+</tr>
+</tbody>
+</table>
+<p>There are also columns with season level outcomes:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>points_score</td>
+<td>Total number of points scored by the team</td>
+</tr>
+<tr class="even">
+<td>points_allowed</td>
+<td>Total number of points allowed by the team</td>
+</tr>
+<tr class="odd">
+<td>wins</td>
+<td>Number of games the team won</td>
+</tr>
+<tr class="even">
+<td>losses</td>
+<td>Number of games the team lost</td>
+</tr>
+<tr class="odd">
+<td>ties</td>
+<td>Number of games the team tied</td>
+</tr>
+<tr class="even">
+<td>score_differential</td>
+<td>points scored - points allowed</td>
+</tr>
+</tbody>
+</table>
+<p>There are also several columns corresponding to offensive and defensive summaries of the team’s performance in the season separated by play type (either pass or run):</p>
+<table class="table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 76%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>offense/defense_completion_percentage</td>
+<td>Passing completion percentage either for (offense) or against (defense)</td>
+</tr>
+<tr class="even">
+<td>offense/defense_total_yards_gained_pass/run</td>
+<td>Total number of yards gained (offense) or allowed (defense) by play type (pass or run)</td>
+</tr>
+<tr class="odd">
+<td>offense/defense_ave_yards_gained_pass/run</td>
+<td>Average number of yards gained (offense) or allowed (defense) per play by play type (pass or run)</td>
+</tr>
+<tr class="even">
+<td>offense/defense_total_air_yards</td>
+<td>Total number of air yards gained (offense) or allowed (defense), where air yards correspond to perpendicular yards traveled from the line of scrimmage to location of catch for passing plays</td>
+</tr>
+<tr class="odd">
+<td>offense/defense_ave_air_yards</td>
+<td>Average number of air yards gained (offense) or allowed (defense) per passing play</td>
+</tr>
+<tr class="even">
+<td>offense/defense_total_yac</td>
+<td>Total number of yards after catch gained (offense) or allowed (defense)</td>
+</tr>
+<tr class="odd">
+<td>offense/defense_ave_yac</td>
+<td>Average number of yards after catch gained (offense) or allowed (defense) per passing play</td>
+</tr>
+<tr class="even">
+<td>offense/defense_n_plays_pass/run</td>
+<td>Total number of plays by the team (offense) or against (defense) by play type (pass or run)</td>
+</tr>
+<tr class="odd">
+<td>offense/defense_n_interceptions</td>
+<td>Total number of interceptions thrown (offense) or caught (defense)</td>
+</tr>
+<tr class="even">
+<td>offense/defense/n_fumbles_lost_pass/run</td>
+<td>Total number of fumbles lost (offense) or forced (defense) by play type (pass or run)</td>
+</tr>
+<tr class="odd">
+<td>offense/defense_total_epa_pass/run</td>
+<td>Total expected points added (offense) or allowed (defense) by play type (pass or run)</td>
+</tr>
+<tr class="even">
+<td>offense/defense_ave_epa_pass/run</td>
+<td>Average expected points added (offense) or allowed (defense) per play by play type (pass or run)</td>
+</tr>
+<tr class="odd">
+<td>offense/defense_total_wpa_pass/run</td>
+<td>Total win probability added (offense) or allowed (defense) by play type (pass or run)</td>
+</tr>
+<tr class="even">
+<td>offense/defense_ave_wpa_pass/run</td>
+<td>Average win probability added (offense) or allowed (defense) per play by play type (pass or run)</td>
+</tr>
+<tr class="odd">
+<td>offense/defense_total_epa_pass/run</td>
+<td>Total expected points added (offense) or allowed (defense) by play type (pass or run)</td>
+</tr>
+<tr class="even">
+<td>offense/defense_success_rate_pass/run</td>
+<td>Proportion of plays with positive expected points added (offense) or allowed (defense) by play type (pass or run)</td>
+</tr>
+</tbody>
+</table>
+<p>The EPA variables are <em>advanced</em> NFL statistics, conveying how much value a team is adding over the average team in a given situation. It’s on a points scale instead of the typically used yards, because not all yards are created equal in American football (10 yard gain on 3rd and 15 is much less valuable than a 2 yard gain on 4th and 1). For offensive stats the higher the EPA the better, but for defensive stats the lower (more negative) the EPA the better. The WPA variables are similar except they are measuring play value in terms of win probability.</p>
+</section>
+<section id="nhl-shots" class="level3">
+<h3 class="anchored" data-anchor-id="nhl-shots">NHL Shots</h3>
+<p>The <a href="https://www.nhl.com/">National Hockey League (NHL)</a> is the top professional men’s hockey league in the world. The league records every shot players take along with contextual information about the shot such as its location, the player’s distance and angle to the goal when attempting the shot, as well as the outcome (blocked, missed, or goal). Using this information, the hockey analytics community have developed measures of shot quality known as <a href="https://www.nhl.com/kraken/news/analytics-with-alison-expected-goals/c-327728890"><strong>expected goals</strong></a>. With this dataset, you can create your own <strong>expected goals model</strong> to predict the shot outcome given relevant features.</p>
+<p>This dataset contains information about 104,316 shots during the 2021-2022 NHL season.</p>
+<p>The data was collected using the <a href="https://hockeyr.netlify.app/index.html"><code>hockeyR</code> package in <code>R</code></a>.</p>
+<table class="table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 76%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>description</td>
+<td>String detailed description of event</td>
+</tr>
+<tr class="even">
+<td>shot_outcome</td>
+<td>String denoting the outcome of the shot, either BLOCKED_SHOT (meaning blocked by a non-goalie), GOAL, MISSED_SHOT (shot that missed the net), or SHOT (shot on net that was saved by a goalie)</td>
+</tr>
+<tr class="odd">
+<td>period</td>
+<td>Integer value of the game period</td>
+</tr>
+<tr class="even">
+<td>period_seconds_remaining</td>
+<td>Numeric value of the seconds remaining in the period</td>
+</tr>
+<tr class="odd">
+<td>game_seconds_remaining</td>
+<td>Numeric value of the seconds remaining in the game; negative for overtime periods</td>
+</tr>
+<tr class="even">
+<td>home_score</td>
+<td>Integer value of the home team score after the event</td>
+</tr>
+<tr class="odd">
+<td>away_score</td>
+<td>Integer value of the away team score after the event</td>
+</tr>
+<tr class="even">
+<td>home_name</td>
+<td>String name of the home team</td>
+</tr>
+<tr class="odd">
+<td>away_name</td>
+<td>String name of the away team</td>
+</tr>
+<tr class="even">
+<td>event_team</td>
+<td>String defining the team taking the shot</td>
+</tr>
+<tr class="odd">
+<td>event_player_1_name</td>
+<td>String name of the primary event player</td>
+</tr>
+<tr class="even">
+<td>event_player_1_type</td>
+<td>String indicator for the role of event_player_1 (typically the shooter)</td>
+</tr>
+<tr class="odd">
+<td>event_player_2_name</td>
+<td>String name of the secondary event player</td>
+</tr>
+<tr class="even">
+<td>event_player_2_type</td>
+<td>String indicator for the role of event_player_2 (blocker, assist, or goalie)</td>
+</tr>
+<tr class="odd">
+<td>strength_code</td>
+<td>String indicator for game strength: EV (Even), SH (Shorthanded), or PP (Power Play)</td>
+</tr>
+<tr class="even">
+<td>x_fixed</td>
+<td>Numeric transformed x-coordinate of event in feet, where the home team always shoots to the right, away team to the left</td>
+</tr>
+<tr class="odd">
+<td>y_fixed</td>
+<td>Numeric transformed y-coordinate of event in feet, where the home team always shoots to the right, away team to the left</td>
+</tr>
+<tr class="even">
+<td>shot_distance</td>
+<td>Numeric distance (in feet) to center of net for unblocked shot events</td>
+</tr>
+<tr class="odd">
+<td>shot_angle</td>
+<td>Numeric angle (in degrees) to center of net for unlocked shot events</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="nwsl-team-statistics" class="level3">
+<h3 class="anchored" data-anchor-id="nwsl-team-statistics">NWSL Team Statistics</h3>
+<p>The <a href="https://www.nwslsoccer.com/">National Women’s Soccer League (NWSL)</a> is the top professional women’s soccer league in the United States. While a team’s record ultimately determines their ranking, goal differential (goals scored - goals conceded) is often a better indicator of a team’s ability. But what aspects of a team’s performance are related to their goal differential? The NWSL records a variety of statistics describing a team’s performance, such as the percentage of time they maintain possession, percentage of shots on target, etc. With this dataset, you can explore variation between teams as well as which statistics are relevant predictor variables of goal differential.</p>
+<p>This dataset contains statistics about the regular season performance for each NWSL team from 2016 to 2022 (excluding 2020 which was cancelled due to COVID).</p>
+<p>The data was collected using the <a href="https://github.com/nwslR/nwslR"><code>nwslR</code> package in <code>R</code></a>.</p>
+<table class="table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 76%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>team_name</td>
+<td>Name of NWSL team</td>
+</tr>
+<tr class="even">
+<td>season</td>
+<td>Regular season year of team’s statistics</td>
+</tr>
+<tr class="odd">
+<td>games_played</td>
+<td>Number of games team played in season</td>
+</tr>
+<tr class="even">
+<td>goal_differential</td>
+<td>Goals scored - goals conceded</td>
+</tr>
+<tr class="odd">
+<td>goals</td>
+<td>Number of goals scores</td>
+</tr>
+<tr class="even">
+<td>goals_conceded</td>
+<td>Number of goals conceded</td>
+</tr>
+<tr class="odd">
+<td>cross_accuracy</td>
+<td>Percent of crosses that were successful</td>
+</tr>
+<tr class="even">
+<td>goal_conversion_pct</td>
+<td>Percent of shots scored</td>
+</tr>
+<tr class="odd">
+<td>pass_pct</td>
+<td>Pass accuracy</td>
+</tr>
+<tr class="even">
+<td>pass_pct_opposition_half</td>
+<td>Pass accuracy in opposition half</td>
+</tr>
+<tr class="odd">
+<td>possession_pct</td>
+<td>Percentage of overall ball possession the team had during the season</td>
+</tr>
+<tr class="even">
+<td>shot_accuracy</td>
+<td>Percentage of shots on target</td>
+</tr>
+<tr class="odd">
+<td>tackle_success_pct</td>
+<td>Percent of successful tackles</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="wta-grand-slam-matches" class="level3">
+<h3 class="anchored" data-anchor-id="wta-grand-slam-matches">WTA Grand Slam Matches</h3>
+<p>The <a href="https://www.wtatennis.com/">Women’s Tennis Associate (WTA)</a> organizes the top women’s professional tennis tour in the world. Throughout the year, there are four major tournaments yielding the most ranking points, prize money, and fame. These are known as the Grand Slam tournaments, consisting of (in order): Australian Open, French Open (aka Roland Garros), Wimbledon, and the US Open. With this dataset of information about winners and losers in WTA Grand Slam matches from 2018 to 2022, you’ll be able to explore statistics collected during matches and information about the athletes to predict match outcomes.</p>
+<p>This dataset contains all WTA matches between 2018 and 2022, courtesy of <a href="https://github.com/JeffSackmann/tennis_wta">Jeff Sackmann’s famous tennis repository</a>.</p>
+<p>There are 2,413 rows in this dataset where each row corresponds to a single WTA Grand Slam match. Each row has 38 columns with general information about the matches, as well as columns describing the winner and loser of the matches:</p>
+<table class="table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 76%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>tourney_name</code></td>
+<td>name of the Grand Slam Tournament (French Open is recorded as ROLAND GARROS)</td>
+</tr>
+<tr class="even">
+<td><code>surface</code></td>
+<td>type of court surface</td>
+</tr>
+<tr class="odd">
+<td><code>tourney_date</code></td>
+<td>eight digits, YYYYMMDD, usually the Monday of the tournament week</td>
+</tr>
+<tr class="even">
+<td><code>winner/loser_seed</code></td>
+<td>seed of winning/losing player</td>
+</tr>
+<tr class="odd">
+<td><code>winner/loser_name</code></td>
+<td>Name of the winning/losing player</td>
+</tr>
+<tr class="even">
+<td><code>winner/loser_hand</code></td>
+<td>R = right, L = left, U = unknown. For ambidextrous players, this is their serving hand</td>
+</tr>
+<tr class="odd">
+<td><code>winner/loser_ht</code></td>
+<td>height in centimeters, where available</td>
+</tr>
+<tr class="even">
+<td><code>winner/loser_ioc</code></td>
+<td>three-character country code</td>
+</tr>
+<tr class="odd">
+<td><code>winner/loser_age</code></td>
+<td>age, in years, as of the tourney_date</td>
+</tr>
+<tr class="even">
+<td><code>score</code></td>
+<td>final match score</td>
+</tr>
+<tr class="odd">
+<td><code>round</code></td>
+<td>tournament round</td>
+</tr>
+<tr class="even">
+<td><code>minutes</code></td>
+<td>match length in minutes</td>
+</tr>
+<tr class="odd">
+<td><code>w/l_ace</code></td>
+<td>winner/loser’s number of aces</td>
+</tr>
+<tr class="even">
+<td><code>w/l_df</code></td>
+<td>winner/loser’s number of doubles faults</td>
+</tr>
+<tr class="odd">
+<td><code>w/l_svpt</code></td>
+<td>winner/loser’s number of serve points</td>
+</tr>
+<tr class="even">
+<td><code>w/l_1stIn</code></td>
+<td>winner/loser’s number of first serves made</td>
+</tr>
+<tr class="odd">
+<td><code>w/l_1stWon</code></td>
+<td>winner/loser’s number of first-serve points won</td>
+</tr>
+<tr class="even">
+<td><code>w/l_2ndWon</code></td>
+<td>winner/loser’s number of second-serve points won</td>
+</tr>
+<tr class="odd">
+<td><code>w/l_SvGms</code></td>
+<td>winner/loser’s number of serve games</td>
+</tr>
+<tr class="even">
+<td><code>w/l_bpSaved</code></td>
+<td>winner/loser’s number of break points saved</td>
+</tr>
+<tr class="odd">
+<td><code>w/l_bpFaced</code></td>
+<td>winner/loser’s number of break points faced</td>
+</tr>
+<tr class="even">
+<td><code>winner/loser_rank</code></td>
+<td>winner/loser’s WTA rank, as of the tourney_date, or the most recent ranking date before the tourney_date</td>
+</tr>
+</tbody>
+</table>
+<p>Note that a full glossary of the features available for match data can be found <a href="https://github.com/JeffSackmann/tennis_atp/blob/master/matches_data_dictionary.txt">here</a>.</p>
+</section>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>Dror A (2023). <em>nwslR: Compiles dataset for the National Women’s Soccer League (NWSL)</em>. R package version 0.0.0.9001.</p>
+<p>Elmore R (2020). <em>ballr: Access to Current and Historical Basketball Data</em>. R package version 0.2.6.</p>
+<p>Gilani S, Hutchinson G (2022). <em>wehoop: Access Women’s Basketball Play by Play Data</em>. R package version 1.5.0, <a href="https://CRAN.R-project.org/package=wehoop" class="uri">https://CRAN.R-project.org/package=wehoop</a>.</p>
+<p>Ho T, Carl S (2022). <em>nflreadr: Download ‘nflverse’ Data</em>. R package version 1.3.1, <a href="https://CRAN.R-project.org/package=nflreadr" class="uri">https://CRAN.R-project.org/package=nflreadr</a>.</p>
+<p>Howell B, Gilani S (2022). <em>fastRhockey: Functions to Access Premier Hockey Federation and National Hockey League Play by Play Data</em>. R package version 0.4.0, <a href="https://CRAN.R-project.org/package=fastRhockey" class="uri">https://CRAN.R-project.org/package=fastRhockey</a>.</p>
+<p>Morse D (2023). <em>hockeyR: Collect and Clean Hockey Stats</em>. R package version 1.3.1, <a href="https://github.com/danmorse314/hockeyR" class="uri">https://github.com/danmorse314/hockeyR</a>.</p>
+<p>WTA data accessed from <a href="https://github.com/JeffSackmann/tennis_wta">Jeff Sackmann’s tennis GitHub repository</a></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">Content <i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i> 2023 by <a href="https://www.cmu.edu">Carnegie Mellon University</a> <br> All content licensed under a <i class="fa-brands fa-creative-commons" aria-label="creative-commons"></i> <i class="fa-brands fa-creative-commons-by" aria-label="creative-commons-by"></i> <i class="fa-brands fa-creative-commons-nc" aria-label="creative-commons-nc"></i> <a href="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International license (CC BY-NC 4.0)</a></div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">Made with <i class="fa-brands fa-r-project" aria-label="r-project"></i> and <a href="https://quarto.org/">Quarto</a><br> With <i class="fa-solid fa-heart" aria-label="heart"></i> to our <a href="../credits.html">Website Credits</a></div>
+  </div>
+</footer>
+
+
+
+</body></html>

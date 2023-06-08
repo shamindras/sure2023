@@ -44,6 +44,13 @@ type="success" \>}}
 {{\< downloadthis _files/demo-labs/demo-lab-02-supp.zip
 dname="demo-lab-02-supp" label="demo-lab-02-supp.zip" icon="file-earmark"
 type="success" \>}}
+
+Download **EDA Mini Project 1 (Requirements and Data):** 
+
+{{\< downloadthis _files/mini-projects/mini-project-01.Rmd
+dname="mini-project-01" label="mini-project-01.Rmd" icon="file-earmark"
+type="success" \>}}
+
 :::
 
 ## Research project deliverables

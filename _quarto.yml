@@ -152,6 +152,10 @@ website:
               file: assignment/demo-lab-01.qmd
             - text: "Demo Lab 2: Data wrangling with dplyr"
               file: assignment/demo-lab-02.qmd
+        - section: "CMSAC Mini projects"
+          contents:
+            - text: "EDA Mini-Project 1: Requirements and Data"
+              file: assignment/mini-project-01.qmd
         - section: "Final projects"
           contents:
             - text: "Optum Research Project Specification"

@@ -1,0 +1,276 @@
+---
+title: "EDA Mini-Project Requirements and Data"
+---
+
+```{r, echo = FALSE}
+options(tinytex.verbose = TRUE)
+
+```
+
+### Overview
+
+This mini-project will begin on Thursday, June 8 and conclude with a 10 minute (maximum) presentation one week later on Friday, June 12.  Students will be paired into groups of two or three and randomly assigned one of six sports datasets. The goal of this project is to practice understanding the data structure of a dataset, generating hypotheses and using exploratory data analysis and data visualization to attempt to answer these hypotheses.
+
+### Deliverables
+
+Each team is expected to produce slides to accompany their 5 minute presentation with the following information:
+
+* Explanation of the data structure of the dataset
+* Three hypotheses about the dataset
+* Three data visualizations exploring the hypothesis, at least two of which must be multivariate.  Each visualization must be in a different format from the other two, and you must have at least one categorical and one continuous visualization.
+* One clustering example
+* Conclusions reached for the hypothesis using the data visualizations
+
+### Timeline
+
+Groups and datasets will be assigned during the lab session on Thursday 6/8. You will then have the rest of that lab session, as well as the lab sessions Monday, Wednesday, and Thursday of the following week to complete the mini-project
+
+**Thursday, June 15 @ 5:00pm EST** - Slides must be completed and ready for presentation.  Send your slides to Meg's email (mellingw@andrew.cmu.edu).  All code and visualizations must be done in `R`, but the slides may be created in any program.
+
+## Data
+
+### EDA projects data overview
+
+There are six different datasets for the EDA projects (linked here):
+
+- [NBA Player Statistics](https://shorturl.at/hAFV4)
+- [WNBA Shots](https://shorturl.at/fit17)
+- [NFL Team Statistics](https://shorturl.at/jnuEP)
+- [NHL Shots](https://shorturl.at/tNQUX)
+- [NWSL Team Statistics](https://shorturl.at/iEF14)
+- [WTA Grand Slam Matches](https://shorturl.at/cJL67)
+
+These datasets were curated by Ron Yurko as part of the [SCORE project](https://data.scorenetwork.org/), and his description of each dataset can be found below.
+
+### NBA Player Statistics
+
+The [National Basketball Association (NBA)](https://www.nba.com/) is the top men's professional basketball league in the world. While players have predefined positions, the sport is becoming increasingly _positionless_ - with centers attempting more three point shots and guards driving the ball inside to dunk. With this dataset, you can explore clustering NBA players based on various types of statistics and compare your players labels to the predefined positions.
+
+This dataset contains statistics about 812 player-team stints for during the 2021-2022 NBA regular season. For players that played for $T$ teams during the season (due to trade), there are $T+1$ rows with one row for their performance with each of the $T$ teams and another row indicating their total performance (where `tm = TOT`) across the full season regardless of team. The counting stats are reported on a per 100 team possessions scale, to normalize for playing time differences. 
+
+The data was collected using the [`ballr` package in `R`](https://github.com/rtelmore/ballr)., which gathers data from [basketball-reference.com](https://www.basketball-reference.com//leagues/NBA_2022_per_poss.html).  
+
+
+| Variable | Description |
+|----|-------------|
+| player |	Name of player |
+| pos |	Player's designated position |
+| age |	Player's age on February 1st of the season |
+| tm | Name of team |
+| g |	Number of games |
+| gs |	Number of games started |
+| mp |	Number of minutes played |
+| fg | Field goals per 100 team possessions |
+| fga |	Field goal attempts per 100 team possessions |
+| fgpercent |	Field goal percentage |
+| x3p |	3 point field goals per 100 team possessions |
+| x3pa |	3 point field goal attempts per 100 team possessions |
+| x3ppercent |	3 point field goal percentage |
+| x2p |	2 point field goals per 100 team possessions |
+| x2pa |	2 point field goal attempts per 100 team possessions |
+| x2ppercent |	2 point field goal percentage |
+| ft |	Free throws per 100 team possessions |
+| fta |	Free throw attempts per 100 team possessions |
+| ftpercent |	Free throw percentage |
+| orb |	Offensive rebounds per 100 team possessions |
+| drb |	Defensive rebounds per 100 team possessions |
+| trb |	Total rebounds per 100 team possessions |
+| ast |	Assists per 100 team possessions |
+| stl |	Steals per 100 team possessions |
+| blk |	Blocks per 100 team possessions |
+| tov |	Turnovers per 100 team possessions |
+| pf |	Personal fouls per 100 team possessions |
+| pts |	Points per 100 team possessions |
+| ortg |	Offensive Rating - an estimate of points produced per 100 possessions scale |
+| drtg |	Defensive Rating - an estimate of points allowed per 100 possessions scale |
+
+### WNBA Shots
+
+The [Women's National Basketball Association (WNBA)](https://www.wnba.com/) is the top professional women's basketball league in the world. The league records every shot players take along with contextual information about the shot such as its location, a description of the shot type, as well as the outcome. With this dataset, you can predict the success of each shot attempt to compute the expected value of shot types and compare team decision making.
+
+This dataset contains information about 41,497 shots during the 2021-2022 WNBA season. 
+
+The data was collected using the [`wehoop` package in `R`](https://wehoop.sportsdataverse.org/). 
+
+
+| Variable | Description |
+|----|-------------|
+| game_id |	Unique integer ID for each WNBA game |
+| game_play_number |	Integer indicating the recorded play number for the shot attempt, where 1 indicates the first play of the game |
+| desc |	String detailed description of shot attempt |
+| shot_type |	String description of the shot type (e.g., dunk, layup, jump shot, etc.) |
+| made_shot |	Boolean denoting if the shot was made (TRUE) or not (FALSE) |
+| shot_value | Numeric value of the shot outcome (0 for shots that were not made, and a positive value for made shots) |
+| coordinate_x |	Horizontal location in feet of shot attempt where the hoop would be located at 25 feet |
+| coordinate_y |	Vertical location in feet of shot attempt with respect to the target hoop (the hoop should be a little in front of 0 but the coordinate system is not exact) |
+| shooting_team |	String name of the team taking the shot |
+| home_name |	String name of the home team |
+| away_name |	String name of the away team |
+| home_score |	Integer value of the home team score after the shot |
+| away_score |	Integer value of the away team score after the shot |
+| qtr | Integer denoting the quarter/period in the game |
+| quarter_seconds_remaining |	Numeric integer value for number of seconds remaining in quarter/period |
+| game_seconds_remaining |	Numeric integer value for number of seconds remaining in game |
+
+### NFL Team Statistics
+
+The [National Football League (NFL)](https://www.nfl.com/) is the top professional American football league in the world. While a team's record ultimately determines whether or not they make the playoffs, their score differential (points for - points against) is often a better indicator of a team's ability. But what aspects of a team's performance are related to their point differential? Is passing more important than rushing? What about offense in comparison to defense? The NFL records a variety of statistics, and the [public NFL analytics community]() have [developed advanced metrics](https://arxiv.org/abs/1802.00998) such as expected points added (EPA) that provide deeper insight into a team's performance. With this dataset of statistics dating back to 1999, you can explore variation between teams since as well as which types of statistics are relevant predictor variables of record and point differential.  
+
+This dataset contains statistics about the regular season performance for each NFL team from 1999 to 2022 team. The data was collected using the [`nflreadr` package in `R`](https://nflreadr.nflverse.com/index.html). 
+
+Each row in the dataset corresponds to a single NFL team in a single regular season. There are a total of 765 team-seasons, with 56 total columns. The column names are organized below by the type of information they contain, with the first set of columns being self-explanatory:
+
+| Variable | Description |
+|----|-------------|
+| season |	Regular season year of team's statistics |
+| team |	NFL team three letter abbreviation |
+
+There are also columns with season level outcomes:
+
+| Variable | Description |
+|----|-------------|
+| points_score |	Total number of points scored by the team |
+| points_allowed |	Total number of points allowed by the team |
+| wins | Number of games the team won |
+| losses | Number of games the team lost |
+| ties | Number of games the team tied |
+| score_differential | points scored - points allowed |
+
+There are also several columns corresponding to offensive and defensive summaries of the team's performance in the season separated by play type (either pass or run):
+
+| Variable | Description |
+|----|-------------|
+| offense/defense_completion_percentage |	Passing completion percentage either for (offense) or against (defense) |
+| offense/defense_total_yards_gained_pass/run | Total number of yards gained (offense) or allowed (defense) by play type (pass or run) |
+| offense/defense_ave_yards_gained_pass/run | Average number of yards gained (offense) or allowed (defense) per play by play type (pass or run) |
+| offense/defense_total_air_yards | Total number of air yards gained (offense) or allowed (defense), where air yards correspond to perpendicular yards traveled from the line of scrimmage to location of catch for passing plays |
+| offense/defense_ave_air_yards | Average number of air yards gained (offense) or allowed (defense) per passing play |
+| offense/defense_total_yac | Total number of yards after catch gained (offense) or allowed (defense) |
+| offense/defense_ave_yac | Average number of yards after catch gained (offense) or allowed (defense) per passing play |
+| offense/defense_n_plays_pass/run | Total number of plays by the team (offense) or against (defense) by play type (pass or run) |
+| offense/defense_n_interceptions | Total number of interceptions thrown (offense) or caught (defense) |
+| offense/defense/n_fumbles_lost_pass/run | Total number of fumbles lost (offense) or forced (defense) by play type (pass or run) |
+| offense/defense_total_epa_pass/run | Total expected points added (offense) or allowed (defense) by play type (pass or run) |
+| offense/defense_ave_epa_pass/run | Average expected points added (offense) or allowed (defense) per play by play type (pass or run) |
+| offense/defense_total_wpa_pass/run | Total win probability added (offense) or allowed (defense) by play type (pass or run) |
+| offense/defense_ave_wpa_pass/run | Average win probability added (offense) or allowed (defense) per play by play type (pass or run) |
+| offense/defense_total_epa_pass/run | Total expected points added (offense) or allowed (defense) by play type (pass or run) |
+| offense/defense_success_rate_pass/run | Proportion of plays with positive expected points added (offense) or allowed (defense) by play type (pass or run) |
+
+
+The EPA variables are _advanced_ NFL statistics, conveying how much value a team is adding over the average team in a given situation. It's on a points scale instead of the typically used yards, because not all yards are created equal in American football (10 yard gain on 3rd and 15 is much less valuable than a 2 yard gain on 4th and 1). For offensive stats the higher the EPA the better, but for defensive stats the lower (more negative) the EPA the better. The WPA variables are similar except they are measuring play value in terms of win probability.  
+
+### NHL Shots
+
+The [National Hockey League (NHL)](https://www.nhl.com/) is the top professional men's hockey league in the world. The league records every shot players take along with contextual information about the shot such as its location, the player's distance and angle to the goal when attempting the shot, as well as the outcome (blocked, missed, or goal). Using this information, the hockey analytics community have developed measures of shot quality known as [__expected goals__](https://www.nhl.com/kraken/news/analytics-with-alison-expected-goals/c-327728890). With this dataset, you can create your own __expected goals model__ to predict the shot outcome given relevant features.
+
+This dataset contains information about 104,316 shots during the 2021-2022 NHL season. 
+
+The data was collected using the [`hockeyR` package in `R`](https://hockeyr.netlify.app/index.html). 
+
+
+| Variable | Description |
+|----|-------------|
+| description |	String detailed description of event |
+| shot_outcome |	String denoting the outcome of the shot, either BLOCKED_SHOT (meaning blocked by a non-goalie), GOAL, MISSED_SHOT (shot that missed the net), or SHOT (shot on net that was saved by a goalie) |
+| period |	Integer value of the game period |
+| period_seconds_remaining | Numeric value of the seconds remaining in the period |
+| game_seconds_remaining |	Numeric value of the seconds remaining in the game; negative for overtime periods |
+| home_score |	Integer value of the home team score after the event |
+| away_score |	Integer value of the away team score after the event |
+| home_name |	String name of the home team |
+| away_name |	String name of the away team |
+| event_team |	String defining the team taking the shot |
+| event_player_1_name |	String name of the primary event player |
+| event_player_1_type |	String indicator for the role of event_player_1 (typically the shooter) |
+| event_player_2_name |	String name of the secondary event player |
+| event_player_2_type |	String indicator for the role of event_player_2 (blocker, assist, or goalie) |
+| strength_code |	String indicator for game strength: EV (Even), SH (Shorthanded), or PP (Power Play) |
+| x_fixed |	Numeric transformed x-coordinate of event in feet, where the home team always shoots to the right, away team to the left |
+| y_fixed |	Numeric transformed y-coordinate of event in feet, where the home team always shoots to the right, away team to the left |
+| shot_distance |	Numeric distance (in feet) to center of net for unblocked shot events |
+| shot_angle |	Numeric angle (in degrees) to center of net for unlocked shot events |
+
+### NWSL Team Statistics
+
+The [National Women’s Soccer League (NWSL)](https://www.nwslsoccer.com/) is the top professional women's soccer league in the United States. While a team's record ultimately determines their ranking, goal differential (goals scored - goals conceded) is often a better indicator of a team's ability. But what aspects of a team's performance are related to their goal differential? The NWSL records a variety of statistics describing a team's performance, such as the percentage of time they maintain possession, percentage of shots on target, etc. With this dataset, you can explore variation between teams as well as which statistics are relevant predictor variables of goal differential.  
+
+This dataset contains statistics about the regular season performance for each NWSL team from 2016 to 2022 (excluding 2020 which was cancelled due to COVID). 
+
+The data was collected using the [`nwslR` package in `R`](https://github.com/nwslR/nwslR). 
+
+
+| Variable | Description |
+|----|-------------|
+| team_name |	Name of NWSL team |
+| season |	Regular season year of team's statistics |
+| games_played |	Number of games team played in season |
+| goal_differential | Goals scored - goals conceded |
+| goals |	Number of goals scores |
+| goals_conceded |	Number of goals conceded |
+| cross_accuracy |	Percent of crosses that were successful |
+| goal_conversion_pct |	Percent of shots scored |
+| pass_pct |	Pass accuracy |
+| pass_pct_opposition_half |	Pass accuracy in opposition half |
+| possession_pct |	Percentage of overall ball possession the team had during the season |
+| shot_accuracy |	Percentage of shots on target |
+| tackle_success_pct |	Percent of successful tackles |
+
+### WTA Grand Slam Matches
+
+The [Women's Tennis Associate (WTA)](https://www.wtatennis.com/) organizes the top women's professional tennis tour in the world. Throughout the year, there are four major tournaments yielding the most ranking points, prize money, and fame. These are known as the Grand Slam tournaments, consisting of (in order): Australian Open, French Open (aka Roland Garros), Wimbledon, and the US Open. With this dataset of information about winners and losers in WTA Grand Slam matches from 2018 to 2022, you'll be able to explore statistics collected during matches and information about the athletes to predict match outcomes.
+
+This dataset contains all WTA matches between 2018 and 2022, courtesy of [Jeff Sackmann's famous tennis repository](https://github.com/JeffSackmann/tennis_wta). 
+
+There are 2,413 rows in this dataset where each row corresponds to a single WTA Grand Slam match. Each row has 38 columns with general information about the matches, as well as columns describing the winner and loser of the matches:
+
+| Variable | Description |
+|----|-------------|
+| `tourney_name` | name of the Grand Slam Tournament (French Open is recorded as ROLAND GARROS) |
+| `surface` | type of court surface |
+| `tourney_date` | eight digits, YYYYMMDD, usually the Monday of the tournament week |
+| `winner/loser_seed` | seed of winning/losing player |
+| `winner/loser_name` | Name of the winning/losing player |
+| `winner/loser_hand`|  R = right, L = left, U = unknown. For ambidextrous players, this is their serving hand |
+| `winner/loser_ht` | height in centimeters, where available |
+| `winner/loser_ioc` | three-character country code |
+| `winner/loser_age` | age, in years, as of the tourney_date |
+| `score` | final match score |
+| `round` | tournament round |
+| `minutes` | match length in minutes |
+| `w/l_ace`| winner/loser's number of aces |
+| `w/l_df` | winner/loser's number of doubles faults |
+| `w/l_svpt` | winner/loser's number of serve points |
+| `w/l_1stIn` | winner/loser's number of first serves made |
+| `w/l_1stWon` | winner/loser's number of first-serve points won |
+| `w/l_2ndWon` | winner/loser's number of second-serve points won |
+| `w/l_SvGms` | winner/loser's number of serve games |
+| `w/l_bpSaved` | winner/loser's number of break points saved |
+| `w/l_bpFaced` | winner/loser's number of break points faced |
+| `winner/loser_rank` | winner/loser's WTA rank, as of the tourney_date, or the most recent ranking date before the tourney_date |
+
+Note that a full glossary of the features available for match data can be found [here](https://github.com/JeffSackmann/tennis_atp/blob/master/matches_data_dictionary.txt).
+
+
+## References
+
+Dror A (2023). _nwslR: Compiles dataset for the National Women's Soccer
+  League (NWSL)_. R package version 0.0.0.9001.
+
+Elmore R (2020). _ballr: Access to Current and Historical Basketball Data_. R
+  package version 0.2.6.
+  
+Gilani S, Hutchinson G (2022). _wehoop: Access Women's Basketball Play by Play
+  Data_. R package version 1.5.0, <https://CRAN.R-project.org/package=wehoop>. 
+  
+Ho T, Carl S (2022). _nflreadr: Download 'nflverse' Data_. R package
+  version 1.3.1, <https://CRAN.R-project.org/package=nflreadr>.
+  
+Howell B, Gilani S (2022). _fastRhockey: Functions to Access Premier Hockey
+  Federation and National Hockey League Play by Play Data_. R package version 0.4.0,
+  <https://CRAN.R-project.org/package=fastRhockey>.
+
+Morse D (2023). _hockeyR: Collect and Clean Hockey Stats_. R package version 1.3.1,
+  <https://github.com/danmorse314/hockeyR>.  
+
+WTA data accessed from [Jeff Sackmann's tennis GitHub repository](https://github.com/JeffSackmann/tennis_wta)
