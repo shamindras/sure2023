@@ -1,7 +1,7 @@
 ---
 title: "Data Visualization"
 subtitle: "Visualizing 2D categorical and continuous by categorical"
-date: "June 10th, 2022"
+date: "June 9th, 2023"
 output:
   xaringan::moon_reader:
     lib_dir: "libs"
@@ -37,8 +37,7 @@ Created dataset of batted balls by the American League MVP Shohei Ohtani in 2021
 
 ```{r load-abreu, warning = FALSE, message = FALSE}
 library(tidyverse)
-ohtani_batted_balls <- 
-  read_csv("http://www.stat.cmu.edu/cmsac/sure/2022/materials/data/sports/xy_examples/ohtani_2021_batted_balls.csv")
+ohtani_batted_balls <- read_csv("https://shorturl.at/mnwL1")
 head(ohtani_batted_balls)
 ```
 
@@ -64,9 +63,8 @@ ohtani_batted_balls <- ohtani_batted_balls %>%
   mutate(pitch_type = fct_recode(pitch_type, "Changeup" = "CH", "Breaking ball" = "CU", #<<
                       "Fastball" = "FC", "Fastball" = "FF", "Fastball" = "FS", #<<
                       "Breaking ball" = "KC",  "Fastball" = "SI",  "Breaking ball" = "SL")) #<<
-table(ohtani_batted_balls$pitch_type)
 ```
-
+__Question:__ Are all pitch types equally likely to occur?
 ---
 
 ## Inference for categorical data
@@ -94,7 +92,6 @@ chisq.test(table(ohtani_batted_balls$pitch_type)) #<<
 
 ## Statistical inference in general
 
-.pull-left[
 Computing $p$-values works like this:
 
 - Choose a test statistic.
@@ -106,14 +103,7 @@ Computing $p$-values works like this:
 - Compare $p$-value to __target error rate__ $\alpha$ (typically referred to as target level $\alpha$ )
 
 - Typically choose $\alpha = 0.05$ 
-]
-.pull-right[
 
-```{r, echo = FALSE, out.width = '70%', fig.align='center'}
-# knitr::include_graphics("https://pics.onsizzle.com/when-the-p-value-is-low-69157676.png") 
-```
-
-]
 
 ---
 
@@ -223,7 +213,8 @@ ohtani_batted_balls %>%
   group_by(batted_ball_type, pitch_type) %>%
   summarize(joint_prob = n() / nrow(ohtani_batted_balls)) %>%
   pivot_wider(names_from = batted_ball_type, values_from = joint_prob,
-              values_fill = 0)
+              values_fill = 0) %>%
+  gt()
 ```
 
 
@@ -452,6 +443,54 @@ ohtani_batted_balls %>%
   theme(legend.position = "bottom")
 ```
 
+
+---
+
+## 2D Continuous Relationships --> Scatterplot
+
+.pull-left[
+
+- We make a __scatterplot__ with [`geom_point()`](https://ggplot2.tidyverse.org/reference/geom_point.html)
+
+
+```{r scatter, eval = FALSE}
+ohtani_batted_balls %>%
+  ggplot(aes(x = exit_velocity, 
+             y = launch_angle)) + 
+  geom_point() + 
+  theme_bw()
+```
+  
+]
+.pull-right[
+```{r ref.label = 'scatter', echo = FALSE, fig.height=7}
+```
+]
+
+---
+
+## Two continuous, one categorical...
+
+.pull-left[
+
+
+
+```{r scatter2, eval = FALSE}
+ohtani_batted_balls %>%
+  ggplot(aes(x = exit_velocity, 
+             y = launch_angle,
+             color = batted_ball_type)) +  #<<
+  geom_point() + 
+  theme_bw()
+```
+The possibilities are endless!
+
+]
+
+.pull-right[
+```{r ref.label = 'scatter2', echo = FALSE, fig.height=7}
+```
+]
 
 
 

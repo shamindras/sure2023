@@ -18,7 +18,7 @@ class: center, middle, inverse, title-slide
 ## Visualizing 2D categorical and continuous by categorical
 ]
 .date[
-### June 10th, 2022
+### June 9th, 2023
 ]
 
 ---
@@ -35,8 +35,7 @@ Created dataset of batted balls by the American League MVP Shohei Ohtani in 2021
 
 ```r
 library(tidyverse)
-ohtani_batted_balls &lt;- 
-  read_csv("http://www.stat.cmu.edu/cmsac/sure/2022/materials/data/sports/xy_examples/ohtani_2021_batted_balls.csv")
+ohtani_batted_balls &lt;- read_csv("https://shorturl.at/mnwL1")
 head(ohtani_batted_balls)
 ```
 
@@ -82,15 +81,8 @@ ohtani_batted_balls &lt;- ohtani_batted_balls %&gt;%
 * mutate(pitch_type = fct_recode(pitch_type, "Changeup" = "CH", "Breaking ball" = "CU",
 *                     "Fastball" = "FC", "Fastball" = "FF", "Fastball" = "FS",
 *                     "Breaking ball" = "KC",  "Fastball" = "SI",  "Breaking ball" = "SL"))
-table(ohtani_batted_balls$pitch_type)
 ```
-
-```
-## 
-##      Changeup Breaking ball      Fastball 
-##            62           110           182
-```
-
+__Question:__ Are all pitch types equally likely to occur?
 ---
 
 ## Inference for categorical data
@@ -127,7 +119,6 @@ $$
 
 ## Statistical inference in general
 
-.pull-left[
 Computing `\(p\)`-values works like this:
 
 - Choose a test statistic.
@@ -139,12 +130,7 @@ Computing `\(p\)`-values works like this:
 - Compare `\(p\)`-value to __target error rate__ `\(\alpha\)` (typically referred to as target level `\(\alpha\)` )
 
 - Typically choose `\(\alpha = 0.05\)` 
-]
-.pull-right[
 
-
-
-]
 
 ---
 
@@ -187,13 +173,13 @@ ohtani_batted_balls %&gt;%
 
 .pull-left[
 
-&lt;img src="05-slides_files/figure-html/unnamed-chunk-3-1.png" width="504" /&gt;
+&lt;img src="05-slides_files/figure-html/unnamed-chunk-2-1.png" width="504" /&gt;
 
 
 ]
 .pull-right[
 
-&lt;img src="05-slides_files/figure-html/unnamed-chunk-4-1.png" width="504" /&gt;
+&lt;img src="05-slides_files/figure-html/unnamed-chunk-3-1.png" width="504" /&gt;
 ]
 
 --
@@ -284,17 +270,482 @@ ohtani_batted_balls %&gt;%
   group_by(batted_ball_type, pitch_type) %&gt;%
   summarize(joint_prob = n() / nrow(ohtani_batted_balls)) %&gt;%
   pivot_wider(names_from = batted_ball_type, values_from = joint_prob,
-              values_fill = 0)
+              values_fill = 0) %&gt;%
+  gt()
 ```
 
-```
-## # A tibble: 3 × 5
-##   pitch_type    fly_ball ground_ball line_drive  popup
-##   &lt;fct&gt;            &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;  &lt;dbl&gt;
-## 1 Changeup        0.0763      0.0537     0.0311 0.0141
-## 2 Breaking ball   0.124       0.107      0.0621 0.0169
-## 3 Fastball        0.147       0.237      0.113  0.0169
-```
+<div id="wpafasszfl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#wpafasszfl table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#wpafasszfl thead, #wpafasszfl tbody, #wpafasszfl tfoot, #wpafasszfl tr, #wpafasszfl td, #wpafasszfl th {
+  border-style: none;
+}
+
+#wpafasszfl p {
+  margin: 0;
+  padding: 0;
+}
+
+#wpafasszfl .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#wpafasszfl .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#wpafasszfl .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#wpafasszfl .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#wpafasszfl .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#wpafasszfl .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wpafasszfl .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#wpafasszfl .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#wpafasszfl .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#wpafasszfl .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#wpafasszfl .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#wpafasszfl .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#wpafasszfl .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#wpafasszfl .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#wpafasszfl .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#wpafasszfl .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#wpafasszfl .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#wpafasszfl .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#wpafasszfl .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wpafasszfl .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#wpafasszfl .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#wpafasszfl .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#wpafasszfl .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wpafasszfl .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#wpafasszfl .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#wpafasszfl .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wpafasszfl .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wpafasszfl .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#wpafasszfl .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wpafasszfl .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#wpafasszfl .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wpafasszfl .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#wpafasszfl .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wpafasszfl .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#wpafasszfl .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wpafasszfl .gt_left {
+  text-align: left;
+}
+
+#wpafasszfl .gt_center {
+  text-align: center;
+}
+
+#wpafasszfl .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#wpafasszfl .gt_font_normal {
+  font-weight: normal;
+}
+
+#wpafasszfl .gt_font_bold {
+  font-weight: bold;
+}
+
+#wpafasszfl .gt_font_italic {
+  font-style: italic;
+}
+
+#wpafasszfl .gt_super {
+  font-size: 65%;
+}
+
+#wpafasszfl .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#wpafasszfl .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#wpafasszfl .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#wpafasszfl .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#wpafasszfl .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#wpafasszfl .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#wpafasszfl .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="pitch_type">pitch_type</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="fly_ball">fly_ball</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="ground_ball">ground_ball</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="line_drive">line_drive</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="popup">popup</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="pitch_type" class="gt_row gt_center">Changeup</td>
+<td headers="fly_ball" class="gt_row gt_right">0.07627119</td>
+<td headers="ground_ball" class="gt_row gt_right">0.05367232</td>
+<td headers="line_drive" class="gt_row gt_right">0.03107345</td>
+<td headers="popup" class="gt_row gt_right">0.01412429</td></tr>
+    <tr><td headers="pitch_type" class="gt_row gt_center">Breaking ball</td>
+<td headers="fly_ball" class="gt_row gt_right">0.12429379</td>
+<td headers="ground_ball" class="gt_row gt_right">0.10734463</td>
+<td headers="line_drive" class="gt_row gt_right">0.06214689</td>
+<td headers="popup" class="gt_row gt_right">0.01694915</td></tr>
+    <tr><td headers="pitch_type" class="gt_row gt_center">Fastball</td>
+<td headers="fly_ball" class="gt_row gt_right">0.14689266</td>
+<td headers="ground_ball" class="gt_row gt_right">0.23728814</td>
+<td headers="line_drive" class="gt_row gt_right">0.11299435</td>
+<td headers="popup" class="gt_row gt_right">0.01694915</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
 
 
 ---
@@ -384,7 +835,7 @@ mosaicplot(table(ohtani_batted_balls$pitch_type, ohtani_batted_balls$batted_ball
 __[`ggmosaic`](https://github.com/haleyjeppson/ggmosaic) has issues...__
 ]
 .pull-right[
-&lt;img src="05-slides_files/figure-html/unnamed-chunk-9-1.png" width="504" /&gt;
+&lt;img src="05-slides_files/figure-html/unnamed-chunk-8-1.png" width="504" /&gt;
 ]
 
 ---
@@ -441,7 +892,7 @@ ohtani_batted_balls %&gt;%
   theme_bw()
 ```
 
-&lt;img src="05-slides_files/figure-html/unnamed-chunk-10-1.png" width="504" /&gt;
+&lt;img src="05-slides_files/figure-html/unnamed-chunk-9-1.png" width="504" /&gt;
   
 ]
 .pull-right[
@@ -455,7 +906,7 @@ ohtani_batted_balls %&gt;%
   theme(legend.position = "bottom")
 ```
 
-&lt;img src="05-slides_files/figure-html/unnamed-chunk-11-1.png" width="504" /&gt;
+&lt;img src="05-slides_files/figure-html/unnamed-chunk-10-1.png" width="504" /&gt;
 ]
 
 ---
@@ -473,7 +924,7 @@ ohtani_batted_balls %&gt;%
   theme_bw() + theme(legend.position = "bottom")
 ```
 
-&lt;img src="05-slides_files/figure-html/unnamed-chunk-12-1.png" width="504" /&gt;
+&lt;img src="05-slides_files/figure-html/unnamed-chunk-11-1.png" width="504" /&gt;
   
 ]
 .pull-right[
@@ -486,7 +937,7 @@ ohtani_batted_balls %&gt;%
   theme_bw() + theme(legend.position = "bottom")
 ```
 
-&lt;img src="05-slides_files/figure-html/unnamed-chunk-13-1.png" width="504" /&gt;
+&lt;img src="05-slides_files/figure-html/unnamed-chunk-12-1.png" width="504" /&gt;
 ]
 
 ---
@@ -504,7 +955,7 @@ ohtani_batted_balls %&gt;%
 * facet_wrap(~ pitch_type, ncol = 2)
 ```
 
-&lt;img src="05-slides_files/figure-html/unnamed-chunk-14-1.png" width="504" /&gt;
+&lt;img src="05-slides_files/figure-html/unnamed-chunk-13-1.png" width="504" /&gt;
   
 ]
 .pull-right[
@@ -517,7 +968,7 @@ ohtani_batted_balls %&gt;%
 * facet_grid(pitch_type ~., margins = TRUE)
 ```
 
-&lt;img src="05-slides_files/figure-html/unnamed-chunk-15-1.png" width="504" /&gt;
+&lt;img src="05-slides_files/figure-html/unnamed-chunk-14-1.png" width="504" /&gt;
 ]
 
 ---
@@ -536,6 +987,54 @@ ohtani_batted_balls %&gt;%
 
 &lt;img src="05-slides_files/figure-html/stacked-bars-facet-1.png" width="864" style="display: block; margin: auto;" /&gt;
 
+
+---
+
+## 2D Continuous Relationships --&gt; Scatterplot
+
+.pull-left[
+
+- We make a __scatterplot__ with [`geom_point()`](https://ggplot2.tidyverse.org/reference/geom_point.html)
+
+
+
+```r
+ohtani_batted_balls %&gt;%
+  ggplot(aes(x = exit_velocity, 
+             y = launch_angle)) + 
+  geom_point() + 
+  theme_bw()
+```
+  
+]
+.pull-right[
+&lt;img src="05-slides_files/figure-html/unnamed-chunk-15-1.png" width="504" /&gt;
+]
+
+---
+
+## Two continuous, one categorical...
+
+.pull-left[
+
+
+
+
+```r
+ohtani_batted_balls %&gt;%
+  ggplot(aes(x = exit_velocity, 
+             y = launch_angle,
+*            color = batted_ball_type)) +
+  geom_point() + 
+  theme_bw()
+```
+The possibilities are endless!
+
+]
+
+.pull-right[
+&lt;img src="05-slides_files/figure-html/unnamed-chunk-16-1.png" width="504" /&gt;
+]
 
 
 

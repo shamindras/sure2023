@@ -1,6 +1,6 @@
 ---
-title: "Introduction and Welcome to SURE 2023"
-date: "2023-06-05"
+title: "Visualizing 2D categorical and continuous by categorical"
+date: "2023-06-09"
 ---
 
 ```{r slides-videos, echo=FALSE, include=FALSE}

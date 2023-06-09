@@ -87,8 +87,8 @@ website:
                   file: class/03-class.qmd
                 - text: "4: Visualizing 1D categorical and continuous variables"
                   file: class/04-class.qmd
-                # - text: "5: Visualizing 2D categorical and continuous by categorical variables"
-                #   file: class/05-class.qmd
+                - text: "5: Visualizing 2D categorical and continuous by categorical"
+                  file: class/05-class.qmd
                 # - text: "6: Density estimation"
                 #   file: class/06-class.qmd
                 # - text: "6: Geographical EDA using Shapefiles"
