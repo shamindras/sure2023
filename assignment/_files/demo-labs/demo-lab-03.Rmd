@@ -19,7 +19,20 @@ heart_disease <- read_csv("https://shorturl.at/borZ7")
 
 The NBA dataset contains information about players from the 2022 season.
 
-The heart disease dataset was collected by a health insurance company gathering information on subscribers who had claims resulting from ischemic (coronary) heart disease. The dataset contains total costs and types of services for one year.
+The heart disease dataset was collected by a health insurance company gathering information on subscribers who had claims resulting from ischemic (coronary) heart disease. The dataset contains total costs and types of services for one year. The variables in this dataset include: 
+
+| Variable | Description |
+|----|-------------|
+| Cost |	Total cost of subscriber claims |
+| Age |	Age of claimant |
+| Gender | Gender of claimant |
+| Interventions | Number of interventions / procedures given to patient |
+| Drugs | Factor describing number of drugs prescribed to patient |
+| ERVisit | Number of ER visits |
+| Complications | Factor describing number of complications experienced by the patient |
+| Comorbidities | Number of comorbidities the patient had |
+| Duration | Duration of treatment |
+| id | Index variable |
 
 ## Peeking at the data
 
@@ -536,8 +549,3 @@ heart_disease %>%
        color = "Interventions") +
   my_theme()
 ```
-
-
-
-
-

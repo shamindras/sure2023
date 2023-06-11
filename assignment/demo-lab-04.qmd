@@ -1,0 +1,143 @@
+---
+title: "Exploratory Data Analysis"
+date: "June 16, 2023"
+format:
+  html: 
+    code-tools:
+      source: true
+      toggle: false
+      caption: none
+---
+
+This lab will be slightly more open-ended, giving you a sense of how you might choose to do exploratory data analysis as part of a research project. Remember to emphasize the **exploratory** aspect here! Feel free to try as many combinations as you like for each of the prompts.
+
+## Read in data
+
+Let's start again by reading in the data using the `read_csv()` function after loading the `tidyverse`. The (SPORTS) group will be using historical data about MLB teams, and the (HEALTH) group will be using data from the CDC about maternal health care disparities:
+
+```{r warning = FALSE, message = FALSE}
+library(tidyverse)
+
+# SPORTS
+mlb_teams <- read.csv("https://shorturl.at/KMX05")
+
+# HEALTH
+maternal_health <- read_csv("https://shorturl.at/gmCFK")
+```
+
+A brief description of these datasets:
+
+#### (SPORTS)
+
+This dataset contains information about MLB teams from each season from 1871 to 2018. Each row is an observation of one team for one season, including their overall performance and season stats like hits and hits allowed.
+
+#### (HEALTH)
+
+The Maternal Health dataset is a bit more complicated, which is why we'll explain it a bit further here: The data come from a [CDC program](https://wonder.cdc.gov/) assessing maternal health, and they provide aggregated birth records. Observations are grouped by state and several different conditions that might have affected the mother: pre-pregnancy diabetes, pre-pregnancy hypertension, smoking, and prior births that were deceased at the time of data collection.
+
+A row represents the number of births with that set of conditions in that state, and the other columns provide averages of different variables among those births. For example, the first row corresponds to births in Alabama where the mother had no prior births now deceased, did smoke, and did have both hypertension and diabetes pre-pregnancy. There were 12 births in this category, and the average age of the mothers was 29.33, and so on.
+
+## Peeking at the data
+
+Use whatever functions you like to get an initial sense of your dataset. What are the variables you have access to? What kinds of data are in each column? Are there any columns that might be more or less useful than others?
+
+```{r}
+# INSERT CODE HERE
+```
+
+Note that some columns may have missing data. You will have to decide how to deal with that. There isn't always a right answer with this kind of thing.
+
+## Single-variable plots
+
+Remember that the general format of a ggplot call is this:
+```{r, eval=FALSE}
+ggplot(data = <dataframe>) +
+  geom_function(mapping = aes(<arguments>)) +
+  <other layers>
+```
+You can also pipe the data in from a series of dplyr manipulations, rather than specifying it in the `ggplot()` call. Similarly, if you will be using the same arguments to `aes()` for several different `geom_function()` calls, you can put that mapping statement in the original `ggplot()` call. Additional layers can be added on top of these functions: labeling axes, specifying scales, modifying the theme.
+
+Now, at this point you've seen many types of visualizations. 
+
+Create a visualization of one of the quantitative variables in your dataset (and feel free to rinse and repeat here. Explore that data!).
+
+```{r}
+# INSERT CODE HERE
+```
+When you're doing EDA, it's fine to leave your graphs "ugly" if you're just messing around, seeing how things look (I promise, I do not add titles to plots when I'm first checking out my data). However, as soon as you get to the point of showing a plot to someone else, you should clean it up. Give it a title, make sure the axis labels are meaningful (and neat... underscores = BAD!). Modify the theme, and maybe even the color palette if you want to get fancy. 
+
+Modify your code from above to make a plot that is presentable:
+
+```{r}
+# INSERT CODE HERE
+```
+Ok, now you can leave your plots "ugly" for the rest of the lab, if you prefer. Or keep adding labels and stuff, you do you.
+
+Create a visualization (or several) of one (or more) of the categorical variables in your dataset. Do some kinds of categorical variables seem to lend themselves better to certain kinds of visualizations rather than others?
+
+```{r}
+# INSERT CODE HERE
+```
+
+## Multivariate plots
+
+Often, EDA is a precursor to another kind of analysis, like modeling with linear regression. So at this point you might want to get a sense of which variables might be related to each other, or to some outcome of interest.
+
+Create a visualization of two of your quantitative variables together.
+```{r}
+# INSERT CODE HERE
+```
+
+Create a visualization with one categorical and one quantitative variable together.
+```{r}
+# INSERT CODE HERE
+```
+
+Create a visualization with two categorical variables.
+```{r}
+# INSERT CODE HERE
+```
+
+Make a plot involving more than two variables (e.g. a scatterplot colored by a third variable, a set of faceted histograms or bar charts. Go wild).
+```{r}
+# INSERT CODE HERE
+```
+
+I'm sure I've mentioned this in lecture by this point, but my favorite resources ever are the RStudio cheatsheets-- I literally have the ones for ggplot, dplyr, and forcats printed and hanging in sheet protectors at my desk at all times, and I refer back to them all the time. Access the data visualization cheat sheet [here](https://github.com/rstudio/cheatsheets/blob/main/data-visualization.pdf), but also note that there are tons of other cheatsheets in that repository as well. 
+
+Pick some visualization or feature of ggplot2 that we have not yet covered in lecture or labs and try it out here.
+```{r}
+# INSERT CODE HERE
+```
+
+I should also note that there are some EDA techniques that do not involve ggplot2 that are still really useful. 
+
+As I mentioned before, going into regression analysis you want to have a sense of which of your variables are related to each other-- both to get a good model for your outcome variable and also to deal with any issues of multicollinearity. One quick way to look at all your (quantitative) variables at once is to use a pairs plot. You can do this in base R, but it's a bit nicer using the package `GGally` (you'll need to install it first). We can use the `ggpairs` function: first, select only the quantitative variables in your dataset, then pipe that to `ggpairs()`
+
+```{r}
+library(GGally)
+
+# INSERT CODE HERE
+```
+
+A word of warning: pairs plots can get really overwhelming, really fast. The more variables you have the more there is to look at in this kind of plot. Honestly, I would not recommend using a pairs plot in any kind of forward-facing material (report, slides, etc.), but they can be a convenient one-step way to check for relationships on your own. 
+
+Another useful visualization for this kind of thing is a correlation plot, which is similar to the pairs plot but exclusively shows the correlations, their directions, and their magnitude. There's a nice package called `corrplot` that does this, but it's a bit more involved. You can read about how to use it [here](https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html) (and this will give you a bit of practice using R documentation and vignettes to figure out how to use new stuff on your own. Google is your friend.)
+
+```{r}
+# OPTIONAL: CORRPLOT
+```
+
+## Wrapping up
+
+A couple more things: while much of the EDA we've done so far has been with an eye towards further analysis later, it is important to note that sometimes you might have a question that can be answered directly with data visualization. EDA can often actually be the end in and of itself. Visualizations can be used to support or refute hypotheses just as much as actual modeling can.
+
+Also, sometimes we will actually want to save a plot to a file rather than just having it in RStudio and/or taking a screenshot (which tbh is my usual way of doing things). To do this, you just use the function `ggsave`: build your plot, assign it to a variable, and then use that variable as an argument to the function. 
+```{r}
+my_plot <- ggplot() # make your plot here
+
+ggsave(filename = "myplot.pdf", plot = my_plot, width = 5, height = 3)
+```
+You can specify the name and path for saving the file, as well as the file type and the size of the image.
+
+

@@ -154,6 +154,8 @@ website:
               file: assignment/demo-lab-02.qmd
             - text: "Demo Lab 3: Data visualization practice with ggplot"
               file: assignment/demo-lab-03.qmd
+            - text: "Demo Lab 4: Exploratory Data Analysis"
+              file: assignment/demo-lab-04.qmd
         - section: "CMSAC Mini projects"
           contents:
             - text: "EDA Mini-Project 1: Requirements and Data"

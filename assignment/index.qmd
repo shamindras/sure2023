@@ -56,6 +56,12 @@ Download **Demo Lab 3 (Data visualization practice with `ggplot`):**
 {{\< downloadthis _files/demo-labs/demo-lab-03.Rmd
 dname="demo-lab-03" label="demo-lab-03.Rmd" icon="file-earmark"
 type="success" \>}} 
+
+Download **Demo Lab 4 (Exploratory Data Analysis (Case Studies)):** 
+
+{{\< downloadthis _files/demo-labs/demo-lab-04.Rmd
+dname="demo-lab-04" label="demo-lab-04.Rmd" icon="file-earmark"
+type="success" \>}} 
 :::
 
 ## Research project deliverables
