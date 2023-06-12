@@ -576,8 +576,17 @@ curry_shots %>%
 
 ]
 .pull-right[
-```{r ref.label = 'shot-loc-points-hex', echo = FALSE, fig.height=6}
-
+```{r, echo = FALSE, fig.height=6, include=TRUE}
+curry_shots %>%
+  mutate(shot_x = -shot_x / 10,
+         shot_y = shot_y / 10) %>%
+  filter(shot_y <= 30) %>%
+  ggplot(aes(x = shot_x, y = shot_y)) + 
+  geom_hex(binwidth = c(1, 1)) + #<<
+  scale_fill_gradient(low = "darkblue", 
+                      high = "darkorange") + 
+  theme_bw() + theme(legend.position = "bottom") +
+  coord_fixed()
 ```
 
 ]  
@@ -612,8 +621,21 @@ curry_shots %>%
 
 ]
 .pull-right[
-```{r ref.label = 'shot-loc-hex-make', echo = FALSE, fig.height=6}
-
+```{r, echo = FALSE, include=TRUE, fig.height=6}
+curry_shots %>%
+  mutate(shot_x = -shot_x / 10,
+         shot_y = shot_y / 10) %>%
+  filter(shot_y <= 30) %>%
+  ggplot(aes(x = shot_x, y = shot_y, 
+             z = is_shot_made, #<<
+             group = -1)) + #<<
+  stat_summary_hex(binwidth = c(2, 2), #<<
+                   color = "black", #<<
+                   fun = mean) + #<<
+  scale_fill_gradient(low = "darkblue", 
+                      high = "darkorange") + 
+  theme_bw() + theme(legend.position = "bottom") +
+  coord_fixed()
 ```
 ]  
 
