@@ -435,12 +435,13 @@ your assigned card secure and private. To login to CMU WiFi, do the following
 ::: {.callout-tip}
 ### Instruction: Setting up CMU campus and Housing WiFi
 
-1. Grab your personal CMU WiFi printed card.
-2. Go to [identity.andrew.cmu.edu](identity.andrew.cmu.edu).
-3. Enter the guest ID and initial password.
-4. Click Login.
-5. Follow the on-screen steps to set a secure password for the guest account.
+1.  Grab your personal CMU WiFi printed card.
+2.  Go to [identity.andrew.cmu.edu](identity.andrew.cmu.edu).
+3.  Enter the guest ID and initial password.
+4.  Click Login.
+5.  Follow the on-screen steps to set a secure password for the guest account.
+6.  **Important:** Please ***change*** your assigned temporary password
+    **immediately** after you login, otherwise your account will expire in **2
+    days**. We will have to keep asking for new logins for you since it costs
+    _you_ valuable time away from WiFi `r fontawesome::fa("wifi")`.
 :::
-
-The deadline to complete this is **2pm June 5th, 2023**. Though most likely you 
-will want to complete it the moment you arrive at your housing!
