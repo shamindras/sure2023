@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Clustering</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Clustering
+]
+.subtitle[
+## K-means
+]
+.date[
+### June 13th, 2023
+]
+
+---
+
+
+
+
+
+
+## Brace yourselves
+
+&lt;img src="http://images6.fanpop.com/image/photos/42900000/Thor-Ragnarok-2017-Loki-and-Thor-mood-compilation-thor-ragnarok-42998758-268-200.gif" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Into statistical learning with unsupervised learning
+
+What is __statistical learning?__
+--
+ [Preface of Introduction to Statistical Learning with Applications in R (ISLR)](https://www.statlearning.com/):
+
+&gt; _refers to a set of tools for modeling and understanding complex datasets_ 
+
+
+--
+What is __unsupervised learning?__
+
+
+--
+We have `\(p\)` variables for `\(n\)` observations `\(x_1,\dots,x_n\)`, and for observation `\(i\)`:
+
+`$$x_{i1},x_{i2},\ldots,x_{ip} \sim P$$`
+
+- `\(P\)` is a `\(p\)`-dimensional distribution that we might not know much about *a priori*.
+
+- _unsupervised_: none of the variables are __response__ variables, i.e., there are no labeled data
+
+
+--
+Think of unsupervised learning as __an extension of EDA...__
+
+
+--
+- `\(\Rightarrow\)` __there is no unique right answer!__
+
+???
+
+- Statistical learning is the process of ascertaining (discovering) associations between groups of variables
+
+- unsupervised learning - where the goal is to discover interesting things about the data
+
+---
+
+## What is clustering (aka cluster analysis)?
+
+--
+[ISLR 10.3](http://faculty.marshall.usc.edu/gareth-james/ISL/ISLR%20Seventh%20Printing.pdf): 
+&gt; _very broad set of techniques for finding subgroups, or clusters, in a dataset_
+
+--
+__Goals__:
+
+- observations __within__ clusters are __more similar__ to each other,
+
+- observations __in different__ clusters are __more different__ from each other
+
+
+--
+How do we define __distance / dissimilarity__ between observations? 
+
+--
+- e.g. __Euclidean distance__ between observations `\(i\)` and `\(j\)`
+
+`$$d(x_i, x_j) = \sqrt{(x_{i1}-x_{j1})^2 + \cdots + (x_{ip}-x_{jp})^2}$$`
+
+--
+__Units matter!__ 
+
+--
+- one variable may _dominate_ others when computing Euclidean distance because its range is much larger
+
+- can standardize each variable / column of dataset to have mean 0 and standard divation 1 with `scale()`
+
+- __but we may value the separation in that variable!__ (so just be careful...)
+
+
+???
+
+It is the partitioning of data into homogeneous subgroups
+
+Goal define clusters for which the within-cluster variation is relatively small, i.e. observations within clusters are similar to each other
+
+---
+
+## What's the clustering objective?
+
+- `\(C_1, \dots, C_K\)` are _sets_ containing indices of observations in each of the `\(K\)` clusters
+
+  - if observation `\(i\)` is in cluster `\(k\)`, then `\(i \in C_k\)`
+  
+
+--
+- We want to minimize the __within-cluster variation__ `\(W(C_k)\)` for each cluster `\(C_k\)` and solve:
+
+`$$\underset{C_1, \dots, C_K}{\text{minimize}} \Big\{ \sum_{k=1}^K W(C_k) \Big\}$$`
+
+- Can define using the __squared Euclidean distance__ ( `\(|C_k| = n_k =\)` # observations in cluster `\(k\)`)
+
+`$$W(C_k) = \frac{1}{|C_k|}\sum_{i,j \in C_k} d(x_i, x_j)^2$$`
+
+  - Commonly referred to as the within-cluster sum of squares (WSS)
+
+--
+
+__So how can we solve this?__
+
+---
+
+## [Lloyd's algorithm](https://en.wikipedia.org/wiki/K-means_clustering)
+
+.pull-left[
+
+1) Choose `\(K\)` random centers, aka __centroids__
+
+2) Assign each observation closest center (using Euclidean distance)
+
+3) Repeat until cluster assignment stop changing:
+
+  - Compute new centroids as the averages of the updated groups
+  
+  - Reassign each observations to closest center
+
+__Converges to a local optimum__, not the global 
+
+__Results will change from run to run__ (set the seed!)
+
+__Takes `\(K\)` as an input!__
+
+]
+
+--
+
+.pull-right[
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/e/ea/K-means_convergence.gif" width="80%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Gapminder data
+
+Health and income outcomes for 184 countries from 1960 to 2016 from the famous [Gapminder project](https://www.gapminder.org/data)
+
+
+```r
+library(tidyverse)
+library(dslabs)
+gapminder &lt;- as_tibble(gapminder)
+head(gapminder)
+```
+
+```
+## # A tibble: 6 × 9
+##   country           year infan…¹ life_…² ferti…³ popul…⁴      gdp conti…⁵ region
+##   &lt;fct&gt;            &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;fct&gt;   &lt;fct&gt; 
+## 1 Albania           1960   115.     62.9    6.19  1.64e6 NA       Europe  South…
+## 2 Algeria           1960   148.     47.5    7.65  1.11e7  1.38e10 Africa  North…
+## 3 Angola            1960   208      36.0    7.32  5.27e6 NA       Africa  Middl…
+## 4 Antigua and Bar…  1960    NA      63.0    4.43  5.47e4 NA       Americ… Carib…
+## 5 Argentina         1960    59.9    65.4    3.11  2.06e7  1.08e11 Americ… South…
+## 6 Armenia           1960    NA      66.9    4.55  1.87e6 NA       Asia    Weste…
+## # … with abbreviated variable names ¹​infant_mortality, ²​life_expectancy,
+## #   ³​fertility, ⁴​population, ⁵​continent
+```
+
+---
+
+## GDP is severely skewed right...
+
+
+```r
+gapminder %&gt;% ggplot(aes(x = gdp)) + geom_histogram() 
+```
+
+&lt;img src="07-slides_files/figure-html/gdp-hist-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Some initial cleaning...
+
+- Each row is at the `country`-`year` level
+
+- Will just focus on data for 2011 where `gdp` is not missing
+
+- Take `log()` transformation of `gdp`
+
+
+```r
+clean_gapminder &lt;- gapminder %&gt;%
+  filter(year == 2011, !is.na(gdp)) %&gt;%
+  mutate(log_gdp = log(gdp))
+clean_gapminder
+```
+
+```
+## # A tibble: 168 × 10
+##    country   year infan…¹ life_…² ferti…³ popul…⁴     gdp conti…⁵ region log_gdp
+##    &lt;fct&gt;    &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;fct&gt;   &lt;fct&gt;    &lt;dbl&gt;
+##  1 Albania   2011    14.3    77.4    1.75  2.89e6 6.32e 9 Europe  South…    22.6
+##  2 Algeria   2011    22.8    76.1    2.83  3.67e7 8.11e10 Africa  North…    25.1
+##  3 Angola    2011   107.     58.1    6.1   2.19e7 2.70e10 Africa  Middl…    24.0
+##  4 Antigua…  2011     7.2    75.9    2.12  8.82e4 8.02e 8 Americ… Carib…    20.5
+##  5 Argenti…  2011    12.7    76      2.2   4.17e7 4.73e11 Americ… South…    26.9
+##  6 Armenia   2011    15.3    73.5    1.5   2.97e6 4.29e 9 Asia    Weste…    22.2
+##  7 Austral…  2011     3.8    82.2    1.88  2.25e7 5.73e11 Oceania Austr…    27.1
+##  8 Austria   2011     3.4    80.7    1.44  8.42e6 2.31e11 Europe  Weste…    26.2
+##  9 Azerbai…  2011    32.5    70.8    1.96  9.23e6 2.14e10 Asia    Weste…    23.8
+## 10 Bahamas   2011    11.1    72.6    1.9   3.67e5 6.76e 9 Americ… Carib…    22.6
+## # … with 158 more rows, and abbreviated variable names ¹​infant_mortality,
+## #   ²​life_expectancy, ³​fertility, ⁴​population, ⁵​continent
+```
+
+---
+
+### K-means clustering example (`gdp` and `life_expectancy`)
+
+.pull-left[
+
+- Use the `kmeans()` function, __but must provide number of clusters `\(K\)`__
+
+
+```r
+init_kmeans &lt;- 
+  kmeans(dplyr::select(clean_gapminder,
+                  log_gdp, life_expectancy),
+         algorithm = "Lloyd", centers = 4,
+         nstart = 1)
+
+clean_gapminder %&gt;%
+  mutate(country_clusters = 
+*         as.factor(init_kmeans$cluster)) %&gt;%
+  ggplot(aes(x = log_gdp, y = life_expectancy,
+          color = country_clusters)) +
+  geom_point() + 
+  ggthemes::scale_color_colorblind() +
+  theme(legend.position = "bottom") 
+```
+
+
+]
+.pull-right[
+
+&lt;img src="07-slides_files/figure-html/unnamed-chunk-3-1.png" width="504" /&gt;
+
+
+]
+
+---
+
+## Careful with units...
+
+.pull-left[
+
+- Use the `coord_fixed()` so that the axes match with unit scales
+
+
+```r
+clean_gapminder %&gt;%
+  mutate(country_clusters = 
+*        as.factor(init_kmeans$cluster)) %&gt;%
+  ggplot(aes(x = log_gdp, y = life_expectancy,
+             color = country_clusters)) +
+  geom_point() + 
+  ggthemes::scale_color_colorblind() +
+  theme(legend.position = "bottom") +
+* coord_fixed()
+```
+
+
+]
+.pull-right[
+
+&lt;img src="07-slides_files/figure-html/unnamed-chunk-4-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+---
+
+## Standardize the variables!
+
+.pull-left[
+
+- Use the `scale()` function to first __standardize the variables__, `\(\frac{value - mean}{standard\ deviation}\)`
+
+
+```r
+clean_gapminder &lt;- clean_gapminder %&gt;%
+  mutate(s_log_gdp = as.numeric(scale(log_gdp, 
+*          center = TRUE, scale = TRUE)),
+         s_life_exp = 
+           as.numeric(scale(life_expectancy, 
+*          center = TRUE, scale = TRUE)))
+s_kmeans &lt;- kmeans(dplyr::select(clean_gapminder, 
+                       s_log_gdp, s_life_exp),
+         algorithm = "Lloyd", centers = 4, 
+         nstart = 1)
+clean_gapminder %&gt;% mutate(country_clusters = 
+*          as.factor(s_kmeans$cluster)) %&gt;%
+  ggplot(aes(x = log_gdp, y = life_expectancy,
+             color = country_clusters)) +
+  geom_point() + 
+  ggthemes::scale_color_colorblind() +
+  theme(legend.position = "bottom") +
+  coord_fixed()
+```
+
+
+]
+.pull-right[
+
+&lt;img src="07-slides_files/figure-html/unnamed-chunk-5-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+---
+
+## Standardize the variables!
+
+.pull-left[
+
+
+
+```r
+clean_gapminder %&gt;%
+  mutate(country_clusters = 
+*          as.factor(s_kmeans$cluster)) %&gt;%
+  ggplot(aes(x = s_log_gdp, y = s_life_exp,
+             color = country_clusters)) +
+  geom_point() + 
+  ggthemes::scale_color_colorblind() +
+  theme(legend.position = "bottom") +
+* coord_fixed()
+```
+
+
+]
+.pull-right[
+
+&lt;img src="07-slides_files/figure-html/unnamed-chunk-6-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+---
+
+### And if we run it again?
+
+.pull-left[
+
+We get different clustering results!
+
+
+```r
+another_kmeans &lt;- 
+  kmeans(dplyr::select(clean_gapminder, 
+                       s_log_gdp, s_life_exp),
+         algorithm = "Lloyd", centers = 4, 
+         nstart = 1)
+
+clean_gapminder %&gt;%
+  mutate(country_clusters = 
+*          as.factor(another_kmeans$cluster)) %&gt;%
+  ggplot(aes(x = log_gdp, y = life_expectancy,
+             color = country_clusters)) +
+  geom_point() + 
+  ggthemes::scale_color_colorblind() +
+  theme(legend.position = "bottom")
+```
+
+
+__Results depend on initialization__
+
+Keep in mind: __the labels / colors are arbitrary__
+
+]
+.pull-right[
+
+&lt;img src="07-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" /&gt;
+
+
+]
+
+
+---
+
+
+### Fix randomness issue with `nstart`
+
+.pull-left[
+
+Run the algorithm `nstart` times, then __pick the results with lowest total within-cluster variation__ (total WSS `\(= \sum_k^K W(C_k)\)`)
+
+
+```r
+nstart_kmeans &lt;- 
+  kmeans(dplyr::select(clean_gapminder,
+                       s_log_gdp, s_life_exp),
+         algorithm = "Lloyd", centers = 4,
+*        nstart = 30)
+
+clean_gapminder %&gt;%
+  mutate(country_clusters = 
+           as.factor(nstart_kmeans$cluster)) %&gt;% 
+  ggplot(aes(x = log_gdp, y = life_expectancy,
+             color = country_clusters)) +
+  geom_point() + 
+  ggthemes::scale_color_colorblind() +
+  theme(legend.position = "bottom")
+```
+
+
+]
+.pull-right[
+
+&lt;img src="07-slides_files/figure-html/unnamed-chunk-8-1.png" width="504" /&gt;
+
+
+]
+
+
+---
+
+### By default `R` uses [Hartigan and Wong algorithm](https://en.wikipedia.org/wiki/K-means_clustering#Hartigan%E2%80%93Wong_method)
+
+.pull-left[
+
+Updates based on changing a single observation
+
+__Computational advantages over re-computing distances for every observation__
+
+
+```r
+default_kmeans &lt;- 
+  kmeans(dplyr::select(clean_gapminder,
+                       s_log_gdp, s_life_exp),
+*        algorithm = "Hartigan-Wong",
+         centers = 4, nstart = 30) 
+
+clean_gapminder %&gt;%
+  mutate(country_clusters = 
+           as.factor(default_kmeans$cluster)) %&gt;% 
+  ggplot(aes(x = log_gdp, y = life_expectancy,
+             color = country_clusters)) +
+  geom_point() + 
+  ggthemes::scale_color_colorblind() +
+  theme(legend.position = "bottom")
+```
+
+Very little differences for our purposes...
+
+]
+.pull-right[
+
+&lt;img src="07-slides_files/figure-html/unnamed-chunk-9-1.png" width="504" /&gt;
+
+
+]
+
+---
+
+### Better alternative to `nstart`: __K-means++__
+
+Pick a random observation to be the center `\(c_1\)` of the first cluster `\(C_1\)`
+
+  - This initializes a set `\(Centers = \{c_1 \}\)`
+  
+--
+
+Then for each remaining cluster `\(c^* \in 2, \dots, K\)`:
+
+  - For each observation (that is not a center), compute `\(D(x_i) = \underset{c \in Centers}{\text{min}} d(x_i, c)\)`
+  
+    - Distance between observation and its closest center `\(c \in Centers\)`
+    
+--
+
+  - Randomly pick a point `\(x_i\)` with probability: `\(p_i = \frac{D^2(x_i)}{\sum_{j=1}^n D^2(x_j)}\)`
+
+--
+
+  - As distance to closest center increases `\(\Rightarrow\)` probability of selection increases
+
+  - Call this randomly selected observation `\(c^*\)`, update `\(Centers = Centers\ \cup c^*\)`
+  
+    - Same as `centers = c(centers, c_new)`
+    
+--
+
+__Then run `\(K\)`-means using these `\(Centers\)` as the starting points__
+
+---
+
+### K-means++ in R using [`flexclust`](https://cran.r-project.org/web/packages/flexclust/flexclust.pdf)
+
+.pull-left[
+
+
+```r
+library(flexclust)
+init_kmeanspp &lt;- 
+* kcca(dplyr::select(clean_gapminder,
+*                    s_log_gdp, s_life_exp),
+*      k = 4,
+*      control = list(initcent = "kmeanspp"))
+
+clean_gapminder %&gt;%
+  mutate(country_clusters = 
+*          as.factor(init_kmeanspp@cluster)) %&gt;%
+  ggplot(aes(x = log_gdp, y = life_expectancy,
+             color = country_clusters)) +
+  geom_point() + 
+  ggthemes::scale_color_colorblind() +
+  theme(legend.position = "bottom")
+```
+
+__Note the use of `@` instead of `$`...__
+
+]
+.pull-right[
+
+&lt;img src="07-slides_files/figure-html/unnamed-chunk-10-1.png" width="504" /&gt;
+
+
+]
+
+---
+
+### So, how do we choose the number of clusters?!
+
+&lt;img src="https://i.pinimg.com/originals/86/90/6c/86906c4cb23094b8bfb851031509b9f4.gif" width="60%" style="display: block; margin: auto;" /&gt;
+
+--
+
+__There is no universally accepted way to conclude that a particular choice of `\(K\)` is optimal!__
+
+
+---
+
+### Popular heuristic: elbow plot (use with caution)
+
+Look at the total within-cluster variation as a function of the number of clusters
+
+
+```r
+# Initialize number of clusters to search over
+n_clusters_search &lt;- 2:12
+tibble(total_wss = 
+         # Compute total WSS for each number by looping with sapply
+         sapply(n_clusters_search,
+                function(k) {
+                  kmeans_results &lt;- kmeans(dplyr::select(clean_gapminder,
+                                                         s_log_gdp,
+                                                         s_life_exp),
+                                           centers = k, nstart = 30)
+                  # Return the total WSS for choice of k
+                  return(kmeans_results$tot.withinss)
+                })) %&gt;%
+  mutate(k = n_clusters_search) %&gt;%
+  ggplot(aes(x = k, y = total_wss)) +
+  geom_line() + geom_point() +
+  labs(x = "Number of clusters K", y = "Total WSS") +
+  theme_bw()
+```
+
+---
+
+### Popular heuristic: elbow plot (use with caution)
+
+.pull-left[
+Choose `\(K\)` where marginal improvements is low at the bend (hence the elbow)
+
+__This is just a guideline and should not dictate your choice of `\(K\)`!__
+
+[Gap statistic](https://web.stanford.edu/~hastie/Papers/gap.pdf) is a popular choice (see [`clusGap` function](https://stat.ethz.ch/R-manual/R-devel/library/cluster/html/clusGap.html) in [`cluster` package](https://cran.r-project.org/web/packages/cluster/cluster.pdf))
+
+__Later this week__: model-based approach to choosing the number of clusters!
+
+]
+
+.pull-right[
+&lt;img src="07-slides_files/figure-html/unnamed-chunk-12-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+### Appendix: elbow plot with `flexclust`
+
+
+```r
+# Initialize number of clusters to search over
+n_clusters_search &lt;- 2:12
+tibble(total_wss = 
+         # Compute total WSS for each number by looping with sapply
+         sapply(n_clusters_search,
+                function(k_choice) {
+                  kmeans_results &lt;- kcca(dplyr::select(clean_gapminder,
+                                                         s_log_gdp,
+                                                         s_life_exp),
+                                         k = k_choice, 
+                                         control = list(initcent = "kmeanspp"))
+                  # Return the total WSS for choice of k
+                  return(sum(kmeans_results@clusinfo$size * 
+                               kmeans_results@clusinfo$av_dist))
+                })) %&gt;%
+  mutate(k = n_clusters_search) %&gt;%
+  ggplot(aes(x = k, y = total_wss)) +
+  geom_line() + geom_point() +
+  labs(x = "Number of clusters K", y = "Total WSS") +
+  theme_bw()
+```
+
+---
+
+### Appendix: elbow plot with `flexclust`
+
+&lt;img src="07-slides_files/figure-html/unnamed-chunk-13-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
