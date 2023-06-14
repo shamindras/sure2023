@@ -73,6 +73,8 @@ website:
               contents:
                 - text: "1: Getting acquainted with the UNIX philosophy"
                   file: data_eng/01-class-data-eng.qmd
+                - text: "2: Getting comfortable with the UNIX philosophy"
+                  file: data_eng/01-class-data-eng.qmd
         - section: "Data Science Lectures"
           contents:
             - section: "Orientation"
@@ -95,8 +97,8 @@ website:
               contents:
                 - text: "7: K-means"
                   file: class/07-class.qmd
-            #     - text: "9: Hierarchical clustering"
-            #       file: class/09-class.qmd
+                - text: "8: Hierarchical clustering"
+                  file: class/08-class.qmd
             #     - text: "10: Gaussian mixture models"
             #       file: class/10-class.qmd
             # - section: "Presentation Skills"

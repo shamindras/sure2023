@@ -426,6 +426,8 @@ installed and up-to-date on your device(s).
 
 # CMU WiFi (in housing and on campus)
 
+## Initial CMU SECURE WiFi setup
+
 `r fontawesome::fa("wifi")` $\text{}$ When you arrive at your **CMU housing**,
 or on the **CMU campus** you will receive a printed (paper) card which contains
 your **personal CMU WiFi username and password** (for SURE 2023). You must keep
@@ -435,7 +437,8 @@ your assigned card secure and private. To login to CMU WiFi, do the following
 ::: {.callout-tip}
 ### Instruction: Setting up CMU campus and Housing WiFi
 
-1.  Grab your personal CMU WiFi printed card.
+1.  Grab your paper card containing your original guest WiFi username and
+    password.
 2.  Go to [identity.andrew.cmu.edu](identity.andrew.cmu.edu).
 3.  Enter the guest ID and initial password.
 4.  Click Login.
@@ -443,5 +446,26 @@ your assigned card secure and private. To login to CMU WiFi, do the following
 6.  **Important:** Please ***change*** your assigned temporary password
     **immediately** after you login, otherwise your account will expire in **2
     days**. We will have to keep asking for new logins for you since it costs
-    _you_ valuable time away from WiFi `r fontawesome::fa("wifi")`.
+    *you* valuable time away from WiFi `r fontawesome::fa("wifi")`.
+:::
+
+## Resetting CMU SECURE expired WiFi password
+
+In case you do set up the above, but forget to change your password in time and
+it expires, please follow the instructions below to reset it:
+
+::: {.callout-important collapse="true"}
+### Instruction: Resetting expired guest WiFi password
+
+1.  Grab your paper card containing your original guest WiFi username and
+    (expired) password.
+2.  Go to <http://identity.andrew.cmu.edu/>
+3.  Enter your username and original (expired) password.
+4.  At the next prompt re-enter your username and (expired) password.
+5.  Then enter your current (expired) password and new password twice to confirm
+    it.
+6.  Make sure to note down your new password in a secure place.
+7.  You should now be reconnected to CMU-SECURE `r fontawesome::fa("wifi")`
+    using your original guest username and new password (as you had created in
+    the previous step)
 :::

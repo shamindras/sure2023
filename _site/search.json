@@ -630,6 +630,20 @@
     "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
   },
   {
+    "objectID": "data_eng/02-class-data-eng.html",
+    "href": "data_eng/02-class-data-eng.html",
+    "title": "Data Engineering: Getting comfortable with the UNIX philosophy",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
+    "objectID": "data_eng/02-class-data-eng.html#slides",
+    "href": "data_eng/02-class-data-eng.html#slides",
+    "title": "Data Engineering: Getting comfortable with the UNIX philosophy",
+    "section": "",
+    "text": "The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.\n Download PDF of all slides"
+  },
+  {
     "objectID": "guides/computing-setup.html",
     "href": "guides/computing-setup.html",
     "title": "Computing Setup",
@@ -698,6 +712,20 @@
     "title": "Computing Setup",
     "section": "RStudio Customization",
     "text": "RStudio Customization\n\n\n\n\n\n\nCode formatting\n\n\n\n\n\n\n\n\n\n\nThe tidyverse style guide is a great reference for good coding style. It is supported by the styler package in R. The figure above provides a simple demonstration for code formatting with styler, taken from the package site.\n\n\n\n\n\n\n\n\n\nRStudio theme\n\n\n\n\n\nRStudio can be customized with different themes. To explore built-in themes,\n\nNavigate to the menu bar at the top of your screen\nChoose Tools \\(\\rightarrow\\) Global Options \\(\\rightarrow\\) Appearance\nChange your RStudio theme under Editor theme\n\nNote that within the Appearance tab, there are also options for changing your Editor font, Editor font size, etc.\nThe following gif illustrates a theme switch from Textmate (default) to Tomorrow Night Bright, which is the theme used by your TA advisor Quang.\n\n\n\nFurther, the rsthemes package provides additional options to the original built-in themes. The package can be installed with the following command:\n\ninstall.packages(\n  \"rsthemes\",\n  repos = c(gadenbuie = 'https://gadenbuie.r-universe.dev', getOption(\"repos\"))\n)\n\nYou can then follow the same instructions as above and select your favorite theme. For your information, your co-instructor Shamindra uses the Dracula theme.\n\n\n\n\n\n\n\n\n\nFont ligatures\n\n\n\n\n\n(This section is heavily borrowed from Jeffrey Girard’s excellent blog post on Using Fira Code Ligatures in RStudio. Please check out the linked article for step-by-step instructions.)\nTo quote the blog post (which quoted the Fira Code README):\n\n\nProblem\n\n\nProgrammers use a lot of symbols, often encoded with several characters. For the human brain, sequences like -&gt;, &lt;= or := are single logical tokens, even if they take two or three characters on the screen. Your eye spends a non-zero amount of energy to scan, parse and join multiple characters into a single logical one. Ideally, all programming languages should be designed with full-fledged Unicode symbols for operators, but that’s not the case yet.\n\n\nSolution\n\n\nFira Code is a free monospaced font containing ligatures for common programming multi-character combinations. This is just a font rendering feature: underlying code remains ASCII-compatible. This helps to read and understand code faster. For some frequent sequences like .. or //, ligatures allow us to correct spacing.\n\n\nHere are some examples of ligatures for common operators in R.\n\n\n\n\n\n\n\nWithout ligature\nWith ligature\n\n\n\n\nx &lt;- 10\n\n\n\nx &lt;= y\n\n\n\nx &gt;= y\n\n\n\nx == y\n\n\n\nx != y\n\n\n\n\nOnce again, please see the aforementioned blog post for a detailed instruction of how to set up ligatures in RStudio."
+  },
+  {
+    "objectID": "guides/computing-setup.html#initial-cmu-secure-wifi-setup",
+    "href": "guides/computing-setup.html#initial-cmu-secure-wifi-setup",
+    "title": "Computing Setup",
+    "section": "Initial CMU SECURE WiFi setup",
+    "text": "Initial CMU SECURE WiFi setup\n \\(\\text{}\\) When you arrive at your CMU housing, or on the CMU campus you will receive a printed (paper) card which contains your personal CMU WiFi username and password (for SURE 2023). You must keep your assigned card secure and private. To login to CMU WiFi, do the following (inside your CMU housing, or on CMU campus):\n\n\n\n\n\n\nInstruction: Setting up CMU campus and Housing WiFi\n\n\n\n\nGrab your paper card containing your original guest WiFi username and password.\nGo to identity.andrew.cmu.edu.\nEnter the guest ID and initial password.\nClick Login.\nFollow the on-screen steps to set a secure password for the guest account.\nImportant: Please change your assigned temporary password immediately after you login, otherwise your account will expire in 2 days. We will have to keep asking for new logins for you since it costs you valuable time away from WiFi ."
+  },
+  {
+    "objectID": "guides/computing-setup.html#resetting-cmu-secure-expired-wifi-password",
+    "href": "guides/computing-setup.html#resetting-cmu-secure-expired-wifi-password",
+    "title": "Computing Setup",
+    "section": "Resetting CMU SECURE expired WiFi password",
+    "text": "Resetting CMU SECURE expired WiFi password\nIn case you do set up the above, but forget to change your password in time and it expires, please follow the instructions below to reset it:\n\n\n\n\n\n\nInstruction: Resetting expired guest WiFi password\n\n\n\n\n\n\nGrab your paper card containing your original guest WiFi username and (expired) password.\nGo to http://identity.andrew.cmu.edu/\nEnter your username and original (expired) password.\nAt the next prompt re-enter your username and (expired) password.\nThen enter your current (expired) password and new password twice to confirm it.\nMake sure to note down your new password in a secure place.\nYou should now be reconnected to CMU-SECURE  using your original guest username and new password (as you had created in the previous step)"
   },
   {
     "objectID": "guides/pittsburgh-fun-activities.html",
