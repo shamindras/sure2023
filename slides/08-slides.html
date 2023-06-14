@@ -15,10 +15,10 @@ class: center, middle, inverse, title-slide
 # Clustering
 ]
 .subtitle[
-## K-means
+## Hierarchical clustering
 ]
 .date[
-### June 14th, 2022
+### June 14th, 2023
 ]
 
 ---
@@ -27,144 +27,6 @@ class: center, middle, inverse, title-slide
 
 
 
-
-## Brace yourselves
-
-&lt;img src="http://images6.fanpop.com/image/photos/42900000/Thor-Ragnarok-2017-Loki-and-Thor-mood-compilation-thor-ragnarok-42998758-268-200.gif" width="60%" style="display: block; margin: auto;" /&gt;
-
-
----
-
-## Into statistical learning with unsupervised learning
-
-What is __statistical learning?__
---
- [Preface of Introduction to Statistical Learning with Applications in R (ISLR)](https://www.statlearning.com/):
-
-&gt; _refers to a set of tools for modeling and understanding complex datasets_ 
-
-
---
-What is __unsupervised learning?__
-
-
---
-We have `\(p\)` variables for `\(n\)` observations `\(x_1,\dots,x_n\)`, and for observation `\(i\)`:
-
-`$$x_{i1},x_{i2},\ldots,x_{ip} \sim P$$`
-
-- `\(P\)` is a `\(p\)`-dimensional distribution that we might not know much about *a priori*.
-
-- _unsupervised_: none of the variables are __response__ variables, i.e., there are no labeled data
-
-
---
-Think of unsupervised learning as __an extension of EDA...__
-
-
---
-- `\(\Rightarrow\)` __there is no unique right answer!__
-
-???
-
-- Statistical learning is the process of ascertaining (discovering) associations between groups of variables
-
-- unsupervised learning - where the goal is to discover interesting things about the data
-
----
-
-## What is clustering (aka cluster analysis)?
-
---
-[ISLR 10.3](http://faculty.marshall.usc.edu/gareth-james/ISL/ISLR%20Seventh%20Printing.pdf): 
-&gt; _very broad set of techniques for finding subgroups, or clusters, in a dataset_
-
---
-__Goals__:
-
-- observations __within__ clusters are __more similar__ to each other,
-
-- observations __in different__ clusters are __more different__ from each other
-
-
---
-How do we define __distance / dissimilarity__ between observations? 
-
---
-- e.g. __Euclidean distance__ between observations `\(i\)` and `\(j\)`
-
-`$$d(x_i, x_j) = \sqrt{(x_{i1}-x_{j1})^2 + \cdots + (x_{ip}-x_{jp})^2}$$`
-
---
-__Units matter!__ 
-
---
-- one variable may _dominate_ others when computing Euclidean distance because its range is much larger
-
-- can standardize each variable / column of dataset to have mean 0 and standard divation 1 with `scale()`
-
-- __but we may value the separation in that variable!__ (so just be careful...)
-
-
-???
-
-It is the partitioning of data into homogeneous subgroups
-
-Goal define clusters for which the within-cluster variation is relatively small, i.e. observations within clusters are similar to each other
-
----
-
-## What's the clustering objective?
-
-- `\(C_1, \dots, C_K\)` are _sets_ containing indices of observations in each of the `\(K\)` clusters
-
-  - if observation `\(i\)` is in cluster `\(k\)`, then `\(i \in C_k\)`
-  
-
---
-- We want to minimize the __within-cluster variation__ `\(W(C_k)\)` for each cluster `\(C_k\)` and solve:
-
-`$$\underset{C_1, \dots, C_K}{\text{minimize}} \Big\{ \sum_{k=1}^K W(C_k) \Big\}$$`
-
-- Can define using the __squared Euclidean distance__ ( `\(|C_k| = n_k =\)` # observations in cluster `\(k\)`)
-
-`$$W(C_k) = \frac{1}{|C_k|}\sum_{i,j \in C_k} d(x_i, x_j)^2$$`
-
-  - Commonly referred to as the within-cluster sum of squares (WSS)
-
---
-
-__So how can we solve this?__
-
----
-
-## [Lloyd's algorithm](https://en.wikipedia.org/wiki/K-means_clustering)
-
-.pull-left[
-
-1) Choose `\(K\)` random centers, aka __centroids__
-
-2) Assign each observation closest center (using Euclidean distance)
-
-3) Repeat until cluster assignment stop changing:
-
-  - Compute new centroids as the averages of the updated groups
-  
-  - Reassign each observations to closest center
-
-__Converges to a local optimum__, not the global 
-
-__Results will change from run to run__ (set the seed!)
-
-__Takes `\(K\)` as an input!__
-
-]
-
-.pull-right[
-&lt;img src="https://upload.wikimedia.org/wikipedia/commons/e/ea/K-means_convergence.gif" width="80%" style="display: block; margin: auto;" /&gt;
-]
-
----
 
 ## Gapminder data
 
@@ -191,21 +53,9 @@ head(gapminder)
 ## # … with abbreviated variable names ¹​infant_mortality, ²​life_expectancy,
 ## #   ³​fertility, ⁴​population, ⁵​continent
 ```
-
 ---
 
-## GDP is severely skewed right...
-
-
-```r
-gapminder %&gt;% ggplot(aes(x = gdp)) + geom_histogram() 
-```
-
-&lt;img src="08-slides_files/figure-html/gdp-hist-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
----
-
-## Some initial cleaning...
+## Cleaning and transformation...
 
 - Each row is at the `country`-`year` level
 
@@ -241,97 +91,50 @@ clean_gapminder
 
 ---
 
-### K-means clustering example (`gdp` and `life_expectancy`)
+## Let's work from the bottom-up...
 
 .pull-left[
 
-- Use the `kmeans()` function, __but must provide number of clusters `\(K\)`__
+- __Review__: We have `\(p\)` variables for `\(n\)` observations `\(x_1,\dots,x_n\)`,
+
+- Compute the __distance / dissimilarity__ between observations
+
+- e.g. __Euclidean distance__ between observations `\(i\)` and `\(j\)`
+
+`$$d(x_i, x_j) = \sqrt{(x_{i1}-x_{j1})^2 + \cdots + (x_{ip}-x_{jp})^2}$$`
+
+__What are the distances between these countries using (log)GDP and life expectancy?__ 
 
 
-```r
-init_kmeans &lt;- 
-  kmeans(dplyr::select(clean_gapminder,
-                       log_gdp, life_expectancy),
-         algorithm = "Lloyd", centers = 4,
-         nstart = 1)
-
-clean_gapminder %&gt;%
-  mutate(country_clusters = 
-*          as.factor(init_kmeans$cluster)) %&gt;%
-  ggplot(aes(x = log_gdp, y = life_expectancy,
-             color = country_clusters)) +
-  geom_point() + 
-  ggthemes::scale_color_colorblind() +
-  theme_bw() +
-  theme(legend.position = "bottom") 
-```
 
 
 ]
 .pull-right[
 
-&lt;img src="08-slides_files/figure-html/unnamed-chunk-3-1.png" width="504" /&gt;
-
-
-]
-
----
-
-## Careful with units...
-
-.pull-left[
-
-- Use the `coord_fixed()` so that the axes match with unit scales
-
-
-```r
-clean_gapminder %&gt;%
-  mutate(country_clusters = 
-*          as.factor(init_kmeans$cluster)) %&gt;%
-  ggplot(aes(x = log_gdp, y = life_expectancy,
-             color = country_clusters)) +
-  geom_point() + 
-  ggthemes::scale_color_colorblind() +
-  theme_bw() +
-  theme(legend.position = "bottom") +
-* coord_fixed()
-```
-
-
-]
-.pull-right[
-
-&lt;img src="08-slides_files/figure-html/unnamed-chunk-4-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
+&lt;img src="08-slides_files/figure-html/unnamed-chunk-1-1.png" width="504" /&gt;
 
 ]
 
 ---
 
-## Standardize the variables!
+## Remember to standardize!
+
 
 .pull-left[
-
-- Use the `scale()` function to first __standardize the variables__, `\(\frac{value - mean}{standard\ deviation}\)`
 
 
 ```r
 clean_gapminder &lt;- clean_gapminder %&gt;%
-* mutate(std_log_gdp = as.numeric(scale(log_gdp, center = TRUE, scale = TRUE)),
-*        std_life_exp = as.numeric(scale(life_expectancy, center = TRUE, scale = TRUE)))
-std_kmeans &lt;- 
-  kmeans(dplyr::select(clean_gapminder, std_log_gdp, std_life_exp),
-         algorithm = "Lloyd", centers = 4, nstart = 1)
+  mutate(s_log_gdp = as.numeric(scale(log_gdp, 
+           center = TRUE, scale = TRUE)),
+         s_life_exp = 
+           as.numeric(scale(life_expectancy, 
+           center = TRUE, scale = TRUE)))
 
 clean_gapminder %&gt;%
-  mutate(country_clusters = 
-*          as.factor(std_kmeans$cluster)) %&gt;%
-  ggplot(aes(x = log_gdp, y = life_expectancy,
-             color = country_clusters)) +
+  ggplot(aes(x = s_log_gdp, y = s_life_exp)) +
   geom_point() + 
-  ggthemes::scale_color_colorblind() +
   theme_bw() +
-  theme(legend.position = "bottom") +
   coord_fixed()
 ```
 
@@ -339,207 +142,250 @@ clean_gapminder %&gt;%
 ]
 .pull-right[
 
-&lt;img src="08-slides_files/figure-html/unnamed-chunk-5-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
+&lt;img src="08-slides_files/figure-html/unnamed-chunk-2-1.png" width="504" /&gt;
 
 ]
 
 ---
 
-## Standardize the variables!
+## Compute the distance matrix using `dist()`
 
-.pull-left[
-
+- Compute pairwise Euclidean distance
 
 
 ```r
-clean_gapminder %&gt;%
-  mutate(country_clusters = 
-*          as.factor(std_kmeans$cluster)) %&gt;%
-  ggplot(aes(x = std_log_gdp, y = std_life_exp,
-             color = country_clusters)) +
-  geom_point() + 
-  ggthemes::scale_color_colorblind() +
+gap_dist &lt;- dist(dplyr::select(clean_gapminder, s_log_gdp, 
+                               s_life_exp))
+```
+
+- Returns an object of `dist` class - i.e., not a matrix
+
+- Can convert to a matrix, then set the row and column names:
+
+
+```r
+*gap_dist_matrix &lt;- as.matrix(gap_dist)
+rownames(gap_dist_matrix) &lt;- clean_gapminder$country
+colnames(gap_dist_matrix) &lt;- clean_gapminder$country
+head(gap_dist_matrix[1:3, 1:3])
+```
+
+```
+##          Albania  Algeria   Angola
+## Albania 0.000000 1.116567 2.352044
+## Algeria 1.116567 0.000000 2.166692
+## Angola  2.352044 2.166692 0.000000
+```
+
+
+---
+
+## Plotting similarities
+
+.pull-left[
+
+- Can convert to a long table for plotting with `ggplot`:
+
+
+```r
+long_dist_matrix &lt;- 
+  as_tibble(gap_dist_matrix) %&gt;%
+  mutate(country1 = rownames(gap_dist_matrix)) %&gt;%
+* pivot_longer(cols = -country1,
+*              names_to = "country2",
+*              values_to = "distance")
+long_dist_matrix %&gt;%
+  ggplot(aes(x = country1, y = country2, 
+             fill = distance)) +
+  geom_tile() +
   theme_bw() +
-  theme(legend.position = "bottom") +
-* coord_fixed()
+  theme(axis.text = element_blank(), 
+        axis.ticks = element_blank(),
+        legend.position = "bottom") +
+  scale_fill_gradient(low = "darkorange", 
+                      high = "darkblue")
 ```
 
 
 ]
 .pull-right[
 
-&lt;img src="08-slides_files/figure-html/unnamed-chunk-6-1.png" width="504" style="display: block; margin: auto;" /&gt;
+&lt;img src="08-slides_files/figure-html/unnamed-chunk-3-1.png" width="504" style="display: block; margin: auto;" /&gt;
 
 
 ]
 
 ---
 
-### And if we run it again?
+### Code interlude: arrange your heatmap with [`seriation`](https://github.com/mhahsler/seriation)
 
 .pull-left[
 
-We get different clustering results!
-
-
 ```r
-another_kmeans &lt;- 
-  kmeans(dplyr::select(clean_gapminder, std_log_gdp, std_life_exp),
-         algorithm = "Lloyd", centers = 4, nstart = 1)
+library(seriation)
+*gap_dist_seriate &lt;- seriate(gap_dist)
+*gap_order &lt;- get_order(gap_dist_seriate)
+gap_countries_order &lt;- 
+  as.character(clean_gapminder$country[gap_order])
 
-clean_gapminder %&gt;%
-  mutate(country_clusters = 
-*          as.factor(another_kmeans$cluster)) %&gt;%
-  ggplot(aes(x = log_gdp, y = life_expectancy,
-             color = country_clusters)) +
-  geom_point() + 
-  ggthemes::scale_color_colorblind() +
-  theme_bw() +
-  theme(legend.position = "bottom")
+long_dist_matrix$country1 &lt;- 
+  as_factor(long_dist_matrix$country1)
+long_dist_matrix$country2 &lt;- 
+  as_factor(long_dist_matrix$country2)
+long_dist_matrix %&gt;%
+  mutate(country1 = fct_relevel(country1, 
+                    gap_countries_order),
+         country2 = fct_relevel(country2, 
+                    gap_countries_order)) %&gt;%
+  ggplot(aes(x = country1, y = country2, 
+             fill = distance)) +
+  geom_tile() + theme_bw() +
+  theme(axis.text = element_blank(), 
+        axis.ticks = element_blank(),
+        legend.position = "bottom") +
+  scale_fill_gradient(low = "darkorange",
+                      high = "darkblue")
 ```
-
-
-__Results depend on initialization__
-
-Keep in mind: __the labels / colors are arbitrary__
 
 ]
 .pull-right[
-
-&lt;img src="08-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" /&gt;
-
-
+&lt;img src="08-slides_files/figure-html/unnamed-chunk-4-1.png" width="504" style="display: block; margin: auto;" /&gt;
 ]
-
 
 ---
 
+## (Agglomerative) [Hierarchical clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering)
 
-### Fix randomness issue with `nstart`
+Let's pretend all `\(n\)` observations are in their own cluster
+
+--
+
+- Step 1: Compute the pairwise dissimilarities between each cluster
+
+  - e.g., distance matrix on previous slides
+  
+--
+  
+- Step 2: Identify the pair of clusters that are __least dissimilar__
+
+--
+
+- Step 3: Fuse these two clusters into a new cluster!
+
+--
+
+- __Repeat Steps 1 to 3 until all observations are in the same cluster__
+
+--
+
+__"Bottom-up"__, agglomerative clustering that forms a __tree / hierarchy__ of merging
+
+No mention of any randomness!
+
+No mention of the number of clusters `\(K\)`!
+
+---
+
+## (Agglomerative) [Hierarchical clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering)
 
 .pull-left[
+Start with all observations in their own cluster
 
-Run the algorithm `nstart` times, then __pick the results with lowest total within-cluster variation__ (total WSS `\(= \sum_k^K W(C_k)\)`)
+- Step 1: Compute the pairwise dissimilarities between each cluster
 
+- Step 2: Identify the pair of clusters that are __least dissimilar__
 
-```r
-nstart_kmeans &lt;- 
-  kmeans(dplyr::select(clean_gapminder,
-                       std_log_gdp, std_life_exp),
-         algorithm = "Lloyd", centers = 4,
-*        nstart = 30)
+- Step 3: Fuse these two clusters into a new cluster!
 
-clean_gapminder %&gt;%
-  mutate(country_clusters = 
-           as.factor(nstart_kmeans$cluster)) %&gt;% 
-  ggplot(aes(x = log_gdp, y = life_expectancy,
-             color = country_clusters)) +
-  geom_point() + 
-  ggthemes::scale_color_colorblind() +
-  theme_bw() +
-  theme(legend.position = "bottom")
-```
-
-
+- __Repeat Steps 1 to 3 until all observations are in the same cluster__
 ]
 .pull-right[
-
-&lt;img src="08-slides_files/figure-html/unnamed-chunk-8-1.png" width="504" /&gt;
-
-
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Clusters.svg/250px-Clusters.svg.png" width="70%" style="display: block; margin: auto;" /&gt;
 ]
-
 
 ---
 
-### By default `R` uses [Hartigan and Wong algorithm](https://en.wikipedia.org/wiki/K-means_clustering#Hartigan%E2%80%93Wong_method)
+## (Agglomerative) [Hierarchical clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering)
 
 .pull-left[
+Start with all observations in their own cluster
 
-Updates based on changing a single observation
+- Step 1: Compute the pairwise dissimilarities between each cluster
 
-__Computational advantages over re-computing distances for every observation__
+- Step 2: Identify the pair of clusters that are __least dissimilar__
 
+- Step 3: Fuse these two clusters into a new cluster!
 
-```r
-default_kmeans &lt;- 
-  kmeans(dplyr::select(clean_gapminder,
-                       std_log_gdp, std_life_exp),
-*        algorithm = "Hartigan-Wong",
-         centers = 4, nstart = 30) 
-
-clean_gapminder %&gt;%
-  mutate(country_clusters = 
-           as.factor(default_kmeans$cluster)) %&gt;% 
-  ggplot(aes(x = log_gdp, y = life_expectancy,
-             color = country_clusters)) +
-  geom_point() + 
-  ggthemes::scale_color_colorblind() +
-  theme_bw() +
-  theme(legend.position = "bottom")
-```
-
-Very little differences for our purposes...
-
+- __Repeat Steps 1 to 3 until all observations are in the same cluster__
 ]
 .pull-right[
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Hierarchical_clustering_simple_diagram.svg/418px-Hierarchical_clustering_simple_diagram.svg.png" width="85%" style="display: block; margin: auto;" /&gt;
 
-&lt;img src="08-slides_files/figure-html/unnamed-chunk-9-1.png" width="504" /&gt;
-
-
+Forms a __dendrogram__ (typically displayed from bottom-up)
 ]
+
 
 ---
 
-### Better alternative to `nstart`: __K-means++__
+## How do we define dissimilarity between clusters?
 
-Pick a random observation to be the center `\(c_1\)` of the first cluster `\(C_1\)`
+We know how to compute distance / dissimilarity between two observations
 
-  - This initializes a set `\(Centers = \{c_1 \}\)`
+__But how do we handle clusters?__
+
+  - Dissimilarity between a cluster and an observation, or between two clusters
   
 --
 
-Then for each remaining cluster `\(c^* \in 2, \dots, K\)`:
+We need to choose a __linkage function__! Clusters are built up by __linking them together__
 
-  - For each observation (that is not a center), compute `\(D(x_i) = \underset{c \in Centers}{\text{min}} d(x_i, c)\)`
+--
+
+Compute all pairwise dissimilarities between observations in cluster 1 with observations in cluster 2
+
+i.e. Compute the distance matrix between observations, `\(d(x_i, x_j)\)` for `\(i \in C_1\)` and `\(j \in C_2\)`
+
+--
+
+  - __Complete linkage__: Use the __maximum__ value of these dissimilarities: `\(\underset{i \in C_1, j \in C_2}{\text{max}} d(x_i, x_j)\)`
   
-    - Distance between observation and its closest center `\(c \in Centers\)`
-    
 --
 
-  - Randomly pick a point `\(x_i\)` with probability: `\(p_i = \frac{D^2(x_i)}{\sum_{j=1}^n D^2(x_j)}\)`
+  - __Single linkage__: Use the __minimum__ value: `\(\underset{i \in C_1, j \in C_2}{\text{min}} d(x_i, x_j)\)`
 
 --
 
-  - As distance to closest center increases `\(\Rightarrow\)` probability of selection increases
-
-  - Call this randomly selected observation `\(c^*\)`, update `\(Centers = Centers\ \cup c^*\)`
+  - __Average linkage__: Use the __average__ value: `\(\frac{1}{|C_1| \cdot |C_2|} \sum_{i \in C_1} \sum_{j \in C_2} d(x_i, x_j)\)`
   
-    - Same as `centers = c(centers, c_new)`
-    
 --
 
-__Then run `\(K\)`-means using these `\(Centers\)` as the starting points__
+Define dissimilarity between two clusters __based on our initial dissimilarity matrix between observations__
 
 ---
 
-### K-means++ in R using [`flexclust`](https://cran.r-project.org/web/packages/flexclust/flexclust.pdf)
+## Complete linkage example 
 
 .pull-left[
 
+- Use the `hclust` function with a `dist()` object
+
+- Uses `complete` linkage by default
+
 
 ```r
-library(flexclust)
-init_kmeanspp &lt;- 
-* kcca(dplyr::select(clean_gapminder,
-*                    std_log_gdp, std_life_exp), k = 4,
-*      control = list(initcent = "kmeanspp"))
+gap_complete_hclust &lt;- 
+* hclust(gap_dist, method = "complete")
+```
 
+- Need to use `cutree()` to return cluster labels:
+
+
+```r
 clean_gapminder %&gt;%
   mutate(country_clusters = 
-*          as.factor(init_kmeanspp@cluster)) %&gt;%
-  ggplot(aes(x = log_gdp, y = life_expectancy,
+*       as.factor(cutree(gap_complete_hclust,
+*                           k = 4))) %&gt;%
+  ggplot(aes(x = s_log_gdp, y = s_life_exp,
              color = country_clusters)) +
   geom_point() + 
   ggthemes::scale_color_colorblind() +
@@ -547,108 +393,274 @@ clean_gapminder %&gt;%
   theme(legend.position = "bottom")
 ```
 
-__Note the use of `@` instead of `$`...__
 
 ]
 .pull-right[
 
-&lt;img src="08-slides_files/figure-html/unnamed-chunk-10-1.png" width="504" /&gt;
+Returns _compact_ clusters, similar to `\(K\)`-means
 
-
+&lt;img src="08-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
 
-### So, how do we choose the number of clusters?!
+## What are we cutting? Dendrograms
 
-&lt;img src="https://i.pinimg.com/originals/86/90/6c/86906c4cb23094b8bfb851031509b9f4.gif" width="60%" style="display: block; margin: auto;" /&gt;
-
---
-
-__There is no universally accepted way to conclude that a particular choice of `\(K\)` is optimal!__
-
-
----
-
-### Popular heuristic: elbow plot (use with caution)
-
-Look at the total within-cluster variation as a function of the number of clusters
+.pull-left[
+Use the [`ggdendro`](https://cran.r-project.org/web/packages/ggdendro/index.html) package (instead of `plot()`)
 
 
 ```r
-# Initialize number of clusters to search over
-n_clusters_search &lt;- 2:12
-tibble(total_wss = 
-         # Compute total WSS for each number by looping with sapply
-         sapply(n_clusters_search,
-                function(k) {
-                  kmeans_results &lt;- kmeans(dplyr::select(clean_gapminder,
-                                                         std_log_gdp,
-                                                         std_life_exp),
-                                           centers = k, nstart = 30)
-                  # Return the total WSS for choice of k
-                  return(kmeans_results$tot.withinss)
-                })) %&gt;%
-  mutate(k = n_clusters_search) %&gt;%
-  ggplot(aes(x = k, y = total_wss)) +
-  geom_line() + geom_point() +
-  labs(x = "Number of clusters K", y = "Total WSS") +
-  theme_bw()
+library(ggdendro)
+*ggdendrogram(gap_complete_hclust,
+*            theme_dendro = FALSE,
+*            labels = FALSE,
+*            leaf_labels = FALSE) +
+  labs(y = "Dissimilarity between clusters") +
+  theme_bw() +
+  theme(axis.text.x = element_blank(), 
+        axis.title.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.grid = element_blank())
 ```
+
+- Each __leaf__ is one observation
+
+- __Height of branch indicates dissimilarity between clusters__
+
+  - (After first step) Horizontal position along x-axis means nothing
+
+]
+.pull-right[
+&lt;img src="08-slides_files/figure-html/unnamed-chunk-8-1.png" width="504" style="display: block; margin: auto;" /&gt;
+]
 
 ---
 
-### Popular heuristic: elbow plot (use with caution)
+## [Textbook example](https://bradleyboehmke.github.io/HOML/hierarchical.html)
+
+&lt;img src="https://bradleyboehmke.github.io/HOML/19-hierarchical_files/figure-html/comparing-dendrogram-to-distances-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Cut dendrograms to obtain cluster labels
 
 .pull-left[
-Choose `\(K\)` where marginal improvements is low at the bend (hence the elbow)
+Specify the height to cut with `h` instead of `k`
 
-__This is just a guideline and should not dictate your choice of `\(K\)`!__
-
-[Gap statistic](https://web.stanford.edu/~hastie/Papers/gap.pdf) is a popular choice (see [`clusGap` function](https://stat.ethz.ch/R-manual/R-devel/library/cluster/html/clusGap.html) in [`cluster` package](https://cran.r-project.org/web/packages/cluster/cluster.pdf))
-
-__Next Tuesday__: model-based approach to choosing the number of clusters!
+&lt;img src="08-slides_files/figure-html/complete-dendro-cut-1.png" width="80%" /&gt;
 
 ]
-
 .pull-right[
+
+```r
+*cutree(gap_complete_hclust, h = 5)
+```
+
+&lt;img src="08-slides_files/figure-html/gap-complete-cut-plot-1.png" width="80%" /&gt;
+]
+
+---
+
+## Single linkage example
+
+.pull-left[
+Change the `method` argument to `single`
+
+&lt;img src="08-slides_files/figure-html/single-dendro-cut-1.png" width="80%" /&gt;
+
+]
+.pull-right[
+Results in a __chaining__ effect
+
+&lt;img src="08-slides_files/figure-html/gap-single-plot-1.png" width="80%" /&gt;
+]
+
+---
+
+## Average linkage example
+
+.pull-left[
+Change the `method` argument to `average`
+
+&lt;img src="08-slides_files/figure-html/average-dendro-cut-1.png" width="80%" /&gt;
+
+]
+.pull-right[
+Closer to `complete` but varies in compactness
+
+&lt;img src="08-slides_files/figure-html/gap-average-plot-1.png" width="80%" /&gt;
+]
+
+---
+
+## More linkage functions
+
+
+- __Centroid linkage__: Computes the dissimilarity between the centroid for cluster 1 and the centroid for cluster 2
+
+  - i.e. distance between the averages of the two clusters
+  
+  - use `method = centroid`
+  
+--
+
+- __Ward’s linkage__: Merges a pair of clusters to minimize the within-cluster variance
+
+  - i.e. aim is to minimize the objective function from `\(K\)`-means
+  
+  - can use `ward.D` or `ward.D2` (different algorithms)
+  
+--
+
+&lt;img src="https://media1.tenor.com/images/bfb8e3e881ac4413ae12b61c4b982d60/tenor.gif?itemid=5140031" width="30%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## [Minimax linkage](http://statweb.stanford.edu/~tibs/sta306bfiles/minimax-clustering.pdf)
+
+- Each cluster is defined __by a prototype__ observation (most representative)
+
+- __Identify the point whose farthest point is closest__ (hence the minimax)
+
+&lt;img src="https://europepmc.org/articles/PMC4527350/bin/nihms637357f2.jpg" width="60%" style="display: block; margin: auto;" /&gt;
+
+- Use this minimum-maximum distance as the measure of cluster dissimilarity
+
+- Dendogram interpretation: each point point is `\(\leq h\)` in dissimilarity to the __prototype__ of cluster
+
+- __Cluster centers are chosen among the observations themselves - hence prototype__
+
+---
+
+## Minimax linkage example
+
+.pull-left[
+
+- Easily done in `R` via the [`protoclust`](https://github.com/jacobbien/protoclust) package
+
+- Use the `protoclust()` function to apply the clustering to the `dist()` object
+
+
+```r
+library(protoclust)
+*gap_minimax &lt;- protoclust(gap_dist)
+plot(gap_minimax)
+# ggdendrogram was having issues
+# with protoclust... so base R :(
+```
+
+
+]
+.pull-right[
+
 &lt;img src="08-slides_files/figure-html/unnamed-chunk-12-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
 ]
 
 ---
 
-### Appendix: elbow plot with `flexclust`
+## Minimax linkage example
+
+.pull-left[
+
+- Use the `protocut()` function to make the cut 
+
+- But then access the cluster labels `cl`
 
 
 ```r
-# Initialize number of clusters to search over
-n_clusters_search &lt;- 2:12
-tibble(total_wss = 
-         # Compute total WSS for each number by looping with sapply
-         sapply(n_clusters_search,
-                function(k_choice) {
-                  kmeans_results &lt;- kcca(dplyr::select(clean_gapminder,
-                                                         std_log_gdp,
-                                                         std_life_exp),
-                                         k = k_choice, 
-                                         control = list(initcent = "kmeanspp"))
-                  # Return the total WSS for choice of k
-                  return(sum(kmeans_results@clusinfo$size * 
-                               kmeans_results@clusinfo$av_dist))
-                })) %&gt;%
-  mutate(k = n_clusters_search) %&gt;%
-  ggplot(aes(x = k, y = total_wss)) +
-  geom_line() + geom_point() +
-  labs(x = "Number of clusters K", y = "Total WSS") +
-  theme_bw()
+minimax_country_clusters &lt;- 
+* protocut(gap_minimax, k = 4)
+
+clean_gapminder %&gt;%
+  mutate(country_clusters = 
+*   as.factor(minimax_country_clusters$cl)) %&gt;%
+  ggplot(aes(x = s_log_gdp, y = s_life_exp,
+             color = country_clusters)) +
+  geom_point() + 
+  ggthemes::scale_color_colorblind() +
+  theme_bw() +
+  theme(legend.position = "bottom")
 ```
 
----
 
-### Appendix: elbow plot with `flexclust`
+]
+.pull-right[
 
 &lt;img src="08-slides_files/figure-html/unnamed-chunk-13-1.png" width="504" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Minimax linkage example
+
+- Want to check out the prototypes for the three clusters
+
+- `protocut` returns the indices of the prototypes (in order of the cluster labels)
+
+
+```r
+minimax_country_clusters$protos
+```
+
+```
+## [1]  91 150  26 115
+```
+
+- View these country rows using `slice`:
+
+
+```r
+clean_gapminder %&gt;%
+  dplyr::select(country, gdp, life_expectancy, 
+                population, infant_mortality) %&gt;%
+  slice(minimax_country_clusters$protos)
+```
+
+```
+## # A tibble: 4 × 5
+##   country                 gdp life_expectancy population infant_mortality
+##   &lt;fct&gt;                 &lt;dbl&gt;           &lt;dbl&gt;      &lt;dbl&gt;            &lt;dbl&gt;
+## 1 Macedonia, FYR   4713514754            75.6    2065888              7.5
+## 2 Togo             1658132200            59.6    6566179             57.9
+## 3 Canada         894251850391            81.6   34499905              4.7
+## 4 Pakistan       118790417253            64.9  173669648             72.1
+```
+
+---
+
+## Wrapping up...
+
+- How might this clustering example help us understand global public health?
+
+
+```r
+table("Clusters" = minimax_country_clusters$cl, 
+      "Continents" = clean_gapminder$continent)
+```
+
+```
+##         Continents
+## Clusters Africa Americas Asia Europe Oceania
+##        1     10       19   24     20       2
+##        2     36        1    0      0       6
+##        3      0        9   13     18       1
+##        4      3        0    5      1       0
+```
+
+--
+
+- Can see countries on different continents tend to fall within particular clusters...
+
+--
+
+- __We can easily include more variables__ - just changes our distance matrix
+
+--
+
+- But we might want to explore __soft__ assignments instead...
+
+
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
