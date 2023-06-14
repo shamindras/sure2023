@@ -74,7 +74,7 @@ website:
                 - text: "1: Getting acquainted with the UNIX philosophy"
                   file: data_eng/01-class-data-eng.qmd
                 - text: "2: Getting comfortable with the UNIX philosophy"
-                  file: data_eng/01-class-data-eng.qmd
+                  file: data_eng/02-class-data-eng.qmd
         - section: "Data Science Lectures"
           contents:
             - section: "Orientation"
