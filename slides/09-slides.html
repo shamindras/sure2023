@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Clustering</title>
+    <title>Model-based clustering</title>
     <meta charset="utf-8" />
     <script src="libs/header-attrs-2.20/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
@@ -12,13 +12,13 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# Clustering
+# Model-based clustering
 ]
 .subtitle[
-## Hierarchical clustering
+## Gaussian mixture models
 ]
 .date[
-### June 15th, 2022
+### June 15th, 2023
 ]
 
 ---
@@ -28,7 +28,298 @@ class: center, middle, inverse, title-slide
 
 
 
-## Prep NBA player dataset
+## Previously...
+
+- We explored the use of __K-means__ and __hierarchical clustering__ for clustering
+
+- These methods yield __hard__ assignments, strictly assigning observations to only one cluster
+
+
+--
+- What about __soft__ assignments? Allow for some __uncertainty__ in the clustering results
+
+--
+- Welcome to the wonderful world of __mixture models__
+
+
+&lt;img src="https://imgs.xkcd.com/comics/t_distribution_2x.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## Previously in kernel density estimation...
+
+$$
+\text{Kernel density estimate: } \hat{f}(x) = \frac{1}{n} \sum_{i=1}^n \frac{1}{h} K_h(x - x_i)
+$$
+
+
+--
+- We have to use __every observation__ when estimating the density for new points
+
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Comparison_of_1D_histogram_and_KDE.png/1000px-Comparison_of_1D_histogram_and_KDE.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+--
+- Instead we can make __assumptions__ to "simplify" the problem
+
+---
+
+## Mixture models
+
+We assume the distribution `\(f(x)\)` is a __mixture__ of `\(K\)` __component__ distributions:
+
+`$$f(x) = \sum_{k=1}^K \pi_k f_k(x)$$`
+
+--
+- `\(\pi_k =\)` __mixing proportions (or weights)__, where `\(\pi_k &gt; 0\)`, and `\(\sum_k \pi_k = 1\)`
+
+
+--
+This is a __data generating process__, meaning to generate a new point:
+
+1. __pick a distribution / component__ among our `\(K\)` options, by introducing a new variable: 
+
+  - `\(z \sim \text{Multinomial} (\pi_1, \pi_2, \dots, \pi_k)\)`, i.e. categorical variable saying which group the new point is from
+
+
+--
+2. __generate an observation with that distribution / component__, i.e. `\(x | z \sim f_{z}\)`
+
+
+--
+_So what do we use for each `\(f_k\)`?_
+
+
+---
+
+## Gaussian mixture models (GMMs)
+
+Assume a __parametric mixture model__, with __parameters__ `\(\theta_k\)` for the `\(k\)`th component
+
+`$$f(x) = \sum_{k=1}^K \pi_k f_k(x; \theta_k)$$`
+
+
+--
+Assume each component is [Gaussian / Normal](https://en.wikipedia.org/wiki/Normal_distribution) where for 1D case:
+
+`$$f_k(x; \theta_k) = N(x; \mu_k, \sigma_k^2) = \frac{1}{\sqrt{2\pi \sigma_k^2}}\text{exp} \Big( -\frac{(x - \mu_k)^2}{2 \sigma_k^2} \Big)$$`
+
+--
+We need to estimate each `\(\pi_1, \dots, \pi_k\)`, `\(\mu_1, \dots, \mu_k\)`, `\(\sigma_1, \dots, \sigma_k\)`!
+
+
+---
+
+## Let's pretend we only have one component...
+
+If we have `\(n\)` observations from a single Normal distribution, we estimate the distribution parameters using the __likelihood function__, the probability / density of observing the data given the parameters
+
+`$$\mathcal{L}(\mu, \sigma | x_1, \dots, x_n) = f( x_1, \dots, x_n | \mu, \sigma) =  \prod_i^n \frac{1}{\sqrt{2\pi \sigma^2}}\text{exp }-\frac{(x_i - \mu)^2}{2 \sigma^2}$$`
+
+
+--
+We can compute the __maximum likelihood estimates (MLEs)__ for `\(\mu\)` and `\(\sigma\)`
+
+__You already know these values!__
+
+- `\(\hat{\mu}_{MLE} = \frac{1}{n} \sum_i^n x_i\)`, sample mean
+
+- `\(\hat{\sigma}_{MLE} = \sqrt{\frac{1}{n}\sum_i^n (x_i - \mu)^2}\)`, sample standard deviation (plug in `\(\hat{\mu}_{MLE}\)`)
+
+---
+
+## The problem with more than one component...
+
+.pull-left[
+
+- __We don't know which component an observation belongs to__
+
+- __IF WE DID KNOW__, then we could compute each component's MLEs as before
+
+- But we don't know because `\(z\)` is a __latent variable__! So what about its distribution given the data?
+
+`$$P(z_i = k | x_i) = \frac{P(x_i | z_i = k) P(z_i = k)}{P(x_i)}$$`
+
+`$$=\frac{\pi_{k} N\left(\mu_{k}, \sigma_{k}^{2}\right)}{\sum_{k=1}^{K} \pi_{k} N\left(\mu_{k}, \sigma_{k}\right)}$$`
+
+- __But we do NOT know these parameters!__
+
+- This leads to a very useful algorithm in statistics...
+
+]
+
+.pull-right[
+&lt;img src="09-slides_files/figure-html/init-sim-data-1.png" width="504" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+
+## Expectation-maximization (EM) algorithm
+
+We alternate between the following:
+
+- _pretending_ to know the probability each observation belongs to each group, to estimate the parameters of the components
+
+
+--
+- _pretending_ to know the parameters of the components, to estimate the probability each observation belong to each group
+
+
+--
+__Where have you seen this before?__
+
+--
+K-means algorithm!
+
+
+--
+1. Start with initial guesses about `\(\pi_1, \dots, \pi_k\)`, `\(\mu_1, \dots, \mu_k\)`, `\(\sigma_1, \dots, \sigma_k\)`
+
+2. Repeat until nothing changes:
+
+
+--
+- __Expectation__ step: calculate `\(\hat{z}_{ik}\)` = expected membership of observation `\(i\)` in cluster `\(k\)`
+
+- __Maximization__ step: update parameter estimates with __weighted__ MLE using `\(\hat{z}_{ik}\)`
+
+---
+
+## How does this relate back to clustering?
+
+--
+From the EM algorithm:  `\(\hat{z}_{ik}\)` is a __soft membership__ of observation `\(i\)` in cluster `\(k\)`
+
+--
+  - you can assign observation `\(i\)` to a cluster with the largest `\(\hat{z}_{ik}\)`
+  
+  - measure cluster assignment __uncertainty__ `\(= 1 - \text{max}_k \hat{z}_{ik}\)`
+
+
+--
+
+__Our parameters determine the type of clusters__
+
+
+--
+In 1D we only have two options:
+
+
+--
+1. each cluster __is assumed to have equal variance__ (spread): `\(\sigma_1^2 = \sigma_2^2 = \dots = \sigma_k^2\)`
+
+
+--
+2. each cluster __is allowed to have a different variance__
+
+
+--
+_But that is only 1D... what happens in multiple dimensions?_
+
+
+---
+
+## Multivariate GMMs
+
+`$$f(x) = \sum_{k=1}^K \pi_k f_k(x; \theta_k) \\ \text{where }f_k(x; \theta_k) \sim N(\boldsymbol{\mu}_k, \boldsymbol{\Sigma}_k)$$`
+
+
+Each component is a __multivariate normal distribution__:
+
+
+--
+- `\(\boldsymbol{\mu}_k\)` is a _vector_ of means in `\(p\)` dimensions
+
+
+--
+- `\(\boldsymbol{\Sigma}_k\)` is the `\(p \times p\)` __covariance__ matrix - describes the joint variability between pairs of variables
+
+`$$\sum=\left[\begin{array}{cccc}
+\sigma_{1}^{2} &amp; \sigma_{1,2} &amp; \cdots &amp; \sigma_{1, p} \\
+\sigma_{2,1} &amp; \sigma_{2}^{2} &amp; \cdots &amp; \sigma_{2, p} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+\sigma_{p, 1} &amp; \sigma_{p, 2}^{2} &amp; \cdots &amp; \sigma_{p}^{2}
+\end{array}\right]$$`
+
+---
+
+## Covariance constraints
+
+`$$\sum=\left[\begin{array}{cccc}
+\sigma_{1}^{2} &amp; \sigma_{1,2} &amp; \cdots &amp; \sigma_{1, p} \\
+\sigma_{2,1} &amp; \sigma_{2}^{2} &amp; \cdots &amp; \sigma_{2, p} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+\sigma_{p, 1} &amp; \sigma_{p, 2}^{2} &amp; \cdots &amp; \sigma_{p}^{2}
+\end{array}\right]$$`
+
+--
+
+As we increase the number of dimensions, model fitting and estimation becomes increasingly difficult
+
+--
+
+We can use __constraints__ on multiple aspects of the `\(k\)` covariance matrices:
+
+
+--
+- __volume__: size of the clusters, i.e., number of observations, 
+
+- __shape__: direction of variance, i.e. which variables display more variance
+
+- __orientation__: aligned with axes (low covariance) versus tilted (due to relationships between variables)
+
+---
+
+&lt;img src="files/figures/gmms_parameter-visual.jpg" width="70%" style="display: block; margin: auto;" /&gt;
+
+- Control volume, shape, orientation
+
+- __E__ means equal and __V__ means variable (_VVV_ is the most flexible, but has the most parameters)
+
+- Two II is __spherical__, one I is __diagonal__, and the remaining are __general__
+
+---
+
+## So many options! How do we know what to do?
+
+&lt;img src="https://i.pinimg.com/originals/c8/d5/0e/c8d50e648631eb60535305d2da3ceb2a.gif" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Bayesian information criterion (BIC)
+
+__This is a statistical model__
+
+`$$f(x) = \sum_{k=1}^K \pi_k f_k(x; \theta_k) \\ \text{where }f_k(x; \theta_k) \sim N(\boldsymbol{\mu}_k, \boldsymbol{\Sigma}_k)$$`
+
+
+--
+Meaning we can use a __model selection__ procedure for determining which best characterizes the data
+
+
+--
+Specifically - we will use a __penalized likelihood__ measure
+
+`$$BIC = 2\log \mathcal{L} - m\log n$$`
+
+- `\(\log \mathcal{L}\)` is the log-likelihood of the considered model
+
+- with `\(m\)` parameters (_VVV_ has the most parameters) and `\(n\)` observations
+
+
+--
+- __penalizes__ large models with __many clusters without constraints__
+
+- __we can use BIC to choose the covariance constraints AND number of clusters `\(K\)`!__
+
+_The above BIC is really the -BIC of what you typically see, this sign flip is just for ease_
+
+
+---
+
+### Mixture model for NBA players... New dataset!
 
 Created dataset of NBA player statistics per 100 possessions using [`ballr`](https://cran.r-project.org/web/packages/ballr/vignettes/use-ballr.html)
 
@@ -36,11 +327,12 @@ Created dataset of NBA player statistics per 100 possessions using [`ballr`](htt
 ```r
 library(tidyverse)
 nba_pos_stats &lt;- 
-  read_csv("http://www.stat.cmu.edu/cmsac/sure/2022/materials/data/sports/clustering/nba_2022_player_per_pos_stats.csv")
+  read_csv("https://shorturl.at/mFGY2")
 # Find rows for players indicating a full season worth of stats
 tot_players &lt;- nba_pos_stats %&gt;% filter(tm == "TOT")
 # Stack this dataset with players that played on just one team
-nba_player_stats &lt;- nba_pos_stats %&gt;% filter(!(player %in% tot_players$player)) %&gt;% 
+nba_player_stats &lt;- nba_pos_stats %&gt;% 
+  filter(!(player %in% tot_players$player)) %&gt;% 
   bind_rows(tot_players)
 # Filter to only players with at least 125 minutes played
 nba_filtered_stats &lt;- nba_player_stats %&gt;% filter(mp &gt;= 125)
@@ -64,579 +356,143 @@ head(nba_filtered_stats)
 ## #   ¹​fgpercent
 ```
 
-
 ---
 
-## Let's work from the bottom-up...
+## Gaussian Mixture Models with [`mclust`](https://cran.r-project.org/web/packages/mclust/vignettes/mclust.html)
 
-.pull-left[
-
-- __Review__: We have `\(p\)` variables for `\(n\)` observations `\(x_1,\dots,x_n\)`,
-
-- Compute the __distance / dissimilarity__ between observations
-
-- e.g. __Euclidean distance__ between observations `\(i\)` and `\(j\)`
-
-`$$d(x_i, x_j) = \sqrt{(x_{i1}-x_{j1})^2 + \cdots + (x_{ip}-x_{jp})^2}$$`
-
-__What are the distances between these NBA players using `x3pa` and `trb`?__ 
-
-
-
-
-]
-.pull-right[
-
-&lt;img src="09-slides_files/figure-html/unnamed-chunk-1-1.png" width="504" /&gt;
-
-]
-
----
-
-## Remember to standardize!
-
-
-.pull-left[
+Use the `Mclust` function to search over 1 to 9 clusters (_K_ = `G`) and the different covariance constraints (i.e. models) 
 
 
 ```r
-nba_filtered_stats &lt;- nba_filtered_stats %&gt;%
-  mutate(std_x3pa = as.numeric(scale(x3pa)),
-         std_trb = as.numeric(scale(trb)))
-nba_filtered_stats %&gt;%
-  ggplot(aes(x = std_x3pa, y = std_trb)) +
-  geom_point(alpha = 0.5) + 
-  theme_bw() +
-  coord_fixed()
+library(mclust)
+nba_mclust &lt;- Mclust(dplyr::select(nba_filtered_stats, x3pa, trb))
 ```
 
 
-]
-.pull-right[
 
-&lt;img src="09-slides_files/figure-html/unnamed-chunk-2-1.png" width="504" /&gt;
-
-]
-
----
-
-## Compute the distance matrix using `dist()`
-
-.pull-left[
-
-- Compute pairwise Euclidean distance
+We can use the `summary()` function to display the selection and resulting table of assignments:
 
 
 ```r
-*player_dist &lt;- dist(dplyr::select(nba_filtered_stats,
-                                  std_x3pa, std_trb))
-```
-
-- Returns an object of `dist` class - i.e., not a matrix
-
-- Can convert to a matrix, then set the row and column names:
-
-
-```r
-*player_dist_matrix &lt;- as.matrix(player_dist)
-rownames(player_dist_matrix) &lt;- nba_filtered_stats$player
-colnames(player_dist_matrix) &lt;- nba_filtered_stats$player
-head(player_dist_matrix[1:3, 1:3])
+summary(nba_mclust)
 ```
 
 ```
-##                  Precious Achiuwa Steven Adams Bam Adebayo
-## Precious Achiuwa         0.000000    1.6394586   1.2387398
-## Steven Adams             1.639459    0.0000000   0.6652539
-## Bam Adebayo              1.238740    0.6652539   0.0000000
+## ---------------------------------------------------- 
+## Gaussian finite mixture model fitted by EM algorithm 
+## ---------------------------------------------------- 
+## 
+## Mclust VVI (diagonal, varying volume and shape) model with 3 components: 
+## 
+##  log-likelihood   n df       BIC       ICL
+##        -2459.03 483 14 -5004.581 -5141.138
+## 
+## Clustering table:
+##   1   2   3 
+##  52 276 155
 ```
 
-
-]
-.pull-right[
-
-Can convert to a long table for plotting with `ggplot`:
-
-
-```r
-long_dist_matrix &lt;- 
-  as_tibble(player_dist_matrix) %&gt;%
-  mutate(player1 = rownames(player_dist_matrix)) %&gt;%
-* pivot_longer(cols = -player1,
-*              names_to = "player2",
-*              values_to = "distance")
-long_dist_matrix %&gt;%
-  ggplot(aes(x = player1, y = player2, 
-             fill = distance)) +
-  geom_tile() +
-  theme_bw() +
-  theme(axis.text = element_blank(), 
-        axis.ticks = element_blank(),
-        legend.position = "bottom") +
-  scale_fill_gradient(low = "darkorange", 
-                      high = "darkblue")
-```
-
-
-]
 
 ---
 
-## This is useless...
-
-&lt;img src="09-slides_files/figure-html/unnamed-chunk-3-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
----
-
-### Code interlude: arrange your heatmap with [`seriation`](https://github.com/mhahsler/seriation)
+## Display the BIC for each model and number of clusters
 
 .pull-left[
 
 ```r
-library(seriation)
-*player_dist_seriate &lt;- seriate(player_dist)
-*player_order &lt;- get_order(player_dist_seriate)
-player_names_order &lt;- 
-  nba_filtered_stats$player[player_order]
-
-long_dist_matrix %&gt;%
-  mutate(player1 = 
-           fct_relevel(player1, 
-                       player_names_order),
-         player2 = 
-           fct_relevel(player2, 
-                       player_names_order)) %&gt;%
-  ggplot(aes(x = player1, y = player2, 
-             fill = distance)) +
-  geom_tile() + theme_bw() +
-  theme(axis.text = element_blank(), 
-        axis.ticks = element_blank(),
-        legend.position = "bottom") +
-  scale_fill_gradient(low = "darkorange",
-                      high = "darkblue")
+plot(nba_mclust, what = 'BIC', 
+     legendArgs = list(x = "bottomright", 
+                       ncol = 4))
 ```
 
-]
-.pull-right[
-&lt;img src="09-slides_files/figure-html/unnamed-chunk-4-1.png" width="504" style="display: block; margin: auto;" /&gt;
-]
-
----
-
-## (Agglomerative) [Hierarchical clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering)
-
-Let's pretend all `\(n\)` observations are in their own cluster
-
---
-
-- Step 1: Compute the pairwise dissimilarities between each cluster
-
-  - e.g., distance matrix on previous slides
-  
---
-  
-- Step 2: Identify the pair of clusters that are __least dissimilar__
-
---
-
-- Step 3: Fuse these two clusters into a new cluster!
-
---
-
-- __Repeat Steps 1 to 3 until all observations are in the same cluster__
-
---
-
-__"Bottom-up"__, agglomerative clustering that forms a __tree / hierarchy__ of merging
-
-No mention of any randomness!
-
-No mention of the number of clusters `\(K\)`!
-
----
-
-## (Agglomerative) [Hierarchical clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering)
-
-.pull-left[
-Start with all observations in their own cluster
-
-- Step 1: Compute the pairwise dissimilarities between each cluster
-
-- Step 2: Identify the pair of clusters that are __least dissimilar__
-
-- Step 3: Fuse these two clusters into a new cluster!
-
-- __Repeat Steps 1 to 3 until all observations are in the same cluster__
-]
-.pull-right[
-&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Clusters.svg/250px-Clusters.svg.png" width="70%" style="display: block; margin: auto;" /&gt;
-]
-
----
-
-## (Agglomerative) [Hierarchical clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering)
-
-.pull-left[
-Start with all observations in their own cluster
-
-- Step 1: Compute the pairwise dissimilarities between each cluster
-
-- Step 2: Identify the pair of clusters that are __least dissimilar__
-
-- Step 3: Fuse these two clusters into a new cluster!
-
-- __Repeat Steps 1 to 3 until all observations are in the same cluster__
-]
-.pull-right[
-&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Hierarchical_clustering_simple_diagram.svg/418px-Hierarchical_clustering_simple_diagram.svg.png" width="85%" style="display: block; margin: auto;" /&gt;
-
-Forms a __dendrogram__ (typically displayed from bottom-up)
-]
-
-
----
-
-## How do we define dissimilarity between clusters?
-
-We know how to compute distance / dissimilarity between two observations
-
-__But how do we handle clusters?__
-
-  - Dissimilarity between a cluster and an observation, or between two clusters
-  
---
-
-We need to choose a __linkage function__! Clusters are built up by __linking them together__
-
---
-
-Compute all pairwise dissimilarities between observations in cluster 1 with observations in cluster 2
-
-i.e. Compute the distance matrix between observations, `\(d(x_i, x_j)\)` for `\(i \in C_1\)` and `\(j \in C_2\)`
-
---
-
-  - __Complete linkage__: Use the __maximum__ value of these dissimilarities: `\(\underset{i \in C_1, j \in C_2}{\text{max}} d(x_i, x_j)\)`
-  
---
-
-  - __Single linkage__: Use the __minimum__ value: `\(\underset{i \in C_1, j \in C_2}{\text{min}} d(x_i, x_j)\)`
-
---
-
-  - __Average linkage__: Use the __average__ value: `\(\frac{1}{|C_1| \cdot |C_2|} \sum_{i \in C_1} \sum_{j \in C_2} d(x_i, x_j)\)`
-  
---
-
-Define dissimilarity between two clusters __based on our initial dissimilarity matrix between observations__
-
----
-
-## Complete linkage example 
-
-.pull-left[
-
-- Use the `hclust` function with a `dist()` object
-
-- Uses `complete` linkage by default
-
-
-```r
-nba_complete_hclust &lt;- 
-* hclust(player_dist, method = "complete")
-```
-
-- Need to use `cutree()` to return cluster labels:
-
-
-```r
-nba_filtered_stats %&gt;%
-  mutate(player_clusters = 
-*          as.factor(cutree(nba_complete_hclust,
-*                           k = 4))) %&gt;%
-  ggplot(aes(x = std_x3pa, y = std_trb,
-             color = player_clusters)) +
-  geom_point(alpha = 0.5) + 
-  ggthemes::scale_color_colorblind() +
-  theme_bw() +
-  theme(legend.position = "bottom")
-```
-
-
-]
-.pull-right[
-
-Returns _compact_ clusters, similar to `\(K\)`-means
-
-&lt;img src="09-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" style="display: block; margin: auto;" /&gt;
-]
-
----
-
-## What are we cutting? Dendrograms
-
-.pull-left[
-Use the [`ggdendro`](https://cran.r-project.org/web/packages/ggdendro/index.html) package (instead of `plot()`)
-
-
-```r
-library(ggdendro)
-*ggdendrogram(nba_complete_hclust, theme_dendro = FALSE,
-*            labels = FALSE, leaf_labels = FALSE) +
-  labs(y = "Dissimilarity between clusters") +
-  theme_bw() +
-  theme(axis.text.x = element_blank(), 
-        axis.title.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        panel.grid = element_blank())
-```
-
-- Each __leaf__ is one observation
-
-- __Height of branch indicates dissimilarity between clusters__
-
-  - (After first step) Horizontal position along x-axis means nothing
-
-]
-.pull-right[
-&lt;img src="09-slides_files/figure-html/unnamed-chunk-8-1.png" width="504" style="display: block; margin: auto;" /&gt;
-]
-
----
-
-## [Textbook example](https://bradleyboehmke.github.io/HOML/hierarchical.html)
-
-&lt;img src="https://bradleyboehmke.github.io/HOML/19-hierarchical_files/figure-html/comparing-dendrogram-to-distances-1.png" width="100%" style="display: block; margin: auto;" /&gt;
-
----
-
-## Cut dendrograms to obtain cluster labels
-
-.pull-left[
-Specify the height to cut with `h` instead of `k`
-
-&lt;img src="09-slides_files/figure-html/complete-dendro-cut-1.png" width="80%" /&gt;
-
+&lt;img src="09-slides_files/figure-html/nba-bic-1.png" width="504" style="display: block; margin: auto;" /&gt;
 ]
 .pull-right[
 
 ```r
-*cutree(nba_complete_hclust, h = 6)
+plot(nba_mclust, what = 'classification')
 ```
 
-&lt;img src="09-slides_files/figure-html/nba-complete-cut-plot-1.png" width="80%" /&gt;
+&lt;img src="09-slides_files/figure-html/nba-cluster-plot-1.png" width="504" /&gt;
 ]
 
 ---
 
-## Single linkage example
+## How do the cluster assignments compare to the positions?
 
-.pull-left[
-Change the `method` argument to `single`
-
-&lt;img src="09-slides_files/figure-html/single-dendro-cut-1.png" width="80%" /&gt;
-
-]
-.pull-right[
-Results in a __chaining__ effect
-
-&lt;img src="09-slides_files/figure-html/nba-single-plot-1.png" width="80%" /&gt;
-]
-
----
-
-## Average linkage example
-
-.pull-left[
-Change the `method` argument to `average`
-
-&lt;img src="09-slides_files/figure-html/average-dendro-cut-1.png" width="80%" /&gt;
-
-]
-.pull-right[
-Closer to `complete` but varies in compactness
-
-&lt;img src="09-slides_files/figure-html/nba-average-plot-1.png" width="80%" /&gt;
-]
-
----
-
-## More linkage functions
-
-
-- __Centroid linkage__: Computes the dissimilarity between the centroid for cluster 1 and the centroid for cluster 2
-
-  - i.e. distance between the averages of the two clusters
-  
-  - use `method = centroid`
-  
---
-
-- __Ward’s linkage__: Merges a pair of clusters to minimize the within-cluster variance
-
-  - i.e. aim is to minimize the objection function from `\(K\)`-means
-  
-  - can use `ward.D` or `ward.D2` (different algorithms)
-  
---
-
-&lt;img src="https://media1.tenor.com/images/bfb8e3e881ac4413ae12b61c4b982d60/tenor.gif?itemid=5140031" width="30%" style="display: block; margin: auto;" /&gt;
-
----
-
-## [Minimax linkage](http://statweb.stanford.edu/~tibs/sta306bfiles/minimax-clustering.pdf)
-
-- Each cluster is defined __by a prototype__ observation (most representative)
-
-- __Identify the point whose farthest point is closest__ (hence the minimax)
-
-&lt;img src="https://europepmc.org/articles/PMC4527350/bin/nihms637357f2.jpg" width="60%" style="display: block; margin: auto;" /&gt;
-
-- Use this minimum-maximum distance as the measure of cluster dissimilarity
-
-- Dendogram interpretation: each point point is `\(\leq h\)` in dissimilarity to the __prototype__ of cluster
-
-- __Cluster centers are chosen among the observations themselves - hence prototype__
-
----
-
-## Minimax linkage example
-
-.pull-left[
-
-- Easily done in `R` via the [`protoclust`](https://github.com/jacobbien/protoclust) package
-
-- Use the `protoclust()` function to apply the clustering to the `dist()` object
+We can again compare the clustering assignments with player positions:
 
 
 ```r
-library(protoclust)
-*nba_minimax &lt;- protoclust(player_dist)
-# ggdendrogram(nba_minimax, 
-#              theme_dendro = FALSE, 
-#              labels = FALSE, 
-#              leaf_labels = FALSE) + 
-#   labs(y = "Maximum dissimilarity from prototype") +
-#   theme_bw() +
-#   theme(axis.text.x = element_blank(), 
-#         axis.title.x = element_blank(),
-#         axis.ticks.x = element_blank(),
-#         panel.grid = element_blank())
-```
-
-
-]
-
-.pull-right[
-
-&lt;!-- TODO: Add image of output here --&gt;
-
-]
----
-
-## Minimax linkage example
-
-.pull-left[
-
-- Use the `protocut()` function to make the cut 
-
-- But then access the cluster labels `cl`
-
-
-```r
-library(protoclust)
-minimax_player_clusters &lt;- 
-* protocut(nba_minimax, k = 4)
-nba_filtered_stats %&gt;%
-  mutate(player_clusters = 
-*          as.factor(minimax_player_clusters$cl)) %&gt;%
-  ggplot(aes(x = std_x3pa, y = std_trb,
-             color = player_clusters)) +
-  geom_point(alpha = 0.5) + 
-  ggthemes::scale_color_colorblind() +
-  theme_bw() +
-  theme(legend.position = "bottom")
-```
-
-&lt;img src="09-slides_files/figure-html/nba-minimax-cut-1.png" width="504" /&gt;
-
-
-]
-.pull-right[
-
-&lt;!-- TODO: Add image of output here --&gt;
-]
-
----
-
-## Minimax linkage example
-
-- Want to check out the prototypes for the three clusters
-
-- `protocut` returns the indices of the prototypes (in order of the cluster labels)
-
-
-```r
-minimax_player_clusters$protos
-```
-
-```
-## [1] 468 347 103 251
-```
-
-- View these player rows using `slice`:
-
-
-```r
-nba_filtered_stats %&gt;%
-  dplyr::select(player, pos, age, std_x3pa, std_trb) %&gt;%
-  slice(minimax_player_clusters$protos)
-```
-
-```
-## # A tibble: 4 × 5
-##   player           pos     age std_x3pa std_trb
-##   &lt;chr&gt;            &lt;chr&gt; &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
-## 1 Domantas Sabonis C-PF     25   -1.02    1.99 
-## 2 Jalen Suggs      PG       20    0.161  -0.691
-## 3 Luka Dončić      PG       22    1.53    0.955
-## 4 Ben McLemore     SG       28    2.47   -1.28
-```
-
----
-
-## Wrapping up...
-
-- For context, how does player position (`pos`) relate to our clustering results?
-
-
-```r
-table("Clusters" = minimax_player_clusters$cl, "Positions" = nba_filtered_stats$pos)
+table("Clusters" = nba_mclust$classification, "Positions" = nba_filtered_stats$pos)
 ```
 
 ```
 ##         Positions
 ## Clusters  C C-PF PF PF-SF PG PG-SG SF SF-SG SG SG-PG SG-SF
-##        1 71    2 34     0  0     0  8     0  3     0     0
-##        2 13    0 54     1 88     1 76     5 90     2     4
-##        3  1    0  4     0  2     0  6     0  3     0     0
-##        4  0    0  1     0  2     0  2     0  9     1     0
+##        1 43    0  9     0  0     0  0     0  0     0     0
+##        2  3    0 28     0 84     0 54     5 96     3     3
+##        3 39    2 56     1  8     1 38     0  9     0     1
 ```
 
---
+---
 
-- Can see positions tend to fall within particular clusters...
+## What about the cluster probabilities?
 
-- _What's the way to visually compare the two labels?_
+.pull-left[
 
---
+```r
+*nba_player_probs &lt;- nba_mclust$z
+colnames(nba_player_probs) &lt;- 
+  paste0('Cluster ', 1:3)
 
-- __We can easily include more variables__ - just changes our distance matrix
+nba_player_probs &lt;- nba_player_probs %&gt;%
+  as_tibble() %&gt;%
+  mutate(player = 
+           nba_filtered_stats$player) %&gt;%
+* pivot_longer(contains("Cluster"),
+*              names_to = "cluster",
+*              values_to = "prob")
 
---
+nba_player_probs %&gt;%
+  ggplot(aes(prob)) +
+  geom_histogram() +
+  theme_bw() +
+  facet_wrap(~ cluster, nrow = 2)
+```
+]
+.pull-right[
+&lt;img src="09-slides_files/figure-html/unnamed-chunk-6-1.png" width="504" /&gt;
+]
 
-- But we might want to explore __soft__ assignments instead...
+---
 
+## Which players have the highest uncertainty?
+
+.pull-left[
+
+```r
+nba_filtered_stats %&gt;%
+* mutate(cluster =
+*          nba_mclust$classification,
+*        uncertainty =
+*          nba_mclust$uncertainty) %&gt;%
+  group_by(cluster) %&gt;%
+  arrange(desc(uncertainty)) %&gt;%
+  slice(1:5) %&gt;%
+  ggplot(aes(y = uncertainty, 
+*            x = reorder(player,
+*                        uncertainty))) +
+  geom_point() +
+  coord_flip() + 
+  theme_bw() +
+  facet_wrap(~ cluster, 
+             scales = 'free_y', nrow = 3)
+```
+]
+.pull-right[
+&lt;img src="09-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" /&gt;
+]
 
 
     </textarea>
