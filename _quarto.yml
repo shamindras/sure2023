@@ -93,6 +93,8 @@ website:
                   file: class/05-class.qmd
                 - text: "6: Density estimation"
                   file: class/06-class.qmd
+                - text: "10: Visualizing Geographic Data"
+                  file: class/10-class.qmd
             - section: "Clustering"
               contents:
                 - text: "7: K-means"

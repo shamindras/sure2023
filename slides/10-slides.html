@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Model-based clustering</title>
+    <title>Visualizing Geographic Data</title>
     <meta charset="utf-8" />
     <script src="libs/header-attrs-2.20/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
@@ -12,13 +12,13 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# Model-based clustering
+# Visualizing Geographic Data
 ]
 .subtitle[
-## Gaussian mixture models
+## EDA with Maps
 ]
 .date[
-### June 17th, 2021
+### June 16th, 2023
 ]
 
 ---
@@ -28,489 +28,606 @@ class: center, middle, inverse, title-slide
 
 
 
-## Previously...
+# How should we think about spatial data?
 
-- We explored the use of __K-means__ and __hiearchical clustering__ for clustering NBA players
-
-- These methods yield __hard__ assignments, strictly assigning observations to only one cluster
-
-
---
-- What about __soft__ assignments? Allow for some __uncertainty__ in the clustering results
-
-
---
-- Welcome to the wonderful world of __mixture models__
-
-
-&lt;img src="https://imgs.xkcd.com/comics/t_distribution_2x.png" width="60%" style="display: block; margin: auto;" /&gt;
-
-
----
-
-## Previously in kernel density estimation...
-
-$$
-\text{Kernel density estimate: } \hat{f}(x) = \frac{1}{n} \sum_{i=1}^n \frac{1}{h} K_h(x - x_i)
-$$
-
-
---
-- We have to use __every observation__ when estimating the density for new points
-
-&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Comparison_of_1D_histogram_and_KDE.png/1000px-Comparison_of_1D_histogram_and_KDE.png" width="60%" style="display: block; margin: auto;" /&gt;
-
-
---
-- Instead we can make __assumptions__ to "simplify" the problem
-
----
-
-## Mixture models
-
-We assume the distribution `\(f(x)\)` is a __mixture__ of `\(K\)` __component__ distributions:
-
-`$$f(x) = \sum_{k=1}^K \pi_k f_k(x)$$`
-
---
-- `\(\pi_k =\)` __mixing proportions (or weights)__, where `\(\pi_k &gt; 0\)`, and `\(\sum_k \pi_k = 1\)`
-
-
---
-This is a __data generating process__, meaning to generate a new point:
-
-1. __pick a distribution / component__ among our `\(K\)` options, by introducing a new variable: 
-
-  - `\(z \sim \text{Multinomial} (\pi_1, \pi_2, \dots, \pi_k)\)`, i.e. categorical variable saying which group the new point is from
-
-
---
-2. __generate an observation with that distribution / component__, i.e. `\(x | z \sim f_{z}\)`
-
-
---
-_So what do we use for each `\(f_k\)`?_
-
-
----
-
-## Gaussian mixture models (GMMs)
-
-Assume a __parametric mixture model__, with __parameters__ `\(\theta_k\)` for the `\(k\)`th component
-
-`$$f(x) = \sum_{k=1}^K \pi_k f_k(x; \theta_k)$$`
-
-
---
-Assume each component is [Gaussian / Normal](https://en.wikipedia.org/wiki/Normal_distribution) where for 1D case:
-
-`$$f_k(x; \theta_k) = N(x; \mu_k, \sigma_k^2) = \frac{1}{\sqrt{2\pi \sigma_k^2}}\text{exp} \Big( -\frac{(x - \mu_k)^2}{2 \sigma_k^2} \Big)$$`
-
---
-We need to estimate each `\(\pi_1, \dots, \pi_k\)`, `\(\mu_1, \dots, \mu_k\)`, `\(\sigma_1, \dots, \sigma_k\)`!
-
-
----
-
-## Let's pretend we only have one component...
-
-If we have `\(n\)` observations from a single Normal distribution, we estimate the distribution parameters using the __likelihood function__, the probability / density of observing the data given the parameters
-
-`$$\mathcal{L}(\mu, \sigma | x_1, \dots, x_n) = f( x_1, \dots, x_n | \mu, \sigma) =  \prod_i^n \frac{1}{\sqrt{2\pi \sigma^2}}\text{exp }-\frac{(x_i - \mu)^2}{2 \sigma^2}$$`
-
-
---
-We can compute the __maximum likelihood estimates (MLEs)__ for `\(\mu\)` and `\(\sigma\)`
-
-__You already know these values!__
-
-- `\(\hat{\mu}_{MLE} = \frac{1}{n} \sum_i^n x_i\)`, sample mean
-
-- `\(\hat{\sigma}_{MLE} = \sqrt{\frac{1}{n}\sum_i^n (x_i - \mu)^2}\)`, sample standard deviation (plug in `\(\hat{\mu}_{MLE}\)`)
-
----
-
-## The problem with more than one component...
+Typically location is measured with __latitude__ / __longitude__ (2D)
 
 .pull-left[
 
-- __We don't know which component an observation belongs to__
+- __Latitude__: Measures North / South (the "y-axis")
 
-- __IF WE DID KNOW__, then we could compute each component's MLEs as before
+  - Range is `\((-90^{\circ}, 90^{\circ})\)`
+  
+  - Measures degrees from the equator `\((0^{\circ})\)`
+  
+  - `\((-90^{\circ}, 0^{\circ})\)` = southern hemisphere 
+  
+  - `\((0^{\circ}, 90^{\circ})\)` = northern hemisphere 
 
-- But we don't know because `\(z\)` is a __latent variable__! So what about its distribution given the data?
+]
 
-`$$P(z_i = k | x_i) = \frac{P(x_i | z_i = k) P(z_i = k)}{P(x_i)}$$`
 
-`$$=\frac{\pi_{k} N\left(\mu_{k}, \sigma_{k}^{2}\right)}{\sum_{k=1}^{K} \pi_{k} N\left(\mu_{k}, \sigma_{k}\right)}$$`
+.pull-right[
 
-- __But we do NOT know these parameters!__
+- __Longitude__: Measures East/West (the "x-axis")
 
-- This leads to a very useful algorithm in statistics...
+  - Range is `\((-180^{\circ}, 180^{\circ})\)`
+  
+  - Measures degrees from the prime meridian `\((0^{\circ})\)` in Greenwich, England
+  
+  - `\((-180^{\circ}, 0^{\circ})\)` = eastern hemisphere
+  
+  - `\((0^{\circ}, 180^{\circ})\)` = western hemisphere
+
+]  
+
+---
+
+# Latitude and Longitude
+
+
+&lt;img src="https://c.tadst.com/gfx/1200x630/longitude-and-latitude-simple.png?1" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Map Projections
+
+- Earth is a 3D object, but maps are 2D objects
+
+- __Map projections__: Transformation of the lat / long coordinates on a sphere (the earth) to a 2D plane
+  
+- There are many different projections - each will distort the map in different ways.
+
+- The most common projections are:
+
+  - [Mercator](https://en.wikipedia.org/wiki/Mercator_projection)
+  - [Robinson](https://en.wikipedia.org/wiki/Robinson_projection)
+  - [Conic](http://www.geo.hunter.cuny.edu/~jochen/gtech201/lectures/lec6concepts/Map%20coordinate%20systems/Conic%20projections.htm#:~:text=Conic%20projections%20are%20created%20by,a%20developable%20map%20projection%20surface.)
+  - [Cylindrical](https://en.wikipedia.org/wiki/Map_projection#Cylindrical)
+  - [Planar](http://www.geo.hunter.cuny.edu/~jochen/gtech201/lectures/lec6concepts/Map%20coordinate%20systems/Planar%20projections.htm)
+  - [Interrupted projections](https://en.wikipedia.org/wiki/Interruption_(map_projection))
+
+
+---
+.pull-left[
+
+### Mercator Projection (1500s)
+
+
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Mercator_projection_Square.JPG/700px-Mercator_projection_Square.JPG" width="80%" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+.pull-right[
+### (With [_Tissot indicatrix_](https://en.wikipedia.org/wiki/Tissot%27s_indicatrix))
+
+
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Mercator_with_Tissot%27s_Indicatrices_of_Distortion.svg/700px-Mercator_with_Tissot%27s_Indicatrices_of_Distortion.svg.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+### Robinson Projection (Standard from 1963-1998)
+
+.pull-left[
+
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Robinson_projection_SW.jpg/700px-Robinson_projection_SW.jpg" style="display: block; margin: auto;" /&gt;
+]
+
+
+.pull-right[
+
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Robinson_with_Tissot%27s_Indicatrices_of_Distortion.svg/700px-Robinson_with_Tissot%27s_Indicatrices_of_Distortion.svg.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+### Winkel Tripel Projection (proposed 1921, now the standard)
+
+.pull-left[
+
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Winkel_triple_projection_SW.jpg/660px-Winkel_triple_projection_SW.jpg" style="display: block; margin: auto;" /&gt;
+]
+
+
+.pull-right[
+
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Winkel_Tripel_with_Tissot%27s_Indicatrices_of_Distortion.svg/660px-Winkel_Tripel_with_Tissot%27s_Indicatrices_of_Distortion.svg.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# And many more... (see [xkcd comic](https://xkcd.com/977/))
+
+&lt;img src="https://i.pinimg.com/originals/2d/03/cf/2d03cffa216afb23fa50fb07fc1221b1.jpg" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+
+## Visualizing spatial data on maps using [`ggmap`](https://cran.r-project.org/web/packages/ggmap/readme/README.html)
+
+.pull-left[
+
+
+```r
+library(ggmap)
+# First, we'll draw a "box" around the US
+# (in terms of latitude and longitude)
+US &lt;- c(left = -125, bottom = 24, 
+        right = -67, top = 49)
+map &lt;- get_stamenmap(US, zoom = 5, 
+                     maptype = "toner-lite")
+
+# Visualize the basic map
+*ggmap(map)
+```
+
+- Draw map based on lat / lon coordinates
+
+- Put the box into `get_stamenmap()` to access [Stamen Maps](http://maps.stamen.com/#terrain/12/37.7706/-122.3782)
+
+- Draw the map using `ggmap()` to serve as base
+
+(We will only display the continental US for today... sorry Alaska &amp; Hawaii)
 
 ]
 
 .pull-right[
-&lt;img src="10-slides_files/figure-html/init-sim-data-1.png" width="504" style="display: block; margin: auto;" /&gt;
+&lt;img src="10-slides_files/figure-html/unnamed-chunk-9-1.png" width="504" /&gt;
+
 ]
 
+---
+
+
+# Three main types of spatial data
+
+
+1. __Point Pattern Data__: lat-long coordinates where events have occurred
+
+2. __Point-Referenced data__: Latitude-longitude (lat-long) coordinates as well as one or more variables specific to those coordinates.
+
+3. __Areal Data__: Geographic regions with one or more variables associated with those regions.
+
+--
+
+- Each type is structured differently within a dataset
+
+- Each type requires a different kind of graph(s)
+
+--
+
+We'll review each type of data, then demonstrate how to plot these different data types
 
 ---
 
-## Expectation-maximization (EM) algorithm
+# Point-Pattern data
 
-We alternate between the following:
+- __Point Pattern Data__: lat-long coordinates where events have occurred
 
-- _pretending_ to know the probability each observation belongs to each group, to estimate the parameters of the components
+- __Point pattern data simply records the lat-long of events__; thus, there are only two columns
 
-
---
-- _pretending_ to know the parameters of the components, to estimate the probability each observation belong to each group
-
-
---
-__Where have you seen this before?__
-
---
-K-means algorithm!
-
-
---
-1. Start with initial guesses about `\(\pi_1, \dots, \pi_k\)`, `\(\mu_1, \dots, \mu_k\)`, `\(\sigma_1, \dots, \sigma_k\)`
-
-2. Repeat until nothing changes:
-
-
---
-- __Expectation__ step: calculate `\(\hat{z}_{ik}\)` = expected membership of observation `\(i\)` in cluster `\(k\)`
-
-- __Maximization__ step: update parameter estimates with __weighted__ MLE using `\(\hat{z}_{ik}\)`
-
----
-
-## How does this relate back to clustering?
-
---
-From the EM algorithm:  `\(\hat{z}_{ik}\)` is a __soft membership__ of observation `\(i\)` in cluster `\(k\)`
-
---
-  - you can assign observation `\(i\)` to a cluster with the largest `\(\hat{z}_{ik}\)`
-  
-  - measure cluster assignment __uncertainty__ `\(= 1 - \text{max}_k \hat{z}_{ik}\)`
-
+- Again, latitude and longitude are represented with dots, sometimes called a dot or bubble map.
 
 --
 
-__Our parameters determine the type of clusters__
+- The goal is to understand how the __density__ of events varies across space
 
+- The density of the dots can also be visualized (e.g., with contours)
 
---
-In 1D we only have two options:
-
-
---
-1. each cluster __is assumed to have equal variance__ (spread): `\(\sigma_1^2 = \sigma_2^2 = \dots = \sigma_k^2\)`
-
-
---
-2. each cluster __is allowed to have a different variance__
-
-
---
-_But that is only 1D... what happens in multiple dimensions?_
+  - __Use methods we've discussed before for visualizing 2D joint distribution__
 
 
 ---
 
-## Multivariate GMMs
+# Point-Referenced data
 
-`$$f(x) = \sum_{k=1}^K \pi_k f_k(x; \theta_k) \\ \text{where }f_k(x; \theta_k) \sim N(\boldsymbol{\mu}_k, \boldsymbol{\Sigma}_k)$$`
+- __Point-Referenced data__: Latitude-longitude (lat-long) coordinates as well as one or more variables specific to those coordinates
+
+- Point-referenced data will have the following form:
 
 
-Each component is a __multivariate normal distribution__:
-
+```r
+data %&gt;% 
+  dplyr::select(latitude, longitude,
+                &lt;Variables of interest&gt;)
+```
 
 --
-- `\(\boldsymbol{\mu}_k\)` is a _vector_ of means in `\(p\)` dimensions
 
+- The goal is to understand how the variable(s) vary across different spatial locations
 
---
-- `\(\boldsymbol{\Sigma}_k\)` is the `\(p \times p\)` __covariance__ matrix - describes the joint variability between pairs of variables
-
-`$$\sum=\left[\begin{array}{cccc}
-\sigma_{1}^{2} &amp; \sigma_{1,2} &amp; \cdots &amp; \sigma_{1, p} \\
-\sigma_{2,1} &amp; \sigma_{2}^{2} &amp; \cdots &amp; \sigma_{2, p} \\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-\sigma_{p, 1} &amp; \sigma_{p, 2}^{2} &amp; \cdots &amp; \sigma_{p}^{2}
-\end{array}\right]$$`
+- Typically, the latitude and longitude are represented with dots, and the variable(s) are represented with size and/or colors
 
 ---
 
-## Covariance constraints
+## Data: Hospitals in the US
 
-`$$\sum=\left[\begin{array}{cccc}
-\sigma_{1}^{2} &amp; \sigma_{1,2} &amp; \cdots &amp; \sigma_{1, p} \\
-\sigma_{2,1} &amp; \sigma_{2}^{2} &amp; \cdots &amp; \sigma_{2, p} \\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-\sigma_{p, 1} &amp; \sigma_{p, 2}^{2} &amp; \cdots &amp; \sigma_{p}^{2}
-\end{array}\right]$$`
-
---
-
-As we increase the number of dimensions, model fitting and estimation becomes increasingly difficult
-
---
-
-We can use __constraints__ on multiple aspects of the `\(k\)` covariance matrices:
-
-
---
-- __volume__: size of the clusters, i.e., number of observations, 
-
-- __shape__: direction of variance, i.e. which variables display more variance
-
-- __orientation__: aligned with axes (low covariance) versus tilted (due to relationships between variables)
-
----
-
-&lt;img src="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5096736/bin/nihms793803f2.jpg" width="70%" style="display: block; margin: auto;" /&gt;
-
-- Control volume, shape, orientation
-
-- __E__ means equal and __V__ means variable (_VVV_ is the most flexible, but has the most parameters)
-
-- Two II is __spherical__, one I is __diagonal__, and the remaining are __general__
-
----
-
-## So many options! How do we know what to do?
-
-&lt;img src="https://i.pinimg.com/originals/c8/d5/0e/c8d50e648631eb60535305d2da3ceb2a.gif" width="70%" style="display: block; margin: auto;" /&gt;
-
----
-
-## Bayesian information criterion (BIC)
-
-__This is a statistical model__
-
-`$$f(x) = \sum_{k=1}^K \pi_k f_k(x; \theta_k) \\ \text{where }f_k(x; \theta_k) \sim N(\boldsymbol{\mu}_k, \boldsymbol{\Sigma}_k)$$`
-
-
---
-Meaning we can use a __model selection__ procedure for determining which best characterizes the data
-
-
---
-Specifically - we will use a __penalized likelihood__ measure
-
-`$$BIC = 2\log \mathcal{L} - m\log n$$`
-
-- `\(\log \mathcal{L}\)` is the log-likelihood of the considered model
-
-- with `\(m\)` parameters (_VVV_ has the most parameters) and `\(n\)` observations
-
-
---
-- __penalizes__ large models with __many clusters without constraints__
-
-- __we can use BIC to choose the covariance constraints AND number of clusters `\(K\)`!__
-
-_The above BIC is really the -BIC of what you typically see, this sign flip is just for ease_
-
-
----
-
-### How do we implement this? Back to our NBA data... enter `mclust`
+Information about hospitals including their locations (latitude &amp; longitude), ownership type (non-profit, proprietary, etc.), number of beds, presence of certain treatment units, and more (available via [ArcGIS](https://hub.arcgis.com/datasets/geoplatform::hospitals/about))
 
 
 ```r
 library(tidyverse)
-nba_pos_stats &lt;- 
-  read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/clustering/nba_2021_player_per_pos_stats.csv")
-tot_players &lt;- nba_pos_stats %&gt;% filter(tm == "TOT")
-nba_player_stats &lt;- nba_pos_stats %&gt;% filter(!(player %in% tot_players$player)) %&gt;% 
-  bind_rows(tot_players)
-nba_filtered_stats &lt;- nba_player_stats %&gt;% filter(mp &gt;= 250)
-head(nba_filtered_stats)
+hospitals &lt;- read_csv("https://shorturl.at/hiLR5", na = c("", "NA", "-999"))
+hospitals &lt;- hospitals %&gt;% 
+  filter(STATUS == "OPEN") %&gt;% 
+  select(-c(X, Y, OBJECTID, ID, ZIP4, TELEPHONE, NAICS_CODE, NAICS_DESC, SOURCE,
+            SOURCEDATE, VAL_METHOD, VAL_DATE, WEBSITE, ALT_NAME, TTL_STAFF))
+head(hospitals, 2)
 ```
 
 ```
-## # A tibble: 6 × 31
-##   player     pos     age tm        g    gs    mp    fg   fga fgper…¹   x3p  x3pa
-##   &lt;chr&gt;      &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 Precious … PF       21 MIA      61     4   737   8.4  15.4   0.544   0     0.1
-## 2 Steven Ad… C        27 NOP      58    58  1605   5.6   9.2   0.614   0     0.1
-## 3 Bam Adeba… C        23 MIA      64    64  2143  10.6  18.5   0.57    0     0.2
-## 4 Nickeil A… SG       22 NOP      46    13  1007   9.1  21.8   0.419   3.6  10.4
-## 5 Grayson A… SG       25 MEM      50    38  1259   6.6  15.7   0.418   4.1  10.4
-## 6 Kyle Ande… PF       27 MEM      69    69  1887   7.8  16.7   0.468   2.4   6.6
-## # … with 19 more variables: x3ppercent &lt;dbl&gt;, x2p &lt;dbl&gt;, x2pa &lt;dbl&gt;,
-## #   x2ppercent &lt;dbl&gt;, ft &lt;dbl&gt;, fta &lt;dbl&gt;, ftpercent &lt;dbl&gt;, orb &lt;dbl&gt;,
-## #   drb &lt;dbl&gt;, trb &lt;dbl&gt;, ast &lt;dbl&gt;, stl &lt;dbl&gt;, blk &lt;dbl&gt;, tov &lt;dbl&gt;, pf &lt;dbl&gt;,
-## #   pts &lt;dbl&gt;, x &lt;lgl&gt;, ortg &lt;dbl&gt;, drtg &lt;dbl&gt;, and abbreviated variable name
-## #   ¹​fgpercent
+## # A tibble: 2 × 19
+##   NAME     ADDRESS CITY  STATE ZIP   TYPE  STATUS POPUL…¹ COUNTY COUNT…² COUNTRY
+##   &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;  
+## 1 ANDALUS… 849 SO… ANDA… AL    36420 GENE… OPEN        88 COVIN… 01039   USA    
+## 2 ATHENS … 700 WE… ATHE… AL    35611 GENE… OPEN        71 LIMES… 01083   USA    
+## # … with 8 more variables: LATITUDE &lt;dbl&gt;, LONGITUDE &lt;dbl&gt;, STATE_ID &lt;chr&gt;,
+## #   ST_FIPS &lt;chr&gt;, OWNER &lt;chr&gt;, BEDS &lt;dbl&gt;, TRAUMA &lt;chr&gt;, HELIPAD &lt;chr&gt;, and
+## #   abbreviated variable names ¹​POPULATION, ²​COUNTYFIPS
 ```
 
-While there are multiple implementations of GMMs, we will use the [`mclust`](https://cran.r-project.org/web/packages/mclust/vignettes/mclust.html) package
-
-
-```r
-library(mclust)
-```
-
-```
-## Package 'mclust' version 6.0.0
-## Type 'citation("mclust")' for citing this R package in publications.
-```
-
-```
-## 
-## Attaching package: 'mclust'
-```
-
-```
-## The following object is masked from 'package:purrr':
-## 
-##     map
-```
+We will be able to use this dataset to show several different kinds of geographical visualizations...
 
 ---
-
-## Selecting the model and number of clusters
-
-Use the `Mclust` function to search over 1 to 9 clusters (_K_ = `G`) and the different covariance constraints (i.e. models) 
-
-
-```r
-nba_mclust &lt;- Mclust(dplyr::select(nba_filtered_stats, x3pa, trb))
-```
-
-
-
-We can use the `summary()` function to display the selection and resulting table of assignments:
-
-
-```r
-summary(nba_mclust)
-```
-
-```
-## ---------------------------------------------------- 
-## Gaussian finite mixture model fitted by EM algorithm 
-## ---------------------------------------------------- 
-## 
-## Mclust VVI (diagonal, varying volume and shape) model with 3 components: 
-## 
-##  log-likelihood   n df       BIC       ICL
-##        -2107.77 418 14 -4300.038 -4429.194
-## 
-## Clustering table:
-##   1   2   3 
-##  52 165 201
-```
-
-
----
-
-## Display the BIC for each model and number of clusters
+## Adding points to the map: `geom_point` layer!
 
 .pull-left[
 
+
 ```r
-plot(nba_mclust, what = 'BIC', 
-     legendArgs = list(x = "bottomright", ncol = 4))
+ggmap(map) +
+* geom_point(data = hospitals,
+             aes(x = LONGITUDE, y = LATITUDE),
+             alpha = 0.25, size = 0.5)
 ```
 
-&lt;img src="10-slides_files/figure-html/nba-bic-1.png" width="504" style="display: block; margin: auto;" /&gt;
+- Display locations of hospitals using `geom_point()` layer, need to specify `data` for layer
+
+- Currently viewing __point-pattern__ data 
+
 ]
+
 .pull-right[
+&lt;img src="10-slides_files/figure-html/unnamed-chunk-12-1.png" width="504" /&gt;
 
-```r
-plot(nba_mclust, what = 'classification')
-```
 
-&lt;img src="10-slides_files/figure-html/nba-cluster-plot-1.png" width="504" /&gt;
 ]
 
----
-
-## How do the cluster assignments compare to the positions?
-
-We can again compare the clustering assignments with player positions:
-
-
-```r
-table("Clusters" = nba_mclust$classification, "Positions" = nba_filtered_stats$pos)
-```
-
-```
-##         Positions
-## Clusters  C C-PF PF PF-C PF-SF PG PG-SG SF SF-PF SF-SG SG SG-PG SG-SF
-##        1 42    0  7    1     0  1     0  0     1     0  0     0     0
-##        2  0    0  8    0     1 56     0 23     0     2 74     0     1
-##        3 34    2 66    0     0 18     1 49     2     0 25     3     1
-```
 
 ---
 
-## What about the cluster probabilities?
+
+## Display a new variable by altering the points
 
 .pull-left[
 
+
 ```r
-*nba_player_probs &lt;- nba_mclust$z
-colnames(nba_player_probs) &lt;- 
-  paste0('Cluster ', 1:3)
-
-nba_player_probs &lt;- nba_player_probs %&gt;%
-  as_tibble() %&gt;%
-  mutate(player = 
-           nba_filtered_stats$player) %&gt;%
-* pivot_longer(contains("Cluster"),
-*              names_to = "cluster",
-*              values_to = "prob")
-
-nba_player_probs %&gt;%
-  ggplot(aes(prob)) +
-  geom_histogram() +
-  theme_bw() +
-  facet_wrap(~ cluster, nrow = 2)
+ggmap(map) +
+  geom_point(data = hospitals, 
+             aes(x = LONGITUDE, y = LATITUDE, 
+*                size = BEDS,
+*                color = BEDS),
+             alpha = .5) +
+  scale_size_area(breaks = c(1, 10, 25, 50, 100, 150, 200, 300), 
+                  labels = c(1, 10, 25, 50, 100, 150, 200, 300), 
+                  name = "#Beds") +
+  scale_color_distiller(palette = "Spectral") +
+  labs(color = "#Beds") +
+  theme(legend.position = "bottom")
 ```
+
+
+- Displaying additional variables through `aes`
+
+- Now seeing __point-referenced__ data: number of beds _referenced_ to the location _point_ of the hospital
+
 ]
+
 .pull-right[
-&lt;img src="10-slides_files/figure-html/unnamed-chunk-6-1.png" width="504" /&gt;
+&lt;img src="10-slides_files/figure-html/unnamed-chunk-13-1.png" width="504" /&gt;
+
 ]
 
 ---
 
-## Which players have the highest uncertainty?
+## This is a bit hard to parse...
 
 .pull-left[
 
+- Too many points overall (N = 7634)
+- Too much variability in `BEDS`
+
 ```r
-nba_filtered_stats %&gt;%
-* mutate(cluster =
-*          nba_mclust$classification,
-*        uncertainty =
-*          nba_mclust$uncertainty) %&gt;%
-  group_by(cluster) %&gt;%
-  arrange(desc(uncertainty)) %&gt;%
-  slice(1:5) %&gt;%
-  ggplot(aes(y = uncertainty, 
-*            x = reorder(player,
-*                        uncertainty))) +
-  geom_point() +
-  coord_flip() + 
-  theme_bw() +
-  facet_wrap(~ cluster, 
-             scales = 'free_y', nrow = 3)
+summary(hospitals$BEDS)
 ```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##     2.0    25.0    72.0   146.2   191.0  2059.0     326
+```
+
+Summarize over regions using __areal data__!
+
+]
+
+.pull-right[
+&lt;img src="10-slides_files/figure-html/unnamed-chunk-15-1.png" width="504" /&gt;
+
+]
+
+---
+
+## Thinking about areal data
+
+- __Areal Data__: Geographic regions associated with one or more variables specific to those regions
+
+- Areal data will have the following form: 
+
+
+```r
+region_level_data %&gt;% 
+  dplyr::select(region_name,
+                &lt;Variables of interest&gt;)
+```
+
+
+--
+
+- Need to match the region with the actual geographic boundaries
+
+- Many geographic boundaries/features are stored as "shapefiles"
+
+  - i.e., complicated polygons
+  
+- Can contain the lines, points, etc. to represent any geographic feature
+
+- Shapefiles are readily available for countries, states, counties, etc.
+
+---
+
+### Typical workflow for plotting areal data (e.g., using states)
+
+1. Get state-specific data
+
+  + e.g., you are working with a dataset that contains information at the state level
+  
+2. Get state boundaries
+
+  + Access shapefiles using `map_data()` 
+  
+3. Merge state-specific data with state boundaries (using `left_join()`)
+
+  + Using `left_join()` or `merge` 
+  
+4. Plot the data!
+
+  + Create choropleths displaying regions colored by variable of interest
+  
+
+---
+
+## Wrangle to get data by state
+
+
+```r
+library(usdata)
+
+state_hospitals &lt;- hospitals %&gt;% 
+  filter(!is.na(BEDS), !STATE %in% c("AS", "GU", "MP", "PW", "PR", "VI")) %&gt;% 
+  group_by(STATE) %&gt;% 
+  summarise(total_beds = sum(BEDS)) %&gt;% 
+  mutate(state = tolower(abbr2state(STATE)))
+
+head(state_hospitals)
+```
+
+```
+## # A tibble: 6 × 3
+##   STATE total_beds state     
+##   &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;     
+## 1 AK          1826 alaska    
+## 2 AL         18903 alabama   
+## 3 AR         13181 arkansas  
+## 4 AZ         18555 arizona   
+## 5 CA         90324 california
+## 6 CO         14684 colorado
+```
+
+
+---
+
+## Access shapefiles using `map_data()` 
+
+
+
+```r
+library(maps)
+state_borders &lt;- map_data("state")
+head(state_borders)
+```
+
+```
+##        long      lat group order  region subregion
+## 1 -87.46201 30.38968     1     1 alabama      &lt;NA&gt;
+## 2 -87.48493 30.37249     1     2 alabama      &lt;NA&gt;
+## 3 -87.52503 30.37249     1     3 alabama      &lt;NA&gt;
+## 4 -87.53076 30.33239     1     4 alabama      &lt;NA&gt;
+## 5 -87.57087 30.32665     1     5 alabama      &lt;NA&gt;
+## 6 -87.58806 30.32665     1     6 alabama      &lt;NA&gt;
+```
+
+- For example: `map_data("world")`, `map_data("state")`, `map_data("county")` (need to install [`maps` package](https://cran.r-project.org/web/packages/maps/maps.pdf))
+
+- Contains lat/lon coordinates to draw geographic boundaries
+
+---
+
+## Merge state-specific data with state boundaries
+
+
+```r
+state_plot_data &lt;- state_borders %&gt;%
+* left_join(state_hospitals,
+*           by = c("region" = "state"))
+```
+
+
+--
+
+What it looks like after merging:
+
+
+```r
+head(state_plot_data)
+```
+
+```
+##        long      lat group order  region subregion STATE total_beds
+## 1 -87.46201 30.38968     1     1 alabama      &lt;NA&gt;    AL      18903
+## 2 -87.48493 30.37249     1     2 alabama      &lt;NA&gt;    AL      18903
+## 3 -87.52503 30.37249     1     3 alabama      &lt;NA&gt;    AL      18903
+## 4 -87.53076 30.33239     1     4 alabama      &lt;NA&gt;    AL      18903
+## 5 -87.57087 30.32665     1     5 alabama      &lt;NA&gt;    AL      18903
+## 6 -87.58806 30.32665     1     6 alabama      &lt;NA&gt;    AL      18903
+```
+
+
+---
+## Create a choropleth map with `geom_polygon()`
+
+.pull-left[
+
+
+```r
+state_plot_data %&gt;%
+  ggplot() + 
+  geom_polygon(aes(x = long, y = lat, 
+                   group = group,
+                   fill = total_beds), 
+               color = "black") + 
+  scale_fill_gradient(
+    low = "white",
+    high = "navy") +
+  theme_void() +
+  coord_map("polyconic") + 
+  labs(fill = "Total Beds") + 
+  theme(legend.position = "bottom")
+```
+
+
 ]
 .pull-right[
-&lt;img src="10-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" /&gt;
+&lt;img src="10-slides_files/figure-html/unnamed-chunk-21-1.png" width="504" /&gt;
+
 ]
 
+---
 
+## Does _Total Beds_ per state tell the story we want?
+
+--
+
+- California clearly has a lot of hospital beds, but it is also quite populous
+
+--
+
+- Can we find the number of beds __per capita__?
+
+--
+
+First need total population of each state...
+There's an `R` package with data for this: `usdata`
+
+
+```r
+head(usdata::state_stats)
+```
+
+```
+## # A tibble: 6 × 24
+##   state      abbr   fips  pop2010 pop2000 homeo…¹ multi…² income med_i…³ poverty
+##   &lt;fct&gt;      &lt;fct&gt; &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Alabama    AL        1  4779736  4.45e6    71.1    15.5  22984   42081    17.1
+## 2 Alaska     AK        2   710231  6.27e5    64.7    24.6  30726   66521     9.5
+## 3 Arizona    AZ        4  6392017  5.13e6    67.4    20.7  25680   50448    15.3
+## 4 Arkansas   AR        5  2915918  2.67e6    67.7    15.2  21274   39267    18  
+## 5 California CA        6 37253956  3.39e7    57.4    30.7  29188   60883    13.7
+## 6 Colorado   CO        8  5029196  4.30e6    67.6    25.6  30151   56456    12.2
+## # … with 14 more variables: fed_spend &lt;dbl&gt;, land_area &lt;dbl&gt;, smoke &lt;dbl&gt;,
+## #   murder &lt;dbl&gt;, robbery &lt;dbl&gt;, agg_assault &lt;dbl&gt;, larceny &lt;dbl&gt;,
+## #   motor_theft &lt;dbl&gt;, soc_sec &lt;dbl&gt;, nuclear &lt;dbl&gt;, coal &lt;dbl&gt;,
+## #   tr_deaths &lt;dbl&gt;, tr_deaths_no_alc &lt;dbl&gt;, unempl &lt;dbl&gt;, and abbreviated
+## #   variable names ¹​homeownership, ²​multiunit, ³​med_income
+```
+
+---
+
+### Incorporate this into our state-level hospitals data...
+
+
+```r
+state_pop &lt;- tibble(state_stats) %&gt;% 
+  select(abbr, pop2010)
+state_hospitals &lt;- left_join(state_hospitals, state_pop, 
+                             by = c("STATE" = "abbr")) %&gt;% 
+  mutate(bed_per_cap = total_beds / pop2010)
+head(state_hospitals)
+```
+
+```
+## # A tibble: 6 × 5
+##   STATE total_beds state       pop2010 bed_per_cap
+##   &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;       &lt;dbl&gt;
+## 1 AK          1826 alaska       710231     0.00257
+## 2 AL         18903 alabama     4779736     0.00395
+## 3 AR         13181 arkansas    2915918     0.00452
+## 4 AZ         18555 arizona     6392017     0.00290
+## 5 CA         90324 california 37253956     0.00242
+## 6 CO         14684 colorado    5029196     0.00292
+```
+
+
+```r
+per_capita_plot_data &lt;- state_borders %&gt;%
+  left_join(state_hospitals, by = c("region" = "state"))
+```
+
+---
+
+## Plot hospital beds per capita by state
+
+.pull-left[
+
+
+```r
+per_capita_plot_data %&gt;%
+  ggplot() + 
+  geom_polygon(aes(x = long, y = lat, 
+                   group = group,
+                   fill = bed_per_cap), 
+               color = "black") + 
+  scale_fill_gradient(
+    low = "white",
+    high = "navy") +
+  theme_void() +
+  coord_map("polyconic") + 
+  labs(fill = "Beds / Population") + 
+  theme(legend.position = "bottom")
+```
+
+
+What is the difference is the _stories_ told by these plots?
+
+]
+.pull-right[
+&lt;img src="10-slides_files/figure-html/unnamed-chunk-25-1.png" width="504" /&gt;
+
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
