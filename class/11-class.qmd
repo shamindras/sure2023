@@ -1,6 +1,6 @@
 ---
-title: "Introduction and Welcome to SURE 2023"
-date: "2023-06-05"
+title: "Model assessment vs selection"
+date: "2023-06-20"
 ---
 
 ```{r slides-videos, echo=FALSE, include=FALSE}
@@ -20,5 +20,5 @@ slide_buttons("/slides/11-slides", output_type = "pdf")
 ```
 
 ```{=html}
-<iframe width="780" height="500" src="/slides/11-slides.pdf" title="Lecture 1"></iframe>
+<iframe width="780" height="500" src="/slides/11-slides.pdf" title="Lecture 11"></iframe>
 ```

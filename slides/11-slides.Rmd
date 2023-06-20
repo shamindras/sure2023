@@ -1,7 +1,7 @@
 ---
-title: "Presentations"
-subtitle: "And working with xaringan and xaringanthemer"  
-date: 'June 17th, 2022'
+title: "Supervised Learning"
+subtitle: "Model assessment vs selection"
+date: "June 20th, 2023"
 output:
   xaringan::moon_reader:
     lib_dir: "libs"
@@ -22,551 +22,439 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(
-  fig.width = 9, fig.height=3.5, fig.retina = 3,
-  out.width = "100%",
-  cache = FALSE,
-  echo = TRUE,
-  message = FALSE, 
-  warning = FALSE,
-  fig.show = TRUE,
-  hiline = TRUE
-)
-```
-
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
 library(xaringanthemer)
 style_mono_accent(base_color = "#cc002b")
 ```
 
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(fig.retina = 3, warning = FALSE, message = FALSE)
+```
+## Supervised learning
 
-## Begin with background and motivation
+What is __statistical learning?__
+--
+ [Preface of Introduction to Statistical Learning with Applications in R (ISLR)](https://www.statlearning.com/):
 
-Every presentation has a __story__:
+> _refers to a set of tools for modeling and understanding complex datasets_ 
 
-  - What is the motivation? Why should people care about your work?
-  
-  - You want to build up want your work is trying to address
 
 --
+What is __supervised learning?__ 
 
-Example [nflWAR talk from 2017](https://www.youtube.com/watch?v=djD-yL3vWNQ):
-
-  - Do __NOT__ begin with: "We're introducing WAR for NFL!"
-  
-  - Instead begin with current state of NFL analytics and need for better, reproducible player level-metrics
+__Goal__: uncover associations between a set of __predictor__ (aka __independent__ / __explanatory__) variables / features and a single __response__ (or __dependent__) variable
 
 --
-  
-Do __NOT__ include an outline slide!
+- Ex: We are provided player tracking data from the NFL, all x,y coordinates of every player on the field at every tenth of the second. Can we predict how far a ball-carrier will go at any given moment they have the football?
 
-  - Your presentation should flow naturally 
+--
+- Ex: Given information about a patient's medical history, as well as radiography from mammograms, can we diagnose breast cancer? Can we determine which scans should receive further attention from doctors, versus which scans can be confidently dismissed before reaching a doctor?
 
 ---
 
-## Describing the data
+## Examples of statistical learning methods / algorithms
 
-You want to provide a general overview of your dataset:
+__You are probably already familiar with statistical learning__ - even if you did not know what the phrase meant before
 
-  - What are your observations? i.e., what does each row of your dataset represent?
-
---
-  
-  - What are the relevant variables / features? i.e., what are the columns of interest?
-  
-    - Be careful though with many variables - avoid just listing everything!
-    
-    - Simplify by describing groups of variables together
-    
---
-
-__Use examples__ - makes your data explicit and concrete for the audience
-
-  - But Do __NOT__ print out raw `R` console output!
-  
-  - Use text or a clean formatted table (via `knitr`, [`DT`](https://rstudio.github.io/DT/), [`gt`](https://gt.rstudio.com/))
-  
----
-
-## Introducing and describing methods
-
-- Prior to presenting results, you want to clearly state any transformations and methods used in the analysis
-
-- Your presentation should provide the general steps for someone to replicate your work
-
-  - e.g., Used complete-linkage hierarchical clustering with [INSERT VARIABLES], determined $K$ number of clusters by [INSERT REASON]
-  
-  - e.g., Modeled [INSERT RESPONSE VARIABLE] as a function of [INSERT EXPLANATORY VARIABLES]
-  
---
-
-- For more complicated methods, you'll want to provide a brief review of the methodology
-
-- If introducing new methodology: __walk through the steps clearly__
 
 --
+Examples of statistical learning algorithms include:
 
-- __Always justify your choice of methodology__
+- Generalized linear models (GLMs) and penalized versions (Lasso, elastic net)
 
-  - Why you used a flexible tree-based model over linear regression
-  
+- Smoothing splines, Generalized additive models (GAMs)
+
+- Decision trees and its variants (e.g., random forest, boosting)
+
+- Neural networks (e.g., convolutional neural networks)
+
+
+--
+Two main types of estimation __given values for predictors__:
+
+- __Regression__ models: estimate _average_ value of response
+
+- __Classification__ models: determine _the most likely_ class of a set of discrete response variable classes
 
 ---
 
-## Presenting results
+## Which method should I use in my analysis?
 
-- Use the __assertion-evidence__ model
-
-- __Assertion__: title of the slide should be the key takeaway in brief sentence form
-
-  - Indicates the point of the visualization or whatever means used to display the results
-
-- __Evidence__: the body of the slide containing the results
-
-  - Display of the results in some format that is simple to explain and understand
-  
 --
+__Depends on your goal__ - the big picture: __inference__ vs __prediction__
 
-- Limit the amount of text in your __Evidence__ portion - brief statements with important context
 
-- Treat the __Assertion__ as the title of your __Evidence__
+Let $Y$ be the response variable, and $X$ be the predictors, then the __learned__ model will take the form:
 
-  - Plot titles are then redundant and not necessary with an effective assertion
+$$
+\hat{Y}=\hat{f}(X)
+$$
+
+--
+- Care about the details of $\hat{f}(X)$? $\Rightarrow$ You want to perform statistical inference
+
+- Fine with treating $\hat{f}(X)$ as a obscure/mystical machine? $\Rightarrow$ Your interest is prediction
+
+
+--
+Any algorithm can be used for prediction, however options are limited for inference
+
+
+_Active area of research on using more mystical models for statistical inference_
 
 ---
 
-## Assertion
+### Model flexibility vs interpretability
 
-.center[__Evidence__]
+Generally speaking: __tradeoff__ between a model's _flexibility_ (i.e. how "wiggly" it is) and how __interpretable__ it is
+
+- Simpler the parametric form of the model $\Rightarrow$ the easier it is to interpret
+
+- Hence why __linear regression__ is popular in practice
+
+```{r out.width='50%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/flexibility.png")
+```
+
+.footnote[[ISLR Figure 2.7](https://www.statlearning.com/)]
 
 ---
 
-### MLB strikeout rates have been increasing throughout MLB's history
+## Model flexibility vs interpretability
 
-```{r lahman-example, echo = FALSE, fig.align = 'center'}
-library(tidyverse)
-library(Lahman)
-as_tibble(Batting) %>%
-  filter(lgID %in% c("AL", "NL")) %>%
-  group_by(yearID) %>%
-  summarize(total_sos = sum(SO, na.rm = TRUE),
-            total_atbats = sum(AB, na.rm = TRUE)) %>%
-  mutate(so_rate = total_sos / total_atbats) %>%
-  ggplot(aes(x = yearID, y = so_rate)) +
-  geom_line(color = "darkblue") +
-  geom_point(alpha = 0.8, color = "darkblue") +
-  labs(x = "Year", y = "Strikeouts / At-bats",
-       caption = "Data courtesy of Lahman") +
-  theme_bw() +
-  theme(strip.background = element_blank())
+```{r out.width='50%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/flexibility.png")
+```
+
+- __Parametric__ models, for which we can write down a mathematical expression for $f(X)$ __before observing the data__, _a priori_ (e.g. linear regression), __are inherently less flexible__
+
+
+--
+- __Nonparametric__ models, in which $f(X)$ is __estimated from the data__ (e.g. kernel regression)
+
+---
+
+## Model flexibility vs interpretability
+
+```{r out.width='50%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/flexibility.png")
+```
+
+- If your goal is prediction $\Rightarrow$ your model can be as arbitrarily flexible as it needs to be
+
+- We'll discuss how one estimates the optimal amount of flexibility shortly...
+
+---
+
+## Looks about right...
+
+
+```{r out.width='90%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://66.media.tumblr.com/c4886c7b12f2a9a7d81cba3e8d8f1d00/bc9f1aa7fb6adf6d-7c/s1280x1920/a01569c35bebdac425baf4ed3360f1481580d4d6.jpg")
 ```
 
 
---
-
-(Explain the `aes` of your graph - what is each axis, color, shape, etc referring to? And what is the unit scale?)
-
----
-
-## Discussion (and ending a presentation)
-
-- Conclude with a recap of the main points of your work
-
---
-
-- Then __point out limitations__ and indicate a __direction for the next steps__
-
---
-
-- Either end with the __Discussion__ slide (or __Acknowledgements__ but this is sometimes placed at the beginning)
-
-- Never end a presentation with lone _Thank you_ slide! 
-
-  - Want the audience to focus on the final points in your __Discussion__ slide
-  
---
-
-- Include back-up __Appendix__ slides with additional info, ready for questions
-
---
-
-- Slides for __References__ should not be displayed during your talk
-
-  - Their purpose is just for sharing with others
-  
-  - Alternative option: include references directly on slides either in text or via footnotes<sup>1</sup>
-
-  
-.footnote[
-[1] Like this...
-]  
-
----
-
-## Additional tips and reminders
-
-__Use pauses effectively__ to highlight points and explain steps
-
---
-
-- Showing all of your text at once can overwhelm your audience
-
---
-
-But
---
- don't
---
- be 
---
- ridiculous
-
---
-
-Remember: __memory overload is real!__
-
-- Do __NOT__ introduce too much notation at once
-
-- __Repetitive language and usage of words are useful and reminders for the audience__
-
-  - Use consistent language and terminology throughout the talk
-
---
-
-__Know your audience!__
-
-
-.center[![](https://media2.giphy.com/media/uq6ILNBI6g3As/200.gif)]
-
-
----
-class: inverse center middle
-
-# How do we make presentations?
-
----
-
-## Use [`xaringan`](https://slides.yihui.org/xaringan) and [`xaringanthemer`](https://pkg.garrickadenbuie.com/xaringanthemer/articles/xaringanthemer.html)
-
-- Install both packages: [`xaringan`](https://slides.yihui.org/xaringan) and [`xaringanthemer`](https://pkg.garrickadenbuie.com/xaringanthemer/articles/xaringanthemer.html)
-
-- Create a new presentation using a template 
-
-- View in-progress slides with the __Infinite Moon Reader__ addin for RStudio
-
-- More options with [xaringanExtra](https://pkg.garrickadenbuie.com/xaringanExtra/#/README?id=xaringanextra)!
-
---
-
-Check out public resources:
-
-  - Check out [Alison Hill](https://alison.rbind.io/)'s [Meet xaringan](http://arm.rbind.io/slides/xaringan.html#1) presentation
-  
-  - [Chapter 7](https://bookdown.org/yihui/rmarkdown/xaringan.html) of free online `rmarkdown` book by its author [Yihui Xie](https://yihui.org/)
-  
-  - The rest of these slides are taken from the [`xaringanthemer`](https://pkg.garrickadenbuie.com/xaringanthemer/articles/xaringanthemer.html) template in RStudio
-  
-  - And google for more [examples](https://slides.earo.me/rladiesakl20/#1)
 
 
 ---
 
-## Typography
-
-Text can be **bold**, _italic_, ~~strikethrough~~, or `inline code`.
-
-[Link to another slide](#colors).
-
-### Lorem Ipsum
-
-Dolor imperdiet nostra sapien scelerisque praesent curae metus facilisis dignissim tortor. 
-Lacinia neque mollis nascetur neque urna velit bibendum. 
-Himenaeos suspendisse leo varius mus risus sagittis aliquet venenatis duis nec.
-
-- Dolor cubilia nostra nunc sodales
-
-- Consectetur aliquet mauris blandit
-
-- Ipsum dis nec porttitor urna sed
-
----
-name: colors
-
-## Colors
-
-- <span style="color: var(--text-color)">Text Color</span>
-
-- <span style="color: var(--header-color); font-family: var(--header-font-family);">Header Color</span>
-
-- <span style="color: var(--link-color)">Link Color</span>
-
-- <span style="color: var(--text-bold-color); font-weight: bold;">Bold Color</span>
-
-- `inline code color`
-
----
-
-# Big Topic or Inverse Slides `#`
-
-## Slide Headings `##`
-
-### Sub-slide Headings `###`
-
-#### Bold Call-Out `####`
-
-This is a normal paragraph text. Only use header levels 1-4.
-
-##### Possible, but not recommended `#####`
-
-###### Definitely don't use h6 `######`
-
----
-class: inverse center middle
-
-# Topic Changing Interstitial
+## Model assessment vs selection, what's the difference?
 
 --
+__Model assessment__:
 
+- __evaluating how well a learned model performs__, via the use of a single-number metric
+
+
+
+--
+__Model selection__:
+
+- selecting the best model from a suite of learned models (e.g., linear regression, random forest, etc.)
+
+---
+
+## Model __flexibility__ ([ISLR Figure 2.9](https://www.statlearning.com/))
+
+```{r out.width='60%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/Flexibility.png")
 ```
-class: inverse center middle
+
+- Left panel: intuitive notion of the meaning of model flexibility
+
+- Data are generated from a smoothly varying non-linear model (shown in black), with random noise added:
+$$
+Y = f(X) + \epsilon
+$$
+
+---
+
+## Model __flexibility__
+
+```{r out.width='60%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/Flexibility.png")
+```
+
+Orange line: an inflexible, fully parametrized model (simple linear regression)
+
+
+--
+- __Cannot__ provide a good estimate of $f(X)$
+
+
+--
+- Cannot __overfit__ by modeling the noisy deviations of the data from $f(X)$
+
+
+---
+
+## Model __flexibility__
+
+```{r out.width='60%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/Flexibility.png")
+```
+
+
+Green line: an overly flexible, nonparametric model 
+
+
+--
+- __It can__ provide a good estimate of $f(X)$ 
+--
+, __BUT__ it goes too far and overfits by modeling the noise
+
+
+--
+__This is NOT generalizable__: bad job of predicting response given new data NOT used in learning the model
+
+---
+
+## So... how do we deal with flexibility?
+
+__GOAL__: We want to learn a statistical model that provides a good estimate of $f(X)$ __without overfitting__
+
+
+--
+There are two common approaches:
+
+- We can __split the data into two groups__: 
+  - __training__ data: data used to train models, 
+  
+  - __test__ data: data used to test them
+  
+  - By assessing models using "held-out" test set data, we act to ensure that we get a __generalizable(!)__ estimate of $f(X)$
+
+
+--
+- We can __repeat data splitting $k$ times__:
+
+  - Each observation is placed in the "held-out" / test data exactly once
+  
+  - This is called __k-fold cross validation__ (typically set $k$ to 5 or 10)
+
+
+--
+$k$-fold cross validation is the preferred approach, but the tradeoff is that CV analyses take ${\sim}k$ times longer than analyses that utilize data splitting
+
+---
+
+### Model assessment
+
+```{r out.width='55%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/Flexibility.png")
+```
+
+- Right panel shows __a metric of model assessment__, the mean squared error (MSE) as a function of flexibility for both a training and test datasets
+
+
+--
+- Training error (gray line) __decreases as  flexibility increases__
+
+--
+- Test error (red line) decreases while flexibility increases __until__ the point a good estimate of $f(X)$ is reached, and then it __increases as it overfits to the training data__
+
+---
+
+## Brief note on reproducibility
+
+An important aspect of a statistical analysis is that it be reproducible. You should...
+
+1. Record your analysis in a notebook, via, e.g., `R Markdown` or `Jupyter`. A notebook should be complete such that if you give it and datasets to someone, that someone should be able to recreate the entire analysis and achieve the exact same results. To ensure the achivement of the exact same results, you should...
+
+2. Manually set the random-number generator seed before each instance of random sampling in your analysis (such as when you assign data to training or test sets, or to folds):
+```{r}
+set.seed(101)    # can be any number...
+sample(10,3)     # sample three numbers between 1 and 10 inclusive
+set.seed(101)
+sample(10,3)     # voila: the same three numbers!
 ```
 
 ---
-layout: true
 
-## Blocks
+## Model assessment metrics
+
+__Loss function__ (aka _objective_ or _cost_ function) is a metric that represents __the quality of fit of a model__
+
+
+--
+For regression we typically use __mean squared error (MSE)__
+- quadratic loss: squared differences between model predictions $\hat{f}(X)$ and observed data $Y$
+
+$$\text{MSE} = \frac{1}{n} \sum_i^n (Y_i - \hat{f}(X_i))^2$$
+
+
+--
+For classification, the situation is not quite so clear-cut
+- __misclassification rate (MCR)__: percentage of predictions that are wrong
+
+- __area under curve (AUC)__ (we'll come back to this later)
+
+--
+- interpretation can be affected by __class imbalance__: 
+  - if two classes are equally represented in a dataset, an MCR of 2% is good
+  
+  - but if one class comprises 99% of the data, that 2% is no longer such a good result...
 
 ---
 
-### Blockquote
+## Back to model selection
 
-> This is a blockquote following a header.
->
-> When something is important enough, you do it even if the odds are not in your favor.
+__Model selection__: picking the best model from a suite of possible models 
+
+
+--
+- Picking the best covariance constraints (e.g. _VVV_) or number of clusters with BIC
+
+- Picking the best regression model based on __MSE__, or best classification model based on __MCR__
+
+
+--
+Two things to keep in mind:
+
+1. __Ensure an apples-to-apples comparison of metrics__
+  - every model should be learned using __the same training and test data__! Do not resample the data between the time when you, e.g., perform linear regression and vs you perform random forest.
+
+2. __An assessment metric is a random variable__, i.e., if you choose different data to be in your training set, the metric will be different.
+
+
+--
+For regression, a third point should be kept in mind: __a metric like the MSE is unit-dependent__
+  - an MSE of 0.001 in one analysis context is not necessarily better or worse than an MSE of 100 in another context
 
 ---
 
-### Code Blocks
+## An example __true__ model
 
-#### R Code
-
-```{r eval=FALSE}
-ggplot(gapminder) +
-  aes(x = gdpPercap, y = lifeExp, size = pop, color = country) +
-  geom_point() +
-  facet_wrap(~year)
+```{r fig.height=6,fig.width=6,fig.align="center",echo = FALSE}
+library(ggplot2)
+x.true  = seq(-2,4,0.01)
+df.true = data.frame("x"=x.true,"y"=x.true^2)
+ggplot(data=df.true,mapping=aes(x=x,y=y)) + geom_line(linetype="dashed",color="red",size=1.5) + ylim(-2,18) +
+  theme_bw()
 ```
 
-#### JavaScript
+---
 
-```js
-var fun = function lang(l) {
-  dateformat.i18n = require('./lang/' + l)
-  return true;
+## The repeated experiments...
+
+```{r, fig.width=14, fig.height = 5.5, fig.align="center", echo = FALSE, warning = FALSE}
+df = data.frame()
+for ( ii in 1:4 ) {
+  set.seed(101+ii)
+  x = runif(100,min=-2,max=4)
+  y = x^2 + rnorm(100,sd=1.5)
+  df.tmp = data.frame("exp"=rep(ii,100),x,y)
+  df = rbind(df,df.tmp)
+}
+df$exp = factor(df$exp)
+ggplot(data=df,mapping=aes(x=x,y=y)) + geom_point(size=0.5) + 
+  geom_line(data=df.true,mapping=aes(x=x,y=y),linetype="dashed",color="red",size=1.5) + xlim(-2,4) + ylim(-2,18) + 
+  theme_bw() + 
+  facet_wrap(~exp,ncol = 4)
+```
+
+---
+
+## The linear regression fits
+
+```{r,fig.align="center", echo = FALSE}
+df.lm = data.frame()
+for ( ii in 1:4 ) {
+  w = which(df$exp==ii)
+  x = df$x[w]
+  y = df$y[w]
+  out.lm = lm(y~x)
+  y.lm = coef(out.lm)[1] + coef(out.lm)[2]*df.true$x
+  df.tmp = data.frame("exp"=rep(ii,nrow(df.true)),"x"=df.true$x,"y"=y.lm)
+  df.lm = rbind(df.lm,df.tmp)
 }
 ```
 
+
+```{r, fig.width=14, fig.height = 5.5,fig.align="center", echo = FALSE, warning = FALSE}
+df.lm$exp = factor(df.lm$exp)
+ggplot(data=df,mapping=aes(x=x,y=y)) + geom_point(size=0.5) + 
+  geom_line(data=df.lm,mapping=aes(x=x,y=y),linetype="dashed",color="red",size=1.5) + xlim(-2,4) + ylim(-2,18)  + 
+  theme_bw() + 
+  facet_wrap(~exp,ncol = 4)
+```
+Look at the plots. For any given value of $x$:
+
+- The *average* estimated $y$ value is offset from the truth (__high bias__)
+- The dispersion (variance) in the estimated $y$ values is relatively small (__low variance__)
+
 ---
 
-### More R Code
+## The spline fits
 
-```{r eval=FALSE}
-dplyr::starwars %>% dplyr::slice_sample(n = 4)
+```{r, echo = FALSE}
+if ( require(splines) == FALSE ) {
+  install.packages("splines",repos="https://cloud.r-project.org")
+  library(splines)
+}
+df.spline = data.frame()
+for ( ii in 1:4 ) {
+  w = which(df$exp==ii)
+  x = df$x[w]
+  y = df$y[w]
+  out.spline = lm(y~bs(x,knots=seq(-1.5,3.5,by=0.2)))
+  y.spline = predict(out.spline)
+  o = order(x)
+  df.tmp = data.frame("exp"=rep(ii,length(x)),"x"=x[o],"y"=y.spline[o])
+  df.spline = rbind(df.spline,df.tmp)
+}
 ```
 
----
-
-```{r message=TRUE}
-cli::cli_alert_success("It worked!")
+```{r, fig.width=14, fig.height = 5.5,fig.align="center", echo = FALSE, warning = FALSE}
+df.spline$exp = factor(df.spline$exp)
+ggplot(data=df,mapping=aes(x=x,y=y)) + geom_point(size=0.5) + 
+  geom_line(data=df.spline,mapping=aes(x=x,y=y),linetype="dashed",color="red",size=1.5) + xlim(-2,4) + ylim(-2,18) + 
+  theme_bw() + 
+  facet_wrap(~exp,ncol = 4)
 ```
+Look at the plots. For any given value of $x$:
 
 --
+- The *average* estimated $y$ value approximately matches the truth (__low bias__)
+- The dispersion (variance) in the estimated $y$ values is relatively large (__high variance__)
 
-```{r message=TRUE}
-message("Just a friendly message")
-```
+---
+
+### Bias-variance tradeoff
+
+"Best" model minimizes the test-set MSE, where the __true__ MSE can be decomposed into:
 
 --
-
-```{r warning=TRUE}
-warning("This could be bad...")
-```
-
+$$
+{\rm MSE} = {\rm (Bias)}^2 + {\rm Variance}
+$$
 --
-
-```{r error=TRUE}
-stop("I hope you're sitting down for this")
+```{r out.width='55%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/Flexibility.png")
 ```
 
+Towards the left: high bias, low variance. Towards the right: low bias, high variance. 
 
----
-layout: true
+__Optimal amount of flexibility lies somewhere in the middle__
 
-## Tables
 
----
-
-```{r}
-tibble::as_tibble(mtcars)
-```
-
----
-
-```{r}
-knitr::kable(head(mtcars), format = 'html')
-```
-
----
-
-```{r}
-DT::datatable(head(mtcars), fillContainer = FALSE, options = list(pageLength = 4))
-```
-
----
-layout: true
-
-## Lists
-
----
-
-.pull-left[
-#### Here is an unordered list:
-
-*   Item foo
-*   Item bar
-*   Item baz
-*   Item zip
-]
-
-.pull-right[
-
-#### And an ordered list:
-
-1.  Item one
-1.  Item two
-1.  Item three
-1.  Item four
-]
-
----
-
-### And a nested list:
-
-- level 1 item
-  - level 2 item
-  - level 2 item
-    - level 3 item
-    - level 3 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-  - level 2 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-- level 1 item
-
----
-
-### Nesting an ol in ul in an ol
-
-- level 1 item (ul)
-  1. level 2 item (ol)
-  1. level 2 item (ol)
-    - level 3 item (ul)
-    - level 3 item (ul)
-- level 1 item (ul)
-  1. level 2 item (ol)
-  1. level 2 item (ol)
-    - level 3 item (ul)
-    - level 3 item (ul)
-  1. level 4 item (ol)
-  1. level 4 item (ol)
-    - level 3 item (ul)
-    - level 3 item (ul)
-- level 1 item (ul)
-
----
-layout: true
-
-## Plots
-
----
-
-```{r plot-example}
-library(ggplot2)
-(g <- ggplot(mpg) + aes(hwy, cty, color = class) + geom_point())
-```
-
----
-
-```{r plot-example-themed}
-g + xaringanthemer::theme_xaringan(text_font_size = 16, title_font_size = 18) +
-  ggtitle("A Plot About Cars")
-```
-
----
-layout: false
-
-## Square image
-
-<center><img src="https://octodex.github.com/images/labtocat.png" height="400px" /></center>
-
-.footnote[GitHub Octocat]
-
----
-
-### Wide image
-
-![](https://guides.github.com/activities/hello-world/branching.png)
-
-.footnote[Wide images scale to 100% slide width]
-
----
-
-## Two images
-
-.pull-left[
-![](https://octodex.github.com/images/motherhubbertocat.png)
-]
-
-.pull-right[
-![](https://octodex.github.com/images/dinotocat.png)
-]
-
----
-
-## Alternatively `include_graphics`
-
-```{r out.width='60%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("http://images6.fanpop.com/image/photos/42900000/Thor-Ragnarok-2017-Loki-and-Thor-mood-compilation-thor-ragnarok-42998758-268-200.gif")
-```
-
----
-
-### Definition lists can be used with HTML syntax.
-
-<dl>
-<dt>Name</dt>
-<dd>Godzilla</dd>
-<dt>Born</dt>
-<dd>1952</dd>
-<dt>Birthplace</dt>
-<dd>Japan</dd>
-<dt>Color</dt>
-<dd>Green</dd>
-</dl>
-
----
-class: center, middle
-
-# Thanks!
-
-Slides created via the R packages:
-
-[**xaringan**](https://github.com/yihui/xaringan)<br>
-[gadenbuie/xaringanthemer](https://github.com/gadenbuie/xaringanthemer)
-
-The chakra comes from [remark.js](https://remarkjs.com), [**knitr**](http://yihui.name/knitr), and [R Markdown](https://rmarkdown.rstudio.com).
