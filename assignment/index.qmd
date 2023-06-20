@@ -62,6 +62,12 @@ Download **Demo Lab 4 (Exploratory Data Analysis (Case Studies)):**
 {{\< downloadthis _files/demo-labs/demo-lab-04.Rmd
 dname="demo-lab-04" label="demo-lab-04.Rmd" icon="file-earmark"
 type="success" \>}} 
+
+Download **Demo Lab 5 (Clustering):** 
+
+{{\< downloadthis _files/demo-labs/demo-lab-05.Rmd
+dname="demo-lab-05" label="demo-lab-05.Rmd" icon="file-earmark"
+type="success" \>}} 
 :::
 
 ## Research project deliverables

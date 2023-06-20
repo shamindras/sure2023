@@ -1,0 +1,204 @@
+---
+title: "Clustering"
+date: "June 19, 2023"
+---
+
+In this lab you will practice generating and interpreting clustering results, following the examples from the lectures on [K-means, hierarchical clustering](http://www.stat.cmu.edu/cmsac/sure/materials/lectures/slides/06-intro-clustering.html#1) and [Gaussian mixture models](http://www.stat.cmu.edu/cmsac/sure/materials/lectures/slides/07-gmms.html#1).
+
+
+## Read in data
+
+As usual, we first load the `tidyverse`, then read in the data. 
+
+The (HEALTH) group will once again be using the Maternal Health dataset from the CDC. You can look back at the EDA lab or the CDC website [here](https://wonder.cdc.gov/) to refresh your memory about these data. Feel free to repeat any of the steps about exploring the available variables, etc., before moving on.
+
+The (SPORTS) group will work with data from the 2018 and 2019 seasons of NCAA D1 Women's Lacrosse (the dataset also includes partial 2020 data, but we will remove it). Each row represents one team-season, and we have observations for each team's season performance, including goals scored, goals allowed, shots on goal, shooting percentage, and more.
+
+```{r}
+library(tidyverse)
+
+# SPORTS
+lacrosse <- read.csv("https://shorturl.at/ghJP0") %>% 
+  filter(season != 2020)
+
+# HEALTH
+maternal_health <- read_csv("https://shorturl.at/gmCFK")
+```
+
+## EDA
+
+How do the variables in your dataset relate to one another? Create some plots to display bivariate relationships between the quantitative variables in your dataset.
+
+```{r}
+# INSERT CODE HERE
+```
+
+#### (SPORTS)
+
+Let's focus on the variables `draw_controls` and `caused_tos`. The first corresponds to the number of times that team won the "draw" or faceoff, which, like in hockey, is how play begins at the start of the game or after a goal is scored. The second is the number of takeaways by that team, or the number of turnovers they caused. These two variables might represent ability to gain possession of a contested ball.
+
+Do these variables display a relationship?
+
+```{r}
+# INSERT CODE HERE
+```
+
+#### (HEALTH)
+
+For now, let's consider the variables `AveragePrePregnancyBMI` and `AverageBirthWeight`. These variables might help us consider the relationship between mothers' and babies' weights, and how this interaction may or may not relate to maternal and infant health outcomes. 
+
+Do these variables display a relationship?
+
+```{r}
+# INSERT CODE HERE
+```
+
+## K-means clustering
+
+Use the `kmeans()` function as demonstrated in lecture to perform k-means clustering on your data, using the two variables discussed above. For now, use k = 3.
+
+```{r}
+# INSERT CODE HERE
+```
+
+Note: If you get a message saying "Warning: did not converge in 10 iterations", this means that the algorithm did not confidently settle on a set of centroids and cluster assignments. You can allow it to keep searching by setting the `iter.max` argument to a higher value (its default is 10).
+
+Create a scatterplot using your two variables of interest, and color the points by the cluster assignments:
+
+```{r}
+# INSERT CODE HERE
+```
+
+Is there something wrong with this picture? Do the points seem to be colored in simple vertical or horizontal bands? Why? We didn't standardize the variables, so one or the other is "dominating" the Euclidean distance, and the algorithm is assigning clusters based on that variable alone.
+
+(If there's nothing wrong with your plot, you probably already remembered to standardize the variables, in which case, good for you. Now go back and try it without standardizing, just to see how it looks different.)
+
+Now, use the `mutate()` function to add standardized versions of your two variables of interest to your dataset (i.e. `std_draw_controls` and `std_caused_tos` for SPORTS, and `std_AveragePrePregnancyBMI` and `std_AverageBirthWeight` for HEALTH):
+
+```{r}
+# INSERT CODE HERE
+```
+
+Run your code from above again to compute the k-means clusters, but now with standardized variables. Plot the results. How have they changed?
+
+```{r}
+# INSERT CODE HERE
+```
+
+### Choosing the number of clusters K
+
+At this point, try running the k-means algorithm on a couple of different values for k (2, 4, 5, etc.). Do any of them seem to stand out as having better separation than the others?
+
+```{r}
+# INSERT CODE HERE
+```
+
+Sometimes our data will not lend itself to clear separation at first glance. Instead, we can use heuristics like an elbow plot to decide which value of k to pick. Uncomment and run the code below to create an elbow plot displaying the within-cluster sum of squares for different values of k.
+
+Try to walk yourself through each line of code and get a sense of what it is doing. It's ok if you don't understand every step, but see if you can get the gist of what's being done here:
+
+#### (SPORTS)
+```{r}
+# n_clusters_search <- 2:12
+# tibble(total_wss =
+#          # Compute total WSS for each number by looping with sapply
+#          sapply(n_clusters_search,
+#                 function(k) {
+#                   kmeans_results <- kmeans(dplyr::select(lacrosse,
+#                                                          std_draw_controls,
+#                                                          std_caused_tos),
+#                                            centers = k, nstart = 30)
+#                   # Return the total WSS for choice of k
+#                   return(kmeans_results$tot.withinss)
+#                 })) %>%
+#   mutate(k = n_clusters_search) %>%
+#   ggplot(aes(x = k, y = total_wss)) +
+#   geom_line() + geom_point() +
+#   labs(x = "Number of clusters K", y = "Total WSS") +
+#   theme_bw()
+```
+
+#### (HEALTH)
+```{r}
+# n_clusters_search <- 2:12
+# tibble(total_wss = 
+#          # Compute total WSS for each number by looping with sapply
+#          sapply(n_clusters_search,
+#                 function(k) {
+#                   kmeans_results <- kmeans(dplyr::select(maternal_health,
+#                                                          std_AveragePrePregnancyBMI,
+#                                                          std_AverageBirthWeight),
+#                                            centers = k, nstart = 30)
+#                   # Return the total WSS for choice of k
+#                   return(kmeans_results$tot.withinss)
+#                 })) %>%
+#   mutate(k = n_clusters_search) %>%
+#   ggplot(aes(x = k, y = total_wss)) +
+#   geom_line() + geom_point() +
+#   labs(x = "Number of clusters K", y = "Total WSS") +
+#   theme_bw()
+```
+
+Debugging Note: If these chunks don't work, first check that you've named your mutated standardized variables the same as I have here, or change the names of the variables in these code chunks to match yours.
+
+#### (ALL TOGETHER NOW)
+
+Does your elbow plot indicate an optimal value for k? 
+
+(It might not! With unsupervised learning, there isn't always an optimal choice.)
+
+## Hierarchical clustering
+
+Now, let's explore a different way to think about similarity between observations and between clusters.
+
+First, use the `dist()` function to compute the Euclidean distance between observations in your dataset. Remember to continue using the standardized variables here!
+
+```{r}
+# INSERT CODE HERE
+```
+
+__Optional__: Copy the code from the slides to display these distances as a heatmap by turning the distance object into a matrix, using pivot_longer to transform the matrix, and plotting using `geom_tile()`. (Or even add in the seriation step)
+
+```{r}
+# INSERT OPTIONAL DETOUR CODE HERE
+```
+
+After computing the distances, feed that `dist` object into `hclust`. For now, stick with complete linkage.
+
+```{r}
+# INSERT CODE HERE
+```
+
+Plot the dendrogram that corresponds to the clustering of this dataset. Uncomment this code and replace `<INSERT_OBJECT>` with your hclust object from above to display the plot (make sure `ggdendro` is installed!)
+
+```{r}
+# library(ggdendro)
+# ggdendrogram(<INSERT_OBJECT>, theme_dendro = FALSE,
+#              labels = FALSE, leaf_labels = FALSE) +
+#   labs(y = "Dissimilarity between clusters") +
+#   theme_bw() +
+#   theme(axis.text.x = element_blank(), 
+#         axis.title.x = element_blank(),
+#         axis.ticks.x = element_blank(),
+#         panel.grid = element_blank())
+```
+
+Looking at this dendrogram, does there seem to be a reasonable place to "cut the tree"? Pick either a number of clusters k or a height h to cut the tree. Then, show a scatterplot where the points are colored by cluster labels by using `mutate` to add cluster labels with the `cutree()` function.
+
+```{r}
+# INSERT CODE HERE
+```
+
+How does this output differ from your findings using k-means above? In what ways is it similar?
+
+
+Now, repeat the previous steps with single and average linkage functions.
+
+```{r}
+# INSERT CODE HERE
+```
+
+Does one of the linkage functions seem to make more or less sense for your particular dataset? Why or why not?
+
+
+
