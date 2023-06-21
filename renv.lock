@@ -2259,6 +2259,18 @@
       ],
       "Hash": "7ce2733a9826b3aeb1775d56fd305472"
     },
+    "maps": {
+      "Package": "maps",
+      "Version": "3.4.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "graphics",
+        "utils"
+      ],
+      "Hash": "644a88fb036ab50cee0b715394eefa1a"
+    },
     "marginaleffects": {
       "Package": "marginaleffects",
       "Version": "0.10.0",
@@ -2286,20 +2298,6 @@
         "xfun"
       ],
       "Hash": "d209cfd1f4ff7260eae5a7f07da3aa4f"
-    },
-    "mclust": {
-      "Package": "mclust",
-      "Version": "6.0.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "grDevices",
-        "graphics",
-        "stats",
-        "utils"
-      ],
-      "Hash": "a42d1a95e400fcd75294b1464d1a84ac"
     },
     "memoise": {
       "Package": "memoise",
@@ -2880,13 +2878,6 @@
         "stats"
       ],
       "Hash": "4ab2c43adb4d4699cf3690acd378d75d"
-    },
-    "protoclust": {
-      "Package": "protoclust",
-      "Version": "1.6.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "1e76f930608b4a5f3b03bcdf65793421"
     },
     "proxy": {
       "Package": "proxy",
@@ -3844,6 +3835,17 @@
         "cpp11"
       ],
       "Hash": "f561504ec2897f4d46f0c7657e488ae1"
+    },
+    "usdata": {
+      "Package": "usdata",
+      "Version": "0.2.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "tibble"
+      ],
+      "Hash": "9cc31e3592089bfd82c69a65260f1e37"
     },
     "utf8": {
       "Package": "utf8",

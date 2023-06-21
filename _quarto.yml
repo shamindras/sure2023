@@ -103,10 +103,10 @@ website:
                   file: class/08-class.qmd
                 - text: "9: Gaussian mixture models"
                   file: class/09-class.qmd
-            # - section: "Presentation Skills"
-            #   contents:
-            #     - text: "12: Working with xaringan and xaringanthemer"
-            #       file: class/12-class.qmd
+            - section: "Presentation Skills"
+              contents:
+                - text: "12: Working with xaringan and xaringanthemer"
+                  file: class/12-class.qmd
             - section: "Machine Learning"
               contents:
                 - text: "11: Model assessment vs selection"

@@ -30,6 +30,7 @@ style_mono_accent(base_color = "#cc002b")
 ```{r setup, echo = FALSE}
 knitr::opts_chunk$set(fig.retina = 3, warning = FALSE, message = FALSE)
 ```
+
 ## Supervised learning
 
 What is __statistical learning?__

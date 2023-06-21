@@ -8,7 +8,7 @@
 
 <meta name="description" content="Explore cutting-edge statistics and data science methodology with applications in sports and health analytics">
 
-<title>SURE 2023 - Introduction and Welcome to SURE 2023</title>
+<title>SURE 2023 - Working with xaringan and xaringanthemer</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -42,6 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/downloadthis-1.9.1/downloadthis.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -64,14 +65,14 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<meta property="og:title" content="SURE 2023 - Introduction and Welcome to SURE 2023">
+<meta property="og:title" content="SURE 2023 - Working with xaringan and xaringanthemer">
 <meta property="og:description" content="">
 <meta property="og:image" content="https://cmu-sure-2023.netlify.app//files/cmu-statds-icon-hex-2-bg.png">
 <meta property="og:site-name" content="SURE 2023">
 <meta property="og:locale" content="en_US">
 <meta property="og:image:height" content="2000">
 <meta property="og:image:width" content="1728">
-<meta name="twitter:title" content="SURE 2023 - Introduction and Welcome to SURE 2023">
+<meta name="twitter:title" content="SURE 2023 - Working with xaringan and xaringanthemer">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="https://cmu-sure-2023.netlify.app//files/cmu-statds-icon-hex-2-bg.png">
 <meta name="twitter:creator" content="@CMU_Stats">
@@ -80,7 +81,8 @@ ul.task-list li input[type="checkbox"] {
 <meta name="twitter:image-width" content="1728">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-sidebar docked nav-fixed">
+
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -113,7 +115,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Schedule</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../class/index.html" rel="" target="">
+    <a class="nav-link active" href="../class/index.html" rel="" target="" aria-current="page">
  <span class="menu-text">Lectures</span></a>
   </li>  
   <li class="nav-item">
@@ -158,10 +160,216 @@ ul.task-list li input[type="checkbox"] {
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Data Science Lectures</li><li class="breadcrumb-item"><a href="../class/12-class.html">Presentation Skills</a></li><li class="breadcrumb-item"><a href="../class/12-class.html">12: Working with xaringan and xaringanthemer</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+    </div>
+  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Overview</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../class/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lectures and Readings</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Data Engineering Lectures</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+ <span class="menu-text">UNIX</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../data_eng/01-class-data-eng.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1: Getting acquainted with the UNIX philosophy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../data_eng/02-class-data-eng.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2: Getting comfortable with the UNIX philosophy</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Data Science Lectures</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+ <span class="menu-text">Orientation</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../class/01-class.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1: Welcome to SURE 2023</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+ <span class="menu-text">Exploratory Data Analysis</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../class/02-class.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2: Exploring Data: Into the tidyverse</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../class/03-class.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3: The grammar of graphics and ggplot2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../class/04-class.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4: Visualizing 1D categorical and continuous variables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../class/05-class.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">5: Visualizing 2D categorical and continuous by categorical</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../class/06-class.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">6: Density estimation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../class/10-class.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">10: Visualizing Geographic Data</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
+ <span class="menu-text">Clustering</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../class/07-class.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">7: K-means</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../class/08-class.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">8: Hierarchical clustering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../class/09-class.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">9: Gaussian mixture models</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text">Presentation Skills</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../class/12-class.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">12: Working with xaringan and xaringanthemer</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false">
+ <span class="menu-text">Machine Learning</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../class/11-class.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">11: Model assessment vs selection</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -176,18 +384,27 @@ ul.task-list li input[type="checkbox"] {
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header">
-<h1 class="title display-7">Introduction and Welcome to SURE 2023</h1>
+<h1 class="title display-7">Working with xaringan and xaringanthemer</h1>
 
 <div class="date-block bg-class text-white p-2">
-  <p class="date">Readings and class materials for Monday, June 5, 2023</p>
+  <p class="date">Readings and class materials for Thursday, June 22, 2023</p>
 </div>
 </header>
 
 <section id="slides" class="level2">
 <h2 class="anchored" data-anchor-id="slides">Slides</h2>
-<p>The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.</p>
+<p>The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience. We have also provided the source <code>Rmd</code> files for the knitted PDF presentation.</p>
 <a class="btn btn-danger" target="_blank" href="../slides/12-slides.pdf" role="button"><i class="fa-solid fa-file-pdf"></i> Download PDF of all slides</a>
 <p></p>
+<p><a href="#dnldts38618" onclick="fetch('data:text/plain;base64,LS0tCnRpdGxlOiAiUHJlc2VudGF0aW9ucyIKc3VidGl0bGU6ICJBbmQgd29ya2luZyB3aXRoIHhhcmluZ2FuIGFuZCB4YXJpbmdhbnRoZW1lciIgIApkYXRlOiAnSnVuZSAyMm5kLCAyMDIzJwpvdXRwdXQ6CiAgeGFyaW5nYW46Om1vb25fcmVhZGVyOgogICAgbGliX2RpcjogImxpYnMiCiAgICAjIGNoYWtyYTogImxpYnMvcmVtYXJrLWxhdGVzdC5taW4uanMiCiAgICAjIGNzczogWyJkZWZhdWx0IiwgImNzcy9hdGgtc2xpZGVzLmNzcyIsICJjc3MvYXRoLWluZmVybm8tZm9udHMuY3NzIiwgImNzcy9hbmltYXRlLmNzcyJdCiAgICBzZWxmLWNvbnRhaW5lZDogeWVzCiAgICAjIGNzczogW2RlZmF1bHQsIGRlZmF1bHQtZm9udHNdCiAgICAjIHNlYWw6IGZhbHNlCiAgICAjIGFuY2hvcl9zZWN0aW9uczogZmFsc2UKICAgIG5hdHVyZToKICAgICAgaGlnaGxpZ2h0U3R5bGU6IGdpdGh1YgogICAgICBoaWdobGlnaHRMaW5lczogdHJ1ZQogICAgICBjb3VudEluY3JlbWVudGFsU2xpZGVzOiBmYWxzZQogICAgICByYXRpbzogIjE2OjkiCiAgICAgIG5hdmlnYXRpb246CiAgICAgICAgc2Nyb2xsOiBmYWxzZQplZGl0b3Jfb3B0aW9uczoKICBjaHVua19vdXRwdXRfdHlwZTogY29uc29sZQotLS0KCmBgYHtyIHhhcmluZ2FuLXRoZW1lciwgaW5jbHVkZT1GQUxTRSwgd2FybmluZz1GQUxTRX0KbGlicmFyeSh4YXJpbmdhbnRoZW1lcikKc3R5bGVfbW9ub19hY2NlbnQoYmFzZV9jb2xvciA9ICIjY2MwMDJiIikKYGBgCgpgYGB7ciBzZXR1cCwgaW5jbHVkZT1GQUxTRX0Kb3B0aW9ucyhodG1sdG9vbHMuZGlyLnZlcnNpb24gPSBGQUxTRSkKa25pdHI6Om9wdHNfY2h1bmskc2V0KAogIGZpZy53aWR0aCA9IDksIGZpZy5oZWlnaHQ9My41LCBmaWcucmV0aW5hID0gMywKICBvdXQud2lkdGggPSAiMTAwJSIsCiAgY2FjaGUgPSBGQUxTRSwKICBlY2hvID0gVFJVRSwKICBtZXNzYWdlID0gRkFMU0UsIAogIHdhcm5pbmcgPSBGQUxTRSwKICBmaWcuc2hvdyA9IFRSVUUsCiAgaGlsaW5lID0gVFJVRQopCmBgYAoKLS0KCiMjIEV2ZXJ5IHByZXNlbnRhdGlvbiBpcyBhbiBhY3Qgb2YgaW50ZXJhY3RpdmUgc3Rvcnl0ZWxsaW5nCgotLQoKKipFdmVyeSoqIHByZXNlbnRhdGlvbiAqKmlzIGEgc3RvcnkqKgoKLS0KCioqWW91KiogbXVzdCBmaXJzdCBiZSBpbnRyaW5zaWNhbGx5IF9fZXhjaXRlZCB0byBzaGFyZSBpdF9fCgotLQoKWW91ciAqKmF1ZGllbmNlKiogdGhlbiBzZXRzIHRoZSAqKndpZGVyIGNvbnRleHQqKiBmb3IgdGhlIHN0b3J5dGVsbGluZwoKLS0KClRoZWlyIGxldmVsIG9mIHRlY2huaWNhbGl0eSBkZXRlcm1pbmVzIHRoZSAqKmFzc3VtZWQga25vd2xlZGdlKiogZm9yIHlvdXIgdGFsawogIAotLQoKV2Ugd2FudCBvdXIgcHJlc2VudGF0aW9ucyB0byBiZSAqKmltcGFjdGZ1bCoqLCAqKmVuZ2FnaW5nKiosIGFuZCAqKm1lbW9yYWJsZSoqCgotLS0KCi0tCgojIyBBbHdheXMgYmVnaW4gd2l0aCBiYWNrZ3JvdW5kIGFuZCBtb3RpdmF0aW9uCgotLQoKV2hhdCBpcyB0aGUgKiptb3RpdmF0aW9uKiogZm9yIHRoZSB1bmRlcmx5aW5nIHByb2JsZW0/IAoKLS0KCioqV2h5IHNob3VsZCBwZW9wbGUgY2FyZSoqIGFib3V0IHlvdXIgd29yaz8KCi0tCgpZb3UgKip3YW50IHRvIGJ1aWxkIHVwKiogdG8gd2hhdCBwcm9ibGVtIHlvdXIgd29yayBpcyB0cnlpbmcgdG8gYWRkcmVzcwoKLS0KCioqRXhhbXBsZSoqIFtuZmxXQVIgdGFsayBmcm9tIDIwMTddKGh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9ZGpELXlMM3ZXTlEpOgoKICAtIERvIF9fTk9UX18gYmVnaW4gd2l0aDogIldlJ3JlIGludHJvZHVjaW5nIFdBUiBmb3IgTkZMISIKICAKLS0KICAKICAtIEluc3RlYWQgYmVnaW4gd2l0aCAKICAKICA+IGN1cnJlbnQgc3RhdGUgb2YgTkZMIGFuYWx5dGljcyBhbmQgbmVlZCBmb3IgYmV0dGVyLCByZXByb2R1Y2libGUgcGxheWVyIGxldmVsLW1ldHJpY3MKCi0tCiAgClRoZXJlIGlzIG9mdGVuICoqTk8gbmVlZCoqIGZvciAqKm91dGxpbmUgc2xpZGUqKgoKLS0tCgotLQoKIyMgVGhlbiBtb3ZlIG9udG8gZGVzY3JpYmluZyB0aGUgZGF0YQoKLS0KCllvdSB3YW50IHRvICoqZmlyc3QgcHJvdmlkZSoqIGEgKipnZW5lcmFsIG92ZXJ2aWV3Kiogb2YgeW91ciBkYXRhc2V0CgotLQoKX19Eb21haW4ga25vd2xlZGdlX186IHNvdXJjZSwgdGltZWZyYW1lLCBsaW1pdGF0aW9ucyBvZiB0aGUgZGF0YXNldAoKLS0KCldoYXQgYXJlIHlvdXIgX19vYnNlcnZhdGlvbnNfXz8gaS5lLiwgd2hhdCBkb2VzIGVhY2ggcm93IG9mIHlvdXIgZGF0YXNldCByZXByZXNlbnQ/CgotLQogIApXaGF0IGFyZSB0aGUgcmVsZXZhbnQgX192YXJpYWJsZXMgLyBmZWF0dXJlc19fPyBpLmUuLCB3aGF0IGFyZSB0aGUgY29sdW1ucyBvZiBpbnRlcmVzdD8KCi0tCgogIC0gQmUgY2FyZWZ1bCB0aG91Z2ggd2l0aCBtYW55IHZhcmlhYmxlcyAtIF9fYXZvaWQganVzdCBsaXN0aW5nIGV2ZXJ5dGhpbmdfXyEKICAgIAotLQoKICAtIFNpbXBsaWZ5IGJ5IF9fZGVzY3JpYmluZyBncm91cHNfXyBvZiB2YXJpYWJsZXMgdG9nZXRoZXIKICAgIAotLQoKX19Vc2UgZXhhbXBsZXNfXyAtIG1ha2VzIHlvdXIgZGF0YSBleHBsaWNpdCBhbmQgY29uY3JldGUgZm9yIHRoZSBhdWRpZW5jZQoKLS0KCiAgLSBCdXQgRG8gX19OT1RfXyBwcmludCBvdXQgcmF3IGBSYCBjb25zb2xlIG91dHB1dCEKCi0tLQoKLS0KCiMjIE5leHQgY2xlYXJseSBpbnRyb2R1Y2UgeW91ciBoeXBvdGhlc2VzIGFuZCBtZXRob2RzIHVzZWQKCi0tCgoqKlByaW9yKiogdG8gcHJlc2VudGluZyByZXN1bHRzLCB5b3Ugd2FudCB0byAqKmNsZWFybHkgc3RhdGUqKiBhbnkgKip0cmFuc2Zvcm1hdGlvbnMgYW5kIG1ldGhvZHMqKiB1c2VkIGluIHRoZSBhbmFseXNpcwoKLS0KCllvdXIgcHJlc2VudGF0aW9uIHNob3VsZCBwcm92aWRlIHRoZSAqKmdlbmVyYWwgc3RlcHMqKiBmb3Igc29tZW9uZSB0byAqKnJlcHJvZHVjZSB5b3VyIHdvcmsqKgoKLS0KCiAgLSBlLmcuLCBVc2VkIGNvbXBsZXRlLWxpbmthZ2UgaGllcmFyY2hpY2FsIGNsdXN0ZXJpbmcgd2l0aCBbSU5TRVJUIFZBUklBQkxFU10sIGRldGVybWluZWQgJEskIG51bWJlciBvZiBjbHVzdGVycyBieSBbSU5TRVJUIFJFQVNPTl0KICAKLS0KCiAgLSBlLmcuLCBNb2RlbGVkIFtJTlNFUlQgUkVTUE9OU0UgVkFSSUFCTEVdIGFzIGEgZnVuY3Rpb24gb2YgW0lOU0VSVCBFWFBMQU5BVE9SWSBWQVJJQUJMRVNdCiAgCi0tCgpGb3IgbW9yZSBjb21wbGljYXRlZCBtZXRob2RzLCB5b3UnbGwgd2FudCB0byBwcm92aWRlIGEgYnJpZWYgcmV2aWV3IG9mIHRoZSBtZXRob2RvbG9neQoKLS0KCl9fQWx3YXlzIGp1c3RpZnlfXyB5b3VyIGNob2ljZSBvZiBtZXRob2RvbG9neSwgZS5nLiwgcmFuZG9tIGZvcmVzdCBvdmVyIGxpbmVhciByZWdyZXNzaW9uPwogIAotLS0KCi0tCgojIyBVc2UgdGhlIGFzc2VydGlvbi1ldmlkZW5jZSBtb2RlbCB0byBwcmVzZW50IHJlc3VsdHMKCl9fQXNzZXJ0aW9uX186IHRpdGxlIG9mIHRoZSBzbGlkZSBzaG91bGQgYmUgdGhlIGtleSB0YWtlYXdheSBpbiBicmllZiBzZW50ZW5jZSBmb3JtCgotLQoKSW5kaWNhdGVzIHRoZSBwb2ludCBvZiB0aGUgdmlzdWFsaXphdGlvbiBvciB3aGF0ZXZlciBtZWFucyB1c2VkIHRvIGRpc3BsYXkgdGhlIHJlc3VsdHMKCl9fRXZpZGVuY2VfXzogdGhlIGJvZHkgb2YgdGhlIHNsaWRlIGNvbnRhaW5pbmcgdGhlIHJlc3VsdHMKCi0tCgpEaXNwbGF5IG9mIHRoZSByZXN1bHRzIGluIHNvbWUgZm9ybWF0IHRoYXQgaXMgc2ltcGxlIHRvIGV4cGxhaW4gYW5kIHVuZGVyc3RhbmQKICAKLS0KCkxpbWl0IHRoZSBhbW91bnQgb2YgdGV4dCBpbiB5b3VyIF9fRXZpZGVuY2VfXyBwb3J0aW9uIC0gYnJpZWYgc3RhdGVtZW50cyB3aXRoIGltcG9ydGFudCBjb250ZXh0CgotLQoKVHJlYXQgdGhlIF9fQXNzZXJ0aW9uX18gYXMgdGhlIHRpdGxlIG9mIHlvdXIgX19FdmlkZW5jZV9fCgotLQoKICAtIFBsb3QgdGl0bGVzIGFyZSB0aGVuIHJlZHVuZGFudCBhbmQgbm90IG5lY2Vzc2FyeSB3aXRoIGFuIGVmZmVjdGl2ZSBhc3NlcnRpb24KCi0tLQoKLS0KCiMjIEZpcnN0IGNvbWVzIHRoZSBib2xkIGFzc2VydGlvbiBpbiB0aGUgdGl0bGUKCi0tCgouY2VudGVyW2FuZCB0aGVuIHRoZSBfX2V2aWRlbmNlX18gaGVyZV0KCi0tLQoKLS0KCiMjIyBNTEIgc3RyaWtlb3V0IHJhdGVzIGhhdmUgYmVlbiBpbmNyZWFzaW5nIHRocm91Z2hvdXQgTUxCJ3MgaGlzdG9yeQoKLS0KCmBgYHtyIGxhaG1hbi1leGFtcGxlLCBlY2hvID0gRkFMU0UsIGZpZy5hbGlnbiA9ICdjZW50ZXInfQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeShMYWhtYW4pCmFzX3RpYmJsZShCYXR0aW5nKSAlPiUKICBmaWx0ZXIobGdJRCAlaW4lIGMoIkFMIiwgIk5MIikpICU+JQogIGdyb3VwX2J5KHllYXJJRCkgJT4lCiAgc3VtbWFyaXplKHRvdGFsX3NvcyA9IHN1bShTTywgbmEucm0gPSBUUlVFKSwKICAgICAgICAgICAgdG90YWxfYXRiYXRzID0gc3VtKEFCLCBuYS5ybSA9IFRSVUUpKSAlPiUKICBtdXRhdGUoc29fcmF0ZSA9IHRvdGFsX3NvcyAvIHRvdGFsX2F0YmF0cykgJT4lCiAgZ2dwbG90KGFlcyh4ID0geWVhcklELCB5ID0gc29fcmF0ZSkpICsKICBnZW9tX2xpbmUoY29sb3IgPSAiZGFya2JsdWUiKSArCiAgZ2VvbV9wb2ludChhbHBoYSA9IDAuOCwgY29sb3IgPSAiZGFya2JsdWUiKSArCiAgbGFicyh4ID0gIlllYXIiLCB5ID0gIlN0cmlrZW91dHMgLyBBdC1iYXRzIiwKICAgICAgIGNhcHRpb24gPSAiRGF0YSBjb3VydGVzeSBvZiBMYWhtYW4iKSArCiAgdGhlbWVfYncoKSArCiAgdGhlbWUoc3RyaXAuYmFja2dyb3VuZCA9IGVsZW1lbnRfYmxhbmsoKSkKYGBgCgoKLS0KCihFeHBsYWluIHRoZSBgYWVzYCBvZiB5b3VyIGdyYXBoIC0gd2hhdCBpcyBlYWNoIGF4aXMsIGNvbG9yLCBzaGFwZSwgZXRjIHJlZmVycmluZyB0bz8gQW5kIHdoYXQgaXMgdGhlIHVuaXQgc2NhbGU/KQoKLS0tCgotLQoKIyMgRW5kIGdyYWNlZnVsbHkgd2l0aCBhIHJlY2FwIGFuZCBmdXR1cmUgZGlyZWN0aW9ucwoKLS0KClRlbGwgZW0nLAotLQpUZWxsIGVtJyBhZ2FpbiwKLS0KVGVsbCBlbScgd2hhdCB5b3UgdG9sZCBlbScKCi0tCgpDb25jbHVkZSB3aXRoIGEgKipyZWNhcCoqIG9mIHRoZSAqKm1haW4gcG9pbnRzKiogb2YgeW91ciB3b3JrCgotLQoKVGhlbiBfX3BvaW50IG91dCBsaW1pdGF0aW9uc19fIGFuZCBpbmRpY2F0ZSBhIF9fZGlyZWN0aW9uIGZvciB0aGUgbmV4dCBzdGVwc19fCgotLQoKRWl0aGVyIGVuZCB3aXRoIHRoZSBfX0Rpc2N1c3Npb25fXyBzbGlkZSAob3IgX19BY2tub3dsZWRnZW1lbnRzX18gYnV0IHRoaXMgaXMgc29tZXRpbWVzIHBsYWNlZCBhdCB0aGUgYmVnaW5uaW5nKQoKLS0tCgotLQoKIyMgU29tZSBhZGRpdGlvbmFsIG5vdGVzIG9uIGNvbmNsdWRpbmcgcHJlc2VudGF0aW9ucwoKLS0KCk5ldmVyIGVuZCBhIHByZXNlbnRhdGlvbiB3aXRoICoqbG9uZSoqIF9UaGFuayB5b3VfIHNsaWRlISAKCi0tCgpXYW50IHRoZSBhdWRpZW5jZSB0byBmb2N1cyBvbiB0aGUgZmluYWwgcG9pbnRzIGluIHlvdXIgX19EaXNjdXNzaW9uX18gc2xpZGUKICAKLS0KCkluY2x1ZGUgYmFjay11cCBfX0FwcGVuZGl4X18gc2xpZGVzIHdpdGggYWRkaXRpb25hbCBpbmZvLCByZWFkeSBmb3IgcXVlc3Rpb25zCgotLQoKU2xpZGVzIGZvciBfX1JlZmVyZW5jZXNfXyBzaG91bGQgbm90IGJlIGRpc3BsYXllZCAqKmF0LWxlbmd0aCoqIGR1cmluZyB5b3VyIHRhbGsKCi0tCgogIC0gVGhlaXIgcHVycG9zZSBpcyBqdXN0IGZvciBzaGFyaW5nIHdpdGggb3RoZXJzCiAgCi0tCgogIC0gQWx0ZXJuYXRpdmUgb3B0aW9uOiBpbmNsdWRlIHJlZmVyZW5jZXMgZGlyZWN0bHkgb24gc2xpZGVzIGVpdGhlciBpbiB0ZXh0IG9yIHZpYSBmb290bm90ZXM8c3VwPjE8L3N1cD4KCiAgCi5mb290bm90ZVsKWzFdIExpa2UgdGhpcy4uLgpdICAKCi0tLQoKIyMgQWRkaXRpb25hbCB0aXBzIGFuZCByZW1pbmRlcnMKCl9fVXNlIHBhdXNlcyBlZmZlY3RpdmVseV9fIHRvIGhpZ2hsaWdodCBwb2ludHMgYW5kIGV4cGxhaW4gc3RlcHMKCi0tCgotIFNob3dpbmcgYWxsIG9mIHlvdXIgdGV4dCBhdCBvbmNlIGNhbiBvdmVyd2hlbG0geW91ciBhdWRpZW5jZQoKLS0KCkJ1dAotLQogZG9uJ3QKLS0KIGJlIAotLQogcmlkaWN1bG91cwoKLS0KClJlbWVtYmVyOiBfX21lbW9yeSBvdmVybG9hZCBpcyByZWFsIV9fCgotIERvIF9fTk9UX18gaW50cm9kdWNlIHRvbyBtdWNoIG5vdGF0aW9uIGF0IG9uY2UKCi0gX19SZXBldGl0aXZlIGxhbmd1YWdlIGFuZCB1c2FnZSBvZiB3b3JkcyBhcmUgdXNlZnVsIGFuZCByZW1pbmRlcnMgZm9yIHRoZSBhdWRpZW5jZV9fCgogIC0gVXNlIGNvbnNpc3RlbnQgbGFuZ3VhZ2UgYW5kIHRlcm1pbm9sb2d5IHRocm91Z2hvdXQgdGhlIHRhbGsKCi0tCgpfX0tub3cgeW91ciBhdWRpZW5jZSFfXwoKCi5jZW50ZXJbIVtdKGh0dHBzOi8vbWVkaWEyLmdpcGh5LmNvbS9tZWRpYS91cTZJTE5CSTZnM0FzLzIwMC5naWYpXQoKCi0tLQpjbGFzczogaW52ZXJzZSBjZW50ZXIgbWlkZGxlCgojIEhvdyBkbyB3ZSBtYWtlIHByZXNlbnRhdGlvbnM/CgotLS0KCiMjIFVzZSBgeGFyaW5nYW5gIHRvIGNyZWF0ZSByZXByb2R1Y2libGUgdGVjaG5pY2FsIHByZXNlbnRhdGlvbnMKCi0tCgpXaGF0J3MgdGhlIF9fYmlnIGlkZWFfXyBiZWhpbmQgdGhlIFtgeGFyaW5nYW5gXSgpIGBSYCBwYWNrYWdlPwoKLS0KCl9fR29hbDpfXyB3ZSB3YW50IHRvIF9fY3JlYXRlX18gYW5kIF9fc2hhcmVfXyByZXByb2R1Y2libGUgdGVjaG5pY2FsIHByZXNlbnRhdGlvbnMKCi0tCgpJZGVhbGx5IHdhbnQgdG8gZG8gdGhpcyBfX29uIHRoZSB3ZWJfXywgaS5lLiwgdXNlIGByZW1hcmsuanNgCgotLQoKKipQcm9ibGVtLi4uKiogd2UgKipkb24ndCBrbm93IEphdmFzY3JpcHQqKiwgYnV0IHdlICoqa25vdyBybWFya2Rvd24qKi4KCi0tCgpFbnRlciBgeGFyaW5nYW5gLCBhbiAqKnJtYXJrZG93biB3cmFwcGVyKiogZm9yIHJlbWFyay5qcy4gKipQcm9ibGVtIHNvbHZlZCEqKgoKLS0KCioqR29vZ2xlIFNsaWRlcyoqLCBhbmQgKipLZXlub3RlKiogYXJlIF9hbHNvXyBncmVhdCwgZGVwZW5kaW5nIG9uIHlvdXIgKipwdXJwb3NlKioKCi0tLQoKLS0KCiMjIFVzZSBbYHhhcmluZ2FuYF0oaHR0cHM6Ly9zbGlkZXMueWlodWkub3JnL3hhcmluZ2FuKSBhbmQgW2B4YXJpbmdhbnRoZW1lcmBdKGh0dHBzOi8vcGtnLmdhcnJpY2thZGVuYnVpZS5jb20veGFyaW5nYW50aGVtZXIvYXJ0aWNsZXMveGFyaW5nYW50aGVtZXIuaHRtbCkKCi0tCgpJbnN0YWxsIGJvdGggcGFja2FnZXM6IFtgeGFyaW5nYW5gXShodHRwczovL3NsaWRlcy55aWh1aS5vcmcveGFyaW5nYW4pIGFuZCBbYHhhcmluZ2FudGhlbWVyYF0oaHR0cHM6Ly9wa2cuZ2Fycmlja2FkZW5idWllLmNvbS94YXJpbmdhbnRoZW1lci9hcnRpY2xlcy94YXJpbmdhbnRoZW1lci5odG1sKQoKLS0KCi0gQ3JlYXRlIGEgbmV3IHByZXNlbnRhdGlvbiB1c2luZyBhIF9fdGVtcGxhdGVfXyAKCi0tCgotIFZpZXcgaW4tcHJvZ3Jlc3Mgc2xpZGVzIHdpdGggdGhlIF9fSW5maW5pdGUgTW9vbiBSZWFkZXJfXyBhZGRpbiBmb3IgUlN0dWRpbwoKLS0KCi0gTW9yZSBvcHRpb25zIHdpdGggW3hhcmluZ2FuRXh0cmFdKGh0dHBzOi8vcGtnLmdhcnJpY2thZGVuYnVpZS5jb20veGFyaW5nYW5FeHRyYS8jL1JFQURNRT9pZD14YXJpbmdhbmV4dHJhKSEKCi0tCgpDaGVjayBvdXQgcHVibGljIHJlc291cmNlczoKCi0tCgogIC0gQ2hlY2sgb3V0IFtBbGlzb24gSGlsbF0oaHR0cHM6Ly9hbGlzb24ucmJpbmQuaW8vKSdzIFtNZWV0IHhhcmluZ2FuXShodHRwOi8vYXJtLnJiaW5kLmlvL3NsaWRlcy94YXJpbmdhbi5odG1sIzEpIHByZXNlbnRhdGlvbgogIAotLQoKICAtIFtDaGFwdGVyIDddKGh0dHBzOi8vYm9va2Rvd24ub3JnL3lpaHVpL3JtYXJrZG93bi94YXJpbmdhbi5odG1sKSBvZiBmcmVlIG9ubGluZSBgcm1hcmtkb3duYCBib29rIGJ5IGl0cyBhdXRob3IgW1lpaHVpIFhpZV0oaHR0cHM6Ly95aWh1aS5vcmcvKQogIAotLQoKICAtIFRoZSByZXN0IG9mIHRoZXNlIHNsaWRlcyBhcmUgdGFrZW4gZnJvbSB0aGUgW2B4YXJpbmdhbnRoZW1lcmBdKGh0dHBzOi8vcGtnLmdhcnJpY2thZGVuYnVpZS5jb20veGFyaW5nYW50aGVtZXIvYXJ0aWNsZXMveGFyaW5nYW50aGVtZXIuaHRtbCkgdGVtcGxhdGUgaW4gUlN0dWRpbwogIAotLQoKICAtIEFuZCBnb29nbGUgZm9yIG1vcmUgW2V4YW1wbGVzXShodHRwczovL3NsaWRlcy5lYXJvLm1lL3JsYWRpZXNha2wyMC8jMSkKCi0tLQoKIyMgVHlwb2dyYXBoeQoKVGV4dCBjYW4gYmUgKipib2xkKiosIF9pdGFsaWNfLCB+fnN0cmlrZXRocm91Z2h+fiwgb3IgYGlubGluZSBjb2RlYC4KCltMaW5rIHRvIGFub3RoZXIgc2xpZGVdKCNjb2xvcnMpLgoKIyMjIExvcmVtIElwc3VtCgpEb2xvciBpbXBlcmRpZXQgbm9zdHJhIHNhcGllbiBzY2VsZXJpc3F1ZSBwcmFlc2VudCBjdXJhZSBtZXR1cyBmYWNpbGlzaXMgZGlnbmlzc2ltIHRvcnRvci4gCkxhY2luaWEgbmVxdWUgbW9sbGlzIG5hc2NldHVyIG5lcXVlIHVybmEgdmVsaXQgYmliZW5kdW0uIApIaW1lbmFlb3Mgc3VzcGVuZGlzc2UgbGVvIHZhcml1cyBtdXMgcmlzdXMgc2FnaXR0aXMgYWxpcXVldCB2ZW5lbmF0aXMgZHVpcyBuZWMuCgotIERvbG9yIGN1YmlsaWEgbm9zdHJhIG51bmMgc29kYWxlcwoKLSBDb25zZWN0ZXR1ciBhbGlxdWV0IG1hdXJpcyBibGFuZGl0CgotIElwc3VtIGRpcyBuZWMgcG9ydHRpdG9yIHVybmEgc2VkCgotLS0KbmFtZTogY29sb3JzCgojIyBDb2xvcnMKCi0gPHNwYW4gc3R5bGU9ImNvbG9yOiB2YXIoLS10ZXh0LWNvbG9yKSI+VGV4dCBDb2xvcjwvc3Bhbj4KCi0gPHNwYW4gc3R5bGU9ImNvbG9yOiB2YXIoLS1oZWFkZXItY29sb3IpOyBmb250LWZhbWlseTogdmFyKC0taGVhZGVyLWZvbnQtZmFtaWx5KTsiPkhlYWRlciBDb2xvcjwvc3Bhbj4KCi0gPHNwYW4gc3R5bGU9ImNvbG9yOiB2YXIoLS1saW5rLWNvbG9yKSI+TGluayBDb2xvcjwvc3Bhbj4KCi0gPHNwYW4gc3R5bGU9ImNvbG9yOiB2YXIoLS10ZXh0LWJvbGQtY29sb3IpOyBmb250LXdlaWdodDogYm9sZDsiPkJvbGQgQ29sb3I8L3NwYW4+CgotIGBpbmxpbmUgY29kZSBjb2xvcmAKCi0tLQoKIyBCaWcgVG9waWMgb3IgSW52ZXJzZSBTbGlkZXMgYCNgCgojIyBTbGlkZSBIZWFkaW5ncyBgIyNgCgojIyMgU3ViLXNsaWRlIEhlYWRpbmdzIGAjIyNgCgojIyMjIEJvbGQgQ2FsbC1PdXQgYCMjIyNgCgpUaGlzIGlzIGEgbm9ybWFsIHBhcmFncmFwaCB0ZXh0LiBPbmx5IHVzZSBoZWFkZXIgbGV2ZWxzIDEtNC4KCiMjIyMjIFBvc3NpYmxlLCBidXQgbm90IHJlY29tbWVuZGVkIGAjIyMjI2AKCiMjIyMjIyBEZWZpbml0ZWx5IGRvbid0IHVzZSBoNiBgIyMjIyMjYAoKLS0tCmNsYXNzOiBpbnZlcnNlIGNlbnRlciBtaWRkbGUKCiMgVG9waWMgQ2hhbmdpbmcgSW50ZXJzdGl0aWFsCgotLQoKYGBgCmNsYXNzOiBpbnZlcnNlIGNlbnRlciBtaWRkbGUKYGBgCgotLS0KbGF5b3V0OiB0cnVlCgojIyBCbG9ja3MKCi0tLQoKLS0KCiMjIyBCbG9ja3F1b3RlCgo+IFRoaXMgaXMgYSBibG9ja3F1b3RlIGZvbGxvd2luZyBhIGhlYWRlci4KPgo+IFdoZW4gc29tZXRoaW5nIGlzIGltcG9ydGFudCBlbm91Z2gsIHlvdSBkbyBpdCBldmVuIGlmIHRoZSBvZGRzIGFyZSBub3QgaW4geW91ciBmYXZvci4KCi0tLQoKLS0KCiMjIyBDb2RlIEJsb2NrcwoKLS0KCiMjIyMgUiBDb2RlCgpgYGB7ciBldmFsPUZBTFNFfQpnZ3Bsb3QoZ2FwbWluZGVyKSArCiAgYWVzKHggPSBnZHBQZXJjYXAsIHkgPSBsaWZlRXhwLCBzaXplID0gcG9wLCBjb2xvciA9IGNvdW50cnkpICsKICBnZW9tX3BvaW50KCkgKwogIGZhY2V0X3dyYXAofnllYXIpCmBgYAoKLS0KCiMjIyMgSmF2YVNjcmlwdAoKYGBganMKdmFyIGZ1biA9IGZ1bmN0aW9uIGxhbmcobCkgewogIGRhdGVmb3JtYXQuaTE4biA9IHJlcXVpcmUoJy4vbGFuZy8nICsgbCkKICByZXR1cm4gdHJ1ZTsKfQpgYGAKCi0tLQoKLS0KCiMjIyBNb3JlIFIgQ29kZQoKYGBge3IgZXZhbD1GQUxTRX0KZHBseXI6OnN0YXJ3YXJzICU+JSBkcGx5cjo6c2xpY2Vfc2FtcGxlKG4gPSA0KQpgYGAKCi0tLQoKLS0KCmBgYHtyIG1lc3NhZ2U9VFJVRX0KY2xpOjpjbGlfYWxlcnRfc3VjY2VzcygiSXQgd29ya2VkISIpCmBgYAoKLS0KCmBgYHtyIG1lc3NhZ2U9VFJVRX0KbWVzc2FnZSgiSnVzdCBhIGZyaWVuZGx5IG1lc3NhZ2UiKQpgYGAKCi0tCgpgYGB7ciB3YXJuaW5nPVRSVUV9Cndhcm5pbmcoIlRoaXMgY291bGQgYmUgYmFkLi4uIikKYGBgCgotLQoKYGBge3IgZXJyb3I9VFJVRX0Kc3RvcCgiSSBob3BlIHlvdSdyZSBzaXR0aW5nIGRvd24gZm9yIHRoaXMiKQpgYGAKCgotLS0KbGF5b3V0OiB0cnVlCgojIyBUYWJsZXMKCi0tLQoKYGBge3J9CnRpYmJsZTo6YXNfdGliYmxlKG10Y2FycykKYGBgCgotLS0KCmBgYHtyfQprbml0cjo6a2FibGUoaGVhZChtdGNhcnMpLCBmb3JtYXQgPSAnaHRtbCcpCmBgYAoKLS0tCgpgYGB7cn0KRFQ6OmRhdGF0YWJsZShoZWFkKG10Y2FycyksIGZpbGxDb250YWluZXIgPSBGQUxTRSwgb3B0aW9ucyA9IGxpc3QocGFnZUxlbmd0aCA9IDQpKQpgYGAKCi0tLQpsYXlvdXQ6IHRydWUKCiMjIExpc3RzCgotLS0KCi5wdWxsLWxlZnRbCiMjIyMgSGVyZSBpcyBhbiB1bm9yZGVyZWQgbGlzdDoKCiogICBJdGVtIGZvbwoqICAgSXRlbSBiYXIKKiAgIEl0ZW0gYmF6CiogICBJdGVtIHppcApdCgoucHVsbC1yaWdodFsKCiMjIyMgQW5kIGFuIG9yZGVyZWQgbGlzdDoKCjEuICBJdGVtIG9uZQoxLiAgSXRlbSB0d28KMS4gIEl0ZW0gdGhyZWUKMS4gIEl0ZW0gZm91cgpdCgotLS0KCiMjIyBBbmQgYSBuZXN0ZWQgbGlzdDoKCi0gbGV2ZWwgMSBpdGVtCiAgLSBsZXZlbCAyIGl0ZW0KICAtIGxldmVsIDIgaXRlbQogICAgLSBsZXZlbCAzIGl0ZW0KICAgIC0gbGV2ZWwgMyBpdGVtCi0gbGV2ZWwgMSBpdGVtCiAgLSBsZXZlbCAyIGl0ZW0KICAtIGxldmVsIDIgaXRlbQogIC0gbGV2ZWwgMiBpdGVtCi0gbGV2ZWwgMSBpdGVtCiAgLSBsZXZlbCAyIGl0ZW0KICAtIGxldmVsIDIgaXRlbQotIGxldmVsIDEgaXRlbQoKLS0tCgojIyMgTmVzdGluZyBhbiBvbCBpbiB1bCBpbiBhbiBvbAoKLSBsZXZlbCAxIGl0ZW0gKHVsKQogIDEuIGxldmVsIDIgaXRlbSAob2wpCiAgMS4gbGV2ZWwgMiBpdGVtIChvbCkKICAgIC0gbGV2ZWwgMyBpdGVtICh1bCkKICAgIC0gbGV2ZWwgMyBpdGVtICh1bCkKLSBsZXZlbCAxIGl0ZW0gKHVsKQogIDEuIGxldmVsIDIgaXRlbSAob2wpCiAgMS4gbGV2ZWwgMiBpdGVtIChvbCkKICAgIC0gbGV2ZWwgMyBpdGVtICh1bCkKICAgIC0gbGV2ZWwgMyBpdGVtICh1bCkKICAxLiBsZXZlbCA0IGl0ZW0gKG9sKQogIDEuIGxldmVsIDQgaXRlbSAob2wpCiAgICAtIGxldmVsIDMgaXRlbSAodWwpCiAgICAtIGxldmVsIDMgaXRlbSAodWwpCi0gbGV2ZWwgMSBpdGVtICh1bCkKCi0tLQpsYXlvdXQ6IHRydWUKCiMjIFBsb3RzCgotLS0KCmBgYHtyIHBsb3QtZXhhbXBsZX0KbGlicmFyeShnZ3Bsb3QyKQooZyA8LSBnZ3Bsb3QobXBnKSArIGFlcyhod3ksIGN0eSwgY29sb3IgPSBjbGFzcykgKyBnZW9tX3BvaW50KCkpCmBgYAoKLS0tCgpgYGB7ciBwbG90LWV4YW1wbGUtdGhlbWVkfQpnICsgeGFyaW5nYW50aGVtZXI6OnRoZW1lX3hhcmluZ2FuKHRleHRfZm9udF9zaXplID0gMTYsIHRpdGxlX2ZvbnRfc2l6ZSA9IDE4KSArCiAgZ2d0aXRsZSgiQSBQbG90IEFib3V0IENhcnMiKQpgYGAKCi0tLQpsYXlvdXQ6IGZhbHNlCgojIyBTcXVhcmUgaW1hZ2UKCi0tCgo8Y2VudGVyPjxpbWcgc3JjPSJodHRwczovL29jdG9kZXguZ2l0aHViLmNvbS9pbWFnZXMvbGFidG9jYXQucG5nIiBoZWlnaHQ9IjQwMHB4IiAvPjwvY2VudGVyPgoKLmZvb3Rub3RlW0dpdEh1YiBPY3RvY2F0XQoKLS0tCgotLQoKIyMgVHdvIGltYWdlcwoKLS0KCi5wdWxsLWxlZnRbCiFbXShodHRwczovL29jdG9kZXguZ2l0aHViLmNvbS9pbWFnZXMvbW90aGVyaHViYmVydG9jYXQucG5nKQpdCgotLQoKLnB1bGwtcmlnaHRbCiFbXShodHRwczovL29jdG9kZXguZ2l0aHViLmNvbS9pbWFnZXMvZGlub3RvY2F0LnBuZykKXQoKLS0tCgotLQoKIyMgQWx0ZXJuYXRpdmVseSBgaW5jbHVkZV9ncmFwaGljc2AKCi0tCgpgYGB7ciBvdXQud2lkdGg9JzYwJScsIGVjaG8gPSBGQUxTRSwgZmlnLmFsaWduPSdjZW50ZXInfQprbml0cjo6aW5jbHVkZV9ncmFwaGljcygiaHR0cDovL2ltYWdlczYuZmFucG9wLmNvbS9pbWFnZS9waG90b3MvNDI5MDAwMDAvVGhvci1SYWduYXJvay0yMDE3LUxva2ktYW5kLVRob3ItbW9vZC1jb21waWxhdGlvbi10aG9yLXJhZ25hcm9rLTQyOTk4NzU4LTI2OC0yMDAuZ2lmIikKYGBgCgotLS0KCi0tCgojIyMgRGVmaW5pdGlvbiBsaXN0cyBjYW4gYmUgdXNlZCB3aXRoIEhUTUwgc3ludGF4LgoKPGRsPgo8ZHQ+TmFtZTwvZHQ+CjxkZD5Hb2R6aWxsYTwvZGQ+CjxkdD5Cb3JuPC9kdD4KPGRkPjE5NTI8L2RkPgo8ZHQ+QmlydGhwbGFjZTwvZHQ+CjxkZD5KYXBhbjwvZGQ+CjxkdD5Db2xvcjwvZHQ+CjxkZD5HcmVlbjwvZGQ+CjwvZGw+CgotLS0KY2xhc3M6IGNlbnRlciwgbWlkZGxlCgotLQoKIyMgT3ZlciB0byB5b3UgLSBhbnkgcHJlc2VudGF0aW9uIHRpcHMgd2UgbWF5IGhhdmUgbWlzc2VkPwoKLS0tCmNsYXNzOiBjZW50ZXIsIG1pZGRsZQoKIyBUaGFua3MhCgpTbGlkZXMgY3JlYXRlZCB2aWEgdGhlIFIgcGFja2FnZXM6CgpbKip4YXJpbmdhbioqXShodHRwczovL2dpdGh1Yi5jb20veWlodWkveGFyaW5nYW4pPGJyPgpbZ2FkZW5idWllL3hhcmluZ2FudGhlbWVyXShodHRwczovL2dpdGh1Yi5jb20vZ2FkZW5idWllL3hhcmluZ2FudGhlbWVyKQoKVGhlIGNoYWtyYSBjb21lcyBmcm9tIFtyZW1hcmsuanNdKGh0dHBzOi8vcmVtYXJranMuY29tKSwgWyoqa25pdHIqKl0oaHR0cDovL3lpaHVpLm5hbWUva25pdHIpLCBhbmQgW1IgTWFya2Rvd25dKGh0dHBzOi8vcm1hcmtkb3duLnJzdHVkaW8uY29tKS4K').then(res => res.blob()).then(blob => {
+      const downloadURL = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.href = downloadURL;
+      a.download = '12-slides.Rmd'; a.click();
+      window.URL.revokeObjectURL(downloadURL);
+      document.body.removeChild(a);
+        });"><button class="btn btn-success downloadthis  " id="dnldts38618"><i class="bi bi-file-earmark"></i> Download Rmd of all slides </button></a></p>
 <iframe width="780" height="500" src="../slides/12-slides.pdf" title="Lecture 1"></iframe>
 
 
