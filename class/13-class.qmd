@@ -1,6 +1,6 @@
 ---
-title: "Introduction and Welcome to SURE 2023"
-date: "2023-06-05"
+title: "Linear regression"
+date: "2023-06-22"
 ---
 
 ```{r slides-videos, echo=FALSE, include=FALSE}
@@ -18,6 +18,9 @@ arrow keys, for convenience.
 ```{r show-slide-tabs, echo=FALSE, results="asis"}
 slide_buttons("/slides/13-slides", output_type = "pdf")
 ```
+{{\< downloadthis ../slides/13-slides.Rmd
+dname="13-slides" label="Download Rmd of all slides" icon="file-earmark"
+type="success" \>}}
 
 ```{=html}
 <iframe width="780" height="500" src="/slides/13-slides.pdf" title="Lecture 1"></iframe>

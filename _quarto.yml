@@ -111,8 +111,8 @@ website:
               contents:
                 - text: "11: Model assessment vs selection"
                   file: class/11-class.qmd
-            #     - text: "13: Linear regression"
-            #       file: class/13-class.qmd
+                - text: "13: Linear regression"
+                  file: class/13-class.qmd
             #     - text: "14: Intro to variable selection"
             #       file: class/14-class.qmd
             #     - text: "15: Regularization"
