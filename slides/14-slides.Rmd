@@ -1,7 +1,7 @@
 ---
 title: "Supervised Learning"
-subtitle: "Intro to variable selection"
-date: "June 25th, 2021"
+subtitle: "Introduction to variable selection"
+date: "June 23rd, 2023"
 output:
   xaringan::moon_reader:
     lib_dir: "libs"
@@ -31,7 +31,6 @@ style_mono_accent(base_color = "#cc002b")
 knitr::opts_chunk$set(fig.retina = 3, warning = FALSE, message = FALSE)
 ```
 
-
 ## The setting
 
 We wish to learn a linear model. Our estimate (denoted by hats) is
@@ -55,6 +54,34 @@ Why would we attempt to select a __subset__ of the $p$ variables?
   - Eliminating uninformative predictors is obviously a good thing when your goal is to tell the story of how your predictors are associated with your response.
 
 
+---
+
+## A note on interpretation
+
+In a simple linear regression, i.e. where there is only *one* predictor $X$
+
+--
+
+- $\beta_0$ is interpreted as the intercept: the average value of the response $Y$ when $X = 0$
+
+- $\beta_1$ is interpreted as the slope: the change in the average value of $Y$ for a 1-unit increase in $X$
+
+--
+
+Once you start adding more variables, this gets more and more complicated
+
+--
+- $\beta_0$: the average value for $Y$ when *all* predictors $X_1 \dots X_p$ are zero
+
+- $\beta_1$: the change in average value of $Y$ for a 1-unit increase in the variable $X_1$, *holding all other variables constant*
+
+- $\beta_2$: the change in average value of $Y$ for a 1-unit increase in the variable $X_2$, *holding all other variables constant*
+$$ \vdots$$
+- $\beta_p$: ...
+
+--
+
+Coefficients have to be interpreted in relation to all the other variables as well $\rightarrow$ fewer variables is more interpretable
 
 ---
 
@@ -91,7 +118,7 @@ __This is not typically used in research!__
 
 ---
 
-## Use the shoe leather approach
+## Data science requires a data scientist
 
 [Prof. David Freeman](https://en.wikipedia.org/wiki/David_A._Freedman):
 
@@ -134,7 +161,7 @@ You should justify which predictors / variables used in modeling based on:
   
   - 0 means no linear dependence
   
-  - 1 means one variable linear increases absolutely while the other increases
+  - 1 means one variable linearly increases absolutely while the other increases
 
 
 --
@@ -145,12 +172,12 @@ You should justify which predictors / variables used in modeling based on:
 
 ## Example data: NFL teams summary
 
-Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2020
+Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2021
 
 ```{r, warning = FALSE, message = FALSE}
 library(tidyverse)
-nfl_teams_data <- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/regression_projects/nfl_team_season_summary.csv")
-nfl_teams_data
+nfl_teams_data <- read_csv("https://shorturl.at/yRY23")
+head(nfl_teams_data)
 ```
 
 ---
@@ -165,6 +192,7 @@ Interested in modeling a team's __score differential__
 nfl_teams_data <- nfl_teams_data %>%
   mutate(score_diff = 
            points_scored - points_allowed)
+
 nfl_teams_data %>%
   ggplot(aes(x = score_diff)) +
   geom_histogram(color = "black", 
@@ -200,14 +228,16 @@ nfl_teams_data %>%
 ```{r init-cor, echo = TRUE, eval = FALSE}
 library(ggcorrplot)
 nfl_model_data <- nfl_teams_data %>%
-  dplyr::select(score_diff, offense_ave_epa_pass,
-                offense_ave_epa_run, 
-                defense_ave_epa_pass,
-                defense_ave_epa_run,
-                offense_ave_yards_gained_pass,
-                offense_ave_yards_gained_run,
-                defense_ave_yards_gained_pass,
-                defense_ave_yards_gained_run)
+  dplyr::select(score_diff, 
+            offense_ave_epa_pass,
+            offense_ave_epa_run, 
+            defense_ave_epa_pass,
+            defense_ave_epa_run,
+            offense_ave_yards_gained_pass,
+            offense_ave_yards_gained_run,
+            defense_ave_yards_gained_pass,
+            defense_ave_yards_gained_run)
+
 nfl_cor_matrix <- cor(nfl_model_data) #<<
 ggcorrplot(nfl_cor_matrix) #<<
 ```
@@ -257,7 +287,7 @@ ggcorrplot(round_cor_matrix,
 
 ## Clustering variables using the correlation matrix
 
-Apply [hierarchical clustering](http://stat.cmu.edu/cmsac/sure/2021/materials/lectures/slides/07-Hierarchical-clustering.html#1) to variables instead of observations
+Apply [hierarchical clustering](https://cmu-sure-2023.netlify.app/class/08-class.html) to variables instead of observations
 
 
 --
@@ -375,9 +405,11 @@ Use the [`GGally`](https://ggobi.github.io/ggally/index.html) package to easily 
 library(GGally) #<<
 ggpairs(nfl_model_data, #<<
         columns =
-          c("score_diff", "offense_ave_epa_pass",
-            "offense_ave_epa_run", "defense_ave_epa_pass",
-            "defense_ave_epa_run")) + #<<
+          c("score_diff", 
+            "offense_ave_epa_pass",
+            "offense_ave_epa_run", 
+            "defense_ave_epa_pass",
+            "defense_ave_epa_run")) + 
   theme_bw()
 ```
 
@@ -403,7 +435,7 @@ Will use __5-fold cross-validation__ to assess how well different sets of variab
 --
 Can initialize a column of the __test__ fold assignments to our dataset with the `sample()` function:
 ```{r init-folds}
-set.seed(2020)
+set.seed(2023)
 nfl_model_data <- nfl_model_data %>%
   mutate(test_fold = sample(rep(1:5, length.out = n())))
 ```
@@ -445,8 +477,10 @@ get_cv_preds <- function(model_formula, data = nfl_model_data) {
 ## Function enables easy generation of holdout analysis
 
 ```{r}
-all_cv_preds <- get_cv_preds("score_diff ~  offense_ave_epa_pass + offense_ave_epa_run + defense_ave_epa_pass + defense_ave_epa_run")
-all_int_cv_preds <- get_cv_preds("score_diff ~ offense_ave_epa_pass*offense_ave_epa_run + defense_ave_epa_pass*defense_ave_epa_run")
+all_cv_preds <- get_cv_preds("score_diff ~  offense_ave_epa_pass + offense_ave_epa_run +
+                             defense_ave_epa_pass + defense_ave_epa_run")
+all_int_cv_preds <- get_cv_preds("score_diff ~ offense_ave_epa_pass*offense_ave_epa_run +
+                                 defense_ave_epa_pass*defense_ave_epa_run")
 run_only_cv_preds <- get_cv_preds("score_diff ~ offense_ave_epa_run + defense_ave_epa_run")
 pass_only_cv_preds <- get_cv_preds("score_diff ~ offense_ave_epa_pass + defense_ave_epa_pass")
 off_only_cv_preds <- get_cv_preds("score_diff ~ offense_ave_epa_pass + offense_ave_epa_run")
@@ -454,20 +488,42 @@ def_only_cv_preds <- get_cv_preds("score_diff ~ defense_ave_epa_pass + defense_a
 int_only_cv_preds <- get_cv_preds("score_diff ~ 1")
 ```
 
+Also write a function to compute RMSE (root mean squared error, back in the scale of the response)
 
---
+```{r}
+get_rmse <- function(observed, predicted) {
+  sqrt(mean((observed - predicted)^2))
+}
+```
+
+
+Note: next week we will learn about a tidyverse framework for fitting, tuning, and analyzing models, which will do all of this for us!
+
+
+
+---
+
+## Can then summarize together for a single plot:
+
 .pull-left[
-Can then summarize together for a single plot:
+
 ```{r five-fold, eval = FALSE}
 bind_rows(mutate(all_cv_preds, type = "All"),
-          mutate(all_int_cv_preds, type = "All w/ interactions"),
-          mutate(pass_only_cv_preds, type = "Passing only"),
-          mutate(run_only_cv_preds, type = "Running only"),
-          mutate(off_only_cv_preds, type = "Offense only"),
-          mutate(def_only_cv_preds, type = "Defense only"),
-          mutate(int_only_cv_preds, type = "Intercept-only")) %>%
+          mutate(all_int_cv_preds, 
+                 type = "All w/ interactions"),
+          mutate(pass_only_cv_preds, 
+                 type = "Passing only"),
+          mutate(run_only_cv_preds, 
+                 type = "Running only"),
+          mutate(off_only_cv_preds, 
+                 type = "Offense only"),
+          mutate(def_only_cv_preds, 
+                 type = "Defense only"),
+          mutate(int_only_cv_preds, 
+                 type = "Intercept-only")) %>%
   group_by(type) %>%
-  summarize(rmse = sqrt(mean((test_actual - test_preds)^2))) %>%
+  summarize(rmse = get_rmse(test_actual, 
+                            test_preds)) %>%
   mutate(type = fct_reorder(type, rmse)) %>%
   ggplot(aes(x = type, y = rmse)) +
   geom_point() + coord_flip() + theme_bw()
@@ -486,7 +542,9 @@ bind_rows(mutate(all_cv_preds, type = "All"),
 ## Fit selected model on all data and view summary
 
 ```{r}
-all_lm <- lm(score_diff ~ offense_ave_epa_pass + offense_ave_epa_run + defense_ave_epa_pass + defense_ave_epa_run, data = nfl_model_data)
+all_lm <- lm(score_diff ~ offense_ave_epa_pass + offense_ave_epa_run + 
+               defense_ave_epa_pass + defense_ave_epa_run, 
+             data = nfl_model_data)
 summary(all_lm)
 ```
 

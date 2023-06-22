@@ -3,9 +3,9 @@
   <head>
     <title>Supervised Learning</title>
     <meta charset="utf-8" />
-    <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -15,14 +15,13 @@ class: center, middle, inverse, title-slide
 # Supervised Learning
 ]
 .subtitle[
-## Intro to variable selection
+## Introduction to variable selection
 ]
 .date[
-### June 25th, 2021
+### June 23rd, 2023
 ]
 
 ---
-
 
 
 
@@ -52,6 +51,34 @@ Why would we attempt to select a __subset__ of the `\(p\)` variables?
   - Eliminating uninformative predictors is obviously a good thing when your goal is to tell the story of how your predictors are associated with your response.
 
 
+---
+
+## A note on interpretation
+
+In a simple linear regression, i.e. where there is only *one* predictor `\(X\)`
+
+--
+
+- `\(\beta_0\)` is interpreted as the intercept: the average value of the response `\(Y\)` when `\(X = 0\)`
+
+- `\(\beta_1\)` is interpreted as the slope: the change in the average value of `\(Y\)` for a 1-unit increase in `\(X\)`
+
+--
+
+Once you start adding more variables, this gets more and more complicated
+
+--
+- `\(\beta_0\)`: the average value for `\(Y\)` when *all* predictors `\(X_1 \dots X_p\)` are zero
+
+- `\(\beta_1\)`: the change in average value of `\(Y\)` for a 1-unit increase in the variable `\(X_1\)`, *holding all other variables constant*
+
+- `\(\beta_2\)`: the change in average value of `\(Y\)` for a 1-unit increase in the variable `\(X_2\)`, *holding all other variables constant*
+$$ \vdots$$
+- `\(\beta_p\)`: ...
+
+--
+
+Coefficients have to be interpreted in relation to all the other variables as well `\(\rightarrow\)` fewer variables is more interpretable
 
 ---
 
@@ -88,7 +115,7 @@ __This is not typically used in research!__
 
 ---
 
-## Use the shoe leather approach
+## Data science requires a data scientist
 
 [Prof. David Freeman](https://en.wikipedia.org/wiki/David_A._Freedman):
 
@@ -131,7 +158,7 @@ You should justify which predictors / variables used in modeling based on:
   
   - 0 means no linear dependence
   
-  - 1 means one variable linear increases absolutely while the other increases
+  - 1 means one variable linearly increases absolutely while the other increases
 
 
 --
@@ -142,36 +169,32 @@ You should justify which predictors / variables used in modeling based on:
 
 ## Example data: NFL teams summary
 
-Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2020
+Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2021
 
 
 ```r
 library(tidyverse)
-nfl_teams_data &lt;- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/regression_projects/nfl_team_season_summary.csv")
-nfl_teams_data
+nfl_teams_data &lt;- read_csv("https://shorturl.at/yRY23")
+head(nfl_teams_data)
 ```
 
 ```
-## # A tibble: 701 × 55
-##    season team  offens…¹ offen…² offen…³ offen…⁴ offen…⁵ offen…⁶ offen…⁷ offen…⁸
-##     &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-##  1   1999 ARI      0.477    2796    1209    4.67    3.15       0     NaN       0
-##  2   1999 ATL      0.504    3317    1176    6.08    3.20       0     NaN      11
-##  3   1999 BAL      0.452    2805    1663    5.07    4.13       0     NaN       0
-##  4   1999 BUF      0.540    3275    2038    6.17    4.13       0     NaN     161
-##  5   1999 CAR      0.552    4144    1484    6.68    4.29       0     NaN      89
-##  6   1999 CHI      0.561    4090    1359    5.75    3.55       0     NaN     508
-##  7   1999 CIN      0.498    3178    1971    5.37    4.63       0     NaN       0
-##  8   1999 CLE      0.489    2574    1140    4.71    3.67       0     NaN      35
-##  9   1999 DAL      0.560    3083    2054    5.95    4.29       0     NaN       0
-## 10   1999 DEN      0.546    3378    1852    5.85    4.05       0     NaN       9
-## # … with 691 more rows, 45 more variables: offense_ave_yac &lt;dbl&gt;,
-## #   offense_n_plays_pass &lt;dbl&gt;, offense_n_plays_run &lt;dbl&gt;,
-## #   offense_n_interceptions &lt;dbl&gt;, offense_n_fumbles_lost_pass &lt;dbl&gt;,
-## #   offense_n_fumbles_lost_run &lt;dbl&gt;, offense_total_epa_pass &lt;dbl&gt;,
-## #   offense_total_epa_run &lt;dbl&gt;, offense_ave_epa_pass &lt;dbl&gt;,
-## #   offense_ave_epa_run &lt;dbl&gt;, offense_total_wpa_pass &lt;dbl&gt;,
-## #   offense_total_wpa_run &lt;dbl&gt;, offense_ave_wpa_pass &lt;dbl&gt;, …
+## # A tibble: 6 × 55
+##   season team  offense…¹ offen…² offen…³ offen…⁴ offen…⁵ offen…⁶ offen…⁷ offen…⁸
+##    &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1   1999 ARI       0.477    2796    1209    4.67    3.15       0      NA       0
+## 2   1999 ATL       0.504    3317    1176    6.08    3.20       0      NA      11
+## 3   1999 BAL       0.452    2805    1663    5.07    4.13       0      NA       0
+## 4   1999 BUF       0.540    3275    2038    6.17    4.13       0      NA     161
+## 5   1999 CAR       0.552    4144    1484    6.68    4.29       0      NA      89
+## 6   1999 CHI       0.561    4090    1359    5.75    3.55       0      NA     508
+## # … with 45 more variables: offense_ave_yac &lt;dbl&gt;, offense_n_plays_pass &lt;dbl&gt;,
+## #   offense_n_plays_run &lt;dbl&gt;, offense_n_interceptions &lt;dbl&gt;,
+## #   offense_n_fumbles_lost_pass &lt;dbl&gt;, offense_n_fumbles_lost_run &lt;dbl&gt;,
+## #   offense_total_epa_pass &lt;dbl&gt;, offense_total_epa_run &lt;dbl&gt;,
+## #   offense_ave_epa_pass &lt;dbl&gt;, offense_ave_epa_run &lt;dbl&gt;,
+## #   offense_total_wpa_pass &lt;dbl&gt;, offense_total_wpa_run &lt;dbl&gt;,
+## #   offense_ave_wpa_pass &lt;dbl&gt;, offense_ave_wpa_run &lt;dbl&gt;, …
 ```
 
 ---
@@ -187,6 +210,7 @@ Interested in modeling a team's __score differential__
 nfl_teams_data &lt;- nfl_teams_data %&gt;%
   mutate(score_diff = 
            points_scored - points_allowed)
+
 nfl_teams_data %&gt;%
   ggplot(aes(x = score_diff)) +
   geom_histogram(color = "black", 
@@ -221,14 +245,16 @@ nfl_teams_data %&gt;%
 ```r
 library(ggcorrplot)
 nfl_model_data &lt;- nfl_teams_data %&gt;%
-  dplyr::select(score_diff, offense_ave_epa_pass,
-                offense_ave_epa_run, 
-                defense_ave_epa_pass,
-                defense_ave_epa_run,
-                offense_ave_yards_gained_pass,
-                offense_ave_yards_gained_run,
-                defense_ave_yards_gained_pass,
-                defense_ave_yards_gained_run)
+  dplyr::select(score_diff, 
+            offense_ave_epa_pass,
+            offense_ave_epa_run, 
+            defense_ave_epa_pass,
+            defense_ave_epa_run,
+            offense_ave_yards_gained_pass,
+            offense_ave_yards_gained_run,
+            defense_ave_yards_gained_pass,
+            defense_ave_yards_gained_run)
+
 *nfl_cor_matrix &lt;- cor(nfl_model_data)
 *ggcorrplot(nfl_cor_matrix)
 ```
@@ -275,7 +301,7 @@ ggcorrplot(round_cor_matrix,
 
 ## Clustering variables using the correlation matrix
 
-Apply [hierarchical clustering](http://stat.cmu.edu/cmsac/sure/2021/materials/lectures/slides/07-Hierarchical-clustering.html#1) to variables instead of observations
+Apply [hierarchical clustering](https://cmu-sure-2023.netlify.app/class/08-class.html) to variables instead of observations
 
 
 --
@@ -396,9 +422,11 @@ Use the [`GGally`](https://ggobi.github.io/ggally/index.html) package to easily 
 *library(GGally)
 *ggpairs(nfl_model_data,
         columns =
-          c("score_diff", "offense_ave_epa_pass",
-            "offense_ave_epa_run", "defense_ave_epa_pass",
-*           "defense_ave_epa_run")) +
+          c("score_diff", 
+            "offense_ave_epa_pass",
+            "offense_ave_epa_run", 
+            "defense_ave_epa_pass",
+            "defense_ave_epa_run")) + 
   theme_bw()
 ```
 
@@ -423,7 +451,7 @@ Will use __5-fold cross-validation__ to assess how well different sets of variab
 Can initialize a column of the __test__ fold assignments to our dataset with the `sample()` function:
 
 ```r
-set.seed(2020)
+set.seed(2023)
 nfl_model_data &lt;- nfl_model_data %&gt;%
   mutate(test_fold = sample(rep(1:5, length.out = n())))
 ```
@@ -466,8 +494,10 @@ get_cv_preds &lt;- function(model_formula, data = nfl_model_data) {
 
 
 ```r
-all_cv_preds &lt;- get_cv_preds("score_diff ~  offense_ave_epa_pass + offense_ave_epa_run + defense_ave_epa_pass + defense_ave_epa_run")
-all_int_cv_preds &lt;- get_cv_preds("score_diff ~ offense_ave_epa_pass*offense_ave_epa_run + defense_ave_epa_pass*defense_ave_epa_run")
+all_cv_preds &lt;- get_cv_preds("score_diff ~  offense_ave_epa_pass + offense_ave_epa_run +
+                             defense_ave_epa_pass + defense_ave_epa_run")
+all_int_cv_preds &lt;- get_cv_preds("score_diff ~ offense_ave_epa_pass*offense_ave_epa_run +
+                                 defense_ave_epa_pass*defense_ave_epa_run")
 run_only_cv_preds &lt;- get_cv_preds("score_diff ~ offense_ave_epa_run + defense_ave_epa_run")
 pass_only_cv_preds &lt;- get_cv_preds("score_diff ~ offense_ave_epa_pass + defense_ave_epa_pass")
 off_only_cv_preds &lt;- get_cv_preds("score_diff ~ offense_ave_epa_pass + offense_ave_epa_run")
@@ -475,28 +505,51 @@ def_only_cv_preds &lt;- get_cv_preds("score_diff ~ defense_ave_epa_pass + defens
 int_only_cv_preds &lt;- get_cv_preds("score_diff ~ 1")
 ```
 
+Also write a function to compute RMSE (root mean squared error, back in the scale of the response)
 
---
+
+```r
+get_rmse &lt;- function(observed, predicted) {
+  sqrt(mean((observed - predicted)^2))
+}
+```
+
+
+Note: next week we will learn about a tidyverse framework for fitting, tuning, and analyzing models, which will do all of this for us!
+
+
+
+---
+
+## Can then summarize together for a single plot:
+
 .pull-left[
-Can then summarize together for a single plot:
+
 
 ```r
 bind_rows(mutate(all_cv_preds, type = "All"),
-          mutate(all_int_cv_preds, type = "All w/ interactions"),
-          mutate(pass_only_cv_preds, type = "Passing only"),
-          mutate(run_only_cv_preds, type = "Running only"),
-          mutate(off_only_cv_preds, type = "Offense only"),
-          mutate(def_only_cv_preds, type = "Defense only"),
-          mutate(int_only_cv_preds, type = "Intercept-only")) %&gt;%
+          mutate(all_int_cv_preds, 
+                 type = "All w/ interactions"),
+          mutate(pass_only_cv_preds, 
+                 type = "Passing only"),
+          mutate(run_only_cv_preds, 
+                 type = "Running only"),
+          mutate(off_only_cv_preds, 
+                 type = "Offense only"),
+          mutate(def_only_cv_preds, 
+                 type = "Defense only"),
+          mutate(int_only_cv_preds, 
+                 type = "Intercept-only")) %&gt;%
   group_by(type) %&gt;%
-  summarize(rmse = sqrt(mean((test_actual - test_preds)^2))) %&gt;%
+  summarize(rmse = get_rmse(test_actual, 
+                            test_preds)) %&gt;%
   mutate(type = fct_reorder(type, rmse)) %&gt;%
   ggplot(aes(x = type, y = rmse)) +
   geom_point() + coord_flip() + theme_bw()
 ```
 ]
 .pull-right[
-&lt;img src="14-slides_files/figure-html/unnamed-chunk-10-1.png" width="504" /&gt;
+&lt;img src="14-slides_files/figure-html/unnamed-chunk-11-1.png" width="504" /&gt;
 
 ]
 
@@ -507,7 +560,9 @@ bind_rows(mutate(all_cv_preds, type = "All"),
 
 
 ```r
-all_lm &lt;- lm(score_diff ~ offense_ave_epa_pass + offense_ave_epa_run + defense_ave_epa_pass + defense_ave_epa_run, data = nfl_model_data)
+all_lm &lt;- lm(score_diff ~ offense_ave_epa_pass + offense_ave_epa_run + 
+               defense_ave_epa_pass + defense_ave_epa_run, 
+             data = nfl_model_data)
 summary(all_lm)
 ```
 
@@ -519,21 +574,21 @@ summary(all_lm)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -74.850 -18.814   0.222  18.964  92.173 
+## -75.142 -18.394   0.024  18.680  92.412 
 ## 
 ## Coefficients:
 ##                      Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)             3.525      1.732   2.035   0.0422 *  
-## offense_ave_epa_pass  462.886      8.737  52.979   &lt;2e-16 ***
-## offense_ave_epa_run   333.415     15.808  21.092   &lt;2e-16 ***
-## defense_ave_epa_pass -480.918     11.226 -42.838   &lt;2e-16 ***
-## defense_ave_epa_run  -298.546     16.324 -18.289   &lt;2e-16 ***
+## (Intercept)             3.378      1.648    2.05   0.0407 *  
+## offense_ave_epa_pass  463.221      8.529   54.31   &lt;2e-16 ***
+## offense_ave_epa_run   336.067     15.283   21.99   &lt;2e-16 ***
+## defense_ave_epa_pass -480.406     10.909  -44.04   &lt;2e-16 ***
+## defense_ave_epa_run  -302.841     15.883  -19.07   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 27.84 on 696 degrees of freedom
-## Multiple R-squared:  0.9248,	Adjusted R-squared:  0.9244 
-## F-statistic:  2141 on 4 and 696 DF,  p-value: &lt; 2.2e-16
+## Residual standard error: 27.67 on 728 degrees of freedom
+## Multiple R-squared:  0.9263,	Adjusted R-squared:  0.9259 
+## F-statistic:  2288 on 4 and 728 DF,  p-value: &lt; 2.2e-16
 ```
 
 ---
@@ -560,7 +615,7 @@ ggcoef(all_lm,
 ]
 .pull-right[
 
-&lt;img src="14-slides_files/figure-html/unnamed-chunk-12-1.png" width="504" /&gt;
+&lt;img src="14-slides_files/figure-html/unnamed-chunk-13-1.png" width="504" /&gt;
 
 
 ]
