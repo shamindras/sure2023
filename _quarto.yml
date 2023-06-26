@@ -160,6 +160,8 @@ website:
               file: assignment/demo-lab-04.qmd
             - text: "Demo Lab 5: Clustering"
               file: assignment/demo-lab-05.qmd
+            - text: "Demo Lab 6: Linear Regression"
+              file: assignment/demo-lab-06.qmd
         - section: "CMSAC Mini projects"
           contents:
             - text: "EDA Mini-Project 1: Requirements and Data"

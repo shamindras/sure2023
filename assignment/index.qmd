@@ -68,6 +68,12 @@ Download **Demo Lab 5 (Clustering):**
 {{\< downloadthis _files/demo-labs/demo-lab-05.Rmd
 dname="demo-lab-05" label="demo-lab-05.Rmd" icon="file-earmark"
 type="success" \>}} 
+
+Download **Demo Lab 6 (Linear Regression):** 
+
+{{\< downloadthis _files/demo-labs/demo-lab-06.Rmd
+dname="demo-lab-06" label="demo-lab-06.Rmd" icon="file-earmark"
+type="success" \>}} 
 :::
 
 ## Research project deliverables

@@ -395,7 +395,7 @@ tidy_ridge_coef %>%
 
 ```
 ]
-
+  
 ---
 
 ## Tidy ridge regression
