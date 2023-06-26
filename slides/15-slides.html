@@ -3,9 +3,9 @@
   <head>
     <title>Supervised Learning</title>
     <meta charset="utf-8" />
-    <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -18,7 +18,7 @@ class: center, middle, inverse, title-slide
 ## Regularization
 ]
 .date[
-### June 28th, 2021
+### June 26th, 2023
 ]
 
 ---
@@ -41,40 +41,91 @@ Why would we attempt to select a __subset__ of the `\(p\)` variables?
 
 
 --
+- *To improve model interpretability*
+
+--
+
+  - **Occam's razor:** simplest model wins!
+  
+--
+
+  - Eliminating uninformative predictors is obviously a good thing when your goal is to tell the story of how your predictors are associated with your response.
+
+--
 - *To improve prediction accuracy* 
 
   - Eliminating uninformative predictors can lead to lower variance in the test-set MSE, at the expense of a slight increase in bias
 
 
+---
+
+## Best subset selection
+
+- Start with the __null model__ `\(\mathcal{M}_0\)` (intercept-only) that has no predictors
+
+  - just predicts the sample mean for each observation
+  
+
 --
-- *To improve model interpretability*
+- For `\(k = 1, 2, \dots, p\)` (each possible number of predictors)
 
-  - Eliminating uninformative predictors is obviously a good thing when your goal is to tell the story of how your predictors are associated with your response.
+  - Fit __all__ `\(\binom{p}{k} = \frac{p!}{k!(p-k)!}\)` with exactly `\(k\)` predictors
+  
+  - Pick the best (some criteria) among these `\(\binom{p}{k}\)` models, call it `\(\mathcal{M}_k\)`
+  
+    - Best can be up to the user: cross-validation error, highest adjusted `\(R^2\)`, etc.
+  
+
+--
+- Select a single best model from among `\(\mathcal{M}_0, \dots, \mathcal{M}_p\)`
 
 
 --
-__Remember the bias-variance tradeoff__:
+__This is not typically used in research!__
 
+- only practical for a smaller number of variables
 
+---
+
+## Remember the bias-variance tradeoff
+
+--
 $$
 {\rm MSE} = {\rm (Bias)}^2 + {\rm Variance}
 $$
 
+--
 - Introduce bias but decrease variance to improve predictions
+
+--
+
+- *Some questions*
+
+--
+
+  - How do we know that there is a _trade-off_ between Bias and Variance?
+  
+--
+
+  - How can we check that it is `\({\rm (Bias)}^2\)` and not `\({\rm (Bias)}\)` without
+  doing _any_ calcs?
 
 ---
 
 ## Shrinkage methods: Ridge regression
 
-__Remember__: linear regression estimates coefficients by minimizing:
+&lt;!-- __Remember__: linear regression estimates coefficients by minimizing: --&gt;
 
- `$$\text{RSS} = \sum_i^n \big(Y_i - \beta_0 -  \sum_j^p \hat{\beta}_j x_{ij}\big)^2$$`
+&lt;!--  `$$\text{RSS} = \sum_i^n \big(Y_i - \beta_0 -  \sum_j^p \hat{\beta}_j x_{ij}\big)^2$$` --&gt;
 
 
 --
 __Ridge regression__ introduces a __shrinkage penalty__ `\(\lambda \geq 0\)` by minimizing:
 
 `$$\sum_i^n \big(Y_i - \beta_0 -  \sum_j^p \beta_j x_{ij}\big)^2 + \lambda \sum_j^p \beta_j^2 = \text{RSS} + \lambda \sum_j^p \beta_j^2$$`
+--
+or more succinctly we want to minimize:
+`$$\lVert{\mathbf{Y} - \mathbf{X} \mathbf{\beta} \rVert}_{2}^{2} + \lambda \lVert{\mathbf{\beta} \rVert}_{2}^{2}$$`
 
 --
 - as `\(\lambda\)` increases `\(\Rightarrow\)` flexibility of models decreases
@@ -115,6 +166,11 @@ But we may believe there is a __sparse__ solution
 __Lasso__ enables variable selection with `\(\lambda\)` by minimizing:
 
 `$$\sum_i^n \big(Y_i - \beta_0 -  \sum_j^p \beta_j X_{ij}\big)^2 + \lambda \sum_j^p\vert  \beta_j \vert = \text{RSS} + \lambda \sum_j^p \vert \beta_j \vert$$`
+
+--
+or more succinctly we want to minimize:
+`$$\lVert{\mathbf{Y} - \mathbf{X} \mathbf{\beta} \rVert}_{2}^{2} + \lambda \lVert{\mathbf{\beta} \rVert}_{1}$$`
+
 
 - Lasso uses an `\(\ell_1\)` ("ell 1") penalty
 
@@ -207,7 +263,7 @@ Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL te
 
 ```r
 library(tidyverse)
-nfl_teams_data &lt;- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/regression_projects/nfl_team_season_summary.csv")
+nfl_teams_data &lt;- read_csv("https://shorturl.at/uwAV2")
 nfl_model_data &lt;- nfl_teams_data %&gt;%
   mutate(score_diff = points_scored - points_allowed) %&gt;%
   # Only use rows with air yards
@@ -330,7 +386,7 @@ tidy_ridge_coef %&gt;%
   theme_bw()
 ```
 
-- Could easily add color with legend for variables...
+&lt;!-- - Could easily add color with legend for variables... --&gt;
 
 ]
 .pull-right[

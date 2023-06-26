@@ -1,7 +1,7 @@
 ---
 title: "Supervised Learning"
 subtitle: "Regularization"
-date: "June 28th, 2021"
+date: "June 26th, 2023"
 output:
   xaringan::moon_reader:
     lib_dir: "libs"
@@ -19,11 +19,12 @@ output:
       navigation:
         scroll: false
 editor_options:
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
 library(xaringanthemer)
+library(tidyverse)
 style_mono_accent(base_color = "#cc002b")
 ```
 
@@ -44,40 +45,91 @@ Why would we attempt to select a __subset__ of the $p$ variables?
 
 
 --
+- *To improve model interpretability*
+
+--
+
+  - **Occam's razor:** simplest model wins!
+  
+--
+
+  - Eliminating uninformative predictors is obviously a good thing when your goal is to tell the story of how your predictors are associated with your response.
+
+--
 - *To improve prediction accuracy* 
 
   - Eliminating uninformative predictors can lead to lower variance in the test-set MSE, at the expense of a slight increase in bias
 
 
+---
+
+## Best subset selection
+
+- Start with the __null model__ $\mathcal{M}_0$ (intercept-only) that has no predictors
+
+  - just predicts the sample mean for each observation
+  
+
 --
-- *To improve model interpretability*
+- For $k = 1, 2, \dots, p$ (each possible number of predictors)
 
-  - Eliminating uninformative predictors is obviously a good thing when your goal is to tell the story of how your predictors are associated with your response.
+  - Fit __all__ $\binom{p}{k} = \frac{p!}{k!(p-k)!}$ with exactly $k$ predictors
+  
+  - Pick the best (some criteria) among these $\binom{p}{k}$ models, call it $\mathcal{M}_k$
+  
+    - Best can be up to the user: cross-validation error, highest adjusted $R^2$, etc.
+  
+
+--
+- Select a single best model from among $\mathcal{M}_0, \dots, \mathcal{M}_p$
 
 
 --
-__Remember the bias-variance tradeoff__:
+__This is not typically used in research!__
 
+- only practical for a smaller number of variables
 
+---
+
+## Remember the bias-variance tradeoff
+
+--
 $$
 {\rm MSE} = {\rm (Bias)}^2 + {\rm Variance}
 $$
 
+--
 - Introduce bias but decrease variance to improve predictions
+
+--
+
+- *Some questions*
+
+--
+
+  - How do we know that there is a _trade-off_ between Bias and Variance?
+  
+--
+
+  - How can we check that it is ${\rm (Bias)}^2$ and not ${\rm (Bias)}$ without
+  doing _any_ calcs?
 
 ---
 
 ## Shrinkage methods: Ridge regression
 
-__Remember__: linear regression estimates coefficients by minimizing:
+<!-- __Remember__: linear regression estimates coefficients by minimizing: -->
 
- $$\text{RSS} = \sum_i^n \big(Y_i - \beta_0 -  \sum_j^p \hat{\beta}_j x_{ij}\big)^2$$
+<!--  $$\text{RSS} = \sum_i^n \big(Y_i - \beta_0 -  \sum_j^p \hat{\beta}_j x_{ij}\big)^2$$ -->
 
 
 --
 __Ridge regression__ introduces a __shrinkage penalty__ $\lambda \geq 0$ by minimizing:
 
 $$\sum_i^n \big(Y_i - \beta_0 -  \sum_j^p \beta_j x_{ij}\big)^2 + \lambda \sum_j^p \beta_j^2 = \text{RSS} + \lambda \sum_j^p \beta_j^2$$
+--
+or more succinctly we want to minimize:
+$$\lVert{\mathbf{Y} - \mathbf{X} \mathbf{\beta} \rVert}_{2}^{2} + \lambda \lVert{\mathbf{\beta} \rVert}_{2}^{2}$$
 
 --
 - as $\lambda$ increases $\Rightarrow$ flexibility of models decreases
@@ -120,6 +172,11 @@ But we may believe there is a __sparse__ solution
 __Lasso__ enables variable selection with $\lambda$ by minimizing:
 
 $$\sum_i^n \big(Y_i - \beta_0 -  \sum_j^p \beta_j X_{ij}\big)^2 + \lambda \sum_j^p\vert  \beta_j \vert = \text{RSS} + \lambda \sum_j^p \vert \beta_j \vert$$
+
+--
+or more succinctly we want to minimize:
+$$\lVert{\mathbf{Y} - \mathbf{X} \mathbf{\beta} \rVert}_{2}^{2} + \lambda \lVert{\mathbf{\beta} \rVert}_{1}$$
+
 
 - Lasso uses an $\ell_1$ ("ell 1") penalty
 
@@ -213,9 +270,9 @@ $$\tilde{x}_{ij} = \frac{x_{ij} - \bar{x}_j}{s_{x,j}}$$
 
 Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2020
 
-```{r, warning = FALSE, message = FALSE}
+```{r message=FALSE, warning=FALSE}
 library(tidyverse)
-nfl_teams_data <- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/regression_projects/nfl_team_season_summary.csv")
+nfl_teams_data <- read_csv("https://shorturl.at/uwAV2")
 nfl_model_data <- nfl_teams_data %>%
   mutate(score_diff = points_scored - points_allowed) %>%
   # Only use rows with air yards
@@ -330,7 +387,7 @@ tidy_ridge_coef %>%
   theme_bw()
 ```
 
-- Could easily add color with legend for variables...
+<!-- - Could easily add color with legend for variables... -->
 
 ]
 .pull-right[
