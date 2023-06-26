@@ -22,7 +22,7 @@ Machine Learning,Supervised Learning,2023-06-20,Model assessment vs selection,,c
 Machine Learning,Supervised Learning,2023-06-22,Linear regression,,class/13-class,,
 Machine Learning,Supervised Learning,2023-06-23,Introduction to variable selection,,class/14-class,,
 Machine Learning,Supervised Learning,2023-06-26,Regularization,,class/15-class,,
-Machine Learning,Supervised Learning,2023-06-26,Demo-lab: Linear regression,,,,
+Machine Learning,Supervised Learning,2023-06-26,Demo-lab: Linear regression,,,assignment/demo-lab-06,
 Machine Learning,Supervised Learning,2023-06-27,Supervised and unsupervised learning with Tidymodels,,,,
 Machine Learning,Supervised Learning,2023-06-28,Dimension Reduction: Principal components analysis (PCA),,,,
 Machine Learning,Supervised Learning,2023-06-29,Principal component regression and partial least squares,,,,
