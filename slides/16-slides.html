@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Machine Learning with R</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Machine Learning with R
+]
+.subtitle[
+## tidymodels
+]
+.date[
+### June 27th, 2023
+]
+
+---
+
+
+
+
+
+
+## So far...
+
+__Exploratory data analysis__: Wrangling, visualization `\(\rightarrow\)` tidyverse
+
+__Unsupervised learning__: K-means clustering (stats), Kmeans++ (flexclust), Hierarchical clustering (stats), minimax linkage (protoclust), Gaussian mixture models (mclust)
+
+__Linear regression__: simple/multiple linear regression (stats), ridge / lasso / elastic net (glmnet)
+
+--
+
+Within supervised learning we've only really seen two methods: `lm` and `glmnet`, but they've already had differences:
+
+--
+- x and y together? separate?
+- cross-validation?
+
+---
+
+## R is free, open-source, and user-contributed
+
+__R__ comes out of the __S__ programming language (Bell Labs)... object oriented!
+
+But many (if not most) of the things we do in __R__ come from "packages" rather than from "base R", which includes the `base` and `stats` packages
+
+__Packages__ are created by users:
+
+.pull-left[
+
+__Pro__
+
+- You come up with a method, you can code it right up!
+
+- Then I can use your code to fit a model!
+
+]
+
+.pull-right[
+
+__Con__
+
+- Say what? `G` = `k` = `centers`? nzero?
+
+- Many ways to do one thing may not be ideal
+
+]
+
+---
+
+## Into the tidy~~verse~~ models
+
+.pull-left[
+
+Like the __tidyverse__, __tidymodels__ is a suite of packages dedicated to fitting and using models in a _tidy_ way, enabling interaction with the other packages we've used so far (`dplyr`, `ggplot`, etc.)
+
+- __parsnip__ simplifies model parameters and interfaces
+
+- __recipes__ enables feature engineering and preprocessing
+
+- __workflows__ allow you to store and execute steps together
+
+- __tune__ optimizes hyperparameters
+
+(Also like the tidyverse, tidymodels has fantastic [documentation](https://www.tidymodels.org/))
+
+]
+
+.pull-right[
+
+&lt;img src="https://rviews.rstudio.com/2020/04/21/the-case-for-tidymodels/tidymodels.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+---
+
+## Data: NFL teams summary
+
+Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2021
+
+
+```r
+library(tidyverse)
+nfl_teams_data &lt;- read_csv("https://shorturl.at/uwAV2")
+nfl_model_data &lt;- nfl_teams_data %&gt;%
+  mutate(score_diff = points_scored - points_allowed) %&gt;%
+  filter(season &gt;= 2006) %&gt;%
+  dplyr::select(-wins, -losses, -ties, -points_scored, -points_allowed, -season, -team)
+head(nfl_model_data)
+```
+
+```
+## # A tibble: 6 × 49
+##   offense_completion_percentage offense_total_yards_gai…¹ offense_total_yards_…²
+##                           &lt;dbl&gt;                     &lt;dbl&gt;                  &lt;dbl&gt;
+## 1                         0.561                      3662                   1350
+## 2                         0.480                      2371                   2946
+## 3                         0.612                      3435                   1667
+## 4                         0.564                      2718                   1555
+## 5                         0.569                      3264                   1674
+## 6                         0.525                      3286                   1940
+## # ℹ abbreviated names: ¹​offense_total_yards_gained_pass,
+## #   ²​offense_total_yards_gained_run
+## # ℹ 46 more variables: offense_ave_yards_gained_pass &lt;dbl&gt;,
+## #   offense_ave_yards_gained_run &lt;dbl&gt;, offense_total_air_yards &lt;dbl&gt;,
+## #   offense_ave_air_yards &lt;dbl&gt;, offense_total_yac &lt;dbl&gt;,
+## #   offense_ave_yac &lt;dbl&gt;, offense_n_plays_pass &lt;dbl&gt;,
+## #   offense_n_plays_run &lt;dbl&gt;, offense_n_interceptions &lt;dbl&gt;, …
+```
+
+---
+
+## Using `glmnet`
+
+Divide data into matrix of predictors and vector of response
+
+
+```r
+model_x &lt;- model.matrix(score_diff ~ ., nfl_model_data)[, -1]
+model_y &lt;- nfl_model_data$score_diff
+```
+
+Fit linear regression models:
+
+.pull-left[
+
+
+```r
+# Base R
+init_reg_base &lt;- lm(score_diff ~ ., 
+                    nfl_model_data)
+```
+
+
+]
+
+.pull-right[
+
+```r
+library(glmnet)
+init_ridge_glmnet &lt;- glmnet(model_x, model_y, 
+                          alpha = 0)
+```
+
+]
+
+--
+
+Let's leave all that behind...
+
+
+```r
+library(tidymodels)
+```
+
+
+---
+
+## Instead, specify the model with `parsnip`
+
+1. Pick a __model__: in this case, all we need is linear regression, but we could be using e.g. random forests
+
+2. Set the __engine__: which package should we look to for this method?
+
+3. Set the __mode__ (if needed): are we performing classification or regression?
+
+--
+
+This lets us use a similar syntax with many, many different kinds of models by just pointing to their own implementation
+
+According to the tidymodels [website](https://www.tidymodels.org/find/parsnip/), `parsnip` currently supports 119 types of models and engines!
+
+---
+
+## For today...
+
+`linear_reg()` specifies a model that uses linear regression
+
+
+```r
+linear_reg(
+  mode = "regression",  # this is the "default" mode, but could change
+  engine = "lm",        # default is to use base R linear model
+  penalty = NULL,       # default is no penalty term... OLS
+  mixture = NULL        # default is no mixture of penalties (patience, grasshopper)
+)
+```
+
+
+--
+We could also use __pipes__ to specify different arguments here
+
+
+```r
+linear_reg() %&gt;% 
+  set_mode(mode = "regression") %&gt;% 
+  set_engine(engine = "lm")
+```
+
+--
+Save this model specification in an object to use later
+
+```r
+lm_spec &lt;- linear_reg()
+```
+
+---
+
+## Train a model based on your specifications: `fit()`
+
+.pull-left[
+
+`fit()` returns a parsnip model fit on the data, using your model form
+
+
+```r
+simple_parsnip &lt;- lm_spec %&gt;% 
+  fit(    # formula for the model
+    score_diff ~ offense_n_plays_run,  
+    data = nfl_model_data
+  )
+simple_parsnip
+```
+
+```
+## parsnip model object
+## 
+## 
+## Call:
+## stats::lm(formula = score_diff ~ offense_n_plays_run, data = data)
+## 
+## Coefficients:
+##         (Intercept)  offense_n_plays_run  
+##           -323.5461               0.7705
+```
+
+]
+
+.pull-right[
+
+Compare with `lm()` output
+
+
+```r
+simple_base &lt;- lm(score_diff ~ 
+                    offense_n_plays_run,
+   data = nfl_model_data)
+simple_base
+```
+
+```
+## 
+## Call:
+## lm(formula = score_diff ~ offense_n_plays_run, data = nfl_model_data)
+## 
+## Coefficients:
+##         (Intercept)  offense_n_plays_run  
+##           -323.5461               0.7705
+```
+
+]
+
+---
+
+.pull-left[
+
+## Generate predictions
+
+Just like with a linear model object, we can get predictions using `predict()`
+
+
+```r
+preds &lt;- predict(simple_parsnip, 
+        new_data = nfl_model_data)
+head(preds)
+```
+
+```
+## # A tibble: 6 × 1
+##   .pred
+##   &lt;dbl&gt;
+## 1 -6.12
+## 2 84.8 
+## 3 20.1 
+## 4 -2.26
+## 5 -9.20
+## 6 48.6
+```
+
+But with `parsnip` models, this returns a tibble rather than a vector
+
+
+]
+
+.pull-right[
+
+## Assess model using RMSE
+
+`yardstick` package has its own `rmse()` function!
+
+
+```r
+nfl_lm_mod_assess &lt;- simple_parsnip %&gt;% 
+  predict(new_data = nfl_model_data) %&gt;% 
+  mutate(obs_score_diff =
+           nfl_model_data$score_diff)
+
+rmse(data = nfl_lm_mod_assess,
+     truth = obs_score_diff,
+     estimate = .pred)
+```
+
+```
+## # A tibble: 1 × 3
+##   .metric .estimator .estimate
+##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+## 1 rmse    standard        94.6
+```
+
+]
+
+---
+
+## Which kind of error was that?
+
+--
+__Training error!__ We predicted based on the same data we used to fit the model
+
+--
+
+But tidymodels makes it really easy to compare train vs. test error as well...
+
+--
+Construct a train-test split using `initial_split()`
+
+```r
+set.seed(1234)
+nfl_split &lt;- initial_split(nfl_model_data, 
+                           prop = 0.75)  # 3/4 split is default but could change
+nfl_split
+```
+
+```
+## &lt;Training/Testing/Total&gt;
+## &lt;360/120/480&gt;
+```
+
+Recover the training and test sets using `training()` and `testing()`
+
+```r
+nfl_train &lt;- training(nfl_split)
+nfl_test &lt;- testing(nfl_split)
+```
+
+---
+
+## Fit and assess based on holdout performance
+
+
+```r
+simple_train &lt;- lm_spec %&gt;% 
+  fit(score_diff ~ offense_n_plays_run, nfl_train)
+
+predict(simple_train, new_data = nfl_test) %&gt;% 
+  mutate(obs_score_diff = nfl_test$score_diff) %&gt;% 
+  rmse(truth = obs_score_diff, estimate = .pred)
+```
+
+```
+## # A tibble: 1 × 3
+##   .metric .estimator .estimate
+##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+## 1 rmse    standard        95.7
+```
+--
+
+Fantastic, we've determined that the test error was greater than the training error.
+
+But this was just for simple linear regression...
+
+---
+
+## Simple `\(\rightarrow\)` multiple linear regression
+
+All we need to do is specify more variables in our formula
+
+
+```r
+two_var_parsnip &lt;- lm_spec %&gt;% 
+  fit(    # formula for the model
+*   score_diff ~ offense_n_plays_run +
+*     offense_n_plays_pass,
+    data = nfl_train
+  )
+
+predict(two_var_parsnip, new_data = nfl_test) %&gt;% 
+  mutate(obs_score_diff = nfl_test$score_diff) %&gt;% 
+  rmse(truth = obs_score_diff, estimate = .pred)
+```
+
+```
+## # A tibble: 1 × 3
+##   .metric .estimator .estimate
+##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+## 1 rmse    standard        95.0
+```
+
+--
+But this only used one train-test split? What if I want cross-validation?
+
+---
+
+## `vfold_cv()`
+
+Rather than using a simple train-test split, assign observations to one of ten folds
+
+Then, fit the model using `fit_resamples()`
+
+
+```r
+set.seed(52)
+folds &lt;- vfold_cv(nfl_model_data, v = 10) 
+two_var_cv &lt;- lm_spec %&gt;% 
+  fit_resamples(score_diff ~ offense_n_plays_run + 
+                  offense_n_plays_pass, 
+                folds)
+```
+This gives us a really big model object, with performance metrics on all the folds, which we can view using `collect_metrics()`
+
+```r
+collect_metrics(two_var_cv)
+```
+
+```
+## # A tibble: 2 × 6
+##   .metric .estimator   mean     n std_err .config             
+##   &lt;chr&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
+## 1 rmse    standard   93.4      10  2.32   Preprocessor1_Model1
+## 2 rsq     standard    0.168    10  0.0285 Preprocessor1_Model1
+```
+
+---
+
+## But why tho???
+
+## Didn't we do all this the other day???
+--
+
+
+&lt;img src="https://media.tenor.com/Jj6TNPO2w1QAAAAd/stranger-things-eddie-munson.gif" style="display: block; margin: auto;" /&gt;
+
+---
+
+## What we did the other day:
+
+With `glmnet`, we could fit lasso and ridge regression models with 10-fold cross-validation
+
+`cv.glmnet` would determine the best value for `\(\lambda\)`, given a value for `\(\alpha\)`, but if we wanted to use __*elastic net*__ we had to code the CV ourselves:
+
+
+```r
+set.seed(2020)
+fold_id &lt;- sample(rep(1:10, length.out = nrow(model_x)))
+
+cv_en_25 &lt;- cv.glmnet(model_x, model_y, foldid = fold_id, alpha = .25)
+cv_en_50 &lt;- cv.glmnet(model_x, model_y, foldid = fold_id, alpha = .5)
+cv_ridge &lt;- cv.glmnet(model_x, model_y, foldid = fold_id, alpha = 0)
+cv_lasso &lt;- cv.glmnet(model_x, model_y, foldid = fold_id, alpha = 1)
+
+which.min(c(min(cv_en_25$cvm), min(cv_en_50$cvm), min(cv_ridge$cvm), min(cv_lasso$cvm)))
+```
+
+--
+
+With `tidymodels`, specifically `tune`, we can do this all in one go!
+
+---
+
+## From multiple linear regression to regularized regression...
+
+Add a penalization term!
+
+Remember our initial model form using `parsnip`? All we need to do is modify the arguments for `engine`, `penalty`, and `mixture`!
+
+
+```r
+ridge_example &lt;- linear_reg(
+  mode = "regression",  
+  engine = "glmnet",        # instead of `lm` change to `glmnet`
+  penalty = 0.1,            # set lambda here
+  mixture = 0               # "mixture" == "alpha"
+)
+```
+
+--
+
+`penalty` = "lambda"
+
+`mixture` = "alpha" from yesterday 
+
+--
+
+But you picked those penalty and mixture values yourself!?
+
+---
+
+## `tune` picks the best for you!
+
+
+```r
+elastic_net_spec &lt;- linear_reg(
+  mode = "regression",  
+  engine = "glmnet",
+* penalty = tune(),
+* mixture = tune()
+)
+```
+
+`tune()` acts like a placeholder when specifying the hyperparameters for the model
+
+#### Specify values to try using the `dials` package
+
+I want evenly spaced values for the penalty term `\(\lambda\)` and the mixture term `\(\alpha\)`, and I want five of each:
+
+
+```r
+elnet_grid &lt;- grid_regular(penalty(), mixture(),
+                           levels = 5)
+```
+---
+
+## Model tuning with a grid
+
+First, create the folds as before
+
+
+```r
+set.seed(52)
+folds &lt;- vfold_cv(nfl_model_data, v = 10)
+```
+
+--
+Then, fit models using `tune_grid()` to use each combination of penalty and mixture values
+
+```r
+elnet_resample &lt;- tune_grid(
+  elastic_net_spec,
+  score_diff ~ .,
+  resamples = folds,
+  grid = elnet_grid
+)
+```
+
+---
+
+## Which models (which hyperparameter values) performed best?
+
+.pull-left[
+
+```r
+elnet_resample %&gt;%
+  collect_metrics() %&gt;%
+  filter(.metric == "rmse") %&gt;% 
+  mutate(mixture = factor(mixture)) %&gt;%
+  ggplot(aes(x = penalty, 
+             y = mean, 
+             color = mixture)) +
+  geom_line(size = 1.5, alpha = 0.6) +
+  geom_point(size = 2) +
+  scale_x_log10(labels = 
+                  scales::label_number()) +
+  theme_bw()
+```
+
+
+]
+
+.pull-right[
+&lt;img src="16-slides_files/figure-html/unnamed-chunk-26-1.png" width="90%" /&gt;
+
+
+]
+
+---
+
+## Picking the best one...
+
+
+```r
+best_elnet &lt;- elnet_resample %&gt;% 
+* select_best("rmse")
+
+final_elnet &lt;- linear_reg(
+  engine = "glmnet", penalty = best_elnet$penalty, mixture = best_elnet$mixture
+) %&gt;% 
+  fit(score_diff ~ ., data = nfl_train)
+```
+
+So then we can use this model to generate predictions, etc.
+
+--
+
+Note: That last step would have been even easier if we had used a __recipe__ and a __workflow__
+
+---
+
+## Recipes and Workflows
+
+Two more packages within tidymodels that allow you to keep track of and recreate your data wrangling and model specification process
+
+Recipe = `formula` + `data`
+
+- Can specify "roles" for different variables, e.g. tell that a particular column acts as an ID
+
+- Turn a factor variable into dummy variables, e.g. what if we wanted a predictor for each team in the NFL?
+
+--
+
+Workflow = `model` + `recipe`
+
+- Can combine different preprocessing setups (recipes) with different model specs (from parsnip) to compare
+
+- Stores all model results, predictions, etc. in an object where they can be __extracted__
+
+--
+
+All in all, __tidymodels__ allows for great flexibility, while minimizing headaches
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

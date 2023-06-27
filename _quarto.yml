@@ -117,8 +117,8 @@ website:
                   file: class/14-class.qmd
                 - text: "15: Regularization"
                   file: class/15-class.qmd
-            #     - text: "16: Tidymodels"
-            #       file: class/16-class.qmd
+                - text: "16: Tidymodels"
+                  file: class/16-class.qmd
             #     - text: "17: Dimension reduction: PCA"
             #       file: class/17-class.qmd
             #     - text: "18: PCR and PLS"
