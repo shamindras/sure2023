@@ -1,6 +1,6 @@
 ---
-title: "Generalized linear models (GLMs)"
-date: "2023-06-28"
+title: "Data Engineering: **Embracing** the UNIX philosophy - Part 1"
+date: "2023-06-27"
 ---
 
 ```{r slides-videos, echo=FALSE, include=FALSE}
@@ -16,12 +16,9 @@ also click in the slides and navigate through them with your left and right
 arrow keys, for convenience.
 
 ```{r show-slide-tabs, echo=FALSE, results="asis"}
-slide_buttons("/slides/17-slides", output_type = "pdf")
+slide_buttons("/data_eng/_files/03-slides-data-eng", output_type = "pdf")
 ```
-{{\< downloadthis ../slides/17-slides.Rmd
-dname="17-slides" label="Download Rmd of all slides" icon="file-earmark"
-type="success" \>}}
 
 ```{=html}
-<iframe width="780" height="500" src="/slides/17-slides.pdf" title="Lecture 1"></iframe>
+<iframe width="780" height="500" src="/data_eng/_files/03-slides-data-eng.pdf" title="Lecture 2"></iframe>
 ```

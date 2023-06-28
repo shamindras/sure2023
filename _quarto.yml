@@ -119,14 +119,12 @@ website:
                   file: class/15-class.qmd
                 - text: "16: Tidymodels"
                   file: class/16-class.qmd
-            #     - text: "17: Dimension reduction: PCA"
-            #       file: class/17-class.qmd
-            #     - text: "18: PCR and PLS"
-            #       file: class/18-class.qmd
-            #     - text: "19: GLMs"
-            #       file: class/19-class.qmd
+                - text: "17: GLMs"
+                  file: class/17-class.qmd
             #     - text: "20: Logistic regression"
             #       file: class/20-class.qmd
+            #     - text: "17: Dimension reduction: PCA"
+            #       file: class/17-class.qmd
             #     - text: "21: Nonparametric regression"
             #       file: class/21-class.qmd
             #     - text: "22: Decision Trees"

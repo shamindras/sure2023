@@ -1,7 +1,7 @@
 ---
-title: "Dimension Reduction"
-subtitle: "Principal components analysis (PCA)"
-date: "June 29th, 2021"
+title: "Supervised Learning"
+subtitle: "Generalized linear models (GLMs)"
+date: "June 28th, 2023"
 output:
   xaringan::moon_reader:
     lib_dir: "libs"
@@ -19,11 +19,12 @@ output:
       navigation:
         scroll: false
 editor_options:
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
 library(xaringanthemer)
+library(tidyverse)
 style_mono_accent(base_color = "#cc002b")
 ```
 
@@ -31,478 +32,410 @@ style_mono_accent(base_color = "#cc002b")
 knitr::opts_chunk$set(fig.retina = 3, warning = FALSE, message = FALSE)
 ```
 
-## What is the goal of dimension reduction?
+## Probability distributions
 
-We have $p$ variables (columns) for $n$ observations (rows) __BUT__ which variables are __interesting__?
+A __distribution__ is a mathematical function $f(x \vert \theta)$ where
 
---
-
-Can we find a smaller number of dimensions that captures the __interesting__ structure in the data?
-
-  - Could examine all pairwise scatterplots of each variable - tedious, manual process
-
-  - Last week: clustered variables based on correlation
-  
---
-
-  - Can we find a combination of the original $p$ variables?
+- $x$ may take on continuous or discrete values over the _domain_ (i.e. all possible inputs) of $f(x \vert \theta)$
 
 
 --
+- $\theta$ is a set of parameters governing the shape of the distribution
+  - e.g. $\theta = \{\mu,\sigma^2\}$ for a [Normal / Gaussian](https://en.wikipedia.org/wiki/Normal_distribution) distribution)
 
-__Dimension reduction__: 
+- the $\vert$ symbol means that the shape of the distribution is *conditional* on the values of $\theta$
 
-- Focus on reducing the dimensionality of the feature space (i.e., number of columns), 
 
-- While __retaining__ most of the information / __variability__ in a lower dimensional space (i.e., reducing the number of columns)
+--
+- $f(x \vert \theta) \geq 0$ for all $x$
+
+- $\sum_x f(x \vert \theta) = 1$ or $\int_x f(x \vert \theta) = 1$.
+
+
+--
+We use $f$ to denote the distribution for its:
+
+- __probability density function (PDF)__ if $x$ is continuous
+
+- __probability mass function (PMF)__ if $x$ is discrete
 
 ---
 
-## [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis)
+## Probability distribution examples: [Normal distribution](https://en.wikipedia.org/wiki/Normal_distribution)
 
-```{r out.width='110%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("https://bradleyboehmke.github.io/HOML/images/pcr-steps.png")
-```
+.pull-left[
+Normal distribution PDF (`dnorm`):
 
+$$f(x \vert \mu, \sigma^2)=\frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^{2}}$$
+- we write $X \sim N(\mu, \sigma^2)$
 
----
+- __standard Normal__: $N(0, 1)$
 
-## [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis)
+- can plot density curves with __stat_function()__ 
 
-- PCA explores the __covariance__ between variables, and combines variables into a smaller set of __uncorrelated__ variables called __principal components (PCs)__
-
-- PCs are __weighted__, linear combinations of the original variables
-
-  - Weights reveal how different variables are ___loaded___ into the PCs
-
-- We want a __small number of PCs__ to explain most of the information / variance in the data
-
---
-
-__First principal component__:
-
-$$Z_1 = \phi_{11} X_1 + \phi_{21} X_2 + \dots + \phi_{p1} X_p$$
-
---
-
-  - $\phi_{j1}$ are the weights indicating the contributions of each variable $j \in 1, \dots, p$
-  
-  - Weights are normalized $\sum_{j=1}^p \phi_{j1}^2 = 1$
-  
-  - $\phi_{1} = (\phi_{11}, \phi_{21}, \dots, \phi_{p1})$ is the __loading vector__ for PC1
-
---
-  
-  - $Z_1$ is a linear combination of the $p$ variables that has the __largest variance__
-
----
-
-## [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis)
-
-__Second principal component__:
-
-$$Z_2 = \phi_{12} X_1 + \phi_{22} X_2 + \dots + \phi_{p2} X_p$$
-
-  - $\phi_{j2}$ are the weights indicating the contributions of each variable $j \in 1, \dots, p$
-  
-  - Weights are normalized $\sum_{j=1}^p \phi_{j1}^2 = 1$
-  
-  - $\phi_{2} = (\phi_{12}, \phi_{22}, \dots, \phi_{p2})$ is the __loading vector__ for PC2
-  
-  - $Z_2$ is a linear combination of the $p$ variables that has the __largest variance__
-  
-    - __Subject to constraint it is uncorrelated with $Z_1$__ 
-    
---
-
-We repeat this process to create $p$ principal components
-
----
-
-## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
-
-```{r out.width='50%', echo = FALSE, fig.align='center'}
-# Ensure reproducibility by setting random number seed
-set.seed(123) 
-plot_data <- tibble("x" = rnorm(50, mean = 100, sd = 20)) %>%
-  mutate(y =  0.8 * x + rnorm(50, mean = 0, sd = 10))
-basic_scatter <- ggplot(plot_data) +
-  geom_point(aes(x, y), color = "black")+
-  coord_equal() +
+```{r draw-Normal, eval = FALSE}
+tibble(x = c(-5, 5)) %>%
+  ggplot(aes(x)) +
+  stat_function(fun = dnorm, n = 101, #<< 
+                args = list(mean = 0, sd = 1)) + #<<
+  stat_function(fun = dnorm, color = "red",
+                args = list(mean = -2, 
+                            sd = sqrt(0.5))) +
   theme_bw()
-basic_scatter
 ```
+
+
+]
+.pull-right[
+
+```{r ref.label = 'draw-Normal', echo = FALSE}
+
+```
+
+
+]
 
 ---
 
-## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
+## Probability distribution examples: [binomial distribution](https://en.wikipedia.org/wiki/Binomial_distribution)
 
-```{r out.width='50%', echo = FALSE, fig.align='center'}
-#fit the model
-line1 <- lm(y ~ x, plot_data)$coef
-#extract the slope from the fitted model
-line1.slope <- line1[2]
-#extract the intercept from the fitted model
-line1.intercept <- line1[1]
-basic_scatter_yfit <- basic_scatter +
-  geom_abline(aes(slope = line1.slope, intercept = line1.intercept),
-              colour = "darkred") +
-  annotate("text", x = 75, y = 120, label = "y ~ x", color = "darkred",
-           size = 9)
-basic_scatter_yfit
+.pull-left[
+Binomial distribution PMF (`dbinom`):
+
+$$f(x \vert n, p)= \binom{n}{x} p^{x}(1-p)^{n-x}$$
+- model for the probability of $x$ successes in $n$ independent trials (`size`), each with success probability of $p$ (`prob`)
+
+- we write $X \sim \text{Binomial}(n, p)$
+
+- `R` uses `d` for both PDFs and PMFs
+
+```{r draw-binom, eval = FALSE}
+tibble(x = 0:20) %>%
+  mutate(binom1 = dbinom(x, size = 20,
+                         prob = 0.5),
+         binom2 = dbinom(x, size = 20,
+                         prob = 0.1)) %>%
+  ggplot(aes(x)) + geom_point(aes(y = binom1)) +
+  geom_point(aes(y = binom2), color = "red") +
+  theme_bw()
 ```
 
----
 
-## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
+]
+.pull-right[
 
-```{r out.width='50%', echo = FALSE, fig.align='center'}
-#fit the model
-line2 <- lm(x ~ y, plot_data)$coef
-#extract the slope from the fitted model
-line2.slope <- 1 / line2[2]
-#extract the intercept from the fitted model
-line2.intercept <- -(line2[1] / line2[2])
-basic_scatter_xyfit <- basic_scatter_yfit +
-  geom_abline(aes(slope = line2.slope, intercept = line2.intercept),
-              colour = "blue") +
-  annotate("text", x = 125, y = 55, label = "x ~ y", color = "blue",
-           size = 9)
-basic_scatter_xyfit
+```{r ref.label = 'draw-binom', echo = FALSE}
+
 ```
 
----
 
-## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
-
-```{r out.width='50%', echo = FALSE, fig.align='center'}
-pca <- prcomp(cbind(plot_data$x, plot_data$y))$rotation
-pca.slope <- pca[2,1] / pca[1,1]
-pca.intercept <- mean(plot_data$y) - (pca.slope * mean(plot_data$x))
-
-basic_scatter_xy_pca_fit <- basic_scatter_xyfit +
-  geom_abline(aes(slope = pca.slope, intercept = pca.intercept),
-              colour = "darkorange") +
-  annotate("text", x = 75, y = 90, label = "PCA", color = "darkorange",
-           size = 9)
-basic_scatter_xy_pca_fit
-```
-
----
-
-## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
-
-```{r fig.width=14, fig.height=6, echo = FALSE, fig.align='center'}
-plot_data %>%
-  #calculate the positions using the line equations:
-  mutate(yhat_line1=(x*line1.slope+line1.intercept),
-         xhat_line1=x,
-         yhat_line2=y,
-         xhat_line2=(y-line2.intercept)/line2.slope,
-         #https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
-         a=pca.slope,
-         b=-1,
-         c=pca.intercept,
-         xhat_line3=(b*(b*x-a*y)-(a*c))/((a*a)+(b*b)),
-         yhat_line3=(a*(-b*x+a*y)-(b*c))/((a*a)+(b*b)),
-         #add the slopes/intercepts to this data frame:
-         slope_line1=line1.slope,
-         slope_line2=line2.slope,
-         slope_line3=pca.slope,
-         intercept_line1=line1.intercept,
-         intercept_line2=line2.intercept,
-         intercept_line3=pca.intercept
-         )%>% 
-  #drop intermediate variables
-  select(-c(a,b,c)) %>%
-  pivot_longer(yhat_line1:intercept_line3, names_to = "key", values_to = "value") %>%
-  #transpose to a long form
-  #gather(key="key",value="value",-c(x,y)) %>% 
-  # have "yhat_line1", want two colums of "yhat" "line1"
-  separate(key,c("type", "line"), "_") %>% 
-  #then transpose to be fatter, so we have cols for xhat, yhat etc
-  pivot_wider(names_from = "type", values_from = "value") %>%
-  #spread(key="type",value="value") %>%
-  #relable the lines with more description names, and order the factor for plotting:
-  mutate(line=case_when(
-           line=="line1" ~ "y ~ x",
-           line=="line2" ~ "x ~ y",
-           TRUE ~ "PCA"
-         ),
-         line = fct_relevel(line, "y ~ x", "x ~ y", "PCA")) %>% 
-  ggplot() +
-  geom_point(aes(x = x, y = y, color = line)) +
-  geom_abline(aes(slope = slope, intercept = intercept, color = line)) +
-  geom_segment(aes(x = x, y = y, xend = xhat, yend = yhat, color = line)) +
-  facet_wrap(~ line, ncol = 3) +
-  scale_color_manual(values = c("darkred", "blue", "darkorange")) +
-  theme_bw() +
-  theme(strip.background = element_blank(),
-        legend.position = "none",
-        strip.text = element_text(size = 16))
-```
-
----
-
-## Searching for variance in orthogonal directions
-
-```{r out.width='60%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("https://bradleyboehmke.github.io/HOML/15-pca_files/figure-html/create-pca-image-1.png")
-```
+]
 
 
 ---
 
+## Distributions and regression
 
-## PCA: [__singular value decomposition (SVD)__](https://en.wikipedia.org/wiki/Singular_value_decomposition)
-
-$$
-X = U D V^T
-$$
-
-- Matrices $U$ and $V$ contain the left and right (respectively) __singular vectors of scaled matrix $X$__
-
-- $D$ is the diagonal matrix of the __singular values__
-
---
-
-- SVD simplifies matrix-vector multiplication as __rotate, scale, and rotate again__
+Why does this matter?
 
 
 --
-$V$ is called the __loading matrix__ for $X$ with $\phi_{j}$ as columns, 
+- Because linear regression, and generalized variants, __make assumptions__ about how observed data are distributed around the true regression line, conditional on a value of $x$
 
-  - $Z = X  V$ is the PC matrix
 
 --
+For simple linear regression, our goal is to estimate $E[Y \vert x]$, assuming that for every value of $x$...
 
-BONUS __eigenvalue decomposition__ (aka spectral decomposition)
 
-- $V$ are the __eigenvectors__ of $X^TX$ (covariance matrix, $^T$ means _transpose_)
+--
+- the distribution governing the possible values of $Y$ is a __Normal distribution__
 
-- $U$ are the __eigenvectors__ of $XX^T$
+  - _Note:_ capitalize $Y$ because values are __random variables__ (random samples from distribution)
 
-- The singular values (diagonal of $D$) are square roots of the __eigenvalues__ of $X^TX$ or $XX^T$
 
-- Meaning that $Z = UD$
+--
+- the __mean__ of the Normal distribution is $E[Y \vert x] = \mu(y \vert x) = \beta_0 + \beta_1 x$
+
+- the __variance__ of the Normal distribution is $\sigma^2$, which is a constant (i.e., does not vary with $x$)
+
+
+--
+- $\Rightarrow Y|x \sim N(\beta_0 + \beta_1 x, \sigma^2)$, same as before: $Y = \beta_0 + \beta_1 x + \epsilon$, where $\epsilon \sim N(0, \sigma^2)$
+
+
+--
+However, just because these assumptions are made in simple linear regression doesn't mean that all linear regression-related models utilize the same assumptions. __They don't__. When we step back from these assumptions, we enter the realm of __generalized linear models (GLMs)__.
 
 ---
 
-## Eigenvalues solve time travel?
+## Maximum likelihood estimation
+
+In generalized regression, we
+
+1. assume a (family of) distribution(s) that govern observed response values $Y$, and
 
 
-```{r out.width='70%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("https://thumbs.gfycat.com/RealisticFragrantHerculesbeetle-size_restricted.gif")
-```
+--
+2. estimate the parameters $\theta$ of that distribution.
 
+
+--
+Estimation is done by maximizing the __likelihood function__:
+$$\mathcal{L} = \prod_{i=1}^n f(Y_i \vert \theta)$$
+
+to find the __maximum likelihood estimators (MLEs)__ (typically maximize $\mathcal{l} = \log{\cal L}$, the __log-likelihood__)
+
+
+--
+Leaving many details under the rug:
+
+- the maximum is the point at which the derivative of the likelihood function is zero
+
+- you don't need to check the second derivative: wherever the derivative equals zero, it's a maximum value, not a minimum value
 
 ---
 
-## Probably not... but they guide dimension reduction
+## MLE for regression
 
-We want to choose $p^* < p$ such that we are explaining variation in the data
+__Determining the value of $\theta$ that achieves the maximum likelihood can be difficult__
+
 
 --
+It may require __numerical optimization__ 
+  - wherein the computer, using an algorithm, searches over possible values of $\theta$ to find the optimal one
 
-Eigenvalues $\lambda_j$ for $j \in 1, \dots, p$ indicate __the variance explained by each component__
 
-  - $\sum_j^p \lambda_j = p$, meaning $\lambda_j \geq 1$ indicates $\text{PC}j$ contains at least one variable's worth in variability
-  
-  - $\lambda_j / p$ equals proportion of variance explained by $\text{PC}j$
-  
-  - Arranged in descending order so that $\lambda_1$ is largest eigenvalue and corresponds to PC1
-  
 --
-  
-  - Can compute the cumulative proportion of variance explained (CVE) with $p^*$ components:
-  
-$$\text{CVE}_{p^*} = \frac{\sum_j^{p*} \lambda_j}{p}$$
+For linear regression, ${\cal L}$ can be maximized analytically:
 
-Can use [__scree plot__](https://en.wikipedia.org/wiki/Scree_plot) to plot eigenvalues and guide choice for $p^* <p$ by looking for "elbow" (rapid to slow change)
+$$\hat{\boldsymbol{\beta}} = (\boldsymbol{X} ^T \boldsymbol{X})^{-1}\boldsymbol{X}^T\boldsymbol{Y}$$
+
+- the $\hat{\boldsymbol{\beta}}$ estimates that minimize the __residual sum of squares (RSS)__ are the MLEs!
+
+- Unbiased estimate for $\hat{\sigma}^2$ is $= \frac{RSS}{n - (p + 1)}$
+
+- This enables us to perform statistical inference:
+
+  - Hypothesis testing for coefficients from before
+  
+  - Confidence intervals and prediction intervals
 
 ---
 
-## Example data: NFL teams summary
+## Gapminder data
 
-Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2020
+Health and income outcomes for 184 countries from 1960 to 2016 from the famous [Gapminder project](https://www.gapminder.org/data)
 
-```{r, warning = FALSE, message = FALSE}
+.pull-left[
+
+```{r load-data, warning = FALSE, message = FALSE}
 library(tidyverse)
-nfl_teams_data <- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/regression_projects/nfl_team_season_summary.csv")
-nfl_model_data <- nfl_teams_data %>%
-  mutate(score_diff = points_scored - points_allowed) %>%
-  # Only use rows with air yards
-  filter(season >= 2006) %>%
-  dplyr::select(-wins, -losses, -ties, -points_scored, -points_allowed, -season, -team)
-```
-
----
-
-## NFL PCA example
-
-Use the `prcomp` function (uses SVD) for PCA on __centered__ and __scaled__ data
-
-```{r}
-model_x <- as.matrix(dplyr::select(nfl_model_data, -score_diff))
-pca_nfl <- prcomp(model_x, center = TRUE, scale = TRUE) #<<
-summary(pca_nfl)
+library(dslabs)
+clean_gapminder <- as_tibble(gapminder) %>%
+  filter(year == 2011, !is.na(gdp)) %>%
+  mutate(log_gdp = log(gdp))
+init_lm <- lm(life_expectancy ~ log_gdp, #<<
+              data = clean_gapminder) #<<
 ```
 
 
+- `geom_smooth()` displays __confidence intervals__ for the regression line
+
+```{r conf-int, eval = FALSE}
+lm_plot <- clean_gapminder %>%
+  ggplot(aes(x = log_gdp, #<<
+             y = life_expectancy)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm") + #<<
+  theme_bw() +
+  labs(x = "log(GDP)", y = "Life expectancy")
+lm_plot
+```
+
+]
+.pull-right[
+```{r, ref.label='conf-int', echo = FALSE, fig.height=5, fig.width=6,fig.align="center"}
+
+```
+
+]
+
+
 ---
 
-## Proportion of variance explained
+## Confidence intervals versus prediction intervals
 
-`prcomp$sdev` corresponds to the singular values, i.e., $\sqrt{\lambda_j}$, what is `pca_nfl$sdev^2 / ncol(model_x)`?
+Regression __confidence intervals__ are based on standard errors for the estimated regression line at $x^*$:
+
+$$SE_{\text{line}}\left(x^{*}\right)=\hat{\sigma} \cdot \sqrt{\frac{1}{n}+\frac{\left(x^{*}-\bar{x}\right)^{2}}{\sum_{i=1}^{n}\left(x_{i}-\bar{x}\right)^{2}}}$$
 
 --
 
-Can use the `broom` package easily tidy `prcomp` summary for plotting
+Regression __prediction intervals__ add the variance of a __single predicted value__ $\sigma^2$:
+
+$$SE_{\text{pred}}\left(x^{*}\right)=\hat{\sigma} \cdot \sqrt{1 + \frac{1}{n}+\frac{\left(x^{*}-\bar{x}\right)^{2}}{\sum_{i=1}^{n}\left(x_{i}-\bar{x}\right)^{2}}}$$
+
+--
+
+- $SE_{\text{line}}\left(x^{*}\right) \Rightarrow$ std error for the predicted AVERAGE $\hat{\beta}_0 + \hat{\beta}_1 x^*$
+
+- $SE_{\text{pred}}\left(x^{*}\right) \Rightarrow$ std error for the prediction of an observation $\hat{\beta}_0 + \hat{\beta}_1 x^* + \epsilon$
+
+--
+
+- Why does the standard error for a prediction never go to 0 as $n$ goes to $\infty$?
+
+---
+
+## Confidence intervals versus prediction intervals
+
+Generate 95% intervals with $\hat{Y}^* +/- 2 \cdot SE_{type}(x^*)$
 
 .pull-left[
-```{r plot-pve, eval = FALSE}
-library(broom)
-pca_nfl %>%
-  tidy(matrix = "eigenvalues") %>% #<< 
-  ggplot(aes(x = PC, y = percent)) +
-  geom_line() + geom_point() +
-  geom_hline(yintercept = 1 / ncol(model_x), #<<
-             color = "darkred", 
-             linetype = "dashed") +
-  theme_bw()
+```{r pred-interval, eval = FALSE}
+pred_int_data <- 
+  predict(init_lm, data = clean_gapminder, 
+          interval = "prediction",  #<<
+          level = .95) %>% #<<
+  as_tibble()  
+lm_plot +
+  geom_ribbon(data = #<<
+                bind_cols(clean_gapminder,
+                          pred_int_data),
+              aes(ymin = lwr, ymax = upr), #<<
+              color = "red", fill = NA)
 ```
 
-- Add reference line at $1/p$, _why_?
+Subtle point: both are __confidence intervals__...
 
 ]
 .pull-right[
-```{r ref.label='plot-pve', out.width='80%', echo = FALSE, fig.align='center'}
+```{r, ref.label='pred-interval', echo = FALSE,  fig.height=6,fig.width=6,fig.align="center"}
 
 ```
 
 ]
 
----
-
-## Display data in lower dimensions
-
-`prcomp$x` corresponds to the matrix of __principal component scores__, i.e., $Z = XV$
-
-.pull-left[
-
-Can `augment` dataset with PC scores for plotting
-
-  - Add team and season for context
-
-```{r pc-scores, eval = FALSE}
-pca_nfl %>%
-  augment(nfl_model_data) %>% #<<
-  bind_cols({
-    nfl_teams_data %>% 
-      filter(season >= 2006) %>%
-      dplyr::select(season, team)
-  }) %>%
-  unite("team_id", team:season, sep = "-", #<<
-        remove = FALSE) %>%
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2, 
-             color = season)) +
-  geom_text(aes(label = team_id), alpha = 0.9) +
-  scale_color_gradient(low = "purple", high = "green") +
-  theme_bw() + theme(legend.position = "bottom")
-```
-
-
-]
-.pull-right[
-
-```{r, ref.label='pc-scores',  out.width='90%', echo = FALSE, fig.align='center'}
-
-```
-
-]
 
 ---
 
-## What are the [loadings of these dimensions](https://clauswilke.com/blog/2020/09/07/pca-tidyverse-style/)?
+## Generalization example
 
-`prcomp$rotation` corresponds to the __loading matrix__, i.e., $V$
-
-.pull-left[
-
-```{r pc-loadings, eval = FALSE}
-arrow_style <- arrow(
-  angle = 20, ends = "first", type = "closed", 
-  length = grid::unit(8, "pt")
-)
-library(ggrepel)
-pca_nfl %>%
-  tidy(matrix = "rotation") %>%
-  pivot_wider(names_from = "PC", names_prefix = "PC", 
-              values_from = "value") %>%
-  mutate(stat_type = ifelse(str_detect(column, "offense"),
-                            "offense", "defense")) %>%
-  ggplot(aes(PC1, PC2)) +
-  geom_segment(xend = 0, yend = 0, arrow = arrow_style) +
-  geom_text_repel(aes(label = column, color = stat_type),
-                  size = 3) +
-  scale_color_manual(values = c("darkred", "darkblue")) +
-  theme_bw() +
-  theme(legend.position = "bottom")
-
-```
+In typical linear regression, the distribution is Normal and the domain of $Y \vert x$ is $(-\infty,\infty)$.
 
 
-]
-.pull-right[
+--
+What, however, happens if we know that
 
-```{r, ref.label='pc-loadings',  out.width='90%', echo = FALSE, fig.align='center'}
+1. the domain of observed values of the response is actually $[0,\infty]$? and
 
-```
 
-]
+--
+2. the observed values are __discrete__, with possible values 0, 1, 2, ...
+
+
+--
+__The Normal distribution doesn't hold here__
+
+- Any idea of what distribution could possibly govern $Y \vert x$?
+
+- Remember, we might not know truly how $Y \vert x$ is distributed, but any assumption we make has to fit with the limitations imposed by points 1 and 2 above
 
 ---
 
-## PCA analysis with `factoextra`
+## Generalization: Poisson regression
 
-Visualize the proportion of variance explained by each PC with [`factoextra`](http://www.sthda.com/english/wiki/factoextra-r-package-easy-multivariate-data-analyses-and-elegant-visualization)
 
-```{r, fig.align='center', fig.height=5}
-library(factoextra)
-fviz_eig(pca_nfl)
-```
+A distribution that fulfills the conditions imposed on the last slide is the [__Poisson__ distribution](https://en.wikipedia.org/wiki/Poisson_distribution), 
+
+$$f(x \vert \lambda) = \frac{\lambda^xe^{-\lambda}}{x!},\text{ where }x = 0, 1, 2, \dots$$
+
+--
+- has a single parameter $\lambda$, which is __both__ the mean __AND__ variance of the distribution
+
+  - in general the variance governs the distribution's shape
+
+
+--
+- distribution of independent event occurences in an interval, e.g. soccer goals in a match
+
+- $\lambda$ is the average number of the events in an interval
+
+
+
+--
+So, when we apply generalized linear regression in this context, we would identify the family as Poisson.
+
+But there's another step in generalization...
 
 ---
 
-## PCA analysis with `factoextra`
+## Generalization: link function
 
-Display observations with first two PC
+Start with one predictor, linear function: $\beta_0 + \beta_1 x$
 
-```{r, fig.align='center', fig.height=5}
-fviz_pca_ind(pca_nfl)
+
+--
+Range of this function is $(-\infty,\infty)$ - but for Poisson regression example, we know that $Y$ __cannot be negative__,
+
+- __We need to transform the linear function__ to be $[0,\infty)$! (We could punt and use simple linear regression, but results may not be meaningful, e.g., we predict ${\hat Y}$ to be negative!)
+
+--
+
+__There is usually no unique transformation__, but rather conventional ones
+
+- e.g., for Poisson we use the $log()$ function as the __link function__ $g()$:
+
+$$g(\lambda \vert x) = \log(\lambda \vert x) = \beta_0 + \beta_1 x$$
+
+--
+
+Given $Y$ with values limited to being either 0 or positive integers, with no upper bound, we
+
+1. assume $Y \vert x \sim \text{Poisson}(\lambda)$
+
+2. assume $\lambda \vert x = e^{\beta_0 + \beta_1 x}$ 
+
+3. use optimization to estimate $\beta_0$ and $\beta_1$ by maximizing the likelihood function
+
+---
+
+## More distributions
+
+[Gamma distribution](https://en.wikipedia.org/wiki/Gamma_distribution)
+
++ $Y \vert x$ continuous, but bounded between 0 and $\infty$
+
+```{r out.width='50%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Gamma_distribution_pdf.svg/650px-Gamma_distribution_pdf.svg.png")
 ```
 
 
 ---
 
-## PCA analysis with `factoextra`
+## More distributions
 
-Projection of variables - angles are interpreted as correlations, where negative correlated values point to opposite sides of graph
+[Beta distribution](https://en.wikipedia.org/wiki/Beta_distribution)
 
-```{r, fig.align='center', fig.height=5}
-fviz_pca_var(pca_nfl)
++ $Y \vert x$ continuous, but bounded between 0 and 1
+
+```{r out.width='50%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Beta_distribution_pdf.svg/650px-Beta_distribution_pdf.svg.png")
 ```
+
 
 ---
 
-## PCA analysis with `factoextra`
+## More distributions
 
-__Biplot__ displays both the space of observations and the space of variables 
+[Bernoulli distribution](https://en.wikipedia.org/wiki/Bernoulli_distribution)
 
-  - Arrows represent the directions of the original variables
++ $Y \vert x$ discrete, but can only take on the values 0 and 1
 
-```{r, fig.align='center', fig.height=5}
-fviz_pca_biplot(pca_nfl)
+```{r out.width='50%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Bernoulli_Distribution.PNG/650px-Bernoulli_Distribution.PNG")
 ```
+
+__Focus for Wednesday!__
 
 
