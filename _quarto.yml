@@ -121,8 +121,8 @@ website:
                   file: class/16-class.qmd
                 - text: "17: GLMs"
                   file: class/17-class.qmd
-            #     - text: "20: Logistic regression"
-            #       file: class/20-class.qmd
+                - text: "18: Logistic regression"
+                  file: class/18-class.qmd
             #     - text: "17: Dimension reduction: PCA"
             #       file: class/17-class.qmd
             #     - text: "21: Nonparametric regression"

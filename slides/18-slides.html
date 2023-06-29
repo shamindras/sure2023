@@ -3,9 +3,9 @@
   <head>
     <title>Supervised Learning</title>
     <meta charset="utf-8" />
-    <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -15,10 +15,10 @@ class: center, middle, inverse, title-slide
 # Supervised Learning
 ]
 .subtitle[
-## Principal component regression and partial least squares
+## Logistic regression
 ]
 .date[
-### July 6th, 2021
+### June 29th, 2023
 ]
 
 ---
@@ -28,330 +28,539 @@ class: center, middle, inverse, title-slide
 
 
 
-## Principal component regression (PCR)
-
-&lt;img src="https://bradleyboehmke.github.io/HOML/images/pcr-steps.png" width="50%" style="display: block; margin: auto;" /&gt;
-
----
-
-## Example data: NFL teams summary
-
-Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2020
+## The setting: [Figure 4.2 (ISLR)](http://faculty.marshall.usc.edu/gareth-james/ISL/)
 
 
-```r
-library(tidyverse)
-nfl_teams_data &lt;- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/regression_projects/nfl_team_season_summary.csv")
-nfl_model_data &lt;- nfl_teams_data %&gt;%
-  mutate(score_diff = points_scored - points_allowed) %&gt;%
-  # Only use rows with air yards
-  filter(season &gt;= 2006) %&gt;%
-  dplyr::select(-wins, -losses, -ties, -points_scored, -points_allowed, -season, -team)
-nfl_model_data
-```
-
-```
-## # A tibble: 480 × 49
-##    offense_com…¹ offen…² offen…³ offen…⁴ offen…⁵ offen…⁶ offen…⁷ offen…⁸ offen…⁹
-##            &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-##  1         0.561    3662    1350    6.40    3.28    4284    8.01    1582    4.94
-##  2         0.480    2371    2946    5.10    5.56    4698   11.3      942    4.22
-##  3         0.612    3435    1667    6.41    3.74    4082    7.88    1391    4.24
-##  4         0.564    2718    1555    5.70    3.73    3833    8.91    1243    4.62
-##  5         0.569    3264    1674    5.72    4.10    4348    8.07    1553    4.79
-##  6         0.525    3286    1940    6.12    4.02    4564    8.90    1374    4.89
-##  7         0.588    3827    1648    6.88    3.91    5064    9.76    1466    4.48
-##  8         0.565    2893    1347    5.16    3.69    3766    7.43    1533    4.84
-##  9         0.569    3838    1954    7.04    4.23    4681    9.38    1427    4.63
-## 10         0.529    2799    2167    5.78    4.58    4330    9.56    1233    4.84
-## # … with 470 more rows, 40 more variables: offense_n_plays_pass &lt;dbl&gt;,
-## #   offense_n_plays_run &lt;dbl&gt;, offense_n_interceptions &lt;dbl&gt;,
-## #   offense_n_fumbles_lost_pass &lt;dbl&gt;, offense_n_fumbles_lost_run &lt;dbl&gt;,
-## #   offense_total_epa_pass &lt;dbl&gt;, offense_total_epa_run &lt;dbl&gt;,
-## #   offense_ave_epa_pass &lt;dbl&gt;, offense_ave_epa_run &lt;dbl&gt;,
-## #   offense_total_wpa_pass &lt;dbl&gt;, offense_total_wpa_run &lt;dbl&gt;,
-## #   offense_ave_wpa_pass &lt;dbl&gt;, offense_ave_wpa_run &lt;dbl&gt;, …
-```
-
----
-
-## Implement PCR with [`pls` package](https://cran.r-project.org/web/packages/pls/vignettes/pls-manual.pdf)
-
-Similar syntax to `lm` formula but specify the number of PCs (`ncomp`)
-
-
-```r
-library(pls)
-nfl_pcr_fit &lt;- pcr(score_diff ~ ., ncomp = 2, scale = TRUE, data = nfl_model_data)
-summary(nfl_pcr_fit)
-```
-
-```
-## Data: 	X dimension: 480 48 
-## 	Y dimension: 480 1
-## Fit method: svdpc
-## Number of components considered: 2
-## TRAINING: % variance explained
-##             1 comps  2 comps
-## X             21.49    41.62
-## score_diff    84.01    87.49
-```
-
----
-
-## Tuning PCR with [`caret`](http://topepo.github.io/caret/index.html)
-
-To perform PCR __we need to tune the number of principal components__
-
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/Figure_4.2.png" width="90%" style="display: block; margin: auto;" /&gt;
+--
 .pull-left[
 
-- Tune # components in PCR with [`caret`](http://topepo.github.io/caret/index.html)
-
-- `train` with 10-fold CV using `pcr` from [`pls`](https://cran.r-project.org/web/packages/pls/vignettes/pls-manual.pdf)
-
-
-```r
-set.seed(2013)
-library(caret)
-cv_model_pcr &lt;- train(
-  score_diff ~ ., 
-  data = nfl_model_data, 
-* method = "pcr",
-  trControl = trainControl(method = "cv", number = 10),
-* preProcess = c("center", "scale"),
-  tuneLength = ncol(nfl_model_data) - 1)
-ggplot(cv_model_pcr) + theme_bw()
-```
-
-
-]
-.pull-right[
-
-&lt;img src="18-slides_files/figure-html/unnamed-chunk-3-1.png" width="90%" style="display: block; margin: auto;" /&gt;
-
-]
-
----
-
-## Tuning PCR with [`caret`](http://topepo.github.io/caret/index.html)
-
-By default returns model with minimum CV error as `finalModel`
-
-
-```r
-summary(cv_model_pcr$finalModel)
-```
-
-```
-## Data: 	X dimension: 480 48 
-## 	Y dimension: 480 1
-## Fit method: svdpc
-## Number of components considered: 43
-## TRAINING: % variance explained
-##           1 comps  2 comps  3 comps  4 comps  5 comps  6 comps  7 comps
-## X           21.49    41.62    53.04    61.70    66.63    70.79     74.5
-## .outcome    84.01    87.49    87.75    89.69    89.69    90.06     90.2
-##           8 comps  9 comps  10 comps  11 comps  12 comps  13 comps  14 comps
-## X           77.81    80.56     83.10     85.27     87.18     88.99     90.43
-## .outcome    90.31    90.32     90.66     90.82     91.03     91.05     91.12
-##           15 comps  16 comps  17 comps  18 comps  19 comps  20 comps  21 comps
-## X            91.85     93.10     94.00     94.76     95.49     96.18     96.79
-## .outcome     91.15     91.28     91.28     91.28     91.28     91.34     91.71
-##           22 comps  23 comps  24 comps  25 comps  26 comps  27 comps  28 comps
-## X            97.30     97.77     98.21     98.57     98.84     99.07     99.29
-## .outcome     91.73     91.80     91.95     91.96     92.64     92.72     92.79
-##           29 comps  30 comps  31 comps  32 comps  33 comps  34 comps  35 comps
-## X            99.47     99.61     99.74     99.85     99.88     99.91     99.94
-## .outcome     93.46     93.53     93.81     94.51     94.52     94.55     94.61
-##           36 comps  37 comps  38 comps  39 comps  40 comps  41 comps  42 comps
-## X            99.95     99.97     99.98     99.99     99.99     99.99     99.99
-## .outcome     94.79     94.80     94.82     94.82     94.83     94.83     94.89
-##           43 comps
-## X           100.00
-## .outcome     94.96
-```
-
----
-
-## Tuning PCR with [`caret`](http://topepo.github.io/caret/index.html)
-
-Modify `selectionFunction` in `train` to be the `oneSE` rule
-
-.pull-left[
-
-
-```r
-set.seed(2013)
-cv_model_pcr_onese &lt;- train(
-  score_diff ~ ., 
-  data = nfl_model_data, 
-* method = "pcr",
-  trControl = 
-    trainControl(method = "cv", number = 10,
-*                selectionFunction = "oneSE"),
-  preProcess = c("center", "scale"),
-  tuneLength = ncol(nfl_model_data) - 1)
-```
-
-]
-.pull-right[
-
-
-```r
-summary(cv_model_pcr_onese$finalModel)
-```
-
-```
-## Data: 	X dimension: 480 48 
-## 	Y dimension: 480 1
-## Fit method: svdpc
-## Number of components considered: 32
-## TRAINING: % variance explained
-##           1 comps  2 comps  3 comps  4 comps  5 comps  6 comps  7 comps
-## X           21.49    41.62    53.04    61.70    66.63    70.79     74.5
-## .outcome    84.01    87.49    87.75    89.69    89.69    90.06     90.2
-##           8 comps  9 comps  10 comps  11 comps  12 comps  13 comps  14 comps
-## X           77.81    80.56     83.10     85.27     87.18     88.99     90.43
-## .outcome    90.31    90.32     90.66     90.82     91.03     91.05     91.12
-##           15 comps  16 comps  17 comps  18 comps  19 comps  20 comps  21 comps
-## X            91.85     93.10     94.00     94.76     95.49     96.18     96.79
-## .outcome     91.15     91.28     91.28     91.28     91.28     91.34     91.71
-##           22 comps  23 comps  24 comps  25 comps  26 comps  27 comps  28 comps
-## X            97.30     97.77     98.21     98.57     98.84     99.07     99.29
-## .outcome     91.73     91.80     91.95     91.96     92.64     92.72     92.79
-##           29 comps  30 comps  31 comps  32 comps
-## X            99.47     99.61     99.74     99.85
-## .outcome     93.46     93.53     93.81     94.51
-```
-
-]
-
----
-
-## Partial least squares (PLS)
-
-__PCR is agnostic of response variable__
-
-&lt;img src="https://bradleyboehmke.github.io/HOML/images/pls-vs-pcr.png" width="80%" style="display: block; margin: auto;" /&gt;
-
----
-
-## PLS as supervised dimension reduction
-
-__First principal component__ in PCA:
-
-`$$Z_1 = \phi_{11} X_1 + \phi_{21} X_2 + \dots + \phi_{p1} X_p$$`
-
---
-
-In PLS we set `\(\phi_{j1}\)` to the coefficient from __simple linear regression__ of `\(Y\)` on each `\(X_j\)`
-
-  - Remember this slope is proportional to the correlation! `\(\widehat{\beta}_{} = r_{X,Y} \cdot \frac{s_Y}{s_X}\)`
-  
-  - Thus `\(Z_1\)` in PLS places most weight on variables strongly related to response `\(Y\)`
-
---
-
-To compute `\(Z_2\)` for PLS:
-
-  - Regress each `\(X_j\)` on `\(Z_1\)`, residuals capture signal not explained by `\(Z_1\)`
-  
-  - Set `\(\phi_{j2}\)` to the coefficient from __simple linear regression__ of `\(Y\)` on these residuals for each variable
-  
---
-
-Repeat process until all `\(Z_1, Z_2, \dots, Z_p\)` are computed (__PLS components__)
-
-Then regress `\(Y\)` on `\(Z_1, Z_2, \dots, Z_p^*\)`, where `\(p^* &lt; p\)` is a tuning parameter
-
----
-
-## Tuning PLS with [`caret`](http://topepo.github.io/caret/index.html)
-
-.pull-left[
-
-
-```r
-set.seed(2013)
-cv_model_pls &lt;- train(
-  score_diff ~ ., 
-  data = nfl_model_data, 
-* method = "pls",
-  trControl = 
-    trainControl(method = "cv", number = 10,
-                 selectionFunction = "oneSE"), 
-  preProcess = c("center", "scale"),
-  tuneLength = ncol(nfl_model_data) - 1)
-ggplot(cv_model_pls) + theme_bw()
-```
-
-Sharp contrast with PCR results!
-
-Fewer PLS components because they are guided by the response variable
-
-]
-.pull-right[
-
-&lt;img src="18-slides_files/figure-html/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /&gt;
-
-
-]
-
---
-
-_But how do we summarize variable relationships without a single coefficient?_
-
-
----
-
-## Variable importance with [`vip` package](https://cran.r-project.org/web/packages/vip/vignettes/vip-introduction.pdf)
-
-
-__Variable importance__ attempts to quantify how influential variables are in the model
-
-  - e.g., absolute value of `\(t\)`-statistic in regression
-  
---
-
-__For PLS__:  weighted sums of the absolute regression coefficients across components 
-
-  - Weights are function of reduction of RSS across the number of PLS components
-  
---
-
-.pull-left[
-
-```r
-# Check out `cv_model_pls$finalModel$coefficients`
-library(vip)
-*vip(cv_model_pls, num_features = 10,
-*   method = "model") +
-  theme_bw() 
-```
+Left: Linear regression
+- __not limited to be within [0, 1]!__
 ]
 
 .pull-right[
-&lt;img src="18-slides_files/figure-html/unnamed-chunk-8-1.png" width="576" /&gt;
+
+Right: __Logistic regression__
+- __respects the observed range of outcomes!__
 ]
 
 ---
 
-## Partial dependence plots (PDP) with [`pdp` package](https://bgreenwell.github.io/pdp/index.html)
+## Generalized linear models (GLMs) review
 
-PDPs display the change in the average predicted response as the predictor varies over their marginal distribution
+Linear regression: estimate __mean value__ of response variable `\(Y\)`, given predictor variables `\(x_1,\dots,x_p\)`:
+$$
+\mathbb{E}[Y|x] = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p
+$$
 
-  - More useful for non-linear models later on!
-  
+
+--
+In a __GLM__, we include a __link function__ `\(g\)` that transforms the linear model:
+
+$$
+g(\mathbb{E}[Y|x]) = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p
+$$
+
+- Use `\(g\)` to reduce the range of possible values for `\(\mathbb{E}[Y \vert x]\)` from `\((-\infty,\infty)\)` to, e.g., `\([0,1]\)` or `\([0,\infty)\)`, etc. 
+
+
+--
+In a GLM you specify a __probability distribution family__ that governs the observed response values
+
+--
+- e.g. if `\(Y\)` are zero and the positive integers, the family could be [Poisson](https://en.wikipedia.org/wiki/Poisson_distribution)
+
+- e.g. if `\(Y\)` are just 0 and 1, the family is [Bernoulli](https://en.wikipedia.org/wiki/Bernoulli_distribution) and extends to [Binomial](https://en.wikipedia.org/wiki/Binomial_distribution) for `\(n\)` independent trials
+
+---
+
+## Logistic regression
+
+Assuming that we are dealing with two classes, the possible observed values for `\(Y\)` are 0 and 1, 
+$$
+Y \vert x \sim \text{Bernoulli}(p = \mathbb{E}[Y\vert x]) = {\rm Binomial}(n=1,p=\mathbb{E}[Y\vert x])
+$$
+
+
+--
+To limit the regression betweewn `\([0, 1]\)`: use the __logit__ function, aka the __log-odds ratio__
+
+$$
+\text{logit}(p(x)) = \log \left[ \frac{p(x)}{1 - p(x)} \right] =  \log\left[\frac{\mathbb{E}[Y \vert x]}{1-\mathbb{E}[Y \vert x]}\right] = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p
+$$
+
+--
+meaning
+$$
+p(x) = \mathbb{E}[Y \vert x] = \frac{e^{\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p}}{1 + e^{\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p}}
+$$
+---
+
+## Major difference between linear and logistic regression
+
+
+Logistic regression __involves numerical optimization__
+
+- `\(y_i\)` is observed response for `\(n\)` observations - either 0 or 1
+
+
+--
+- we need to use an iterative algorithm to find `\(\beta\)`'s that maximize the __likelihood__
+
+
+`$$\prod_{i=1}^{n} p\left(x_{i}\right)^{y_{i}}\left(1-p\left(x_{i}\right)\right)^{1-y_{i}}$$`
+
+
+--
+- __Newton's method__: start with initial guess, calculate gradient of log-likelihood, add amount proportional to the gradient to parameters, moving up log-likelihood surface
+
+
+--
+- means logistic regression runs more slowly than linear regression
+
+
+--
+- if you're interested: [you use iteratively re-weighted least squares, Section 12.3.1](http://www.stat.cmu.edu/~cshalizi/uADA/15/lectures/12.pdf)
+
+---
+
+## Inference with logistic regression
+
+__Major motivation__ for logistic regression (and all GLMs) is __inference__
+
+- how does the response change when we change a predictor by one unit?
+
+
+--
+For linear regression, the answer is straightforward
+
+`$$\mathbb{E}[Y \vert x] = \beta_0 + \beta_1 x_1$$`
+
+--
+For logistic regression... it is a little _less_ straightforward, 
+
+$$
+E[Y \vert x] = \frac{e^{\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p}}{1 + e^{\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p}}
+$$
+
+
+--
+- the predicted response varies __non-linearly__ with the predictor variable values
+
+- one convention is to fall back upon the concept of __odds__
+
+
+---
+
+## The odds interpretation
+
+Pretend the predicted probability is 0.8 given a particular predictor variable value
+
+- just pretend we only have one predictor variable
+
+--
+
+This means that if we were to repeatedly sample response values given that predictor variable value: __we expect class 1 to appear 4 times as often as class 0__
+
+
+`$$Odds = \frac{\mathbb{E}[Y \vert x]}{1-\mathbb{E}[Y \vert x]} = \frac{0.8}{1-0.8} = 4 = e^{\beta_0+\beta_1x}$$`
+
+Thus we say that for the given predictor variable value, the `\(Odds\)` are 4 (or 4-1) in favor of class 1
+
+--
+
+How does the odds change if I change the value of a predictor variable by one unit?
+
+
+--
+
+`$$Odds_{\rm new} = e^{\beta_0+\beta_1(x+1)} = e^{\beta_0+\beta_1x}e^{\beta_1} = e^{\beta_1}Odds_{\rm old}$$`
+
+For every unit change in `\(x\)`, the odds change by a __factor__ `\(e^{\beta_1}\)`
+
+---
+
+## Example data: NFL field goal attempts
+
+Created dataset using [`nflscrapR-data`](https://github.com/ryurko/nflscrapR-data) of all NFL field goal attempts from 2009 to 2019
+
 
 ```r
-library(pdp)
-*partial(cv_model_pls, "offense_total_epa_pass", plot = TRUE)
+nfl_fg_attempts &lt;- read_csv("https://shorturl.at/mCGN2")
+nfl_fg_attempts
 ```
 
-&lt;img src="18-slides_files/figure-html/pdp-example-1.png" width="576" style="display: block; margin: auto;" /&gt;
+```
+## # A tibble: 10,811 × 11
+##    kicker_player_id kicker_player_name   qtr score_differential home_team
+##    &lt;chr&gt;            &lt;chr&gt;              &lt;dbl&gt;              &lt;dbl&gt; &lt;chr&gt;    
+##  1 00-0020962       R.Bironas              1                  0 PIT      
+##  2 00-0020962       R.Bironas              2                  0 PIT      
+##  3 00-0020962       R.Bironas              4                  0 PIT      
+##  4 00-0020737       J.Reed                 4                 -3 PIT      
+##  5 00-0020737       J.Reed                 5                  0 PIT      
+##  6 00-0004091       P.Dawson               1                  0 CLE      
+##  7 00-0010072       R.Longwell             1                 -3 CLE      
+##  8 00-0004091       P.Dawson               2                 -7 CLE      
+##  9 00-0010072       R.Longwell             4                 12 CLE      
+## 10 00-0006800       J.Hanson               1                -14 NO       
+## # ℹ 10,801 more rows
+## # ℹ 6 more variables: posteam &lt;chr&gt;, posteam_type &lt;chr&gt;, kick_distance &lt;dbl&gt;,
+## #   pbp_season &lt;dbl&gt;, abs_score_diff &lt;dbl&gt;, is_fg_made &lt;dbl&gt;
+```
+
+
+---
+
+## Fitting a logistic regression model
+
+.pull-left[
+- We use the `glm` function (similar to `lm`)
+
+- __Specify the family is `binomial`__
+
+
+```r
+*init_logit &lt;- glm(is_fg_made ~ kick_distance,
+                  data = nfl_fg_attempts,
+*                 family = "binomial")
+```
+
+- View predicted probability relationship
+
+
+```r
+nfl_fg_attempts %&gt;%
+* mutate(pred_prob = init_logit$fitted.values) %&gt;%
+  ggplot(aes(x = kick_distance)) +
+  geom_line(aes(y = pred_prob), 
+            color = "blue") +
+  geom_point(aes(y = is_fg_made), 
+             alpha = 0.3,
+             color = "darkorange") +
+  scale_x_reverse() +
+  theme_bw()
+```
+
+]
+.pull-right[
+&lt;img src="18-slides_files/figure-html/unnamed-chunk-3-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+---
+
+
+```r
+summary(init_logit)
+```
+
+```
+## 
+## Call:
+## glm(formula = is_fg_made ~ kick_distance, family = "binomial", 
+##     data = nfl_fg_attempts)
+## 
+## Coefficients:
+##                Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)    5.916656   0.145371   40.70   &lt;2e-16 ***
+## kick_distance -0.104365   0.003255  -32.06   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 9593.1  on 10810  degrees of freedom
+## Residual deviance: 8277.5  on 10809  degrees of freedom
+## AIC: 8281.5
+## 
+## Number of Fisher Scoring iterations: 5
+```
+
+---
+
+## What is [Deviance](https://en.wikipedia.org/wiki/Deviance_(statistics)?
+
+For model of interest `\(\mathcal{M}\)` the total deviance is:
+
+`$$D_{\mathcal{M}}= -2 \log \frac{\mathcal{L}_{\mathcal{M}}}{\mathcal{L}_{\mathcal{S}}} = 2\left(\log  \mathcal{L}_{\mathcal{S}}-\log  \mathcal{L}_{\mathcal{M}}\right)$$`
+
+- `\(\mathcal{L}_{\mathcal{M}}\)` is the likelihood for model `\(\mathcal{M}\)`
+
+--
+
+- `\(\mathcal{L}_{\mathcal{S}}\)` is the likelihood for the __saturated__ model, with `\(n\)` parameters! (i.e., a perfect fit)
+
+- Can think of `\(\mathcal{L}_{\mathcal{S}}\)` as some constant that does not change
+
+--
+
+__Deviance is a measure of goodness of fit__: the smaller the deviance, the better the fit
+
+- Generalization of RSS in linear regression to any distribution family
+
+
+---
+
+## Logistic regression output
+
+```
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.7752   0.2420   0.4025   0.6252   1.5136 
+```
+The __deviance residuals__ are contributions to total deviance (signed square roots of unit deviances)
+$$
+d_i = \mbox{sign}(y_i-\hat{p}_i) \sqrt{-2[y_i \log \hat{p}_i + (1-y_i) \log (1 - \hat{p}_i)]}
+$$
+where `\(y_i\)` is the `\(i^{\rm th}\)` observed response and `\(\hat{p}_i\)` is the estimated probability of success 
+
+```
+Coefficients:
+               Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)    5.916656   0.145371   40.70   &lt;2e-16 ***
+kick_distance -0.104365   0.003255  -32.06   &lt;2e-16 ***
+```
+The intercept of the prediction curve is `\(e^{5.916656}\)`.
+
+
+---
+
+## Logistic regression output
+
+```
+    Null deviance: 9593.1  on 10810  degrees of freedom
+Residual deviance: 8277.5  on 10809  degrees of freedom
+AIC: 8281.5
+```
+
+
+```r
+logLik(init_logit)   # the maximum log-likelihood value
+```
+
+```
+## 'log Lik.' -4138.732 (df=2)
+```
+
+
+- __Residual deviance__ is -2 times -4138.732, or 8277.5 (_What about the saturated model?_)
+
+  - Null deviance corresponds to intercept-only model
+
+- [AIC](https://en.wikipedia.org/wiki/Akaike_information_criterion) is `\(2k - 2\log{\cal L}\)` = `\(2 \cdot k - 2 \cdot (-4138.732)\)` = 8281.5
+
+  - where `\(k\)` is the number of degrees of freedom (here, `df` = 2)
+  
+--
+
+- These are all metrics of quality of fit of the model
+
+- __We will consider these to be less important than test-set performances__
+
+---
+
+## Logistic regression predictions
+
+To generate logistic regression predictions there are few things to keep in mind...
+
+- the `fitted.values` __are on the probability scale__: all are between 0 and 1
+
+
+--
+- but the __default__ for `predict(init_logit)` is __the log-odds scale!__
+
+
+--
+- we change this with the `type` argument: `predict(init_logit, type = "response")`
+
+
+--
+How do we predict the class? e.g make or miss field goal?
+
+
+--
+
+```r
+pred_fg_outcome &lt;- ifelse(init_logit$fitted.values &gt; 0.5,
+                          "make", "miss")
+```
+
+- typically if predicted probability is &gt; 0.5 then we predict success, else failure
+
+---
+
+### Model assessment
+
+Most straight-forward way is the __confusion matrix__ (rows are predictions, and columns are observed):
+
+
+```r
+table("Predictions" = pred_fg_outcome, "Observed" = nfl_fg_attempts$is_fg_made)
+```
+
+```
+##            Observed
+## Predictions    0    1
+##        make 1662 8994
+##        miss   94   61
+```
+
+
+--
+__In-sample misclassification rate__:
+
+
+```r
+mean(ifelse(fitted(init_logit) &lt; 0.5, 0, 1) != nfl_fg_attempts$is_fg_made)
+```
+
+```
+## [1] 0.1593747
+```
+
+
+--
+[__Brier score__](https://en.wikipedia.org/wiki/Brier_score):
+
+```r
+mean((nfl_fg_attempts$is_fg_made - fitted(init_logit))^2)
+```
+
+```
+## [1] 0.1197629
+```
 
 
 
+---
+
+### __Well-calibrated__ if actual probabilities match predicted probabilities
+
+
+.pull-left[
+
+```r
+nfl_fg_attempts %&gt;%
+  mutate(pred_prob = init_logit$fitted.values,
+         bin_pred_prob = round(pred_prob / 0.05) * .05) %&gt;%
+  # Group by bin_pred_prob:
+  group_by(bin_pred_prob) %&gt;%
+  # Calculate the calibration results:
+  summarize(n_attempts = n(),
+            bin_actual_prob = mean(is_fg_made)) %&gt;%
+  ggplot(aes(x = bin_pred_prob, y = bin_actual_prob)) +
+  geom_point(aes(size = n_attempts)) +
+  geom_smooth(method = "loess", se = FALSE) +
+  geom_abline(slope = 1, intercept = 0, 
+              color = "black", linetype = "dashed") +
+  coord_equal() + 
+  scale_x_continuous(limits = c(0,1)) + 
+  scale_y_continuous(limits = c(0,1)) + 
+  labs(size = "Number of attempts",
+       x = "Estimated make probability",
+       y = "Observed make probability") + 
+  theme_bw() +
+  theme(legend.position = "bottom")
+```
+
+]
+.pull-right[
+If model says the probability of rain for a group of days is 50%, it better rain on half those days... __or something is incorrect about the probability!__
+
+&lt;img src="18-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" /&gt;
+
+]
+
+---
+
+### BONUS: Leave-one-season-out cross validation (with [`purrr`](https://purrr.tidyverse.org/))
+
+In many datasets rather than random holdout folds, you might have particular holdouts of interest (e.g. seasons, games, etc.)
+
+--
+
+
+```r
+nfl_fg_loso_cv_preds &lt;- # generate holdout predictions for every row based season
+  map_dfr(unique(nfl_fg_attempts$pbp_season), 
+          function(season) {
+            # Separate test and training data:
+            test_data &lt;- nfl_fg_attempts %&gt;%
+              filter(pbp_season == season)
+            train_data &lt;- nfl_fg_attempts %&gt;%
+              filter(pbp_season != season)
+            
+            # Train model:
+            fg_model &lt;- glm(is_fg_made ~ kick_distance, data = train_data,
+                            family = "binomial")
+            
+            # Return tibble of holdout results:
+            tibble(test_pred_probs = predict(fg_model, newdata = test_data,
+                                             type = "response"),
+                   test_actual = test_data$is_fg_made,
+                   test_season = season) 
+          })
+```
+
+
+---
+
+## Overall holdout performance
+
+
+__Misclassification rate__:
+
+
+```r
+nfl_fg_loso_cv_preds %&gt;%
+  mutate(test_pred = ifelse(test_pred_probs &lt; .5, 0, 1)) %&gt;%
+  summarize(mcr = mean(test_pred != test_actual))
+```
+
+```
+## # A tibble: 1 × 1
+##     mcr
+##   &lt;dbl&gt;
+## 1 0.160
+```
+
+
+
+__Brier score__:
+
+```r
+nfl_fg_loso_cv_preds %&gt;%
+  summarize(brier_score = mean((test_actual - test_pred_probs)^2))
+```
+
+```
+## # A tibble: 1 × 1
+##   brier_score
+##         &lt;dbl&gt;
+## 1       0.120
+```
+
+
+---
+
+## Holdout performance by season
+
+
+```r
+nfl_fg_loso_cv_preds %&gt;%
+  mutate(test_pred = ifelse(test_pred_probs &lt; .5, 0, 1)) %&gt;%
+  group_by(test_season) %&gt;%
+  summarize(mcr = mean(test_pred != test_actual)) %&gt;%
+  ggplot(aes(x = test_season, y = mcr)) +
+  geom_bar(stat = "identity", width = .1) + geom_point(size = 5) +
+  theme_bw() +
+  scale_x_continuous(breaks = unique(nfl_fg_loso_cv_preds$test_season))
+```
+
+&lt;img src="18-slides_files/figure-html/mcr-cv-year-1.png" width="504" style="display: block; margin: auto;" /&gt;
 
 
     </textarea>
