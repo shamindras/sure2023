@@ -3,9 +3,9 @@
   <head>
     <title>Supervised Learning</title>
     <meta charset="utf-8" />
-    <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -15,10 +15,10 @@ class: center, middle, inverse, title-slide
 # Supervised Learning
 ]
 .subtitle[
-## Generalized linear models (GLMs)
+## K-Nearest Neighbors Regression and Classification
 ]
 .date[
-### June 22nd, 2021
+### June 30th, 2023
 ]
 
 ---
@@ -28,398 +28,552 @@ class: center, middle, inverse, title-slide
 
 
 
-## Probability distributions
+## Supervised learning so far...
 
-A __distribution__ is a mathematical function `\(f(x \vert \theta)\)` where
-
-- `\(x\)` may take on continuous or discrete values over the _domain_ (i.e. all possible inputs) of `\(f(x \vert \theta)\)`
-
+Linear Regression: Assumptions
 
 --
-- `\(\theta\)` is a set of parameters governing the shape of the distribution
-  - e.g. `\(\theta = \{\mu,\sigma^2\}\)` for a [Normal / Gaussian](https://en.wikipedia.org/wiki/Normal_distribution) distribution)
 
-- the `\(\vert\)` symbol means that the shape of the distribution is *conditional* on the values of `\(\theta\)`
+- The relationship is __linear__
 
+`$$Y_{i}=\beta_{0}+\beta_{1} X_{i}+\epsilon_{i}, \quad \text { for } i=1,2, \dots, n$$`
 
---
-- `\(f(x \vert \theta) \geq 0\)` for all `\(x\)`
+$$ \epsilon_i \overset{iid}{\sim}N(0, \sigma^2) \quad \text{ with constant variance } \sigma^2 $$
 
-- `\(\sum_x f(x \vert \theta) = 1\)` or `\(\int_x f(x \vert \theta) = 1\)`.
+- Error terms must be __independently, identically distributed__ from Normal distribution (actually three assumptions!)
 
-
---
-We use `\(f\)` to denote the distribution for its:
-
-- __probability density function (PDF)__ if `\(x\)` is continuous
-
-- __probability mass function (PMF)__ if `\(x\)` is discrete
-
----
-
-## Probability distribution examples: [Normal distribution](https://en.wikipedia.org/wiki/Normal_distribution)
-
-.pull-left[
-Normal distribution PDF (`dnorm`):
-
-`$$f(x \vert \mu, \sigma^2)=\frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^{2}}$$`
-- we write `\(X \sim N(\mu, \sigma^2)\)`
-
-- __standard Normal__: `\(N(0, 1)\)`
-
-- can plot density curves with __stat_function()__ 
-
-
-```r
-tibble(x = c(-5, 5)) %&gt;%
-  ggplot(aes(x)) +
-* stat_function(fun = dnorm, n = 101,
-*               args = list(mean = 0, sd = 1)) +
-  stat_function(fun = dnorm, color = "red",
-                args = list(mean = -2, 
-                            sd = sqrt(0.5))) +
-  theme_bw()
-```
-
-
-]
-.pull-right[
-
-&lt;img src="19-slides_files/figure-html/unnamed-chunk-1-1.png" width="504" /&gt;
-
-
-]
-
----
-
-## Probability distribution examples: [binomial distribution](https://en.wikipedia.org/wiki/Binomial_distribution)
-
-.pull-left[
-Binomial distribution PMF (`dbinom`):
-
-`$$f(x \vert n, p)= \binom{n}{x} p^{x}(1-p)^{n-x}$$`
-- model for the probability of `\(x\)` successes in `\(n\)` independent trials (`size`), each with success probability of `\(p\)` (`prob`)
-
-- we write `\(X \sim \text{Binomial}(n, p)\)`
-
-- `R` uses `d` for both PDFs and PMFs
-
-
-```r
-tibble(x = 0:20) %&gt;%
-  mutate(binom1 = dbinom(x, size = 20,
-                         prob = 0.5),
-         binom2 = dbinom(x, size = 20,
-                         prob = 0.1)) %&gt;%
-  ggplot(aes(x)) + geom_point(aes(y = binom1)) +
-  geom_point(aes(y = binom2), color = "red") +
-  theme_bw()
-```
-
-
-]
-.pull-right[
-
-&lt;img src="19-slides_files/figure-html/unnamed-chunk-2-1.png" width="504" /&gt;
-
-
-]
-
-
----
-
-## Distributions and regression
-
-Why does this matter?
-
-
---
-- Because linear regression, and generalized variants, __make assumptions__ about how observed data are distributed around the true regression line, conditional on a value of `\(x\)`
-
-
---
-For simple linear regression, our goal is to estimate `\(E[Y \vert x]\)`, assuming that for every value of `\(x\)`...
-
-
---
-- the distribution governing the possible values of `\(Y\)` is a __Normal distribution__
-
-  - _Note:_ capitalize `\(Y\)` because values are __random variables__ (random samples from distribution)
-
-
---
-- the __mean__ of the Normal distribution is `\(E[Y \vert x] = \mu(y \vert x) = \beta_0 + \beta_1 x\)`
-
-- the __variance__ of the Normal distribution is `\(\sigma^2\)`, which is a constant (i.e., does not vary with `\(x\)`)
-
-
---
-- `\(\Rightarrow Y|x \sim N(\beta_0 + \beta_1 x, \sigma^2)\)`, same as yesterday: `\(Y = \beta_0 + \beta_1 x + \epsilon\)`, where `\(\epsilon \sim N(0, \sigma^2)\)`
-
-
---
-However, just because these assumptions are made in simple linear regression doesn't mean that all linear regression-related models utilize the same assumptions. __They don't__. When we step back from these assumptions, we enter the realm of __generalized linear models (GLMs)__.
-
----
-
-## Maximum likelihood estimation
-
-In generalized regression, we
-
-1. assume a (family of) distribution(s) that govern observed response values `\(Y\)`, and
-
-
---
-2. estimate the parameters `\(\theta\)` of that distribution.
-
-
---
-Estimation is done by maximizing the __likelihood function__:
-`$$\mathcal{L} = \prod_{i=1}^n f(Y_i \vert \theta)$$`
-
-to find the __maximum likelihood estimators (MLEs)__ (typically maximize `\(\mathcal{l} = \log{\cal L}\)`, the __log-likelihood__)
-
-
---
-Leaving many details under the rug:
-
-- the maximum is the point at which the derivative of the likelihood function is zero
-
-- you don't need to check the second derivative: wherever the derivative equals zero, it's a maximum value, not a minimum value
-
----
-
-## MLE for regression
-
-__Determining the value of `\(\theta\)` that achieves the maximum likelihood can be difficult__
-
-
---
-It may require __numerical optimization__ 
-  - wherein the computer, using an algorithm, searches over possible values of `\(\theta\)` to find the optimal one
-
-
---
-For linear regression, `\({\cal L}\)` can be maximized analytically:
-
-`$$\hat{\boldsymbol{\beta}} = (\boldsymbol{X} ^T \boldsymbol{X})^{-1}\boldsymbol{X}^T\boldsymbol{Y}$$`
-
-- the `\(\hat{\boldsymbol{\beta}}\)` estimates that minimize the __residual sum of squares (RSS)__ are the MLEs!
-
-- Unbiased estimate for `\(\hat{\sigma}^2\)` is `\(= \frac{RSS}{n - (p + 1)}\)`
-
-- This enables us to perform statistical inference:
-
-  - Hypothesis testing for coefficients from yesterday
+  - Normality
   
-  - Confidence intervals and prediction intervals
+  - Independence
+  
+  - Homoscedasticity
+
+  
+Each of these assumptions must be __checked__
+
+--
+
+Assumptions (in general) make estimation and inference easier but may not always be appropriate
 
 ---
 
-### Example: NFL teams summary and modeling score differential
+## Parametric models
 
-Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2020
+When we make assumptions about distributions, we are saying that we can summarize them with a set of __parameters__
+
+Examples...
+
+--
+
+- Normal distribution: `\(N(\mu, \sigma^2)\)`, the __mean__ `\(\mu\)` and __variance__ `\(\sigma^2\)` are parameters
+
+--
+
+- Poisson distribution: `\(\text{Pois}(\lambda)\)`, the only parameter is `\(\lambda\)`, which is both the __mean and variance__
+
+--
+
+- Simple linear regression: `\(Y=\beta_{0}+\beta_{1} X\)`, the coefficients (__intercept__ `\(\beta_0\)` and __slope__ `\(\beta_1\)`) are parameters
+
+--
+
+But what if we don't want to make assumptions __a priori__ about our data?
 
 
-```r
-library(tidyverse)
-nfl_teams_data &lt;- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/regression_projects/nfl_team_season_summary.csv") %&gt;%
-  mutate(score_diff = points_scored - points_allowed)
-*init_lm &lt;- lm(score_diff ~ offense_ave_epa_pass, data = nfl_teams_data)
-```
+---
+
+## Nonparametric models
+
+Still assume a function mapping the predictors to the response
+
+$$ Y = f(X) $$
+And we still want to __estimate__ this regression or classification function
+
+But now we do not assume that this function takes any __particular form__ (e.g. do not assume that the relationship is linear)
 
 --
 
 .pull-left[
 
-- `geom_smooth()` displays __confidence intervals__ for the regression line
+### Benefits
+
+- Very flexible, allowing for fitting to very complex relationships
+
+- Often show better performance, more accurate predictions
+
+]
+
+.pull-right[
+
+### Limitations
+
+- Frequently less interpretable
+
+- Prone to overfitting
+
+- Computational concerns (require more data, take longer to train)
+
+]
+
+---
+
+## Regression vs. classification
+
+- __Regression__ models: estimate _average_ value of response
+
+- __Classification__ models: determine _the most likely_ class of a set of discrete response variable classes
+
+Linear (simple or multiple) models `\(\rightarrow\)` regression
+
+Logistic models `\(\rightarrow\)` classification!
+
+--
+
+Examples of classification:
+
+- Binary: given covariates like running yards and completion percentage, can we predict __whether or not__ a QB is likely to be a Hall-of-Famer?
+
+- Multi-class: from predictors like tumor size, location, and cell types, can we determine __which kind__ of cancer a patient has?
+
+--
+
+Question of interest determines which type of model to use
+
+Many nonparametric methods (e.g. KNN) can be used either for classification __OR__ regression, just change the final outcome
+
+---
+
+## Setup: Binary classification problem
+
+.pull-left[
+
+`\(Y = f(X_1, X_2)\)`
+
+`\(Y \in \{0, 1\}\)`
+
+How might we model `\(f(X_1, X_2)\)`?
+
+__"Decision boundary"__
+
+Example settings:
+
+- QB's running and passing yards `\((X_1, X_2)\)`, HOF status `\((Y)\)`
+
+- Patient's length of inpatient rehab stay and report of outpatient stress `\((X_1, X_2)\)`, substance abuse relapse `\((Y)\)`
+
+]
+
+
+.pull_right[
+
+&lt;img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLpgBIfLPTFlVsF32It6Ues8tZNDzAYFlMOA&amp;usqp=CAU" width="50%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+## K-Nearest Neighbors Classification
+
+.pull-left[
+
+Classify a __new point__ based on a majority vote of the __k__ points closest to it in space
+
+__Close?__ Use Euclidean distance
+
+`$$d(x_i, x_j) = \sqrt{(x_{i1}-x_{j1})^2 + \cdots + (x_{ip}-x_{jp})^2}$$`
+
+Have to choose how many neighbors to query: which value of __k__ to pick
+
+]
+
+
+.pull_right[
+
+&lt;img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLpgBIfLPTFlVsF32It6Ues8tZNDzAYFlMOA&amp;usqp=CAU" width="50%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+### Different values of k lead to different decision boundaries
+
+&lt;img src="https://elvyna.github.io/images/posts/2019-01-28-knn-explained/6-k-affects-decision-boundary.png?style=centerme" width="100%" style="display: block; margin: auto;" /&gt;
+
+--
+
+Excellent illustration of the __bias-variance tradeoff__
+
+--
+
+As __k increases__, the __variance decreases__ (different training samples will produce more similar decision boundaries), but the __bias increases__ (the decision boundary gets further from the truth)
+
+---
+
+## Picking the number of neighbors
+
+The number of neighbors __k__ is a __hyperparameter__
+
+Tune this value using a train-test split or using cross-validation
+
+__Note__: 1NN classification will have zero training error... __why__ ?
+
+--
+
+&lt;img src="https://kevinzakka.github.io/assets/knn/teaser.png" width="30%" style="display: block; margin: auto;" /&gt;
+
+--
+
+#### Ideally: balance the flexibility, allowing for a complex decision boundary, __but__ don't fit to the noise
+
+---
+
+## Data: NFL field goal attempts
+
+Created dataset using [`nflscrapR-data`](https://github.com/ryurko/nflscrapR-data) of all NFL field goal attempts from 2009 to 2019
 
 
 ```r
-nfl_plot &lt;- nfl_teams_data %&gt;%
-* ggplot(aes(x = offense_ave_epa_pass,
-             y = score_diff)) +
+nfl_fg_attempts &lt;- read_csv("https://shorturl.at/mCGN2") %&gt;% 
+  filter(pbp_season == 2014) %&gt;% 
+  mutate(is_fg_made = as_factor(is_fg_made))
+head(nfl_fg_attempts)
+```
+
+```
+## # A tibble: 6 × 11
+##   kicker_player_id kicker_player_name   qtr score_differential home_team posteam
+##   &lt;chr&gt;            &lt;chr&gt;              &lt;dbl&gt;              &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;  
+## 1 00-0025944       S.Hauschka             1                  0 SEA       SEA    
+## 2 00-0025580       M.Crosby               2                 -3 SEA       GB     
+## 3 00-0025944       S.Hauschka             3                  7 SEA       SEA    
+## 4 00-0019536       S.Graham               1                  0 ATL       NO     
+## 5 00-0019536       S.Graham               1                  3 ATL       NO     
+## 6 00-0020578       M.Bryant               2                -13 ATL       ATL    
+## # ℹ 5 more variables: posteam_type &lt;chr&gt;, kick_distance &lt;dbl&gt;,
+## #   pbp_season &lt;dbl&gt;, abs_score_diff &lt;dbl&gt;, is_fg_made &lt;fct&gt;
+```
+
+__Response__: is the field goal made?
+
+---
+
+## Predicting field goals
+
+.pull-left[
+
+Explanatory variables: 
+
+Kick distance and score differential
+
+
+
+```r
+ggplot(nfl_fg_attempts) +
+  geom_point(aes(x = kick_distance, 
+                 y = score_differential,
+                 color = is_fg_made), 
+             size = 0.7) +
+  theme_bw()
+```
+
+Does there appear to be a relationship between these predictors and the success of field goal attempts?
+
+]
+
+.pull-right[
+&lt;img src="19-slides_files/figure-html/unnamed-chunk-6-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## KNN classification
+
+Using the [FNN package](https://rdrr.io/cran/FNN/) (fast implementation of KNN models)
+
+Separate predictors from the response column:
+
+
+```r
+fg_x &lt;- dplyr::select(nfl_fg_attempts, kick_distance, score_differential)
+fg_y &lt;- nfl_fg_attempts$is_fg_made
+```
+
+Give `knn()` 
+
+- a training set with all explanatory columns `train`
+
+- a "test" set including all explanatory columns `test`
+
+  - if you provide the same set for both, it will give predictions on the training set
+
+- a vector of true classifications for the training set `cl`
+
+- a value for number of nearest neighbors `k`
+
+- instructions for which `algorithm` to use ("brute" means that it will do a brute-force search, but it can also do tree-based searches)
+
+---
+
+## Fitting a KNN classifier
+
+Trying `\(k=1\)`:
+
+
+```r
+library(FNN)
+
+init_knn &lt;- knn(train = fg_x, test = fg_x, cl = fg_y, k = 1, algorithm = "brute")
+```
+
+This outputs a vector of predicted classes for the "test" set (in this case, predictions on the training set)
+
+--
+
+How well does this model perform?
+
+```r
+mean(nfl_fg_attempts$is_fg_made == init_knn)
+```
+
+```
+## [1] 0.9177665
+```
+
+__92%__ But we said that 1NN would achieve zero training error?
+
+--
+
+In this dataset, there are multiple observations for some distance-differential combinations, which might have both made and missed field goals, so it then takes the majority vote among those "equivalent" points (see the documentation!)
+
+---
+
+## Training vs. test
+
+But, as we know, we should not assess models based on training error, we need some measure of holdout performance:
+
+Split the data, train the model, then assess performance on the test set
+
+(Yet another way to manually code a train-test split)
+
+```r
+set.seed(50)
+train_ids &lt;- sample(1:nrow(nfl_fg_attempts), 
+                    ceiling(0.75 * nrow(nfl_fg_attempts)))
+
+train_nfl &lt;- nfl_fg_attempts[train_ids, ]
+test_nfl &lt;- nfl_fg_attempts[-train_ids, ]
+
+# separate predictors and response, again
+train_x &lt;- dplyr::select(train_nfl, kick_distance, score_differential)
+train_y &lt;- train_nfl$is_fg_made
+test_x &lt;- dplyr::select(test_nfl, kick_distance, score_differential)
+test_y &lt;- test_nfl$is_fg_made
+```
+
+---
+
+## Assessing 1NN
+
+1 Nearest Neighbor classifier: How well does it perform on the training data?
+
+```r
+one_nn_train_preds &lt;- knn(train = train_x, test = train_x, cl = train_y, k = 1, algorithm = "brute")
+mean(train_y == one_nn_train_preds)
+```
+
+```
+## [1] 0.9418133
+```
+--
+
+... But what about on the test data?
+
+
+```r
+one_nn_test_preds &lt;- knn(train = train_x, test = test_x, cl = train_y, k = 1, algorithm = "brute")
+mean(test_y == one_nn_test_preds)
+```
+
+```
+## [1] 0.7479675
+```
+Performance decreases! We're overfitting!
+
+---
+
+## Which value of k to pick?
+
+As a demonstration, let's loop through possible values of k and see which ends up having the best holdout performance
+
+
+```r
+errs_train &lt;- rep(0, 12)
+errs_test &lt;- rep(0, 12)
+k_vals &lt;- 1:12
+
+for(k in k_vals) {
+  
+  train_preds &lt;- knn(train = train_x, test = train_x, cl = train_y, k = k, algorithm = "brute")
+  errs_train[k] &lt;- mean(!train_y == train_preds)
+  
+  test_preds &lt;- knn(train = train_x, test = test_x, cl = train_y, k = k, algorithm = "brute")
+  errs_test[k] &lt;- mean(!test_y == test_preds)
+}
+```
+
+--
+
+Side note: beyond k = 12, the model predicts success for the entire test set
+
+---
+
+## Plot training and test error
+
+.pull-left[
+
+
+```r
+errors &lt;- bind_cols(train_err = errs_train,
+                    test_err = errs_test,
+                    k = k_vals)
+
+errors %&gt;% 
+  pivot_longer(c(train_err, test_err), 
+               names_to = "err_type") %&gt;% 
+  ggplot(aes(x = k, y = value, 
+             color = err_type)) +
+  geom_point() +
+  geom_line() +
+  labs(y = "Misclassification Rate", 
+       color = "Type of error") +
+  theme_bw()
+```
+
+
+]
+
+.pull-right[
+&lt;img src="19-slides_files/figure-html/unnamed-chunk-14-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## But wait, there's more!
+
+The k-nearest-neighbors algorithm can also be used for __regression__!
+
+As before:
+
+- Find the k points closest to your new observation (based on Euclidean distance)
+
+--
+
+But now,
+
+- Rather than taking a _majority vote_ to determine a class, take the __average response__ among the neighbors
+
+- Predict this average value as the response for the new point: 
+
+
+`$$\hat{f}(x^*) = \text{Ave}(y_i | x_i \in N_k(x^*))$$`
+
+--
+
+(__Side Note__: You can also do cool stuff like weighting those responses based on how close they are to the new point! Lots of modifications to knn regression out there)
+
+---
+
+## Brief KNN Regression Example
+
+.pull-left[
+
+Gapminder data again
+
+
+```r
+library(dslabs)
+clean_gapminder &lt;- as_tibble(gapminder) %&gt;%
+  filter(year == 2011, !is.na(gdp)) %&gt;%
+  mutate(log_gdp = log(gdp))
+
+gdp_plot &lt;- clean_gapminder %&gt;%
+  ggplot(aes(x = log_gdp,
+             y = life_expectancy)) +
   geom_point(alpha = 0.5) +
 * geom_smooth(method = "lm") +
   theme_bw() +
-  labs(x = "EPA gained per pass attempt",
-       y = "Score differential")
-nfl_plot
+  labs(x = "log(GDP)",
+       y = "Life expectancy")
+gdp_plot
 ```
 
 ]
+
 .pull-right[
-&lt;img src="19-slides_files/figure-html/unnamed-chunk-4-1.png" width="432" style="display: block; margin: auto;" /&gt;
+&lt;img src="19-slides_files/figure-html/unnamed-chunk-15-1.png" width="432" style="display: block; margin: auto;" /&gt;
 
 ]
 
-
 ---
 
-## Confidence intervals versus prediction intervals
-
-Regression __confidence intervals__ are based on standard errors for the estimated regression line at `\(x^*\)`:
-
-`$$SE_{\text{line}}\left(x^{*}\right)=\hat{\sigma} \cdot \sqrt{\frac{1}{n}+\frac{\left(x^{*}-\bar{x}\right)^{2}}{\sum_{i=1}^{n}\left(x_{i}-\bar{x}\right)^{2}}}$$`
-
---
-
-Regression __prediction intervals__ add the variance of a __single predicted value__ `\(\sigma^2\)`:
-
-`$$SE_{\text{pred}}\left(x^{*}\right)=\hat{\sigma} \cdot \sqrt{1 + \frac{1}{n}+\frac{\left(x^{*}-\bar{x}\right)^{2}}{\sum_{i=1}^{n}\left(x_{i}-\bar{x}\right)^{2}}}$$`
-
---
-
-- `\(SE_{\text{line}}\left(x^{*}\right) \Rightarrow\)` std error for the predicted AVERAGE `\(\hat{\beta}_0 + \hat{\beta}_1 x^*\)`
-
-- `\(SE_{\text{pred}}\left(x^{*}\right) \Rightarrow\)` std error for the prediction of an observation `\(\hat{\beta}_0 + \hat{\beta}_1 x^* + \epsilon\)`
-
---
-
-- Why does the standard error for a prediction never go to 0 as `\(n\)` goes to `\(\infty\)`?
-
----
-
-## Confidence intervals versus prediction intervals
-
-Generate 95% intervals with `\(\hat{Y}^* +/- 2 \cdot SE_{type}(x^*)\)`
+## KNN Regression for Life Expectancy
 
 .pull-left[
 
 ```r
-pred_int_data &lt;- 
-  predict(init_lm, data = nfl_teams_data, 
-*         interval = "prediction",
-*         level = .95) %&gt;%
-  as_tibble()  
-nfl_plot +
-* geom_ribbon(data =
-                bind_cols(nfl_teams_data,
-                          pred_int_data),
-*             aes(ymin = lwr, ymax = upr),
-              color = "red", fill = NA)
+k2_le &lt;- knn.reg(
+  train = clean_gapminder$log_gdp,
+  y = clean_gapminder$life_expectancy,
+  k = 2)
+k5_le &lt;- knn.reg(
+  train = clean_gapminder$log_gdp,
+  y = clean_gapminder$life_expectancy,
+  k = 5)
+k15_le &lt;- knn.reg(
+  train = clean_gapminder$log_gdp,
+  y = clean_gapminder$life_expectancy,
+  k = 15)
+
+gdp_plot +
+* geom_line(aes(x = log_gdp, y = k2_le$pred),
+            color = "darkgreen") +
+* geom_line(aes(x = log_gdp, y = k5_le$pred),
+            color = "darkred") +
+* geom_line(aes(x = log_gdp, y = k15_le$pred),
+            color = "purple")
 ```
 
-Subtle point: both are __confidence intervals__...
 
 ]
+
 .pull-right[
-&lt;img src="19-slides_files/figure-html/unnamed-chunk-5-1.png" width="432" style="display: block; margin: auto;" /&gt;
+&lt;img src="19-slides_files/figure-html/unnamed-chunk-16-1.png" width="432" style="display: block; margin: auto;" /&gt;
 
 ]
 
-
 ---
 
-## Generalization example
+## KNN with tidymodels
 
-In typical linear regression, the distribution is Normal and the domain of `\(Y \vert x\)` is `\((-\infty,\infty)\)`.
-
-
---
-What, however, happens if we know that
-
-1. the domain of observed values of the response is actually `\([0,\infty]\)`? and
+Of course, we can also use the tidymodels framework to fit and use a KNN regression model:
 
 
---
-2. the observed values are __discrete__, with possible values 0, 1, 2, ...
+```r
+library(tidymodels)
+knn_reg_mod &lt;- nearest_neighbor(
+  mode = "regression",
+  engine = "kknn",
+  neighbors = 5,         # we could also tune this with cross-validation
+  weight_func = NULL,    # for weighted KNN!
+  dist_power = NULL      # for use with a different distance metric
+)
 
-
---
-__The Normal distribution doesn't hold here__
-
-- Any idea of what distribution could possibly govern `\(Y \vert x\)`?
-
-- Remember, we might not know truly how `\(Y \vert x\)` is distributed, but any assumption we make has to fit with the limitations imposed by points 1 and 2 above
-
----
-
-## Generalization: Poisson regression
-
-
-A distribution that fulfills the conditions imposed on the last slide is the [__Poisson__ distribution](https://en.wikipedia.org/wiki/Poisson_distribution), 
-
-`$$f(x \vert \lambda) = \frac{\lambda^xe^{-\lambda}}{x!},\text{ where }x = 0, 1, 2, \dots$$`
-
---
-- has a single parameter `\(\lambda\)`, which is __both__ the mean __AND__ variance of the distribution
-
-  - in general the variance governs the distribution's shape
-
-
---
-- distribution of independent event occurences in an interval, e.g. soccer goals in a match
-
-- `\(\lambda\)` is the average number of the events in an interval
-
-
-
---
-So, when we apply generalized linear regression in this context, we would identify the family as Poisson.
-
-But there's another step in generalization...
-
----
-
-## Generalization: link Function
-
-Start with one predictor, linear function: `\(\beta_0 + \beta_1 x\)`
-
-
---
-Range of this function is `\((-\infty,\infty)\)` - but for Poisson regression example, we know that `\(Y\)` __cannot be negative__,
-
-- __We need to transform the linear function__ to be `\([0,\infty)\)`! (We could punt and use simple linear regression, but results may not be meaningful, e.g., we predict `\({\hat Y}\)` to be negative!)
-
---
-
-__There is usually no unique transformation__, but rather conventional ones
-
-- e.g., for Poisson we use the `\(log()\)` function as the __link function__ `\(g()\)`:
-
-`$$g(\lambda \vert x) = \log(\lambda \vert x) = \beta_0 + \beta_1 x$$`
-
---
-Given `\(Y\)` with values limited to being either 0 or positive integers, with no upper bound, we
-
-1. assume `\(Y \vert x \sim \text{Poisson}(\lambda)\)`
-
-2. assume `\(\lambda \vert x = e^{\beta_0 + \beta_1 x}\)` 
-
-3. use optimization to estimate `\(\beta_0\)` and `\(\beta_1\)` by maximizing the likelihood function
-
----
-
-## Exercises
-
-What family might be appropriate for...
-
-
---
-1. `\(Y \vert x\)` continuous, but bounded between 0 and 1?
-
---
-[Beta distribution](https://en.wikipedia.org/wiki/Beta_distribution)
-
-
---
-2. `\(Y \vert x\)` continuous, but bounded between 0 and `\(\infty\)`?
-
---
-[Gamma distribution](https://en.wikipedia.org/wiki/Gamma_distribution)
-
-
---
-3. `\(Y \vert x\)` discrete, but can only take on the values 0 and 1?
-
---
-[Bernoulli distribution](https://en.wikipedia.org/wiki/Bernoulli_distribution)
-
-
-Focus on Case 3 for Thursday!
-
-
+gapminder_knn_fit &lt;- knn_reg_mod %&gt;% 
+  fit(
+    life_expectancy ~ log_gdp,
+    data = clean_gapminder
+  )
+```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
