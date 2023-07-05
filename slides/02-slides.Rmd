@@ -2,11 +2,24 @@
 title: "Exploring data"
 subtitle: "Into the tidyverse"
 date: "June 6th, 2023"
-
-output: 
+output:
   xaringan::moon_reader:
-    lib_dir: libs
-    css: xaringan-themer.css
+    lib_dir: "libs"
+    # chakra: "libs/remark-latest.min.js"
+    # css: ["default", "css/ath-slides.css", "css/ath-inferno-fonts.css", "css/animate.css"]
+    self-contained: yes
+    # css: [default, default-fonts]
+    # seal: false
+    # anchor_sections: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      navigation:
+        scroll: false
+editor_options:
+  chunk_output_type: console
 ---
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
@@ -14,6 +27,9 @@ library(xaringanthemer)
 style_mono_accent(base_color = "#cc002b")
 ```
 
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(fig.retina = 3, warning = FALSE, message = FALSE)
+```
 
 ## Data Science workflow
 

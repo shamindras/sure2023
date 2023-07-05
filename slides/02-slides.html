@@ -4,7 +4,8 @@
     <title>Exploring data</title>
     <meta charset="utf-8" />
     <script src="libs/header-attrs-2.20/header-attrs.js"></script>
-    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -21,6 +22,7 @@ class: center, middle, inverse, title-slide
 ]
 
 ---
+
 
 
 
@@ -150,7 +152,7 @@ head(Batting) # Try just typing Batting into your console, what happens?
 ## 4 allisdo01   1871     1 WS3    NA       27   133    28    44    10     2     2
 ## 5 ansonca01   1871     1 RC1    NA       25   120    29    39    11     3     0
 ## 6 armstbo01   1871     1 FW1    NA       12    49     9    11     2     1     0
-## # … with 10 more variables: RBI &lt;int&gt;, SB &lt;int&gt;, CS &lt;int&gt;, BB &lt;int&gt;, SO &lt;int&gt;,
+## # ℹ 10 more variables: RBI &lt;int&gt;, SB &lt;int&gt;, CS &lt;int&gt;, BB &lt;int&gt;, SO &lt;int&gt;,
 ## #   IBB &lt;int&gt;, HBP &lt;int&gt;, SH &lt;int&gt;, SF &lt;int&gt;, GIDP &lt;int&gt;
 ```
 
@@ -258,7 +260,7 @@ head(hr_batting, n = 3)
 ## 1 bondsba01   2001     1 SFN    NL      153   476   129   156    32     2    73
 ## 2 mcgwima01   1998     1 SLN    NL      155   509   130   152    21     0    70
 ## 3 sosasa01    1998     1 CHN    NL      159   643   134   198    20     0    66
-## # … with 10 more variables: RBI &lt;int&gt;, SB &lt;int&gt;, CS &lt;int&gt;, BB &lt;int&gt;, SO &lt;int&gt;,
+## # ℹ 10 more variables: RBI &lt;int&gt;, SB &lt;int&gt;, CS &lt;int&gt;, BB &lt;int&gt;, SO &lt;int&gt;,
 ## #   IBB &lt;int&gt;, HBP &lt;int&gt;, SH &lt;int&gt;, SF &lt;int&gt;, GIDP &lt;int&gt;
 ```
 
@@ -291,7 +293,7 @@ head(new_batting, n = 1)
 ##   playerID  yearID stint teamID lgID      G    AB     R     H   X2B   X3B    HR
 ##   &lt;chr&gt;      &lt;int&gt; &lt;int&gt; &lt;fct&gt;  &lt;fct&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
 ## 1 abercda01   1871     1 TRO    NA        1     4     0     0     0     0     0
-## # … with 12 more variables: RBI &lt;int&gt;, SB &lt;int&gt;, CS &lt;int&gt;, BB &lt;int&gt;, SO &lt;int&gt;,
+## # ℹ 12 more variables: RBI &lt;int&gt;, SB &lt;int&gt;, CS &lt;int&gt;, BB &lt;int&gt;, SO &lt;int&gt;,
 ## #   IBB &lt;int&gt;, HBP &lt;int&gt;, SH &lt;int&gt;, SF &lt;int&gt;, GIDP &lt;int&gt;, batting_avg &lt;dbl&gt;,
 ## #   so_to_bb &lt;dbl&gt;
 ```
@@ -493,11 +495,11 @@ year_batting_summary %&gt;%
 
 ```
 ## # A tibble: 2 × 8
-##   yearID total_hits total_hrs total_sos total_walks total_atbats batti…¹ so_to…²
-##    &lt;int&gt;      &lt;int&gt;     &lt;int&gt;     &lt;int&gt;       &lt;int&gt;        &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-## 1   1893      15913       460      3341        6143        56898   0.280   0.544
-## 2   1879       6171        58      1843         508        24155   0.255   3.63 
-## # … with abbreviated variable names ¹​batting_avg, ²​so_to_bb
+##   yearID total_hits total_hrs total_sos total_walks total_atbats batting_avg
+##    &lt;int&gt;      &lt;int&gt;     &lt;int&gt;     &lt;int&gt;       &lt;int&gt;        &lt;int&gt;       &lt;dbl&gt;
+## 1   1893      15913       460      3341        6143        56898       0.280
+## 2   1879       6171        58      1843         508        24155       0.255
+## # ℹ 1 more variable: so_to_bb &lt;dbl&gt;
 ```
 
 --
@@ -548,18 +550,6 @@ year_batting_summary %&gt;%
 ]
 
 .pull-right[
-
-
-```
-## 
-## Attaching package: 'gt'
-```
-
-```
-## The following object is masked from 'package:xaringanthemer':
-## 
-##     google_font
-```
 
 <div id="wixepmdukw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#wixepmdukw table {
@@ -1073,7 +1063,15 @@ _"The simple graph has brought more information to the data analyst’s mind tha
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
-<script>var slideshow = remark.create();
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
@@ -1151,7 +1149,24 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
       links[i].target = '_blank';
     }
   }
-})();</script>
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
 slideshow._releaseMath = function(el) {

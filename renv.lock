@@ -74,6 +74,16 @@
       ],
       "Hash": "b7b812ae4484d4bbf0a0baac72e8fc01"
     },
+    "FNN": {
+      "Package": "FNN",
+      "Version": "1.1.3.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R"
+      ],
+      "Hash": "e9e53a559ef99e0c02bc2f9a944f0bee"
+    },
     "GGally": {
       "Package": "GGally",
       "Version": "2.1.2",

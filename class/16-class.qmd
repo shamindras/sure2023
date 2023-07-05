@@ -22,7 +22,6 @@ slide_buttons("/slides/16-slides", output_type = "pdf")
 dname="16-slides" label="Download Rmd of all slides" icon="file-earmark"
 type="success" \>}}
 
-
 ```{=html}
 <iframe width="780" height="500" src="/slides/16-slides.pdf" title="Lecture 1"></iframe>
 ```

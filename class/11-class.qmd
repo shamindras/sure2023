@@ -18,6 +18,9 @@ arrow keys, for convenience.
 ```{r show-slide-tabs, echo=FALSE, results="asis"}
 slide_buttons("/slides/11-slides", output_type = "pdf")
 ```
+{{\< downloadthis ../slides/11-slides.Rmd
+dname="11-slides" label="Download Rmd of all slides" icon="file-earmark"
+type="success" \>}}
 
 ```{=html}
 <iframe width="780" height="500" src="/slides/11-slides.pdf" title="Lecture 11"></iframe>
