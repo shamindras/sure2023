@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Supervised Learning</title>
+    <title>Machine learning</title>
     <meta charset="utf-8" />
-    <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
 .title[
-# Supervised Learning
+# Machine learning
 ]
 .subtitle[
-## Logistic regression
+## Decision trees
 ]
 .date[
-### June 24th, 2021
+### July 6th, 2023
 ]
 
 ---
@@ -28,539 +28,436 @@ class: center, middle, inverse, title-slide
 
 
 
-## The setting: [Figure 4.2 (ISLR)](http://faculty.marshall.usc.edu/gareth-james/ISL/)
+## What is Machine Learning?
 
+--
+The short version:
 
-&lt;img src="http://www.stat.cmu.edu/~pfreeman/Figure_4.2.png" width="90%" style="display: block; margin: auto;" /&gt;
+- Machine learning (ML) is a subset of statistical learning that focuses on prediction
 
 
 --
+The longer version:
+
+- ML focuses on constructing data-driven algorithms that *learn* the mapping between predictor variables and response variable(s). 
+
+ - We do not assume a parametric form for the mapping *a priori*, even if technically one can write one down *a posteriori* (e.g., by translating a tree model to a indicator-variable mathematical expression)
+
+  - e.g., linear regression is NOT considered a ML algorithm since we can write down the linear equation ahead of time
+  
+  - e.g., random forests are considered an ML algorithm since we have what the trees will look like in advance
+
+---
+
+## Which algorithm is best?
+
+__That's not the right question to ask.__
+
+(And the answer is *not* deep learning. Because if the underlying relationship between your predictors and your response is truly linear, *you do not need to apply deep learning*! Just do linear regression. Really. It's OK.)
+
+
+--
+The right question is ask is: __why should I try different algorithms?__
+
+
+--
+The answer to that is that without superhuman powers, you cannot visualize the distribution of predictor variables in their native space. 
+
+  - Of course, you can visualize these data *in projection*, for instance when we perform EDA
+  
+  - And the performance of different algorithms will depend on how predictor data are distributed...
+
+---
+
+### Data geometry
+
+&lt;img src="http://www.stat.cmu.edu/~pfreeman/data_geometry.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+- Two predictor variables with binary response variable: x's and o's 
+
+- __LHS__: Linear boundaries that form rectangles will peform well in predicting response
+
+- __RHS__: Circular boundaries will perform better
+
+---
+
+## Decision trees
+
+Decision trees partition training data into __homogenous nodes / subgroups__ with similar response values
+
+--
+
+The subgroups are found __recursively using binary partitions__ 
+
+  - i.e. asking a series of yes-no questions about the predictor variables
+
+We stop splitting the tree once a __stopping criteria__ has been reached (e.g. maximum depth allowed)
+
+
+--
+
+For each subgroup / node predictions are made with:
+
+- Regression tree: __the average of the response values__ in the node
+
+- Classification tree: __the most popular class__ in the node
+
+
+--
+
+Most popular approach is Leo Breiman's __C__lassification __A__nd __R__egression __T__ree (CART) algorithm
+
+---
+
+## Decision tree structure
+
+&lt;img src="https://bradleyboehmke.github.io/HOML/images/decision-tree-terminology.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Decision tree structure
+
+We make a prediction for an observation by __following its path along the tree__
+
+
+&lt;img src="https://bradleyboehmke.github.io/HOML/images/exemplar-decision-tree.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+
+--
+
+- Decision trees are __very easy to explain__ to non-statisticians.
+
+- Easy to visualize and thus easy to interpret __without assuming a parametric form__
+
+---
+
+### Recursive splits: each _split / rule_ depends on previous split / rule _above_ it
+
+__Objective at each split__: find the __best__ variable to partition the data into one of two regions, `\(R_1\)` &amp; `\(R_2\)`, to __minimize the error__ between the actual response, `\(y_i\)`, and the node's predicted constant, `\(c_i\)`
+
+--
+
+- For regression we minimize the sum of squared errors (SSE):
+
+`$$S S E=\sum_{i \in R_{1}}\left(y_{i}-c_{1}\right)^{2}+\sum_{i \in R_{2}}\left(y_{i}-c_{2}\right)^{2}$$`
+
+
+--
+- For classification trees we minimize the node's _impurity_ the __Gini index__
+
+  - where `\(p_k\)` is the proportion of observations in the node belonging to class `\(k\)` out of `\(K\)` total classes
+  
+  - want to minimize `\(Gini\)`: small values indicate a node has primarily one class (_is more pure_)
+
+`$$Gini = 1 - \sum_k^K p_k^2$$`
+
+
+--
+Splits yield __locally optimal__ results, so we are NOT guaranteed to train a model that is globally optimal
+
+
+--
+_How do we control the complexity of the tree?_
+
+---
+
+## Tune the __maximum tree depth__ or __minimum node size__
+
+
+&lt;img src="https://bradleyboehmke.github.io/HOML/07-decision-trees_files/figure-html/dt-early-stopping-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Prune the tree by tuning __cost complexity__
+
+Can grow a very large complicated tree, and then __prune__ back to an optimal __subtree__ using a __cost complexity__ parameter `\(\alpha\)` (like `\(\lambda\)` for elastic net) 
+
+- `\(\alpha\)` penalizes objective as a function of the number of __terminal nodes__
+
+- e.g., we want to minimize `\(SSE + \alpha \cdot (\# \text{  of terminal nodes})\)` 
+
+&lt;img src="https://bradleyboehmke.github.io/HOML/07-decision-trees_files/figure-html/pruned-tree-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Example data: MLB 2022 batting statistics
+
+Downloaded MLB 2022 batting statistics leaderboard from [Fangraphs](https://www.fangraphs.com/leaders.aspx?pos=all&amp;stats=bat&amp;lg=all&amp;qual=y&amp;type=8&amp;season=2022&amp;month=0&amp;season1=2022&amp;ind=0)
+
+
+```r
+library(tidyverse)
+mlb_data &lt;- read_csv("https://shorturl.at/iCP15") %&gt;%
+  janitor::clean_names() %&gt;%
+  mutate_at(vars(bb_percent:k_percent), parse_number)
+head(mlb_data)
+```
+
+```
+## # A tibble: 6 × 23
+##   name      team      g    pa    hr     r   rbi    sb bb_percent k_percent   iso
+##   &lt;chr&gt;     &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1 Rafael D… BOS      85   374    22    62    55     2        6.7      17.6 0.28 
+## 2 Aaron Ju… NYY      88   385    33    72    69     8       11.4      26   0.337
+## 3 Nolan Ar… STL      88   370    18    41    59     1        8.9      13   0.233
+## 4 Manny Ma… SDP      82   349    15    56    51     7       10.6      18.6 0.213
+## 5 Paul Gol… STL      90   391    20    64    70     5       12        21.2 0.26 
+## 6 Jose Ram… CLE      87   375    19    54    75    13       10.7       9.9 0.288
+## # ℹ 12 more variables: babip &lt;dbl&gt;, avg &lt;dbl&gt;, obp &lt;dbl&gt;, slg &lt;dbl&gt;,
+## #   w_oba &lt;dbl&gt;, xw_oba &lt;dbl&gt;, w_rc &lt;dbl&gt;, bs_r &lt;dbl&gt;, off &lt;dbl&gt;, def &lt;dbl&gt;,
+## #   war &lt;dbl&gt;, playerid &lt;dbl&gt;
+```
+
+
+---
+
+## Regression tree example with the [`rpart` package](https://cran.r-project.org/web/packages/rpart/vignettes/longintro.pdf)
+
+
+
+```r
+library(rpart)
+init_mlb_tree &lt;- rpart(formula = w_oba ~ bb_percent + k_percent + iso,
+                       data = mlb_data, method  = "anova")
+init_mlb_tree
+```
+
+```
+## n= 157 
+## 
+## node), split, n, deviance, yval
+##       * denotes terminal node
+## 
+##  1) root 157 0.215948200 0.3291338  
+##    2) iso&lt; 0.2055 123 0.113126200 0.3175691  
+##      4) iso&lt; 0.1035 16 0.016633000 0.2837500 *
+##      5) iso&gt;=0.1035 107 0.075457050 0.3226262  
+##       10) bb_percent&lt; 8.75 65 0.039689380 0.3146154  
+##         20) k_percent&gt;=27.15 9 0.001585556 0.2902222 *
+##         21) k_percent&lt; 27.15 56 0.031887930 0.3185357  
+##           42) iso&lt; 0.152 27 0.010937850 0.3089259 *
+##           43) iso&gt;=0.152 29 0.016135240 0.3274828  
+##             86) k_percent&gt;=21.85 17 0.008568235 0.3194706 *
+##             87) k_percent&lt; 21.85 12 0.004929667 0.3388333 *
+##       11) bb_percent&gt;=8.75 42 0.025140980 0.3350238  
+##         22) k_percent&gt;=23.45 11 0.002378909 0.3129091 *
+##         23) k_percent&lt; 23.45 31 0.015473480 0.3428710  
+##           46) iso&lt; 0.159 15 0.006778000 0.3320000 *
+##           47) iso&gt;=0.159 16 0.005260937 0.3530625 *
+##    3) iso&gt;=0.2055 34 0.026860970 0.3709706  
+##      6) iso&lt; 0.2595 23 0.009236609 0.3608696 *
+##      7) iso&gt;=0.2595 11 0.010370910 0.3920909 *
+```
+
+
+---
+
+## Display the tree with [`rpart.plot`](plhttp://www.milbo.org/rpart-plot/)
+
+
+
 .pull-left[
-Left: Linear regression
-- __not limited to be within [0, 1]!__
+
+
+```r
+library(rpart.plot)
+rpart.plot(init_mlb_tree)
+```
+
+&lt;img src="20-slides_files/figure-html/plot-tree-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
 ]
+
 .pull-right[
-Right: __Logistic regression__
-- __respects the observed range of outcomes!__
+
+- `rpart()` runs 10-fold CV to tune `\(\alpha\)` for pruning 
+
+- Selects # terminal nodes via 1 SE rule
+
+
+```r
+plotcp(init_mlb_tree)
+```
+
+&lt;img src="20-slides_files/figure-html/plot-complexity-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+
 ]
 
 
 ---
 
-## Generalized linear models (GLMs) review
-
-Linear regression: estimate __mean value__ of response variable `\(Y\)`, given predictor variables `\(x_1,\dots,x_p\)`:
-$$
-\mathbb{E}[Y|x] = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p
-$$
-
-
---
-In a __GLM__, we include a __link function__ `\(g\)` that transforms the linear model:
-
-$$
-g(\mathbb{E}[Y|x]) = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p
-$$
-
-- Use `\(g\)` to reduce the range of possible values for `\(\mathbb{E}[Y \vert x]\)` from `\((-\infty,\infty)\)` to, e.g., `\([0,1]\)` or `\([0,\infty)\)`, etc. 
-
-
---
-In a GLM you specify a __probability distribution family__ that governs the observed response values
-
---
-- e.g. if `\(Y\)` are zero and the positive integers, the family could be [Poisson](https://en.wikipedia.org/wiki/Poisson_distribution)
-
-- e.g. if `\(Y\)` are just 0 and 1, the family is [Bernoulli](https://en.wikipedia.org/wiki/Bernoulli_distribution) and extends to [Binomial](https://en.wikipedia.org/wiki/Binomial_distribution) for `\(n\)` independent trials
-
----
-
-## Logistic regression
-
-Assuming that we are dealing with two classes, the possible observed values for `\(Y\)` are 0 and 1, 
-$$
-Y \vert x \sim {\rm Binomial}(n=1,p=\mathbb{E}[Y\vert x]) = \text{Bernoulli}(p = \mathbb{E}[Y\vert x])
-$$
-
-
---
-To limit the regression betweewn `\([0, 1]\)`: use the __logit__ function, aka the __log-odds ratio__
-
-$$
-\text{logit}(p(x)) = \log \left[ \frac{p(x)}{1 - p(x)} \right] =  \log\left[\frac{\mathbb{E}[Y \vert x]}{1-\mathbb{E}[Y \vert x]}\right] = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p
-$$
-
---
-meaning
-$$
-p(x) = \mathbb{E}[Y \vert x] = \frac{e^{\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p}}{1 + e^{\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p}}
-$$
----
-
-## Major difference between linear and logistic regression
-
-
-Logistic regression __involves numerical optimization__
-
-- `\(y_i\)` is observed response for `\(n\)` observations - either 0 or 1
-
-
---
-- we need to use an iterative algorithm to find `\(\beta\)`'s that maximize the __likelihood__
-
-
-`$$\prod_{i=1}^{n} p\left(x_{i}\right)^{y_{i}}\left(1-p\left(x_{i}\right)\right)^{1-y_{i}}$$`
-
-
---
-- __Newton's method__: start with initial guess, calculate gradient of log-likelihood, add amount proportional to the gradient to parameters, moving up log-likelihood surface
-
-
---
-- means logistic regression runs more slowly than linear regression
-
-
---
-- if you're interested: [you use iteratively re-weighted least squares, Section 12.3.1](http://www.stat.cmu.edu/~cshalizi/uADA/15/lectures/12.pdf)
-
----
-
-## Inference with logistic regression
-
-__Major motivation__ for logistic regression (and all GLMs) is __inference__
-
-- how does the response change when we change a predictor by one unit?
-
-
---
-For linear regression, the answer is straightforward
-
-`$$\mathbb{E}[Y \vert x] = \beta_0 + \beta_1 x_1$$`
-
---
-For logistic regression... it is a little _less_ straightforward, 
-
-$$
-E[Y \vert x] = \frac{e^{\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p}}{1 + e^{\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p}}
-$$
-
-
---
-- the predicted response varies __non-linearly__ with the predictor variable values
-
-- one convention is to fall back upon the concept of __odds__
-
-
----
-
-## The odds interpretation
-
-Pretend the predicted probability is 0.8 given a particular predictor variable value
-
-- just pretend we only have one predictor variable
-
---
-
-This means that if we were to repeatedly sample response values given that predictor variable value: __we expect class 1 to appear 4 times as often as class 0__
-
-
-`$$Odds = \frac{\mathbb{E}[Y \vert x]}{1-\mathbb{E}[Y \vert x]} = \frac{0.8}{1-0.8} = 4 = e^{\beta_0+\beta_1x}$$`
-
-Thus we say that for the given predictor variable value, the `\(Odds\)` are 4 (or 4-1) in favor of class 1
-
---
-
-How does the odds change if I change the value of a predictor variable by one unit?
-
-
---
-
-`$$Odds_{\rm new} = e^{\beta_0+\beta_1(x+1)} = e^{\beta_0+\beta_1x}e^{\beta_1} = e^{\beta_1}Odds_{\rm old}$$`
-
-For every unit change in `\(x\)`, the odds change by a __factor__ `\(e^{\beta_1}\)`
-
----
-
-## Example data: NFL field goal attempts
-
-Created dataset using [`nflscrapR-data`](https://github.com/ryurko/nflscrapR-data) of all NFL field goal attempts from 2009 to 2019
-
-
-```r
-nfl_fg_attempts &lt;- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/glm_examples/nfl_fg_attempt_data.csv")
-nfl_fg_attempts
-```
-
-```
-## # A tibble: 10,811 × 11
-##    kicke…¹ kicke…²   qtr score…³ home_…⁴ posteam poste…⁵ kick_…⁶ pbp_s…⁷ abs_s…⁸
-##    &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-##  1 00-002… R.Biro…     1       0 PIT     TEN     away         37    2009       0
-##  2 00-002… R.Biro…     2       0 PIT     TEN     away         31    2009       0
-##  3 00-002… R.Biro…     4       0 PIT     TEN     away         45    2009       0
-##  4 00-002… J.Reed      4      -3 PIT     PIT     home         32    2009       3
-##  5 00-002… J.Reed      5       0 PIT     PIT     home         33    2009       0
-##  6 00-000… P.Daws…     1       0 CLE     CLE     home         37    2009       0
-##  7 00-001… R.Long…     1      -3 CLE     MIN     away         21    2009       3
-##  8 00-000… P.Daws…     2      -7 CLE     CLE     home         20    2009       7
-##  9 00-001… R.Long…     4      12 CLE     MIN     away         37    2009      12
-## 10 00-000… J.Hans…     1     -14 NO      DET     away         47    2009      14
-## # … with 10,801 more rows, 1 more variable: is_fg_made &lt;dbl&gt;, and abbreviated
-## #   variable names ¹​kicker_player_id, ²​kicker_player_name, ³​score_differential,
-## #   ⁴​home_team, ⁵​posteam_type, ⁶​kick_distance, ⁷​pbp_season, ⁸​abs_score_diff
-```
-
-
----
-
-## Fitting a logistic regression model
+## What about the full tree? (check out `rpart.control`)
 
 .pull-left[
-- We use the `glm` function (similar to `lm`)
-
-- __Specify the family is `binomial`__
 
 
 ```r
-*init_logit &lt;- glm(is_fg_made ~ kick_distance,
-                  data = nfl_fg_attempts,
-*                 family = "binomial")
+full_mlb_tree &lt;- rpart(formula = w_oba ~ 
+            bb_percent + k_percent + iso,
+            data = mlb_data, method = "anova", 
+            control = list(cp = 0, xval = 10))
+rpart.plot(full_mlb_tree)
 ```
 
-- View predicted probability relationship
+&lt;img src="20-slides_files/figure-html/plot-full-tree-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
 
 
 ```r
-nfl_fg_attempts %&gt;%
-* mutate(pred_prob = init_logit$fitted.values) %&gt;%
-  ggplot(aes(x = kick_distance)) +
-  geom_line(aes(y = pred_prob), 
-            color = "blue") +
-  geom_point(aes(y = is_fg_made), 
-             alpha = 0.3,
-             color = "darkorange") +
+plotcp(full_mlb_tree)
+```
+
+&lt;img src="20-slides_files/figure-html/plot-full-complexity-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+---
+
+## Train with `caret`
+
+
+```r
+library(caret)
+caret_mlb_tree &lt;- train(w_oba ~ bb_percent + k_percent + iso + avg + obp + slg + war,
+                        data = mlb_data, method = "rpart",
+                        trControl = trainControl(method = "cv", number = 10),
+                        tuneLength = 20)
+ggplot(caret_mlb_tree) + theme_bw()
+```
+
+&lt;img src="20-slides_files/figure-html/caret-tree-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## Display the final model
+
+
+```r
+rpart.plot(caret_mlb_tree$finalModel)
+```
+
+&lt;img src="20-slides_files/figure-html/unnamed-chunk-6-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Summarizing variables in tree-based models
+
+.pull-left[
+__Variable importance__ - based on reduction in SSE (_notice anything odd?_)
+
+
+```r
+library(vip)
+vip(caret_mlb_tree, geom = "point") + 
   theme_bw()
 ```
 
+&lt;img src="20-slides_files/figure-html/var-imp-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+
 ]
 .pull-right[
-&lt;img src="20-slides_files/figure-html/unnamed-chunk-3-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+- Summarize single variable's relationship with __partial dependence plot__
+
+
+```r
+library(pdp)
+partial(caret_mlb_tree, pred.var = "obp") %&gt;% 
+  autoplot() + theme_bw()
+```
+
+&lt;img src="20-slides_files/figure-html/pdp-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
 
 ]
 
 
 ---
 
+## Classification: predicting MLB HRs
+
+Used the [`baseballr`](http://billpetti.github.io/baseballr/) package to scrape all batted-balls from 2022 season:
+
 
 ```r
-summary(init_logit)
+library(tidyverse)
+batted_ball_data &lt;- read_csv("https://shorturl.at/moty2") %&gt;%
+  mutate(is_hr = as.numeric(events == "home_run")) %&gt;%
+  filter(!is.na(launch_angle), !is.na(launch_speed),
+         !is.na(is_hr))
+table(batted_ball_data$is_hr)
 ```
 
 ```
 ## 
-## Call:
-## glm(formula = is_fg_made ~ kick_distance, family = "binomial", 
-##     data = nfl_fg_attempts)
-## 
-## Coefficients:
-##                Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept)    5.916656   0.145371   40.70   &lt;2e-16 ***
-## kick_distance -0.104365   0.003255  -32.06   &lt;2e-16 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## (Dispersion parameter for binomial family taken to be 1)
-## 
-##     Null deviance: 9593.1  on 10810  degrees of freedom
-## Residual deviance: 8277.5  on 10809  degrees of freedom
-## AIC: 8281.5
-## 
-## Number of Fisher Scoring iterations: 5
+##    0    1 
+## 6702  333
 ```
 
 ---
 
-## What is [Deviance](https://en.wikipedia.org/wiki/Deviance_(statistics)?
-
-For model of interest `\(\mathcal{M}\)` the total deviance is:
-
-`$$D_{\mathcal{M}}= -2 \log \frac{\mathcal{L}_{\mathcal{M}}}{\mathcal{L}_{\mathcal{S}}} = 2\left(\log  \mathcal{L}_{\mathcal{S}}-\log  \mathcal{L}_{\mathcal{M}}\right)$$`
-
-- `\(\mathcal{L}_{\mathcal{M}}\)` is the likelihood for model `\(\mathcal{M}\)`
-
---
-
-- `\(\mathcal{L}_{\mathcal{S}}\)` is the likelihood for the __saturated__ model, with `\(n\)` parameters! (i.e., a perfect fit)
-
-- Can think of `\(\mathcal{L}_{\mathcal{S}}\)` as some constant that does not change
-
---
-
-__Deviance is a measure of goodness of fit__: the smaller the deviance, the better the fit
-
-- Generalization of RSS in linear regression to any distribution family
-
-
----
-
-## Logistic regression output
-
-```
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--2.7752   0.2420   0.4025   0.6252   1.5136 
-```
-The __deviance residuals__ are contributions to total deviance (signed square roots of unit deviances)
-$$
-d_i = \mbox{sign}(y_i-\hat{p}_i) \sqrt{-2[y_i \log \hat{p}_i + (1-y_i) \log (1 - \hat{p}_i)]}
-$$
-where `\(y_i\)` is the `\(i^{\rm th}\)` observed response and `\(\hat{p}_i\)` is the estimated probability of success 
-
-```
-Coefficients:
-               Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)    5.916656   0.145371   40.70   &lt;2e-16 ***
-kick_distance -0.104365   0.003255  -32.06   &lt;2e-16 ***
-```
-The intercept of the prediction curve is `\(e^{5.916656}\)` and `\(Odds_{\rm new}/Odds_{\rm old} = e^{-0.104365}\)`.
-
-
----
-
-## Logistic regression output
-
-```
-    Null deviance: 9593.1  on 10810  degrees of freedom
-Residual deviance: 8277.5  on 10809  degrees of freedom
-AIC: 8281.5
-```
-
-
-```r
-logLik(init_logit)   # the maximum log-likelihood value
-```
-
-```
-## 'log Lik.' -4138.732 (df=2)
-```
-
-
-- __Residual deviance__ is -2 times -4138.732, or 8277.5 (_What about the saturated model?_)
-
-  - Null deviance corresponds to intercept-only model
-
-- [AIC](https://en.wikipedia.org/wiki/Akaike_information_criterion) is `\(2k - 2\log{\cal L}\)` = `\(2 \cdot k - 2 \cdot (-4138.732)\)` = 8281.5
-
-  - where `\(k\)` is the number of degrees of freedom (here, `df` = 2)
-  
---
-
-- These are all metrics of quality of fit of the model
-
-- __We will consider these to be less important than test-set performances__
-
----
-
-## Logistic regression predictions
-
-To generate logistic regression predictions there are few things to keep in mind...
-
-- the `fitted.values` __are on the probability scale__: all are between 0 and 1
-
-
---
-- but the __default__ for `predict(init_logit)` is __the log-odds scale!__
-
-
---
-- we change this with the `type` argument: `predict(init_logit, type = "response")`
-
-
---
-How do we predict the class? e.g make or miss field goal?
-
-
---
-
-```r
-pred_fg_outcome &lt;- ifelse(init_logit$fitted.values &gt; 0.5,
-                          "make", "miss")
-```
-
-- typically if predicted probability is &gt; 0.5 then we predict success, else failure
-
----
-
-### Model assessment
-
-Most straight-forward way is the __confusion matrix__ (rows are predictions, and columns are observed):
-
-
-```r
-table("Predictions" = pred_fg_outcome, "Observed" = nfl_fg_attempts$is_fg_made)
-```
-
-```
-##            Observed
-## Predictions    0    1
-##        make 1662 8994
-##        miss   94   61
-```
-
-
---
-__In-sample misclassification rate__:
-
-
-```r
-mean(ifelse(fitted(init_logit) &lt; 0.5, 0, 1) != nfl_fg_attempts$is_fg_made)
-```
-
-```
-## [1] 0.1593747
-```
-
-
---
-[__Brier score__](https://en.wikipedia.org/wiki/Brier_score):
-
-```r
-mean((nfl_fg_attempts$is_fg_made - fitted(init_logit))^2)
-```
-
-```
-## [1] 0.1197629
-```
-
-
-
----
-
-### __Well-calibrated__ if actual probabilities match predicted probabilities
-
+## Predict HRs with launch angle and exit velocity?
 
 .pull-left[
 
 ```r
-nfl_fg_attempts %&gt;%
-  mutate(pred_prob = init_logit$fitted.values,
-         bin_pred_prob = round(pred_prob / 0.05) * .05) %&gt;%
-  # Group by bin_pred_prob:
-  group_by(bin_pred_prob) %&gt;%
-  # Calculate the calibration results:
-  summarize(n_attempts = n(),
-            bin_actual_prob = mean(is_fg_made)) %&gt;%
-  ggplot(aes(x = bin_pred_prob, y = bin_actual_prob)) +
-  geom_point(aes(size = n_attempts)) +
-  geom_smooth(method = "loess", se = FALSE) +
-  geom_abline(slope = 1, intercept = 0, 
-              color = "black", linetype = "dashed") +
-  coord_equal() + 
-  scale_x_continuous(limits = c(0,1)) + 
-  scale_y_continuous(limits = c(0,1)) + 
-  labs(size = "Number of attempts",
-       x = "Estimated make probability",
-       y = "Observed make probability") + 
+batted_ball_data %&gt;%
+  ggplot(aes(x = launch_speed, 
+             y = launch_angle,
+             color = as.factor(is_hr))) +
+  geom_point(alpha = 0.5) +
+  ggthemes::scale_color_colorblind(
+    labels = c("No", "Yes")) +
+  labs(x = "Exit velocity", 
+       y = "Launch angle", 
+       color = "HR?") +
   theme_bw() +
   theme(legend.position = "bottom")
 ```
 
+- HRs are relatively rare and confined to one area of this plot
+
 ]
 .pull-right[
-If model says the probability of rain for a group of days is 50%, it better rain on half those days... __or something is incorrect about the probability!__
-
 &lt;img src="20-slides_files/figure-html/unnamed-chunk-7-1.png" width="504" /&gt;
 
 ]
 
 ---
 
-### BONUS: Leave-one-season-out cross validation (with [`purrr`](https://purrr.tidyverse.org/))
-
-In many datasets rather than random holdout folds, you might have particular holdouts of interest (e.g. seasons, games, etc.)
-
---
+## Train with `caret`
 
 
 ```r
-nfl_fg_loso_cv_preds &lt;- # generate holdout predictions for every row based season
-  map_dfr(unique(nfl_fg_attempts$pbp_season), 
-          function(season) {
-            # Separate test and training data:
-            test_data &lt;- nfl_fg_attempts %&gt;%
-              filter(pbp_season == season)
-            train_data &lt;- nfl_fg_attempts %&gt;%
-              filter(pbp_season != season)
-            
-            # Train model:
-            fg_model &lt;- glm(is_fg_made ~ kick_distance, data = train_data,
-                            family = "binomial")
-            
-            # Return tibble of holdout results:
-            tibble(test_pred_probs = predict(fg_model, newdata = test_data,
-                                             type = "response"),
-                   test_actual = test_data$is_fg_made,
-                   test_season = season) 
-          })
+library(caret)
+caret_hr_tree &lt;- train(as.factor(is_hr) ~ launch_speed + launch_angle,
+                        data = batted_ball_data, method = "rpart",
+                        trControl = trainControl(method = "cv", number = 10),
+                        tuneLength = 20)
+ggplot(caret_hr_tree) + theme_bw()
 ```
+
+&lt;img src="20-slides_files/figure-html/hr-tree-1.png" width="504" style="display: block; margin: auto;" /&gt;
 
 
 ---
 
-## Overall holdout performance
-
-
-__Misclassification rate__:
+## Display the final model
 
 
 ```r
-nfl_fg_loso_cv_preds %&gt;%
-  mutate(test_pred = ifelse(test_pred_probs &lt; .5, 0, 1)) %&gt;%
-  summarize(mcr = mean(test_pred != test_actual))
+rpart.plot(caret_hr_tree$finalModel)
 ```
 
-```
-## # A tibble: 1 × 1
-##     mcr
-##   &lt;dbl&gt;
-## 1 0.160
-```
-
-
-
-__Brier score__:
-
-```r
-nfl_fg_loso_cv_preds %&gt;%
-  summarize(brier_score = mean((test_actual - test_pred_probs)^2))
-```
-
-```
-## # A tibble: 1 × 1
-##   brier_score
-##         &lt;dbl&gt;
-## 1       0.120
-```
-
-
----
-
-## Holdout performance by season
-
-
-```r
-nfl_fg_loso_cv_preds %&gt;%
-  mutate(test_pred = ifelse(test_pred_probs &lt; .5, 0, 1)) %&gt;%
-  group_by(test_season) %&gt;%
-  summarize(mcr = mean(test_pred != test_actual)) %&gt;%
-  ggplot(aes(x = test_season, y = mcr)) +
-  geom_bar(stat = "identity", width = .1) + geom_point(size = 5) +
-  theme_bw() +
-  scale_x_continuous(breaks = unique(nfl_fg_loso_cv_preds$test_season))
-```
-
-&lt;img src="20-slides_files/figure-html/mcr-cv-year-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
+&lt;img src="20-slides_files/figure-html/unnamed-chunk-8-1.png" width="504" style="display: block; margin: auto;" /&gt;
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
