@@ -1,7 +1,7 @@
 ---
-title: "Supervised Learning"
-subtitle: "Nonparametric regression"
-date: "July 8th, 2021"
+title: "Machine learning"
+subtitle: "Random forests and gradient-boosted trees"
+date: "July 7th, 2023"
 output:
   xaringan::moon_reader:
     lib_dir: "libs"
@@ -19,11 +19,12 @@ output:
       navigation:
         scroll: false
 editor_options:
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
 library(xaringanthemer)
+library(tidyverse)
 style_mono_accent(base_color = "#cc002b")
 ```
 
@@ -31,352 +32,386 @@ style_mono_accent(base_color = "#cc002b")
 knitr::opts_chunk$set(fig.retina = 3, warning = FALSE, message = FALSE)
 ```
 
-## Model flexibility vs interpretability
 
-[Figure 2.7, Introduction to Statistical Learning with Applications in R (ISLR)](https://www.statlearning.com/)
+## Decision trees review
 
-```{r out.width='50%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/flexibility.png")
+Decision trees partition training data into __homogenous nodes / subgroups__ with similar response values
+
+__Pros__
+
+- Decision trees are __very easy to explain__ to non-statisticians.
+
+- Easy to visualize and thus easy to interpret __without assuming a parametric form__
+
+--
+
+__Cons__
+
+
+- High variance, i.e. split a dataset in half and grow tress in each half, the result will be very different
+
+- Related note - __they generalize poorly resulting in higher test set error rates__
+
+--
+
+But there are several ways we can overcome this via __ensemble models__
+
+---
+
+## Bagging
+
+__Bootstrap aggregation__ (aka bagging) is a general approach for overcoming high variance
+
+
+--
+- __Bootstrap__: sample the training data _with replacement_
+
+```{r out.width='60%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://bradleyboehmke.github.io/HOML/images/bootstrap-scheme.png")
 ```
 
-__Tradeoff__ between model's _flexibility_ (i.e. how "curvy" it is) and how __interpretable__ it is
 
-- Simpler, parametric form of the model $\Rightarrow$ the easier it is to interpret
+--
+- __Aggregation__: Combine the results from many trees together, each constructed with a different bootstrapped sample of the data
+
 
 ---
 
-## Model flexibility vs interpretability
+## Bagging algorithm
 
-```{r out.width='50%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/flexibility.png")
-```
-
-- __Parametric__ models, for which we can write down a mathematical expression for $f(X)$ __before observing the data__, _a priori_ (e.g. linear regression), __are inherently less flexible__
+Start with a __specified number of trees $B$__:
 
 
 --
+- For each tree $b$ in $1, \dots, B$:
 
-- __Nonparametric__ models, in which $f(X)$ is __estimated from the data__ (e.g. kernel regression)
-
----
-
-## K Nearest Neighbors (KNN)
-
-- Find the $k$ data points __closest__ to an observation $x$, use these to predit
-
-  - Need to use some measure of distance, e.g., Euclidean distance
-
---
-
-- KNN is data-driven, but we can actually write down the model _a priori_
-
---
-
-- Regression:
-$$
-{\hat Y} \vert X = \frac{1}{k} \sum_{i=1}^k Y_i \,,
-$$
-- Classification:
-$$
-\hat{P}[Y = j \vert X] = \frac{1}{k} \sum_{i=1}^k 1(Y_i = j) \,,
-$$
-
-  - $1(\cdot)$ is the indicator function: returns 1 if TRUE, and 0 otherwise. 
-
-  - Summation yields the proportion of neighbors that are of class $j$
-
----
-
-## Finding the optimal number of neighbors $k$
-
-__The number of neighbors $k$ is a tuning parameter__ (like $\lambda$ is for ridge / lasso)
-
---
-
-Determining the optimal value of $k$ requires balancing bias and variance:
-
-- If $k$ is too small, the resulting model is *too flexible*,
-
-  - low bias (it is right on average...if we apply KNN to an infinite number of datasets sampled from the same parent population) 
+  - Construct a bootstrap sample from the training data
   
-  - high variance (the predictions have a large spread in values when we apply KNN to our infinite data). See the panels to the left on the next slide.
-
---
-
-- If $k$ is too large, the resulting model is *not flexible enough*, 
-
-  - high bias (wrong on average) and 
   
-  - low variance (nearly same predictions, every time). See the panels to the right on the next slide.
+--
+  - Grow a deep, unpruned, complicated (aka really overfit!) tree
+
+
+--
+To generate a prediction for a new point:
+
+- __Regression__: take the __average__ across the $B$ trees
+
+
+--
+- __Classification__: take the __majority vote__ across the $B$ trees 
+
+  - assuming each tree predicts a single class (could use probabilities instead...)
+
+
+
+--
+Improves prediction accuracy via __wisdom of the crowds__ - but at the expense of interpretability
+
+- Easy to read one tree, but how do you read $B = 500$?
+
+
+--
+But we can still use the measures of __variable importance__ and __partial dependence__ to summarize our models
 
 ---
 
-## Finding the optimal number of neighbors $k$
+## Random forests algorithm
 
-```{r out.width='40%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/Fig_3.16.png")
-```
+Random forests are __an extension of bagging__
 
-```{r out.width='40%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/Fig_2.16.png")
-```
-
-
-(Figures 3.16 [top] and 2.16 [bottom], *Introduction to Statistical Learning* by James et al.)
-
----
-
-## KNN in context
-
-Here are two quotes from ISLR to keep in mind when thinking about KNN:
-
-- "As a general rule, parametric methods [like linear regression] will tend to outperform non-parametric approaches [like KNN] when there is a small number of observations per predictor." This is the *curse of dimensionality*: for data-driven models, the amount of data you need to get similar model performance goes up exponentially with $p$.
 
 --
+- For each tree $b$ in $1, \dots, B$:
 
-$\Rightarrow$ KNN might not be a good model to learn when the number of predictor variables is very large.
-
---
-
-- "Even in problems in which the dimension is small, we might prefer linear regression to KNN from an interpretability standpoint. If the test MSE of KNN is only slightly lower than that of linear regression, we might be willing to forego a little bit of prediction accuracy for the sake of a simple model..."
-
---
-
-$\Rightarrow$ KNN is not the best model to learn if inference is the goal of an analysis.
-
----
-
-## KNN: two critical points to remember
-
-1. To determine which neighbors are the nearest neighbors, pairwise Euclidean distances are computed...so we may need to scale (or standardize) the individual predictor variables so that the distances are not skewed by that one predictor that has the largest variance.
-
---
-
-2. Don't blindly compute a pairwise distance matrix! For instance, if $n$ = 100,000, then your pairwise distance matrix will have $10^{10}$ elements, each of which uses 8 bytes in memory...resulting in a memory usage of 80 GB! Your laptop cannot handle this. It can barely handle 1-2 GB at this point. If $n$ is large, you have three options:
-    a. subsample your data, limiting $n$ to be $\lesssim$ 15,000-20,000;
-    b. use a variant of KNN that works with sparse matrices (matrices that can be compressed since most values are zero); or
-    c. make use of a "kd tree" to more effectively (but only approximately) identify nearest neighbors.
+  - Construct a bootstrap sample from the training data
   
-The [`FNN` package in `R`](https://daviddalpiaz.github.io/r4sl/knn-reg.html) has an option to search for neighbors via the use of a kd tree.
+  
+--
+  - Grow a deep, unpruned, complicated (aka really overfit!) tree __but with a twist__
+  
+  
+--
+  - __At each split__: limit the variables considered to a __random subset__ $m_{try}$ of original $p$ variables
 
 
 --
-But instead we will use the [`caret`](http://topepo.github.io/caret/index.html) package...
+Predictions are made the same way as bagging:
+
+- __Regression__: take the __average__ across the $B$ trees
+
+
+- __Classification__: take the __majority vote__ across the $B$ trees 
+
+
+--
+__Split-variable randomization__ adds more randomness to make __each tree more independent of each other__ 
+
+
+--
+Introduce $m_{try}$ as a tuning parameter: typically use $p / 3$ (regression) or $\sqrt{p}$ (classification)
+- $m_{try} = p$
+--
+ is bagging
 
 ---
 
-## Example data: MLB 2021 batting statistics
+## Example data: MLB 2022 batting statistics
 
-Downloaded MLB 2021 batting statistics leaderboard from [Fangraphs](https://www.fangraphs.com/leaders.aspx?pos=all&stats=bat&lg=all&qual=y&type=8&season=2019&month=0&season1=2019&ind=0)
+Downloaded MLB 2022 batting statistics leaderboard from [Fangraphs](https://www.fangraphs.com/leaders.aspx?pos=all&stats=bat&lg=all&qual=y&type=8&season=2022&month=0&season1=2022&ind=0)
 
 ```{r load-data, warning = FALSE, message = FALSE}
 library(tidyverse)
-mlb_data <- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/fg_batting_2021.csv")
-head(mlb_data)
-```
-
-
----
-
-## Data cleaning
-
-- [`janitor`](http://sfirke.github.io/janitor/) package has convenient functions for data cleaning like `clean_names()`
-
-- `parse_number()` function provides easy way to convert character to numeric columns
-
-```{r clean-data}
-library(janitor)
-mlb_data_clean <- clean_names(mlb_data)
-mlb_data_clean <- mlb_data_clean %>%
+mlb_data <- read_csv("https://shorturl.at/iCP15") %>%
+  janitor::clean_names() %>%
   mutate_at(vars(bb_percent:k_percent), parse_number)
-head(mlb_data_clean)
-```
-
----
-
-## KNN example
-
-`caret` is a package of functions designed to simplify training, tuning, and testing statistical learning methods
-
-- first create partitions for training and test data using `createDataPartition()`
-
-```{r split-data}
-library(caret)
-set.seed(1960)
-train_i <- createDataPartition(y = mlb_data_clean$w_oba, p = 0.7, list = FALSE) %>%
-  as.numeric()
-train_mlb_data <- mlb_data_clean[train_i,]
-test_mlb_data <- mlb_data_clean[-train_i,]
-```
-
---
-
-- next [`train()`](http://topepo.github.io/caret/model-training-and-tuning.html) to find the optimal `k` on the training data with cross-validation
-
-```{r train-knn}
-set.seed(1971)
-init_knn_mlb_train <- train(w_oba ~ bb_percent + k_percent + iso, 
-                            data = train_mlb_data, method = "knn",
-                            trControl = trainControl("cv", number = 10),
-                            preProcess = c("center", "scale"),
-                            tuneLength = 10)
-```
-
----
-
-## KNN example
-
-```{r plot-knn, fig.align ='center', fig.height=5}
-ggplot(init_knn_mlb_train) + theme_bw()
+model_mlb_data <- mlb_data %>%
+  dplyr::select(-name, -team, -playerid)
+head(model_mlb_data)
 ```
 
 
 ---
 
-## KNN example
+## Example using [`ranger`](https://github.com/imbs-hl/ranger)
 
-Can manually create a __tuning grid__ to search over for the tuning parameter `k`
-
-```{r tune-k}
-set.seed(1979)
-tune_knn_mlb_train <- train(w_oba ~ bb_percent + k_percent + iso, 
-                            data = train_mlb_data, method = "knn",
-                            trControl = trainControl("cv", number = 10),
-                            preProcess = c("center", "scale"),
-                            tuneGrid = expand.grid(k = 2:20)) #<<
-tune_knn_mlb_train$results
-```
-
----
-
-## KNN example
-
-```{r plot-knn-tune, fig.align ='center', fig.height=5}
-ggplot(tune_knn_mlb_train) + theme_bw()
-```
-
----
-
-## KNN example
-
-```{r test-preds}
-tune_knn_mlb_train$bestTune
-test_preds <- predict(tune_knn_mlb_train, test_mlb_data)
-head(test_preds)
-RMSE(test_preds, test_mlb_data$w_oba)
-```
-
----
-
-## What does KNN remind you of?...
-
-```{r out.width='40%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("https://media1.giphy.com/media/12Gyz2J1b9SjD2/200w.gif")
-```
-
----
-
-## Kernels
-
-A kernel $K(x)$ is a weighting function used in estimators, and technically has only one required property:
-
-- $K(x) \geq 0$ for all $x$
-
-However, in the manner that kernels are used in statistics, there are two other properties that are usually satisfied:
-
-- $\int_{-\infty}^\infty K(x) dx = 1$; and 
-
-- $K(-x) = K(x)$ for all $x$.
-
-In short: __a kernel is a symmetric PDF!__
-
----
-
-## Kernel density estimation
-
-__Goal__: estimate the PDF $f(x)$ for all possible values (assuming it is continuous / smooth)
-
---
-
-$$
-\text{Kernel density estimate: } \hat{f}(x) = \frac{1}{n} \sum_{i=1}^n \frac{1}{h} K_h(x - x_i)
-$$
-
---
-- $n =$ sample size, $x =$ new point to estimate $f(x)$ (does NOT have to be in dataset!)
-
-
---
-- $h =$ __bandwidth__, analogous to histogram bin width, ensures $\hat{f}(x)$ integrates to 1
-
-- $x_i =$ $i$th observation in dataset
-
-
---
-- $K_h(x - x_i)$ is the __Kernel__ function, creates __weight__ given distance of $i$th observation from new point 
-  - as $|x - x_i| \rightarrow \infty$ then $K_h(x - x_i) \rightarrow 0$, i.e. further apart $i$th row is from $x$, smaller the weight
-  
-  - as __bandwidth__ $h \uparrow$ weights are more evenly spread out (as $h \downarrow$ more concentrated around $x$) 
-
-  - typically use [__Gaussian__ / Normal](https://en.wikipedia.org/wiki/Normal_distribution) kernel: $\propto e^{-(x - x_i)^2 / 2h^2}$
-  
-  - $K_h(x - x_i)$ is large when $x_i$ is close to $x$
-  
-
----
-
-## Commonly Used Kernels
-
-```{r out.width='40%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/kernels.png")
-```
-
-
-A general rule of thumb: the choice of kernel will have little effect on estimation, particularly if the sample size is large! The Gaussian kernel (i.e., a normal PDF) is by far the most common choice, and is the default for `R` functions that utilize kernels.
-
-
----
-
-## Kernel regression
-
-We can apply kernels in the regression setting as well as in the density estimation setting!
-
-The classic kernel regression estimator is the __Nadaraya-Watson__ estimator:
-
-$$\hat{y}_h(x) = \sum_{i=1}^n w_i(x) Y_i \,,$$
-
-where
-$$w_i(x) = \frac{K\left(\frac{x-X_i}{h}\right)}{\sum_{j=1}^n K\left(\frac{x-X_j}{h}\right)} \,.$$
-
-Regression estimate is the average of all the *weighted* observed response values; 
-
-- Farther $x$ is from observation $\Rightarrow$ less weight that observation has in determining the regression estimate at $x$
-
----
-
-## Kernel regression with `np`
-
-Use the `npregbw` function to tune bandwidth using [__generalized cross-validation__](https://bookdown.org/egarpor/NP-UC3M/kre-i-bwd.html#kre-i-bwd-cv)
-
-```{r, eval = FALSE}
-library(np)
-mlb_bw0 <- npregbw(w_oba ~ bb_percent + k_percent + iso, 
-                            data = train_mlb_data)
-```
-
-```{r, include = FALSE}
-library(np)
-mlb_bw0 <- npregbw(w_oba ~ bb_percent + k_percent + iso, 
-                            data = train_mlb_data)
-```
-
-Generate predictions with `npreg` with provided bandwidth object
+`ranger` package is a popular / fast implementation ([see `randomForest`](https://cran.r-project.org/web/packages/randomForest/randomForest.pdf) for the original)
 
 ```{r}
-mlb_test_npreg <- npreg(mlb_bw0, newdata = test_mlb_data) #<<
-RMSE(mlb_test_npreg$mean, test_mlb_data$w_oba) 
+library(ranger)
+init_mlb_rf <- ranger(war ~ ., data = model_mlb_data, num.trees = 50, importance = "impurity")
+init_mlb_rf
 ```
 
+---
+
+## Out-of-bag estimate
+
+Since the trees are constructed via bootstrapped data (samples with replacements) - each sample _is likely to have duplicate observations / rows_
+
+__Out-of-bag (OOB)__ - original observations not contained in a single bootstrap sample
+
+- Can use the OOB samples to estimate predictive performance (OOB becomes better with larger datasets)
+
+- On average $\approx 63$% of original data ends up in any particular bootstrap sample
+
+---
+
+## Variable importance
+
+```{r fig.align='center', fig.height=6}
+library(vip)
+vip(init_mlb_rf, geom = "point") + theme_bw()
+```
+
+---
+
+## Tuning random forests
+
+Unfortunately `caret` does not let you know tune number of trees - typically the error goes down with more (_Exercise: check out CV performance as a function of the number trees on your own, compare with OOB error_)
+
+.pull-left[
+- __Important__: $m_{try}$
+
+- Marginal: tree complexity, splitting rule, sampling scheme
+
+
+```{r}
+library(caret)
+rf_tune_grid <- 
+  expand.grid(mtry = seq(3, 18, by = 3), 
+              splitrule = "variance",
+              min.node.size = 5)
+set.seed(1917)
+caret_mlb_rf <- 
+  train(war ~ ., data = model_mlb_data,
+        method = "ranger", num.trees = 50,
+        trControl = trainControl(
+          method = "cv", number = 5),
+        tuneGrid = rf_tune_grid)
+```
+
+]
+.pull-right[
+```{r fig.align='center', fig.height=5}
+ggplot(caret_mlb_rf) + theme_bw()
+```
+
+]
+
+---
+
+## Boosting
+
+Build ensemble models __sequentially__
+
+
+--
+- start with a __weak learner__, e.g. small decision tree with few splits
+
+
+--
+- each model in the sequence _slightly_ improves upon the predictions of the previous models __by focusing on the observations with the largest errors / residuals__
+
+```{r out.width='80%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://bradleyboehmke.github.io/HOML/images/boosted-trees-process.png")
+```
+
+---
+
+## Boosted trees algorithm
+
+Write the prediction at step $t$ of the search as $\hat{y}_i^{(t)}$, start with $\hat{y}_i^{(0)} = 0$
+
+- Fit the first decision tree $f_1$ to the data: $\hat{y}_i^{(1)} = f_1(x_i) = \hat{y}_i^{(0)} + f_1(x_i)$
+
+
+--
+- Fit the next tree $f_2$ to the residuals of the previous: $y_i - \hat{y}_i^{(1)}$
+
+- Add this to the prediction: $\hat{y}_i^{(2)} = \hat{y}_i^{(1)} + f_2(x_i) = f_1(x_i) + f_2(x_i)$
+
+
+--
+- Fit the next tree $f_3$ to the residuals of the previous: $y_i - \hat{y}_i^{(2)}$
+
+- Add this to the prediction:  $\hat{y}_i^{(3)} = \hat{y}_i^{(2)} + f_3(x_i) = f_1(x_i) + f_2(x_i) + f_3(x_i)$
+
+
+--
+__Continue until some stopping criteria__ to reach final model as a __sum of trees__:
+
+$$\hat{y_i} = f(x_i) = \sum_{b=1}^B f_b(x_i)$$
+
+---
+
+## Visual example of boosting in action
+
+```{r out.width='80%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://bradleyboehmke.github.io/HOML/10-gradient-boosting_files/figure-html/boosting-in-action-1.png")
+```
+
+
+---
+
+## Gradient boosted trees
+
+Regression boosting algorithm can be generalized to other loss functions via __gradient descent__ - leading to gradient boosted trees, aka __gradient boosting machines (GBMs)__
+
+Update the model parameters in the direction of the loss function's descending gradient 
+
+```{r out.width='60%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://bradleyboehmke.github.io/HOML/10-gradient-boosting_files/figure-html/gradient-descent-fig-1.png")
+```
+
+
+---
+
+## Tune the learning rate in gradient descent
+
+We need to control how much we update by in each step - __the learning rate__
+
+```{r out.width='100%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://bradleyboehmke.github.io/HOML/10-gradient-boosting_files/figure-html/learning-rate-fig-1.png")
+```
+
+
+---
+
+### Stochastic gradient descent can help with complex loss functions
+
+Can take random samples of the data when updating - makes algorithm faster and adds randomness to get closer to global minimum (no guarantees!)
+
+```{r out.width='100%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://bradleyboehmke.github.io/HOML/10-gradient-boosting_files/figure-html/stochastic-gradient-descent-fig-1.png")
+```
+
+
+---
+
+## eXtreme gradient boosting with [XGBoost](https://xgboost.readthedocs.io/en/latest/R-package/xgboostPresentation.html)
+
+```{r out.width='80%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://media1.tenor.com/images/6e86cad4899cd02047c33ecfc0e4052b/tenor.gif?itemid=11446810")
+```
+
+
+---
+
+## Tuning GBMs with [`xgboost`](https://xgboost.readthedocs.io/en/latest/R-package/xgboostPresentation.html)
+
+__XGBoost__ (extreme gradient boosting) is a very powerful, efficient boosting library that is available to use within `R` via the [`xgboost`](https://xgboost.readthedocs.io/en/latest/R-package/xgboostPresentation.html) package
+
+
+--
+What we have to consider tuning (our __hyperparameters__):
+
+- number of trees $B$ (`nrounds`)
+
+- learning rate (`eta`), i.e. how much we update in each step
+
+- these two really have to be tuned together
+
+--
+- complexity of the trees (depth, number of observations in nodes)
+
+
+--
+- XGBoost also provides more __regularization__ (via `gamma`) and early stopping
+
+
+--
+__More work to tune properly as compared to random forests__
+
+- But GBMs have more flexibility in their usage for particular objective functions
+
+- _Insert with great power comes great responsibility meme_
+
+---
+
+## XGBoost example
+
+```{r, message = FALSE, warning = FALSE}
+library(xgboost)
+xgboost_tune_grid <- expand.grid(nrounds = seq(from = 20, to = 200, by = 20),
+                                 eta = c(0.025, 0.05, 0.1, 0.3), gamma = 0,
+                                 max_depth = c(1, 2, 3, 4), colsample_bytree = 1,
+                                 min_child_weight = 1, subsample = 1)
+xgboost_tune_control <- trainControl(method = "cv", number = 5, verboseIter = FALSE)
+set.seed(1937)
+xgb_tune <- train(x = as.matrix(dplyr::select(model_mlb_data, -war)),
+                  y = model_mlb_data$war, trControl = xgboost_tune_control,
+                  tuneGrid = xgboost_tune_grid, 
+                  objective = "reg:squarederror", method = "xgbTree",
+                  verbosity = 0)
+xgb_tune$bestTune
+```
+
+---
+
+## XGBoost example
+
+```{r, fig.align='center', fig.height=4, message = FALSE, warning = FALSE}
+xgb_fit_final <- xgboost(data = as.matrix(dplyr::select(model_mlb_data, -war)),
+                         label = model_mlb_data$war, objective = "reg:squarederror",
+                         nrounds = xgb_tune$bestTune$nrounds,
+                         params = as.list(dplyr::select(xgb_tune$bestTune,
+                                                        -nrounds)), 
+                         verbose = 0)
+vip(xgb_fit_final) + theme_bw()
+```
+
+
+---
+
+## XGBoost example
+
+```{r, fig.align='center', fig.height=5}
+library(pdp)
+partial(xgb_fit_final, pred.var = "off", train = as.matrix(dplyr::select(model_mlb_data, -war)),
+        plot.engine = "ggplot2", plot = TRUE,
+        type = "regression") + theme_bw()
+```
 
 
 

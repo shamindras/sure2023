@@ -1,5 +1,5 @@
 ---
-title: "Introduction and Welcome to SURE 2023"
+title: "Decision Trees"
 date: "2023-07-06"
 ---
 
