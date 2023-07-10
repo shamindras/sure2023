@@ -1,7 +1,7 @@
 ---
-title: "Machine learning"
-subtitle: "Decision trees"
-date: "July 12th, 2021"
+title: "Dimension Reduction"
+subtitle: "Principal components analysis (PCA)"
+date: "July 10th, 2023"
 output:
   xaringan::moon_reader:
     lib_dir: "libs"
@@ -19,11 +19,12 @@ output:
       navigation:
         scroll: false
 editor_options:
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
 library(xaringanthemer)
+library(tidyverse)
 style_mono_accent(base_color = "#cc002b")
 ```
 
@@ -31,295 +32,478 @@ style_mono_accent(base_color = "#cc002b")
 knitr::opts_chunk$set(fig.retina = 3, warning = FALSE, message = FALSE)
 ```
 
-## What is Machine Learning?
+## What is the goal of dimension reduction?
+
+We have $p$ variables (columns) for $n$ observations (rows) __BUT__ which variables are __interesting__?
 
 --
-The short version:
 
-- Machine learning (ML) is a subset of statistical learning that focuses on prediction
+Can we find a smaller number of dimensions that captures the __interesting__ structure in the data?
 
+  - Could examine all pairwise scatterplots of each variable - tedious, manual process
 
---
-The longer version:
-
-- ML focuses on constructing data-driven algorithms that *learn* the mapping between predictor variables and response variable(s). 
-
- - We do not assume a parametric form for the mapping *a priori*, even if technically one can write one down *a posteriori* (e.g., by translating a tree model to a indicator-variable mathematical expression)
-
-  - e.g., linear regression is NOT considered a ML algorithm since we can write down the linear equation ahead of time
+  - Tuesday: clustered variables based on correlation
   
-  - e.g., random forests are considered an ML algorithm since we have what the trees will look like in advance
-
----
-
-## Which algorithm is best?
-
-__That's not the right question to ask.__
-
-(And the answer is *not* deep learning. Because if the underlying relationship between your predictors and your response is truly linear, *you do not need to apply deep learning*! Just do linear regression. Really. It's OK.)
-
-
---
-The right question is ask is: __why should I try different algorithms?__
-
-
---
-The answer to that is that without superhuman powers, you cannot visualize the distribution of predictor variables in their native space. 
-
-  - Of course, you can visualize these data *in projection*, for instance when we perform EDA
-  
-  - And the performance of different algorithms will depend on how predictor data are distributed...
-
----
-
-### Data geometry
-
-```{r out.width='70%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("http://www.stat.cmu.edu/~pfreeman/data_geometry.png")
-```
-
-- Two predictor variables with binary response variable: x's and o's 
-
-- __LHS__: Linear boundaries that form rectangles will peform well in predicting response
-
-- __RHS__: Circular boundaries will perform better
-
----
-
-## Decision trees
-
-Decision trees partition training data into __homogenous nodes / subgroups__ with similar response values
-
 --
 
-The subgroups are found __recursively using binary partitions__ 
-
-  - i.e. asking a series of yes-no questions about the predictor variables
-
-We stop splitting the tree once a __stopping criteria__ has been reached (e.g. maximum depth allowed)
+  - Can we find a combination of the original $p$ variables?
 
 
 --
 
-For each subgroup / node predictions are made with:
+__Dimension reduction__: 
 
-- Regression tree: __the average of the response values__ in the node
+- Focus on reducing the dimensionality of the feature space (i.e., number of columns), 
 
-- Classification tree: __the most popular class__ in the node
-
-
---
-
-Most popular approach is Leo Breiman's __C__lassification __A__nd __R__egression __T__ree (CART) algorithm
+- While __retaining__ most of the information / __variability__ in a lower dimensional space (i.e., reducing the number of columns)
 
 ---
 
-## Decision tree structure
+## [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis)
 
-```{r out.width='100%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("https://bradleyboehmke.github.io/HOML/images/decision-tree-terminology.png")
-```
-
----
-
-## Decision tree structure
-
-We make a prediction for an observation by __following its path along the tree__
-
-
-```{r out.width='100%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("https://bradleyboehmke.github.io/HOML/images/exemplar-decision-tree.png")
+```{r out.width='110%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://bradleyboehmke.github.io/HOML/images/pcr-steps.png")
 ```
 
 
---
-
-- Decision trees are __very easy to explain__ to non-statisticians.
-
-- Easy to visualize and thus easy to interpret __without assuming a parametric form__
-
 ---
 
-### Recursive splits: each _split / rule_ depends on previous split / rule _above_ it
+## [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis)
 
-__Objective at each split__: find the __best__ variable to partition the data into one of two regions, $R_1$ & $R_2$, to __minimize the error__ between the actual response, $y_i$, and the node's predicted constant, $c_i$
+- PCA explores the __covariance__ between variables, and combines variables into a smaller set of __uncorrelated__ variables called __principal components (PCs)__
+
+- PCs are __weighted__, linear combinations of the original variables
+
+  - Weights reveal how different variables are ___loaded___ into the PCs
+
+- We want a __small number of PCs__ to explain most of the information / variance in the data
 
 --
 
-- For regression we minimize the sum of squared errors (SSE):
+__First principal component__:
 
-$$S S E=\sum_{i \in R_{1}}\left(y_{i}-c_{1}\right)^{2}+\sum_{i \in R_{2}}\left(y_{i}-c_{2}\right)^{2}$$
-
+$$Z_1 = \phi_{11} X_1 + \phi_{21} X_2 + \dots + \phi_{p1} X_p$$
 
 --
-- For classification trees we minimize the node's _impurity_ the __Gini index__
 
-  - where $p_k$ is the proportion of observations in the node belonging to class $k$ out of $K$ total classes
+  - $\phi_{j1}$ are the weights indicating the contributions of each variable $j \in 1, \dots, p$
   
-  - want to minimize $Gini$: small values indicate a node has primarily one class (_is more pure_)
-
-$$Gini = 1 - \sum_k^K p_k^2$$
-
-
---
-Splits yield __locally optimal__ results, so we are NOT guaranteed to train a model that is globally optimal
-
+  - Weights are normalized $\sum_{j=1}^p \phi_{j1}^2 = 1$
+  
+  - $\phi_{1} = (\phi_{11}, \phi_{21}, \dots, \phi_{p1})$ is the __loading vector__ for PC1
 
 --
-_How do we control the complexity of the tree?_
+  
+  - $Z_1$ is a linear combination of the $p$ variables that has the __largest variance__
 
 ---
 
-## Tune the __maximum tree depth__ or __minimum node size__
+## [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis)
 
+__Second principal component__:
+
+$$Z_2 = \phi_{12} X_1 + \phi_{22} X_2 + \dots + \phi_{p2} X_p$$
+
+  - $\phi_{j2}$ are the weights indicating the contributions of each variable $j \in 1, \dots, p$
+  
+  - Weights are normalized $\sum_{j=1}^p \phi_{j1}^2 = 1$
+  
+  - $\phi_{2} = (\phi_{12}, \phi_{22}, \dots, \phi_{p2})$ is the __loading vector__ for PC2
+  
+  - $Z_2$ is a linear combination of the $p$ variables that has the __largest variance__
+  
+    - __Subject to constraint it is uncorrelated with $Z_1$__ 
+    
+--
+
+We repeat this process to create $p$ principal components
+
+---
+
+## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
+
+```{r out.width='50%', echo = FALSE, fig.align='center'}
+# Ensure reproducibility by setting random number seed
+set.seed(123) 
+plot_data <- tibble("x" = rnorm(50, mean = 100, sd = 20)) %>%
+  mutate(y =  0.8 * x + rnorm(50, mean = 0, sd = 10))
+basic_scatter <- ggplot(plot_data) +
+  geom_point(aes(x, y), color = "black")+
+  coord_equal() +
+  theme_bw()
+basic_scatter
+```
+
+---
+
+## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
+
+```{r out.width='50%', echo = FALSE, fig.align='center'}
+#fit the model
+line1 <- lm(y ~ x, plot_data)$coef
+#extract the slope from the fitted model
+line1.slope <- line1[2]
+#extract the intercept from the fitted model
+line1.intercept <- line1[1]
+basic_scatter_yfit <- basic_scatter +
+  geom_abline(aes(slope = line1.slope, intercept = line1.intercept),
+              colour = "darkred") +
+  annotate("text", x = 75, y = 120, label = "y ~ x", color = "darkred",
+           size = 9)
+basic_scatter_yfit
+```
+
+---
+
+## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
+
+```{r out.width='50%', echo = FALSE, fig.align='center'}
+#fit the model
+line2 <- lm(x ~ y, plot_data)$coef
+#extract the slope from the fitted model
+line2.slope <- 1 / line2[2]
+#extract the intercept from the fitted model
+line2.intercept <- -(line2[1] / line2[2])
+basic_scatter_xyfit <- basic_scatter_yfit +
+  geom_abline(aes(slope = line2.slope, intercept = line2.intercept),
+              colour = "blue") +
+  annotate("text", x = 125, y = 55, label = "x ~ y", color = "blue",
+           size = 9)
+basic_scatter_xyfit
+```
+
+---
+
+## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
+
+```{r out.width='50%', echo = FALSE, fig.align='center'}
+pca <- prcomp(cbind(plot_data$x, plot_data$y))$rotation
+pca.slope <- pca[2,1] / pca[1,1]
+pca.intercept <- mean(plot_data$y) - (pca.slope * mean(plot_data$x))
+
+basic_scatter_xy_pca_fit <- basic_scatter_xyfit +
+  geom_abline(aes(slope = pca.slope, intercept = pca.intercept),
+              colour = "darkorange") +
+  annotate("text", x = 75, y = 90, label = "PCA", color = "darkorange",
+           size = 9)
+basic_scatter_xy_pca_fit
+```
+
+---
+
+## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
+
+```{r fig.width=14, fig.height=6, echo = FALSE, fig.align='center'}
+plot_data %>%
+  #calculate the positions using the line equations:
+  mutate(yhat_line1=(x*line1.slope+line1.intercept),
+         xhat_line1=x,
+         yhat_line2=y,
+         xhat_line2=(y-line2.intercept)/line2.slope,
+         #https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+         a=pca.slope,
+         b=-1,
+         c=pca.intercept,
+         xhat_line3=(b*(b*x-a*y)-(a*c))/((a*a)+(b*b)),
+         yhat_line3=(a*(-b*x+a*y)-(b*c))/((a*a)+(b*b)),
+         #add the slopes/intercepts to this data frame:
+         slope_line1=line1.slope,
+         slope_line2=line2.slope,
+         slope_line3=pca.slope,
+         intercept_line1=line1.intercept,
+         intercept_line2=line2.intercept,
+         intercept_line3=pca.intercept
+         )%>% 
+  #drop intermediate variables
+  select(-c(a,b,c)) %>%
+  pivot_longer(yhat_line1:intercept_line3, names_to = "key", values_to = "value") %>%
+  #transpose to a long form
+  #gather(key="key",value="value",-c(x,y)) %>% 
+  # have "yhat_line1", want two colums of "yhat" "line1"
+  separate(key,c("type", "line"), "_") %>% 
+  #then transpose to be fatter, so we have cols for xhat, yhat etc
+  pivot_wider(names_from = "type", values_from = "value") %>%
+  #spread(key="type",value="value") %>%
+  #relable the lines with more description names, and order the factor for plotting:
+  mutate(line=case_when(
+           line=="line1" ~ "y ~ x",
+           line=="line2" ~ "x ~ y",
+           TRUE ~ "PCA"
+         ),
+         line = fct_relevel(line, "y ~ x", "x ~ y", "PCA")) %>% 
+  ggplot() +
+  geom_point(aes(x = x, y = y, color = line)) +
+  geom_abline(aes(slope = slope, intercept = intercept, color = line)) +
+  geom_segment(aes(x = x, y = y, xend = xhat, yend = yhat, color = line)) +
+  facet_wrap(~ line, ncol = 3) +
+  scale_color_manual(values = c("darkred", "blue", "darkorange")) +
+  theme_bw() +
+  theme(strip.background = element_blank(),
+        legend.position = "none",
+        strip.text = element_text(size = 16))
+```
+
+---
+
+## Searching for variance in orthogonal directions
 
 ```{r out.width='60%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("https://bradleyboehmke.github.io/HOML/07-decision-trees_files/figure-html/dt-early-stopping-1.png")
+knitr::include_graphics("https://bradleyboehmke.github.io/HOML/15-pca_files/figure-html/create-pca-image-1.png")
 ```
+
 
 ---
 
-## Prune the tree by tuning __cost complexity__
 
-Can grow a very large complicated tree, and then __prune__ back to an optimal __subtree__ using a __cost complexity__ parameter $\alpha$ (like $\lambda$ for elastic net) 
+## PCA: [__singular value decomposition (SVD)__](https://en.wikipedia.org/wiki/Singular_value_decomposition)
 
-- $\alpha$ penalizes objective as a function of the number of __terminal nodes__
+$$
+X = U D V^T
+$$
 
-- e.g., we want to minimize $SSE + \alpha \cdot (\# \text{  of terminal nodes})$ 
+- Matrices $U$ and $V$ contain the left and right (respectively) __singular vectors of scaled matrix $X$__
 
-```{r out.width='80%', echo = FALSE, fig.align='center'}
-knitr::include_graphics("https://bradleyboehmke.github.io/HOML/07-decision-trees_files/figure-html/pruned-tree-1.png")
-```
+- $D$ is the diagonal matrix of the __singular values__
+
+--
+
+- SVD simplifies matrix-vector multiplication as __rotate, scale, and rotate again__
+
+
+--
+$V$ is called the __loading matrix__ for $X$ with $\phi_{j}$ as columns, 
+
+  - $Z = X  V$ is the PC matrix
+
+--
+
+BONUS __eigenvalue decomposition__ (aka spectral decomposition)
+
+- $V$ are the __eigenvectors__ of $X^TX$ (covariance matrix, $^T$ means _transpose_)
+
+- $U$ are the __eigenvectors__ of $XX^T$
+
+- The singular values (diagonal of $D$) are square roots of the __eigenvalues__ of $X^TX$ or $XX^T$
+
+- Meaning that $Z = UD$
 
 ---
 
-## Example data: MLB 2021 batting statistics
+## Eigenvalues solve time travel?
 
-Downloaded MLB 2021 batting statistics leaderboard from [Fangraphs](https://www.fangraphs.com/leaders.aspx?pos=all&stats=bat&lg=all&qual=y&type=8&season=2019&month=0&season1=2021&ind=0)
 
-```{r load-data, warning = FALSE, message = FALSE}
+```{r out.width='70%', echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://thumbs.gfycat.com/RealisticFragrantHerculesbeetle-size_restricted.gif")
+```
+
+
+---
+
+## Probably not... but they guide dimension reduction
+
+We want to choose $p^* < p$ such that we are explaining variation in the data
+
+--
+
+Eigenvalues $\lambda_j$ for $j \in 1, \dots, p$ indicate __the variance explained by each component__
+
+  - $\sum_j^p \lambda_j = p$, meaning $\lambda_j \geq 1$ indicates $\text{PC}j$ contains at least one variable's worth in variability
+  
+  - $\lambda_j / p$ equals proportion of variance explained by $\text{PC}j$
+  
+  - Arranged in descending order so that $\lambda_1$ is largest eigenvalue and corresponds to PC1
+  
+--
+  
+  - Can compute the cumulative proportion of variance explained (CVE) with $p^*$ components:
+  
+$$\text{CVE}_{p^*} = \frac{\sum_j^{p*} \lambda_j}{p}$$
+
+Can use [__scree plot__](https://en.wikipedia.org/wiki/Scree_plot) to plot eigenvalues and guide choice for $p^* <p$ by looking for "elbow" (rapid to slow change)
+
+---
+
+## Example data: NFL teams summary
+
+Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2021
+
+```{r, warning = FALSE, message = FALSE}
 library(tidyverse)
-mlb_data <- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/fg_batting_2021.csv") %>%
-  janitor::clean_names() %>%
-  mutate_at(vars(bb_percent:k_percent), parse_number)
-head(mlb_data)
+nfl_teams_data <- read_csv("https://shorturl.at/cfmpW")
+nfl_model_data <- nfl_teams_data %>%
+  mutate(score_diff = points_scored - points_allowed) %>%
+  # Only use rows with air yards
+  filter(season >= 2006) %>%
+  dplyr::select(-wins, -losses, -ties, -points_scored, -points_allowed, -season, -team)
+```
+
+---
+
+## NFL PCA example
+
+Use the `prcomp` function (uses SVD) for PCA on __centered__ and __scaled__ data
+
+```{r}
+model_x <- as.matrix(dplyr::select(nfl_model_data, -score_diff))
+pca_nfl <- prcomp(model_x, center = TRUE, scale = TRUE) #<<
+summary(pca_nfl)
 ```
 
 
 ---
 
-## Regression tree example with the [`rpart` package](https://cran.r-project.org/web/packages/rpart/vignettes/longintro.pdf)
+## Proportion of variance explained
 
-Revisit the modeling of `w_oba` from the KNN slides
+`prcomp$sdev` corresponds to the singular values, i.e., $\sqrt{\lambda_j}$, what is `pca_nfl$sdev^2 / ncol(model_x)`?
 
-```{r init-rpart}
-library(rpart)
-init_mlb_tree <- rpart(formula = w_oba ~ bb_percent + k_percent + iso,
-                       data = mlb_data, method  = "anova")
-init_mlb_tree
-```
+--
 
-
----
-
-## Display the tree with [`rpart.plot`](plhttp://www.milbo.org/rpart-plot/)
-
-
+Can use the `broom` package easily tidy `prcomp` summary for plotting
 
 .pull-left[
-
-```{r plot-tree, fig.align ='center', fig.height=6}
-library(rpart.plot)
-rpart.plot(init_mlb_tree)
+```{r plot-pve, eval = FALSE}
+library(broom)
+pca_nfl %>%
+  tidy(matrix = "eigenvalues") %>% #<< 
+  ggplot(aes(x = PC, y = percent)) +
+  geom_line() + geom_point() +
+  geom_hline(yintercept = 1 / ncol(model_x), #<<
+             color = "darkred", 
+             linetype = "dashed") +
+  theme_bw()
 ```
 
-]
+- Add reference line at $1/p$, _why_?
 
+]
 .pull-right[
+```{r ref.label='plot-pve', out.width='80%', echo = FALSE, fig.align='center'}
 
-- `rpart()` runs 10-fold CV to tune $\alpha$ for pruning 
-
-- Selects # terminal nodes via 1 SE rule
-
-```{r plot-complexity, fig.align ='center', fig.height=5}
-plotcp(init_mlb_tree)
 ```
-
 
 ]
 
-
 ---
 
-## What about the full tree? (check out `rpart.control`)
+## Display data in lower dimensions
+
+`prcomp$x` corresponds to the matrix of __principal component scores__, i.e., $Z = XV$
 
 .pull-left[
 
-```{r plot-full-tree, fig.align ='center', fig.height=4}
-full_mlb_tree <- rpart(formula = w_oba ~ bb_percent + k_percent + iso,
-                       data = mlb_data, method  = "anova", 
-                       control = list(cp = 0, xval = 10))
-rpart.plot(full_mlb_tree)
-```
+Can `augment` dataset with PC scores for plotting
 
-]
+  - Add team and season for context
 
-.pull-right[
-
-
-```{r plot-full-complexity, fig.align ='center', fig.height=4}
-plotcp(full_mlb_tree)
-```
-
-
-]
-
----
-
-## Train with `caret`
-
-```{r caret-tree, fig.align ='center', fig.height=5}
-library(caret)
-caret_mlb_tree <- train(w_oba ~ bb_percent + k_percent + iso + avg + obp + slg + war,
-                        data = mlb_data, method = "rpart",
-                        trControl = trainControl(method = "cv", number = 10),
-                        tuneLength = 20)
-ggplot(caret_mlb_tree) + theme_bw()
-```
-
-
----
-
-## Display the final model
-
-```{r, fig.align ='center', fig.height=6}
-rpart.plot(caret_mlb_tree$finalModel)
-```
-
----
-
-## Summarizing variables in tree-based models
-
-.pull-left[
-__Variable importance__ - based on reduction in SSE (_notice anything odd?_)
-
-```{r var-imp, fig.align ='center', fig.height=4}
-library(vip)
-vip(caret_mlb_tree, geom = "point") + theme_bw()
+```{r pc-scores, eval = FALSE}
+pca_nfl %>%
+  augment(nfl_model_data) %>% #<<
+  bind_cols({
+    nfl_teams_data %>% 
+      filter(season >= 2006) %>%
+      dplyr::select(season, team)
+  }) %>%
+  unite("team_id", team:season, sep = "-", #<<
+        remove = FALSE) %>%
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2, 
+             color = season)) +
+  geom_text(aes(label = team_id), alpha = 0.9) +
+  scale_color_gradient(low = "purple", high = "green") +
+  theme_bw() + theme(legend.position = "bottom")
 ```
 
 
 ]
 .pull-right[
 
-- Summarize single variable's relationship with __partial dependence plot__
+```{r, ref.label='pc-scores',  out.width='90%', echo = FALSE, fig.align='center'}
 
-```{r pdp, fig.align ='center', fig.height=4}
-library(pdp)
-partial(caret_mlb_tree, pred.var = "obp") %>% autoplot() + theme_bw()
+```
+
+]
+
+---
+
+## What are the [loadings of these dimensions](https://clauswilke.com/blog/2020/09/07/pca-tidyverse-style/)?
+
+`prcomp$rotation` corresponds to the __loading matrix__, i.e., $V$
+
+.pull-left[
+
+```{r pc-loadings, eval = FALSE}
+arrow_style <- arrow(
+  angle = 20, ends = "first", type = "closed", 
+  length = grid::unit(8, "pt")
+)
+library(ggrepel)
+pca_nfl %>%
+  tidy(matrix = "rotation") %>%
+  pivot_wider(names_from = "PC", names_prefix = "PC", 
+              values_from = "value") %>%
+  mutate(stat_type = ifelse(str_detect(column, "offense"),
+                            "offense", "defense")) %>%
+  ggplot(aes(PC1, PC2)) +
+  geom_segment(xend = 0, yend = 0, arrow = arrow_style) +
+  geom_text_repel(aes(label = column, color = stat_type),
+                  size = 3) +
+  scale_color_manual(values = c("darkred", "darkblue")) +
+  theme_bw() +
+  theme(legend.position = "bottom")
 
 ```
 
 
 ]
+.pull-right[
+
+```{r, ref.label='pc-loadings',  out.width='90%', echo = FALSE, fig.align='center'}
+
+```
+
+]
+
+---
+
+## PCA analysis with `factoextra`
+
+Visualize the proportion of variance explained by each PC with [`factoextra`](http://www.sthda.com/english/wiki/factoextra-r-package-easy-multivariate-data-analyses-and-elegant-visualization)
+
+```{r, fig.align='center', fig.height=5}
+library(factoextra)
+fviz_eig(pca_nfl)
+```
+
+---
+
+## PCA analysis with `factoextra`
+
+Display observations with first two PC
+
+```{r, fig.align='center', fig.height=5}
+fviz_pca_ind(pca_nfl)
+```
+
+
+---
+
+## PCA analysis with `factoextra`
+
+Projection of variables - angles are interpreted as correlations, where negative correlated values point to opposite sides of graph
+
+```{r, fig.align='center', fig.height=5}
+fviz_pca_var(pca_nfl)
+```
+
+---
+
+## PCA analysis with `factoextra`
+
+__Biplot__ displays both the space of observations and the space of variables 
+
+  - Arrows represent the directions of the original variables
+
+```{r, fig.align='center', fig.height=5}
+fviz_pca_biplot(pca_nfl)
+```
+
 

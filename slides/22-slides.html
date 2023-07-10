@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Machine learning</title>
+    <title>Dimension Reduction</title>
     <meta charset="utf-8" />
-    <script src="libs/header-attrs/header-attrs.js"></script>
-    <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
 .title[
-# Machine learning
+# Dimension Reduction
 ]
 .subtitle[
-## Decision trees
+## Principal components analysis (PCA)
 ]
 .date[
-### July 12th, 2021
+### July 10th, 2023
 ]
 
 ---
@@ -28,356 +28,421 @@ class: center, middle, inverse, title-slide
 
 
 
-## What is Machine Learning?
+## What is the goal of dimension reduction?
+
+We have `\(p\)` variables (columns) for `\(n\)` observations (rows) __BUT__ which variables are __interesting__?
 
 --
-The short version:
 
-- Machine learning (ML) is a subset of statistical learning that focuses on prediction
+Can we find a smaller number of dimensions that captures the __interesting__ structure in the data?
 
+  - Could examine all pairwise scatterplots of each variable - tedious, manual process
 
---
-The longer version:
-
-- ML focuses on constructing data-driven algorithms that *learn* the mapping between predictor variables and response variable(s). 
-
- - We do not assume a parametric form for the mapping *a priori*, even if technically one can write one down *a posteriori* (e.g., by translating a tree model to a indicator-variable mathematical expression)
-
-  - e.g., linear regression is NOT considered a ML algorithm since we can write down the linear equation ahead of time
+  - Tuesday: clustered variables based on correlation
   
-  - e.g., random forests are considered an ML algorithm since we have what the trees will look like in advance
+--
+
+  - Can we find a combination of the original `\(p\)` variables?
+
+
+--
+
+__Dimension reduction__: 
+
+- Focus on reducing the dimensionality of the feature space (i.e., number of columns), 
+
+- While __retaining__ most of the information / __variability__ in a lower dimensional space (i.e., reducing the number of columns)
 
 ---
 
-## Which algorithm is best?
+## [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis)
 
-__That's not the right question to ask.__
+&lt;img src="https://bradleyboehmke.github.io/HOML/images/pcr-steps.png" width="110%" style="display: block; margin: auto;" /&gt;
 
-(And the answer is *not* deep learning. Because if the underlying relationship between your predictors and your response is truly linear, *you do not need to apply deep learning*! Just do linear regression. Really. It's OK.)
 
+---
+
+## [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis)
+
+- PCA explores the __covariance__ between variables, and combines variables into a smaller set of __uncorrelated__ variables called __principal components (PCs)__
+
+- PCs are __weighted__, linear combinations of the original variables
+
+  - Weights reveal how different variables are ___loaded___ into the PCs
+
+- We want a __small number of PCs__ to explain most of the information / variance in the data
 
 --
-The right question is ask is: __why should I try different algorithms?__
 
+__First principal component__:
+
+`$$Z_1 = \phi_{11} X_1 + \phi_{21} X_2 + \dots + \phi_{p1} X_p$$`
 
 --
-The answer to that is that without superhuman powers, you cannot visualize the distribution of predictor variables in their native space. 
 
-  - Of course, you can visualize these data *in projection*, for instance when we perform EDA
+  - `\(\phi_{j1}\)` are the weights indicating the contributions of each variable `\(j \in 1, \dots, p\)`
   
-  - And the performance of different algorithms will depend on how predictor data are distributed...
-
----
-
-### Data geometry
-
-&lt;img src="http://www.stat.cmu.edu/~pfreeman/data_geometry.png" width="70%" style="display: block; margin: auto;" /&gt;
-
-- Two predictor variables with binary response variable: x's and o's 
-
-- __LHS__: Linear boundaries that form rectangles will peform well in predicting response
-
-- __RHS__: Circular boundaries will perform better
-
----
-
-## Decision trees
-
-Decision trees partition training data into __homogenous nodes / subgroups__ with similar response values
-
---
-
-The subgroups are found __recursively using binary partitions__ 
-
-  - i.e. asking a series of yes-no questions about the predictor variables
-
-We stop splitting the tree once a __stopping criteria__ has been reached (e.g. maximum depth allowed)
-
-
---
-
-For each subgroup / node predictions are made with:
-
-- Regression tree: __the average of the response values__ in the node
-
-- Classification tree: __the most popular class__ in the node
-
-
---
-
-Most popular approach is Leo Breiman's __C__lassification __A__nd __R__egression __T__ree (CART) algorithm
-
----
-
-## Decision tree structure
-
-&lt;img src="https://bradleyboehmke.github.io/HOML/images/decision-tree-terminology.png" width="100%" style="display: block; margin: auto;" /&gt;
-
----
-
-## Decision tree structure
-
-We make a prediction for an observation by __following its path along the tree__
-
-
-&lt;img src="https://bradleyboehmke.github.io/HOML/images/exemplar-decision-tree.png" width="100%" style="display: block; margin: auto;" /&gt;
-
-
---
-
-- Decision trees are __very easy to explain__ to non-statisticians.
-
-- Easy to visualize and thus easy to interpret __without assuming a parametric form__
-
----
-
-### Recursive splits: each _split / rule_ depends on previous split / rule _above_ it
-
-__Objective at each split__: find the __best__ variable to partition the data into one of two regions, `\(R_1\)` &amp; `\(R_2\)`, to __minimize the error__ between the actual response, `\(y_i\)`, and the node's predicted constant, `\(c_i\)`
-
---
-
-- For regression we minimize the sum of squared errors (SSE):
-
-`$$S S E=\sum_{i \in R_{1}}\left(y_{i}-c_{1}\right)^{2}+\sum_{i \in R_{2}}\left(y_{i}-c_{2}\right)^{2}$$`
-
-
---
-- For classification trees we minimize the node's _impurity_ the __Gini index__
-
-  - where `\(p_k\)` is the proportion of observations in the node belonging to class `\(k\)` out of `\(K\)` total classes
+  - Weights are normalized `\(\sum_{j=1}^p \phi_{j1}^2 = 1\)`
   
-  - want to minimize `\(Gini\)`: small values indicate a node has primarily one class (_is more pure_)
+  - `\(\phi_{1} = (\phi_{11}, \phi_{21}, \dots, \phi_{p1})\)` is the __loading vector__ for PC1
 
-`$$Gini = 1 - \sum_k^K p_k^2$$`
+--
+  
+  - `\(Z_1\)` is a linear combination of the `\(p\)` variables that has the __largest variance__
+
+---
+
+## [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis)
+
+__Second principal component__:
+
+`$$Z_2 = \phi_{12} X_1 + \phi_{22} X_2 + \dots + \phi_{p2} X_p$$`
+
+  - `\(\phi_{j2}\)` are the weights indicating the contributions of each variable `\(j \in 1, \dots, p\)`
+  
+  - Weights are normalized `\(\sum_{j=1}^p \phi_{j1}^2 = 1\)`
+  
+  - `\(\phi_{2} = (\phi_{12}, \phi_{22}, \dots, \phi_{p2})\)` is the __loading vector__ for PC2
+  
+  - `\(Z_2\)` is a linear combination of the `\(p\)` variables that has the __largest variance__
+  
+    - __Subject to constraint it is uncorrelated with `\(Z_1\)`__ 
+    
+--
+
+We repeat this process to create `\(p\)` principal components
+
+---
+
+## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
+
+&lt;img src="22-slides_files/figure-html/unnamed-chunk-2-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
+
+&lt;img src="22-slides_files/figure-html/unnamed-chunk-3-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
+
+&lt;img src="22-slides_files/figure-html/unnamed-chunk-4-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
+
+&lt;img src="22-slides_files/figure-html/unnamed-chunk-5-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## [Visualizing PCA](https://www.stevejburr.com/post/scatter-plots-and-best-fit-lines/) in two dimensions
+
+&lt;img src="22-slides_files/figure-html/unnamed-chunk-6-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Searching for variance in orthogonal directions
+
+&lt;img src="https://bradleyboehmke.github.io/HOML/15-pca_files/figure-html/create-pca-image-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+
+## PCA: [__singular value decomposition (SVD)__](https://en.wikipedia.org/wiki/Singular_value_decomposition)
+
+$$
+X = U D V^T
+$$
+
+- Matrices `\(U\)` and `\(V\)` contain the left and right (respectively) __singular vectors of scaled matrix `\(X\)`__
+
+- `\(D\)` is the diagonal matrix of the __singular values__
+
+--
+
+- SVD simplifies matrix-vector multiplication as __rotate, scale, and rotate again__
 
 
 --
-Splits yield __locally optimal__ results, so we are NOT guaranteed to train a model that is globally optimal
+`\(V\)` is called the __loading matrix__ for `\(X\)` with `\(\phi_{j}\)` as columns, 
 
+  - `\(Z = X  V\)` is the PC matrix
 
 --
-_How do we control the complexity of the tree?_
+
+BONUS __eigenvalue decomposition__ (aka spectral decomposition)
+
+- `\(V\)` are the __eigenvectors__ of `\(X^TX\)` (covariance matrix, `\(^T\)` means _transpose_)
+
+- `\(U\)` are the __eigenvectors__ of `\(XX^T\)`
+
+- The singular values (diagonal of `\(D\)`) are square roots of the __eigenvalues__ of `\(X^TX\)` or `\(XX^T\)`
+
+- Meaning that `\(Z = UD\)`
 
 ---
 
-## Tune the __maximum tree depth__ or __minimum node size__
+## Eigenvalues solve time travel?
 
 
-&lt;img src="https://bradleyboehmke.github.io/HOML/07-decision-trees_files/figure-html/dt-early-stopping-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+&lt;img src="https://thumbs.gfycat.com/RealisticFragrantHerculesbeetle-size_restricted.gif" width="70%" style="display: block; margin: auto;" /&gt;
+
 
 ---
 
-## Prune the tree by tuning __cost complexity__
+## Probably not... but they guide dimension reduction
 
-Can grow a very large complicated tree, and then __prune__ back to an optimal __subtree__ using a __cost complexity__ parameter `\(\alpha\)` (like `\(\lambda\)` for elastic net) 
+We want to choose `\(p^* &lt; p\)` such that we are explaining variation in the data
 
-- `\(\alpha\)` penalizes objective as a function of the number of __terminal nodes__
+--
 
-- e.g., we want to minimize `\(SSE + \alpha \cdot (\# \text{  of terminal nodes})\)` 
+Eigenvalues `\(\lambda_j\)` for `\(j \in 1, \dots, p\)` indicate __the variance explained by each component__
 
-&lt;img src="https://bradleyboehmke.github.io/HOML/07-decision-trees_files/figure-html/pruned-tree-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+  - `\(\sum_j^p \lambda_j = p\)`, meaning `\(\lambda_j \geq 1\)` indicates `\(\text{PC}j\)` contains at least one variable's worth in variability
+  
+  - `\(\lambda_j / p\)` equals proportion of variance explained by `\(\text{PC}j\)`
+  
+  - Arranged in descending order so that `\(\lambda_1\)` is largest eigenvalue and corresponds to PC1
+  
+--
+  
+  - Can compute the cumulative proportion of variance explained (CVE) with `\(p^*\)` components:
+  
+`$$\text{CVE}_{p^*} = \frac{\sum_j^{p*} \lambda_j}{p}$$`
+
+Can use [__scree plot__](https://en.wikipedia.org/wiki/Scree_plot) to plot eigenvalues and guide choice for `\(p^* &lt;p\)` by looking for "elbow" (rapid to slow change)
 
 ---
 
-## Example data: MLB 2021 batting statistics
+## Example data: NFL teams summary
 
-Downloaded MLB 2021 batting statistics leaderboard from [Fangraphs](https://www.fangraphs.com/leaders.aspx?pos=all&amp;stats=bat&amp;lg=all&amp;qual=y&amp;type=8&amp;season=2019&amp;month=0&amp;season1=2021&amp;ind=0)
+Created dataset using [`nflfastR`](https://www.nflfastr.com/) summarizing NFL team performances from 1999 to 2021
 
 
 ```r
 library(tidyverse)
-mlb_data &lt;- read_csv("http://www.stat.cmu.edu/cmsac/sure/2021/materials/data/fg_batting_2021.csv") %&gt;%
-  janitor::clean_names() %&gt;%
-  mutate_at(vars(bb_percent:k_percent), parse_number)
-head(mlb_data)
+nfl_teams_data &lt;- read_csv("https://shorturl.at/cfmpW")
+nfl_model_data &lt;- nfl_teams_data %&gt;%
+  mutate(score_diff = points_scored - points_allowed) %&gt;%
+  # Only use rows with air yards
+  filter(season &gt;= 2006) %&gt;%
+  dplyr::select(-wins, -losses, -ties, -points_scored, -points_allowed, -season, -team)
 ```
-
-```
-## # A tibble: 6 × 23
-##   name     team      g    pa    hr     r   rbi    sb bb_pe…¹ k_per…²   iso babip
-##   &lt;chr&gt;    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 Vladimi… TOR      82   354    27    66    69     2    14.4    17.2 0.336 0.346
-## 2 Fernand… SDP      68   288    27    66    58    18    12.5    28.1 0.395 0.333
-## 3 Carlos … HOU      79   347    16    61    52     0    13.5    17   0.231 0.324
-## 4 Marcus … TOR      82   372    21    63    54    10     8.9    23.9 0.256 0.329
-## 5 Ronald … ATL      78   342    23    67    51    16    13.2    24.3 0.313 0.306
-## 6 Shohei … LAA      82   322    31    60    67    12    11.2    28   0.418 0.29 
-## # … with 11 more variables: avg &lt;dbl&gt;, obp &lt;dbl&gt;, slg &lt;dbl&gt;, w_oba &lt;dbl&gt;,
-## #   xw_oba &lt;dbl&gt;, w_rc &lt;dbl&gt;, bs_r &lt;dbl&gt;, off &lt;dbl&gt;, def &lt;dbl&gt;, war &lt;dbl&gt;,
-## #   playerid &lt;dbl&gt;, and abbreviated variable names ¹​bb_percent, ²​k_percent
-```
-
 
 ---
 
-## Regression tree example with the [`rpart` package](https://cran.r-project.org/web/packages/rpart/vignettes/longintro.pdf)
+## NFL PCA example
 
-Revisit the modeling of `w_oba` from the KNN slides
+Use the `prcomp` function (uses SVD) for PCA on __centered__ and __scaled__ data
 
 
 ```r
-library(rpart)
-init_mlb_tree &lt;- rpart(formula = w_oba ~ bb_percent + k_percent + iso,
-                       data = mlb_data, method  = "anova")
-init_mlb_tree
+model_x &lt;- as.matrix(dplyr::select(nfl_model_data, -score_diff))
+*pca_nfl &lt;- prcomp(model_x, center = TRUE, scale = TRUE)
+summary(pca_nfl)
 ```
 
 ```
-## n= 135 
-## 
-## node), split, n, deviance, yval
-##       * denotes terminal node
-## 
-##  1) root 135 0.203847700 0.3383259  
-##    2) iso&lt; 0.2 82 0.069028260 0.3188171  
-##      4) iso&lt; 0.1315 27 0.021396070 0.2981852  
-##        8) bb_percent&lt; 10.15 19 0.013706740 0.2894737 *
-##        9) bb_percent&gt;=10.15 8 0.002822875 0.3188750 *
-##      5) iso&gt;=0.1315 55 0.030496840 0.3289455  
-##       10) k_percent&gt;=15.15 47 0.020832550 0.3243404  
-##         20) bb_percent&lt; 11.45 37 0.012078700 0.3186216  
-##           40) iso&lt; 0.1585 13 0.002205692 0.3071538 *
-##           41) iso&gt;=0.1585 24 0.007237333 0.3248333 *
-##         21) bb_percent&gt;=11.45 10 0.003066500 0.3455000 *
-##       11) k_percent&lt; 15.15 8 0.002812000 0.3560000 *
-##    3) iso&gt;=0.2 53 0.055325250 0.3685094  
-##      6) iso&lt; 0.283 46 0.029749830 0.3607826  
-##       12) bb_percent&lt; 6.5 8 0.000972000 0.3335000 *
-##       13) bb_percent&gt;=6.5 38 0.021569470 0.3665263  
-##         26) iso&lt; 0.251 29 0.014496690 0.3601034  
-##           52) k_percent&gt;=22.65 14 0.005877500 0.3505000 *
-##           53) k_percent&lt; 22.65 15 0.006122933 0.3690667 *
-##         27) iso&gt;=0.251 9 0.002021556 0.3872222 *
-##      7) iso&gt;=0.283 7 0.004781429 0.4192857 *
+## Importance of components:
+##                           PC1    PC2    PC3     PC4     PC5     PC6     PC7
+## Standard deviation     3.2060 3.1026 2.3257 2.04728 1.52301 1.40350 1.35714
+## Proportion of Variance 0.2141 0.2006 0.1127 0.08732 0.04832 0.04104 0.03837
+## Cumulative Proportion  0.2141 0.4147 0.5274 0.61468 0.66301 0.70405 0.74242
+##                            PC8     PC9    PC10    PC11    PC12    PC13    PC14
+## Standard deviation     1.26250 1.14773 1.09881 1.01200 0.95689 0.93513 0.85233
+## Proportion of Variance 0.03321 0.02744 0.02515 0.02134 0.01908 0.01822 0.01513
+## Cumulative Proportion  0.77562 0.80307 0.82822 0.84956 0.86863 0.88685 0.90199
+##                           PC15    PC16    PC17    PC18    PC19   PC20    PC21
+## Standard deviation     0.82315 0.77434 0.65692 0.64016 0.60076 0.5796 0.56756
+## Proportion of Variance 0.01412 0.01249 0.00899 0.00854 0.00752 0.0070 0.00671
+## Cumulative Proportion  0.91610 0.92859 0.93758 0.94612 0.95364 0.9606 0.96735
+##                           PC22    PC23    PC24    PC25    PC26    PC27    PC28
+## Standard deviation     0.51349 0.47233 0.46768 0.41284 0.35810 0.33597 0.32018
+## Proportion of Variance 0.00549 0.00465 0.00456 0.00355 0.00267 0.00235 0.00214
+## Cumulative Proportion  0.97284 0.97749 0.98205 0.98560 0.98827 0.99062 0.99276
+##                           PC29    PC30    PC31    PC32    PC33    PC34    PC35
+## Standard deviation     0.30357 0.26161 0.25289 0.22149 0.13146 0.11459 0.10964
+## Proportion of Variance 0.00192 0.00143 0.00133 0.00102 0.00036 0.00027 0.00025
+## Cumulative Proportion  0.99468 0.99610 0.99744 0.99846 0.99882 0.99909 0.99934
+##                           PC36    PC37    PC38    PC39    PC40    PC41    PC42
+## Standard deviation     0.09672 0.08397 0.07385 0.05223 0.04814 0.03391 0.02901
+## Proportion of Variance 0.00019 0.00015 0.00011 0.00006 0.00005 0.00002 0.00002
+## Cumulative Proportion  0.99954 0.99968 0.99980 0.99985 0.99990 0.99993 0.99994
+##                           PC43    PC44    PC45    PC46    PC47    PC48
+## Standard deviation     0.02562 0.02290 0.02213 0.02139 0.01718 0.01670
+## Proportion of Variance 0.00001 0.00001 0.00001 0.00001 0.00001 0.00001
+## Cumulative Proportion  0.99996 0.99997 0.99998 0.99999 0.99999 1.00000
 ```
 
 
 ---
 
-## Display the tree with [`rpart.plot`](plhttp://www.milbo.org/rpart-plot/)
+## Proportion of variance explained
 
+`prcomp$sdev` corresponds to the singular values, i.e., `\(\sqrt{\lambda_j}\)`, what is `pca_nfl$sdev^2 / ncol(model_x)`?
 
+--
+
+Can use the `broom` package easily tidy `prcomp` summary for plotting
 
 .pull-left[
 
-
 ```r
-library(rpart.plot)
-rpart.plot(init_mlb_tree)
+library(broom)
+pca_nfl %&gt;%
+* tidy(matrix = "eigenvalues") %&gt;%
+  ggplot(aes(x = PC, y = percent)) +
+  geom_line() + geom_point() +
+* geom_hline(yintercept = 1 / ncol(model_x),
+             color = "darkred", 
+             linetype = "dashed") +
+  theme_bw()
 ```
 
-&lt;img src="22-slides_files/figure-html/plot-tree-1.png" width="504" style="display: block; margin: auto;" /&gt;
+- Add reference line at `\(1/p\)`, _why_?
 
 ]
-
 .pull-right[
-
-- `rpart()` runs 10-fold CV to tune `\(\alpha\)` for pruning 
-
-- Selects # terminal nodes via 1 SE rule
-
-
-```r
-plotcp(init_mlb_tree)
-```
-
-&lt;img src="22-slides_files/figure-html/plot-complexity-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
+&lt;img src="22-slides_files/figure-html/unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ]
 
-
 ---
 
-## What about the full tree? (check out `rpart.control`)
+## Display data in lower dimensions
+
+`prcomp$x` corresponds to the matrix of __principal component scores__, i.e., `\(Z = XV\)`
 
 .pull-left[
 
+Can `augment` dataset with PC scores for plotting
 
-```r
-full_mlb_tree &lt;- rpart(formula = w_oba ~ bb_percent + k_percent + iso,
-                       data = mlb_data, method  = "anova", 
-                       control = list(cp = 0, xval = 10))
-rpart.plot(full_mlb_tree)
-```
-
-&lt;img src="22-slides_files/figure-html/plot-full-tree-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
-]
-
-.pull-right[
-
+  - Add team and season for context
 
 
 ```r
-plotcp(full_mlb_tree)
+pca_nfl %&gt;%
+* augment(nfl_model_data) %&gt;%
+  bind_cols({
+    nfl_teams_data %&gt;% 
+      filter(season &gt;= 2006) %&gt;%
+      dplyr::select(season, team)
+  }) %&gt;%
+* unite("team_id", team:season, sep = "-",
+        remove = FALSE) %&gt;%
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2, 
+             color = season)) +
+  geom_text(aes(label = team_id), alpha = 0.9) +
+  scale_color_gradient(low = "purple", high = "green") +
+  theme_bw() + theme(legend.position = "bottom")
 ```
-
-&lt;img src="22-slides_files/figure-html/plot-full-complexity-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
-
-]
-
----
-
-## Train with `caret`
-
-
-```r
-library(caret)
-caret_mlb_tree &lt;- train(w_oba ~ bb_percent + k_percent + iso + avg + obp + slg + war,
-                        data = mlb_data, method = "rpart",
-                        trControl = trainControl(method = "cv", number = 10),
-                        tuneLength = 20)
-ggplot(caret_mlb_tree) + theme_bw()
-```
-
-&lt;img src="22-slides_files/figure-html/caret-tree-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
-
----
-
-## Display the final model
-
-
-```r
-rpart.plot(caret_mlb_tree$finalModel)
-```
-
-&lt;img src="22-slides_files/figure-html/unnamed-chunk-6-1.png" width="504" style="display: block; margin: auto;" /&gt;
-
----
-
-## Summarizing variables in tree-based models
-
-.pull-left[
-__Variable importance__ - based on reduction in SSE (_notice anything odd?_)
-
-
-```r
-library(vip)
-vip(caret_mlb_tree, geom = "point") + theme_bw()
-```
-
-&lt;img src="22-slides_files/figure-html/var-imp-1.png" width="504" style="display: block; margin: auto;" /&gt;
 
 
 ]
 .pull-right[
 
-- Summarize single variable's relationship with __partial dependence plot__
+&lt;img src="22-slides_files/figure-html/unnamed-chunk-12-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+## What are the [loadings of these dimensions](https://clauswilke.com/blog/2020/09/07/pca-tidyverse-style/)?
+
+`prcomp$rotation` corresponds to the __loading matrix__, i.e., `\(V\)`
+
+.pull-left[
 
 
 ```r
-library(pdp)
-partial(caret_mlb_tree, pred.var = "obp") %&gt;% autoplot() + theme_bw()
+arrow_style &lt;- arrow(
+  angle = 20, ends = "first", type = "closed", 
+  length = grid::unit(8, "pt")
+)
+library(ggrepel)
+pca_nfl %&gt;%
+  tidy(matrix = "rotation") %&gt;%
+  pivot_wider(names_from = "PC", names_prefix = "PC", 
+              values_from = "value") %&gt;%
+  mutate(stat_type = ifelse(str_detect(column, "offense"),
+                            "offense", "defense")) %&gt;%
+  ggplot(aes(PC1, PC2)) +
+  geom_segment(xend = 0, yend = 0, arrow = arrow_style) +
+  geom_text_repel(aes(label = column, color = stat_type),
+                  size = 3) +
+  scale_color_manual(values = c("darkred", "darkblue")) +
+  theme_bw() +
+  theme(legend.position = "bottom")
 ```
-
-&lt;img src="22-slides_files/figure-html/pdp-1.png" width="504" style="display: block; margin: auto;" /&gt;
 
 
 ]
+.pull-right[
+
+&lt;img src="22-slides_files/figure-html/unnamed-chunk-13-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+## PCA analysis with `factoextra`
+
+Visualize the proportion of variance explained by each PC with [`factoextra`](http://www.sthda.com/english/wiki/factoextra-r-package-easy-multivariate-data-analyses-and-elegant-visualization)
+
+
+```r
+library(factoextra)
+fviz_eig(pca_nfl)
+```
+
+&lt;img src="22-slides_files/figure-html/unnamed-chunk-14-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+## PCA analysis with `factoextra`
+
+Display observations with first two PC
+
+
+```r
+fviz_pca_ind(pca_nfl)
+```
+
+&lt;img src="22-slides_files/figure-html/unnamed-chunk-15-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## PCA analysis with `factoextra`
+
+Projection of variables - angles are interpreted as correlations, where negative correlated values point to opposite sides of graph
+
+
+```r
+fviz_pca_var(pca_nfl)
+```
+
+&lt;img src="22-slides_files/figure-html/unnamed-chunk-16-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+## PCA analysis with `factoextra`
+
+__Biplot__ displays both the space of observations and the space of variables 
+
+  - Arrows represent the directions of the original variables
+
+
+```r
+fviz_pca_biplot(pca_nfl)
+```
+
+&lt;img src="22-slides_files/figure-html/unnamed-chunk-17-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

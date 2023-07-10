@@ -129,6 +129,9 @@ website:
                   file: class/20-class.qmd
                 - text: "21: Random forest and gradient-boosted trees"
                   file: class/21-class.qmd
+                - text: "22: Principal components analysis (PCA)"
+                  file: class/21-class.qmd
+
 
     - title: "Documentation"
       contents:
