@@ -335,6 +335,8 @@ nfl_model_data <- nfl_teams_data %>%
   # Only use rows with air yards
   filter(season >= 2006) %>%
   dplyr::select(-wins, -losses, -ties, -points_scored, -points_allowed, -season, -team)
+
+dim(nfl_model_data)
 ```
 
 ---
@@ -345,7 +347,7 @@ Use the `prcomp` function (uses SVD) for PCA on __centered__ and __scaled__ data
 
 ```{r}
 model_x <- as.matrix(dplyr::select(nfl_model_data, -score_diff))
-pca_nfl <- prcomp(model_x, center = TRUE, scale = TRUE) #<<
+pca_nfl <- prcomp(model_x, center = TRUE, scale = TRUE) #<<x
 summary(pca_nfl)
 ```
 
