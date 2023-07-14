@@ -374,27 +374,6 @@
       ],
       "Hash": "74a64813f17b492da9c6afda6b128e3d"
     },
-    "arm": {
-      "Package": "arm",
-      "Version": "1.13-1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "MASS",
-        "Matrix",
-        "R",
-        "abind",
-        "coda",
-        "grDevices",
-        "graphics",
-        "lme4",
-        "methods",
-        "nlme",
-        "stats",
-        "utils"
-      ],
-      "Hash": "ecd1fd4d4ea49df1b62fb706c37785ac"
-    },
     "askpass": {
       "Package": "askpass",
       "Version": "1.1",
@@ -476,20 +455,6 @@
       "Repository": "CRAN",
       "Hash": "b7d8d8ee39869c18d8846a184dd8a1af"
     },
-    "blme": {
-      "Package": "blme",
-      "Version": "1.0-5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "lme4",
-        "methods",
-        "stats",
-        "utils"
-      ],
-      "Hash": "13b66de95e741bbec15859623e7c7b0a"
-    },
     "blob": {
       "Package": "blob",
       "Version": "1.2.3",
@@ -558,26 +523,6 @@
         "tidyr"
       ],
       "Hash": "f62b2504021369a2449c54bbda362d30"
-    },
-    "broom.mixed": {
-      "Package": "broom.mixed",
-      "Version": "0.2.9.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "broom",
-        "coda",
-        "dplyr",
-        "forcats",
-        "furrr",
-        "methods",
-        "nlme",
-        "purrr",
-        "stringr",
-        "tibble",
-        "tidyr"
-      ],
-      "Hash": "f57e244a8d8b672fc7f308779787d048"
     },
     "bs4Dash": {
       "Package": "bs4Dash",
@@ -818,17 +763,6 @@
         "utils"
       ],
       "Hash": "b2a10ed0f27e60aeaaf566c15ada5879"
-    },
-    "coda": {
-      "Package": "coda",
-      "Version": "0.19-4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "lattice"
-      ],
-      "Hash": "24b6d006b8b2343876cf230687546932"
     },
     "codetools": {
       "Package": "codetools",
@@ -2388,28 +2322,6 @@
         "rlang"
       ],
       "Hash": "e2817ccf4a065c5d9d7f2cfbe7c1d78c"
-    },
-    "merTools": {
-      "Package": "merTools",
-      "Version": "0.6.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "Matrix",
-        "R",
-        "abind",
-        "arm",
-        "blme",
-        "broom.mixed",
-        "dplyr",
-        "foreach",
-        "ggplot2",
-        "lme4",
-        "methods",
-        "mvtnorm",
-        "shiny"
-      ],
-      "Hash": "af553c4fe718ffad9f704223fe7485c9"
     },
     "mgcv": {
       "Package": "mgcv",

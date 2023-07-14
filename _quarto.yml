@@ -63,6 +63,7 @@ website:
       style: "docked"
       search: false
       background: light
+      collapse-level: 3
       contents:
         - section: "Overview"
           contents:
@@ -137,7 +138,8 @@ website:
                   file: class/22-class.qmd
                 - text: "23: Kernels, Smoothers, and Generalized Additive Models"
                   file: class/23-class.qmd
-
+                - text: "24: Advanced Topics: Multinomial logistic regression (++)"
+                  file: class/24-class.qmd
 
     - title: "Documentation"
       contents:
@@ -149,6 +151,7 @@ website:
             - code-of-conduct.qmd
 
     - title: "Assignments"
+      collapse-level: 3
       contents:
         - section: "Overview"
           contents:
