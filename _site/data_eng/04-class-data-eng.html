@@ -22,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -43,6 +77,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/downloadthis-1.9.1/downloadthis.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -461,6 +496,7 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#slides" id="toc-slides" class="nav-link active" data-scroll-target="#slides">Slides</a></li>
+  <li><a href="#creating-the-ninja-way.csv-file-manually" id="toc-creating-the-ninja-way.csv-file-manually" class="nav-link" data-scroll-target="#creating-the-ninja-way.csv-file-manually">Creating the <code>ninja-way.csv</code> file manually</a></li>
   </ul>
 </nav>
     </div>
@@ -495,7 +531,70 @@ ul.task-list li input[type="checkbox"] {
 <p>The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.</p>
 <a class="btn btn-danger" target="_blank" href="../data_eng/_files/04-slides-data-eng.pdf" role="button"><i class="fa-solid fa-file-pdf"></i> Download PDF of all slides</a>
 <p></p>
+<p><a href="#dnldts49797" onclick="fetch('data:text/csv;base64,VGhpcyBpcyBhIG5pY2UgY3N2IGNvbnRhaW5pbmcgY2hhcmFjdGVycyBmcm9tIHRoZSBBbmltZTogTmFydXRvClRoaXMgaXMgYmFzZWQgb24gYSBtYW5nYSBieSB2YXJpb3VzIGF1dGhvcnMKU2VlIHRoZSBmb2xsb3dpbmcgZmllbGRzIHdoaWNoIGNvbnRhaW4gdGhlIGRhdGEKaWQsZmlyc3RfbmFtZSxsYXN0X25hbWUsdmlsbGFnZSxzZWFzb25fZmlyc3RfYXBwZWFyYW5jZSxob21lCjEsTmFydXRvLFV6YW1ha2ksbGVhdmVzLDEsbGVhdmVzIHZpbGxhZ2UKMSxOYXJ1dG8sVXphbWFraSxsZWF2ZXMsMSxsZWF2ZXMgdmlsbGFnZQoxLE5hcnV0byxVemFtYWtpLGxlYXZlcywxLGxlYXZlcyB2aWxsYWdlCjIsU2FzdWtlLFVjaGloYSxsZWF2ZXMsMSxsZWF2ZXMgdmlsbGFnZQoKCjMsU2FrdXJhLEhhcnVubyxsZWF2ZXMsMSxsZWF2ZXMgdmlsbGFnZQpUT0RPOiBhZGQgbW9yZSBsZWF2ZXMgdmlsbGFnZSBjaGFyYWN0ZXJzCgo0LEdhYXJhLE5vbmUsc2FuZCwyLHNhbmQgdmlsbGFnZQo0LEdhYXJhLE5vbmUsc2FuZCwyLHNhbmQgdmlsbGFnZQo1LFRlbWFyaSxOYXJhLHNhbmQsMixzYW5kIHZpbGxhZ2UKCgoKIyMgd2Ugc2hvdWxkIGFkZCBtb3JlIHNhbmQgdmlsbGFnZSBjaGFyYWN0ZXJzCgo2LFNhaSxZYW1hbmFrYSxsZWF2ZXMsNCxsZWF2ZXMgdmlsbGFnZQoKI2Nsb3NpbmcgdGhlIGZpbGUgbm93Cg==').then(res => res.blob()).then(blob => {
+      const downloadURL = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.href = downloadURL;
+      a.download = 'ninja-way.csv'; a.click();
+      window.URL.revokeObjectURL(downloadURL);
+      document.body.removeChild(a);
+        });"><button class="btn btn-success downloadthis  " id="dnldts49797"><i class="bi bi-file-earmark"></i> Download ninja-way.csv </button></a></p>
 <iframe width="780" height="500" src="../data_eng/_files/04-slides-data-eng.pdf" title="Lecture 4"></iframe>
+</section>
+<section id="creating-the-ninja-way.csv-file-manually" class="level2">
+<h2 class="anchored" data-anchor-id="creating-the-ninja-way.csv-file-manually">Creating the <code>ninja-way.csv</code> file manually</h2>
+<p>You can use the following instructions at the bash command line in your desired working directory to create, i.e., reproduce the <code>ninja-way.csv</code> file manually.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Instructions to create the <code>ninja-way.csv</code> file manually
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In order to create the <code>ninja-way.csv</code> file as used in these lecture notes, you will need to perform the following steps in a bash terminal session:</p>
+<ol type="1">
+<li>First run <code>cat &gt; ninja-way.csv</code></li>
+<li>The prompt will move to the next line. So <code>cat</code> is waiting for <strong>input</strong> from you from <code>stdin</code>, i.e., your keyboard!</li>
+<li>Copy paste the following text into the terminal, where the prompt is active.</li>
+</ol>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">This</span> is a nice csv containing characters from the Anime: Naruto</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">This</span> is based on a manga by various authors</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">See</span> the following fields which contain the data</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">id</span>,first_name,last_name,village,season_first_appearance,home</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">1,Naruto,Uzamaki,leaves,1,leaves</span> village</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">1,Naruto,Uzamaki,leaves,1,leaves</span> village</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">1,Naruto,Uzamaki,leaves,1,leaves</span> village</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">2,Sasuke,Uchiha,leaves,1,leaves</span> village</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">3,Sakura,Haruno,leaves,1,leaves</span> village</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ex">TODO:</span> add more leaves village characters</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="ex">4,Gaara,None,sand,2,sand</span> village</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ex">4,Gaara,None,sand,2,sand</span> village</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="ex">5,Temari,Nara,sand,2,sand</span> village</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">## we should add more sand village characters</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="ex">6,Sai,Yamanaka,leaves,4,leaves</span> village</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">#closing the file now</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="4" type="1">
+<li>Make sure that you hit the <code>Return</code> key after the last pasted line. This will insert a blank line after the pasting is complete. This is important to do else you will end up omitting the final commented line in the above pasted text.</li>
+<li>You can now hit <code>Ctrl-C</code> to terminate the <code>cat</code> input command. The <code>ninja-way.csv</code> file should now be created.</li>
+<li>Run <code>less ninja-way.csv</code> to view the newly created file and check that you get the same contents as those that you just pasted in Step 3.</li>
+</ol>
+</div>
+</div>
+</div>
 
 
 </section>

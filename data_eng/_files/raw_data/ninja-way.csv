@@ -1,0 +1,24 @@
+This is a nice csv containing characters from the Anime: Naruto
+This is based on a manga by various authors
+See the following fields which contain the data
+id,first_name,last_name,village,season_first_appearance,home
+1,Naruto,Uzamaki,leaves,1,leaves village
+1,Naruto,Uzamaki,leaves,1,leaves village
+1,Naruto,Uzamaki,leaves,1,leaves village
+2,Sasuke,Uchiha,leaves,1,leaves village
+
+
+3,Sakura,Haruno,leaves,1,leaves village
+TODO: add more leaves village characters
+
+4,Gaara,None,sand,2,sand village
+4,Gaara,None,sand,2,sand village
+5,Temari,Nara,sand,2,sand village
+
+
+
+## we should add more sand village characters
+
+6,Sai,Yamanaka,leaves,4,leaves village
+
+#closing the file now

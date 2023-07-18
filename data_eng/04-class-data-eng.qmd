@@ -18,7 +18,65 @@ arrow keys, for convenience.
 ```{r show-slide-tabs, echo=FALSE, results="asis"}
 slide_buttons("/data_eng/_files/04-slides-data-eng", output_type = "pdf")
 ```
+{{\< downloadthis ./_files/raw_data/ninja-way.csv
+dname="ninja-way" label="Download ninja-way.csv" icon="file-earmark"
+type="success" \>}}
 
 ```{=html}
 <iframe width="780" height="500" src="/data_eng/_files/04-slides-data-eng.pdf" title="Lecture 4"></iframe>
 ```
+
+## Creating the `ninja-way.csv` file manually
+
+You can use the following instructions at the bash command line in your desired
+working directory to create, i.e., reproduce the `ninja-way.csv` file manually.
+
+::: {.callout-note collapse="true"}
+
+## Instructions to create the `ninja-way.csv` file manually
+
+In order to create the `ninja-way.csv` file as used in these lecture notes, you
+will need to perform the following steps in a bash terminal session:
+
+1.  First run `cat > ninja-way.csv`
+2.  The prompt will move to the next line. So `cat` is waiting for **input**
+    from you from `stdin`, i.e., your keyboard!
+3.  Copy paste the following text into the terminal, where the prompt is active.
+
+```bash
+This is a nice csv containing characters from the Anime: Naruto
+This is based on a manga by various authors
+See the following fields which contain the data
+id,first_name,last_name,village,season_first_appearance,home
+1,Naruto,Uzamaki,leaves,1,leaves village
+1,Naruto,Uzamaki,leaves,1,leaves village
+1,Naruto,Uzamaki,leaves,1,leaves village
+2,Sasuke,Uchiha,leaves,1,leaves village
+
+
+3,Sakura,Haruno,leaves,1,leaves village
+TODO: add more leaves village characters
+
+4,Gaara,None,sand,2,sand village
+4,Gaara,None,sand,2,sand village
+5,Temari,Nara,sand,2,sand village
+
+
+
+## we should add more sand village characters
+
+6,Sai,Yamanaka,leaves,4,leaves village
+
+#closing the file now
+
+```
+4.  Make sure that you hit the `Return` key after the last pasted line. This
+    will insert a blank line after the pasting is complete. This is important to
+    do else you will end up omitting the final commented line in the above
+    pasted text.
+5.  You can now hit `Ctrl-C` to terminate the `cat` input command. The
+    `ninja-way.csv` file should now be created.
+6.  Run `less ninja-way.csv` to view the newly created file and check that you
+    get the same contents as those that you just pasted in Step 3.
+
+:::
