@@ -1,6 +1,6 @@
 ---
 title: "Data Engineering: **Embracing** the UNIX philosophy - Part 2"
-date: "2023-06-27"
+date: "2023-07-12"
 ---
 
 ```{r slides-videos, echo=FALSE, include=FALSE}
@@ -43,7 +43,7 @@ will need to perform the following steps in a bash terminal session:
     from you from `stdin`, i.e., your keyboard!
 3.  Copy paste the following text into the terminal, where the prompt is active.
 
-```bash
+```{txt}
 This is a nice csv containing characters from the Anime: Naruto
 This is based on a manga by various authors
 See the following fields which contain the data

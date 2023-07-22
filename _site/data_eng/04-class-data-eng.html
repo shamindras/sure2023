@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-06-27">
+<meta name="dcterms.date" content="2023-07-12">
 <meta name="description" content="Explore cutting-edge statistics and data science methodology with applications in sports and health analytics">
 
 <title>SURE 2023 - Data Engineering: Embracing the UNIX philosophy - Part 2</title>
@@ -271,6 +271,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">4: Embracing the UNIX philosophy - Part 2</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../data_eng/05-class-data-eng.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">5: A practical approach to SQL - Part 1</span></a>
+  </div>
+</li>
       </ul>
   </li>
       </ul>
@@ -516,7 +522,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 27, 2023</p>
+      <p class="date">July 12, 2023</p>
     </div>
   </div>
   
@@ -531,7 +537,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The slides for today’s lesson are available online as an PDF file. Use the button below to open the slides either in a new tab in your browser. Or you can just scroll the embedded slides below. For the embedded slides below, you can also click in the slides and navigate through them with your left and right arrow keys, for convenience.</p>
 <a class="btn btn-danger" target="_blank" href="../data_eng/_files/04-slides-data-eng.pdf" role="button"><i class="fa-solid fa-file-pdf"></i> Download PDF of all slides</a>
 <p></p>
-<p><a href="#dnldts49797" onclick="fetch('data:text/csv;base64,VGhpcyBpcyBhIG5pY2UgY3N2IGNvbnRhaW5pbmcgY2hhcmFjdGVycyBmcm9tIHRoZSBBbmltZTogTmFydXRvClRoaXMgaXMgYmFzZWQgb24gYSBtYW5nYSBieSB2YXJpb3VzIGF1dGhvcnMKU2VlIHRoZSBmb2xsb3dpbmcgZmllbGRzIHdoaWNoIGNvbnRhaW4gdGhlIGRhdGEKaWQsZmlyc3RfbmFtZSxsYXN0X25hbWUsdmlsbGFnZSxzZWFzb25fZmlyc3RfYXBwZWFyYW5jZSxob21lCjEsTmFydXRvLFV6YW1ha2ksbGVhdmVzLDEsbGVhdmVzIHZpbGxhZ2UKMSxOYXJ1dG8sVXphbWFraSxsZWF2ZXMsMSxsZWF2ZXMgdmlsbGFnZQoxLE5hcnV0byxVemFtYWtpLGxlYXZlcywxLGxlYXZlcyB2aWxsYWdlCjIsU2FzdWtlLFVjaGloYSxsZWF2ZXMsMSxsZWF2ZXMgdmlsbGFnZQoKCjMsU2FrdXJhLEhhcnVubyxsZWF2ZXMsMSxsZWF2ZXMgdmlsbGFnZQpUT0RPOiBhZGQgbW9yZSBsZWF2ZXMgdmlsbGFnZSBjaGFyYWN0ZXJzCgo0LEdhYXJhLE5vbmUsc2FuZCwyLHNhbmQgdmlsbGFnZQo0LEdhYXJhLE5vbmUsc2FuZCwyLHNhbmQgdmlsbGFnZQo1LFRlbWFyaSxOYXJhLHNhbmQsMixzYW5kIHZpbGxhZ2UKCgoKIyMgd2Ugc2hvdWxkIGFkZCBtb3JlIHNhbmQgdmlsbGFnZSBjaGFyYWN0ZXJzCgo2LFNhaSxZYW1hbmFrYSxsZWF2ZXMsNCxsZWF2ZXMgdmlsbGFnZQoKI2Nsb3NpbmcgdGhlIGZpbGUgbm93Cg==').then(res => res.blob()).then(blob => {
+<p><a href="#dnldts56313" onclick="fetch('data:text/csv;base64,VGhpcyBpcyBhIG5pY2UgY3N2IGNvbnRhaW5pbmcgY2hhcmFjdGVycyBmcm9tIHRoZSBBbmltZTogTmFydXRvClRoaXMgaXMgYmFzZWQgb24gYSBtYW5nYSBieSB2YXJpb3VzIGF1dGhvcnMKU2VlIHRoZSBmb2xsb3dpbmcgZmllbGRzIHdoaWNoIGNvbnRhaW4gdGhlIGRhdGEKaWQsZmlyc3RfbmFtZSxsYXN0X25hbWUsdmlsbGFnZSxzZWFzb25fZmlyc3RfYXBwZWFyYW5jZSxob21lCjEsTmFydXRvLFV6YW1ha2ksbGVhdmVzLDEsbGVhdmVzIHZpbGxhZ2UKMSxOYXJ1dG8sVXphbWFraSxsZWF2ZXMsMSxsZWF2ZXMgdmlsbGFnZQoxLE5hcnV0byxVemFtYWtpLGxlYXZlcywxLGxlYXZlcyB2aWxsYWdlCjIsU2FzdWtlLFVjaGloYSxsZWF2ZXMsMSxsZWF2ZXMgdmlsbGFnZQoKCjMsU2FrdXJhLEhhcnVubyxsZWF2ZXMsMSxsZWF2ZXMgdmlsbGFnZQpUT0RPOiBhZGQgbW9yZSBsZWF2ZXMgdmlsbGFnZSBjaGFyYWN0ZXJzCgo0LEdhYXJhLE5vbmUsc2FuZCwyLHNhbmQgdmlsbGFnZQo0LEdhYXJhLE5vbmUsc2FuZCwyLHNhbmQgdmlsbGFnZQo1LFRlbWFyaSxOYXJhLHNhbmQsMixzYW5kIHZpbGxhZ2UKCgoKIyMgd2Ugc2hvdWxkIGFkZCBtb3JlIHNhbmQgdmlsbGFnZSBjaGFyYWN0ZXJzCgo2LFNhaSxZYW1hbmFrYSxsZWF2ZXMsNCxsZWF2ZXMgdmlsbGFnZQoKI2Nsb3NpbmcgdGhlIGZpbGUgbm93Cg==').then(res => res.blob()).then(blob => {
       const downloadURL = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       document.body.appendChild(a);
@@ -539,7 +545,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       a.download = 'ninja-way.csv'; a.click();
       window.URL.revokeObjectURL(downloadURL);
       document.body.removeChild(a);
-        });"><button class="btn btn-success downloadthis  " id="dnldts49797"><i class="bi bi-file-earmark"></i> Download ninja-way.csv </button></a></p>
+        });"><button class="btn btn-success downloadthis  " id="dnldts56313"><i class="bi bi-file-earmark"></i> Download ninja-way.csv </button></a></p>
 <iframe width="780" height="500" src="../data_eng/_files/04-slides-data-eng.pdf" title="Lecture 4"></iframe>
 </section>
 <section id="creating-the-ninja-way.csv-file-manually" class="level2">
@@ -563,30 +569,32 @@ Instructions to create the <code>ninja-way.csv</code> file manually
 <li>The prompt will move to the next line. So <code>cat</code> is waiting for <strong>input</strong> from you from <code>stdin</code>, i.e., your keyboard!</li>
 <li>Copy paste the following text into the terminal, where the prompt is active.</li>
 </ol>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">This</span> is a nice csv containing characters from the Anime: Naruto</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">This</span> is based on a manga by various authors</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">See</span> the following fields which contain the data</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">id</span>,first_name,last_name,village,season_first_appearance,home</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">1,Naruto,Uzamaki,leaves,1,leaves</span> village</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">1,Naruto,Uzamaki,leaves,1,leaves</span> village</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">1,Naruto,Uzamaki,leaves,1,leaves</span> village</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">2,Sasuke,Uchiha,leaves,1,leaves</span> village</span>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>This is a nice csv containing characters from the Anime: Naruto</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>This is based on a manga by various authors</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>See the following fields which contain the data</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>id,first_name,last_name,village,season_first_appearance,home</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>1,Naruto,Uzamaki,leaves,1,leaves village</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>1,Naruto,Uzamaki,leaves,1,leaves village</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>1,Naruto,Uzamaki,leaves,1,leaves village</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>2,Sasuke,Uchiha,leaves,1,leaves village</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">3,Sakura,Haruno,leaves,1,leaves</span> village</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ex">TODO:</span> add more leaves village characters</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>3,Sakura,Haruno,leaves,1,leaves village</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>TODO: add more leaves village characters</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="ex">4,Gaara,None,sand,2,sand</span> village</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ex">4,Gaara,None,sand,2,sand</span> village</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="ex">5,Temari,Nara,sand,2,sand</span> village</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>4,Gaara,None,sand,2,sand village</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>4,Gaara,None,sand,2,sand village</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>5,Temari,Nara,sand,2,sand village</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">## we should add more sand village characters</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>## we should add more sand village characters</span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="ex">6,Sai,Yamanaka,leaves,4,leaves</span> village</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>6,Sai,Yamanaka,leaves,4,leaves village</span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">#closing the file now</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>#closing the file now</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <ol start="4" type="1">
 <li>Make sure that you hit the <code>Return</code> key after the last pasted line. This will insert a blank line after the pasting is complete. This is important to do else you will end up omitting the final commented line in the above pasted text.</li>
 <li>You can now hit <code>Ctrl-C</code> to terminate the <code>cat</code> input command. The <code>ninja-way.csv</code> file should now be created.</li>
