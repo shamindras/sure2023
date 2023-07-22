@@ -25,3 +25,13 @@ type="success" \>}}
 ```{=html}
 <iframe width="780" height="500" src="/data_eng/_files/05-slides-data-eng.pdf" title="Lecture 5"></iframe>
 ```
+
+## UNIX Recap
+
+```{r show-slide-tabs-recap, echo=FALSE, results="asis"}
+slide_buttons("/data_eng/_files/05-slides-data-eng-unix-recap", output_type = "pdf")
+```
+
+```{=html}
+<iframe width="780" height="500" src="/data_eng/_files/05-slides-data-eng-unix-recap.pdf" title="Lecture 5 - UNIX recap"></iframe>
+```
