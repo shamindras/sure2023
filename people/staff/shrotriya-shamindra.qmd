@@ -1,6 +1,7 @@
 ---
 title: "Shamindra Shrotriya"
-sortby: "Shrotriya, Shamindra"
+# sortby: "Shrotriya, Shamindra"
+sortby: 1
 subtitle: "SURE 2023 Faculty (Optum)"
 image: shrotriya-shamindra.jpg
 started: "Fall 2017"

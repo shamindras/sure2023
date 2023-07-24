@@ -1,6 +1,7 @@
 ---
 title: "Meg Ellingwood"
-sortby: "Ellingwood, Meg"
+# sortby: "Ellingwood, Meg"
+sortby: 2
 subtitle: "SURE 2023 Faculty (CMSAC)"
 image: ellingwood-meg.jpg
 started: "Fall 2020"
