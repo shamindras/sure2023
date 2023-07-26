@@ -80,6 +80,8 @@ website:
                   file: data_eng/03-class-data-eng.qmd
                 - text: "4: Embracing the UNIX philosophy - Part 2"
                   file: data_eng/04-class-data-eng.qmd
+            - section: "SQL"
+              contents:
                 - text: "5: A practical approach to SQL - Part 1"
                   file: data_eng/05-class-data-eng.qmd
                 - text: "6: A practical approach to SQL - Part 2"

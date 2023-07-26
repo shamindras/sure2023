@@ -22,6 +22,6 @@ slide_buttons("/data_eng/_files/06-slides-data-eng", output_type = "pdf")
 dname="nycflights-sql-02" label="Download nycflights-sql-02.R" icon="file-earmark"
 type="success" \>}}
 
-<!-- ```{=html} -->
-<!-- <iframe width="780" height="500" src="/data_eng/_files/06-slides-data-eng.pdf" title="Lecture 6"></iframe> -->
-<!-- ``` -->
+```{=html}
+<iframe width="780" height="500" src="/data_eng/_files/06-slides-data-eng.pdf" title="Lecture 6"></iframe>
+```

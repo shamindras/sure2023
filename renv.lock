@@ -3024,13 +3024,6 @@
       ],
       "Hash": "298a252816cabed120391c955aced484"
     },
-    "queryparser": {
-      "Package": "queryparser",
-      "Version": "0.3.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "c38ac719bf64f8b946ffb8d0d0b6aa65"
-    },
     "ragg": {
       "Package": "ragg",
       "Version": "1.2.5",
@@ -3832,21 +3825,6 @@
         "yardstick"
       ],
       "Hash": "65f6942e7cb9396aa31daeaf0d79f70c"
-    },
-    "tidyquery": {
-      "Package": "tidyquery",
-      "Version": "0.2.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "dplyr",
-        "lubridate",
-        "queryparser",
-        "rlang",
-        "stringr",
-        "utils"
-      ],
-      "Hash": "55463525c37162568727b0807a4814e6"
     },
     "tidyr": {
       "Package": "tidyr",
