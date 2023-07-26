@@ -1,0 +1,27 @@
+---
+title: "Data Engineering: A practical approach to SQL - Part 2"
+date: "2023-07-26"
+---
+
+```{r slides-videos, echo=FALSE, include=FALSE}
+source(here::here("R", "slide-things.R"))
+```
+
+## Slides
+
+The slides for today's lesson are available online as an PDF file. Use the 
+button below to open the slides either in a new tab in your browser. Or you can
+just scroll the embedded slides below. For the embedded slides below, you can 
+also click in the slides and navigate through them with your left and right 
+arrow keys, for convenience.
+
+```{r show-slide-tabs, echo=FALSE, results="asis"}
+slide_buttons("/data_eng/_files/06-slides-data-eng", output_type = "pdf")
+```
+{{\< downloadthis ./_files/src/nycflights-sql-02.R
+dname="nycflights-sql-02" label="Download nycflights-sql-02.R" icon="file-earmark"
+type="success" \>}}
+
+<!-- ```{=html} -->
+<!-- <iframe width="780" height="500" src="/data_eng/_files/06-slides-data-eng.pdf" title="Lecture 6"></iframe> -->
+<!-- ``` -->

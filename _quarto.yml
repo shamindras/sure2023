@@ -82,6 +82,8 @@ website:
                   file: data_eng/04-class-data-eng.qmd
                 - text: "5: A practical approach to SQL - Part 1"
                   file: data_eng/05-class-data-eng.qmd
+                - text: "6: A practical approach to SQL - Part 2"
+                  file: data_eng/06-class-data-eng.qmd
         - section: "Data Science Lectures"
           contents:
             - section: "Orientation"

@@ -255,6 +255,24 @@
       ],
       "Hash": "45f0398006e83a5b10b72a90663d8d8c"
     },
+    "RSQLite": {
+      "Package": "RSQLite",
+      "Version": "2.3.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "DBI",
+        "R",
+        "bit64",
+        "blob",
+        "cpp11",
+        "memoise",
+        "methods",
+        "pkgconfig",
+        "plogr"
+      ],
+      "Hash": "207c90cd5438a1f596da2cd54c606fee"
+    },
     "Rcpp": {
       "Package": "Rcpp",
       "Version": "1.0.10",
@@ -1033,6 +1051,23 @@
         "utils"
       ],
       "Hash": "8b708f296afd9ae69f450f9640be8990"
+    },
+    "dittodb": {
+      "Package": "dittodb",
+      "Version": "0.1.6",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "DBI",
+        "R",
+        "digest",
+        "glue",
+        "lifecycle",
+        "methods",
+        "rlang",
+        "utils"
+      ],
+      "Hash": "4c73ea6cd3a6a703b83b8b18282828a6"
     },
     "dplyr": {
       "Package": "dplyr",
@@ -2524,6 +2559,17 @@
       ],
       "Hash": "df58958f293b166e4ab885ebcad90e02"
     },
+    "nycflights13": {
+      "Package": "nycflights13",
+      "Version": "1.0.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "tibble"
+      ],
+      "Hash": "61eb941328b49a62d7f9816dfed7d959"
+    },
     "openssl": {
       "Package": "openssl",
       "Version": "2.0.5",
@@ -2748,6 +2794,13 @@
       ],
       "Hash": "6b0c222c5071efe0f3baf3dae9aa40e2"
     },
+    "plogr": {
+      "Package": "plogr",
+      "Version": "0.2.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "09eb987710984fc2905c7129c7d85e65"
+    },
     "plotly": {
       "Package": "plotly",
       "Version": "4.10.1",
@@ -2970,6 +3023,13 @@
         "yaml"
       ],
       "Hash": "298a252816cabed120391c955aced484"
+    },
+    "queryparser": {
+      "Package": "queryparser",
+      "Version": "0.3.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "c38ac719bf64f8b946ffb8d0d0b6aa65"
     },
     "ragg": {
       "Package": "ragg",
@@ -3772,6 +3832,21 @@
         "yardstick"
       ],
       "Hash": "65f6942e7cb9396aa31daeaf0d79f70c"
+    },
+    "tidyquery": {
+      "Package": "tidyquery",
+      "Version": "0.2.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "dplyr",
+        "lubridate",
+        "queryparser",
+        "rlang",
+        "stringr",
+        "utils"
+      ],
+      "Hash": "55463525c37162568727b0807a4814e6"
     },
     "tidyr": {
       "Package": "tidyr",
